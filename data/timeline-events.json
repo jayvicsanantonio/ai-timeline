@@ -1,0 +1,74 @@
+[
+  {
+    "year": 1956,
+    "month": "August",
+    "title": "Dartmouth AI Conference",
+    "description": "The birth of AI as a field — researchers gathered at Dartmouth College to explore the idea of machines simulating human intelligence.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Dartmouth_workshop"
+  },
+  {
+    "year": 1958,
+    "month": "January",
+    "title": "The Perceptron",
+    "description": "Frank Rosenblatt introduces the perceptron, one of the earliest neural network models.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/Perceptron"
+  },
+  {
+    "year": 1997,
+    "month": "May",
+    "title": "IBM Deep Blue Defeats Garry Kasparov",
+    "description": "IBM's Deep Blue becomes the first computer to defeat a reigning world chess champion in a match under standard chess tournament time controls.",
+    "category": "Hardware Advances",
+    "link": "https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)"
+  },
+  {
+    "year": 2012,
+    "month": "October",
+    "title": "ImageNet Breakthrough",
+    "description": "AlexNet wins the ImageNet competition, drastically reducing error rates and proving the power of deep learning.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/AlexNet"
+  },
+  {
+    "year": 2016,
+    "month": "March",
+    "title": "AlphaGo Defeats Lee Sedol",
+    "description": "DeepMind's AlphaGo defeats world champion Lee Sedol in Go, showcasing AI's ability to master complex, intuition-based games.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/AlphaGo"
+  },
+  {
+    "year": 2022,
+    "month": "November",
+    "title": "ChatGPT Takes the World by Storm",
+    "description": "OpenAI releases ChatGPT to the public, sparking massive interest in conversational AI.",
+    "category": "Public Releases",
+    "link": "https://en.wikipedia.org/wiki/ChatGPT"
+  },
+  {
+    "year": 2023,
+    "month": "January",
+    "title": "Constitutional AI",
+    "description": "Anthropic introduces Constitutional AI, a method for aligning AI models with human values using explicit principles.",
+    "category": "Ethics & Policy",
+    "link": "https://www.anthropic.com/research/constitutional-ai"
+  },
+  {
+    "year": 2024,
+    "month": "February",
+    "title": "Gemini 1.5 Release",
+    "description": "Google DeepMind launches Gemini 1.5, showcasing massive context window capabilities.",
+    "category": "Public Releases",
+    "link": "https://deepmind.google/technologies/gemini/"
+  },
+  {
+    "year": 2025,
+    "month": "March",
+    "title": "GPT-5 Launch",
+    "description": "OpenAI introduces GPT-5 with advanced reasoning, planning, and tool integration.",
+    "category": "Public Releases",
+    "link": "https://openai.com"
+  }
+]
