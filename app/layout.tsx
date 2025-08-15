@@ -1,19 +1,23 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
+import { Work_Sans, Open_Sans } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import { SkipToContent } from "@/components/accessibility/skip-to-content"
+import { FuturisticCursor } from "@/components/ui/futuristic-cursor"
 import "./globals.css"
 
-const inter = Inter({
+const workSans = Work_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-work-sans",
+  weight: ["300", "400", "500", "600", "700"],
 })
 
-const jetbrainsMono = JetBrains_Mono({
+const openSans = Open_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-mono",
+  variable: "--font-open-sans",
+  weight: ["300", "400", "500", "600", "700"],
 })
 
 export const metadata: Metadata = {
@@ -28,10 +32,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
+    <html lang="en" className={`${workSans.variable} ${openSans.variable} antialiased`}>
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          {children}
+          <SkipToContent />
+          <FuturisticCursor />
+          <main id="main-content">{children}</main>
         </ThemeProvider>
       </body>
     </html>

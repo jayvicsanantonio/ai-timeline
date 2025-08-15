@@ -12,6 +12,13 @@ export interface TimelineEvent {
   link: string
 }
 
+export interface ExtendedTimelineEvent extends TimelineEvent {
+  details?: string
+  impact?: string
+  keyFigures?: string[]
+  relatedEvents?: string[]
+}
+
 export type TimelineCategory = TimelineEvent["category"]
 
 export interface TimelineSection {
@@ -22,4 +29,15 @@ export interface TimelineSection {
 export interface TimelineCoreProps {
   events: TimelineEvent[]
   progress: any // MotionValue from scroll progress
+}
+
+export interface AnimationConfig {
+  duration: number
+  delay?: number
+  ease?: string | number[]
+}
+
+export interface ScrollProgress {
+  value: number
+  direction: "up" | "down"
 }

@@ -1,11 +1,67 @@
 [
   {
+    "year": 1943,
+    "month": "November",
+    "title": "McCulloch-Pitts Neuron",
+    "description": "Warren McCulloch and Walter Pitts publish 'A Logical Calculus of the Ideas Immanent in Nervous Activity,' proposing the first mathematical model of a neural network.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.cs.cmu.edu/~./epv/bib/papers/mcculloch-pitts.pdf"
+  },
+  {
+    "year": 1949,
+    "month": "Unknown",
+    "title": "Turing's 'Universal Machine' Concept",
+    "description": "Alan Turing proposes the concept of a 'universal machine' capable of mimicking human intelligence, laying the philosophical groundwork for AI.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Turing_machine"
+  },
+  {
+    "year": 1950,
+    "month": "October",
+    "title": "The Turing Test",
+    "description": "Alan Turing's paper 'Computing Machinery and Intelligence' proposes the 'Imitation Game' to assess a machine's ability to exhibit intelligent behavior indistinguishable from that of a human.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Turing_test"
+  },
+  {
+    "year": 1951,
+    "month": "Unknown",
+    "title": "First AI Programs",
+    "description": "Christopher Strachey writes a checkers program and Dietrich Prinz writes a chess program for the Ferranti Mark 1 computer, among the first AI programs.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/Timeline_of_artificial_intelligence"
+  },
+  {
+    "year": 1952,
+    "month": "Unknown",
+    "title": "Samuel's Checkers Program",
+    "description": "Arthur Samuel develops a self-learning checkers program on an IBM 701, one of the first demonstrations of machine learning.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/Arthur_Samuel"
+  },
+  {
+    "year": 1954,
+    "month": "January",
+    "title": "Georgetown-IBM Experiment",
+    "description": "The first public demonstration of machine translation, translating over 60 Russian sentences into English.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Georgetown%E2%80%93IBM_experiment"
+  },
+  {
     "year": 1956,
     "month": "August",
     "title": "Dartmouth AI Conference",
     "description": "The birth of AI as a field — researchers gathered at Dartmouth College to explore the idea of machines simulating human intelligence.",
     "category": "Research Breakthroughs",
     "link": "https://en.wikipedia.org/wiki/Dartmouth_workshop"
+  },
+  {
+    "year": 1957,
+    "month": "Unknown",
+    "title": "Generative Grammar",
+    "description": "Noam Chomsky's 'Syntactic Structures' introduces the concept of generative grammar, influencing early NLP.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Syntactic_Structures"
   },
   {
     "year": 1958,
@@ -16,59 +72,11 @@
     "link": "https://en.wikipedia.org/wiki/Perceptron"
   },
   {
-    "year": 1997,
-    "month": "May",
-    "title": "IBM Deep Blue Defeats Garry Kasparov",
-    "description": "IBM's Deep Blue becomes the first computer to defeat a reigning world chess champion in a match under standard chess tournament time controls.",
-    "category": "Hardware Advances",
-    "link": "https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)"
-  },
-  {
-    "year": 2012,
-    "month": "October",
-    "title": "ImageNet Breakthrough",
-    "description": "AlexNet wins the ImageNet competition, drastically reducing error rates and proving the power of deep learning.",
+    "year": 1958,
+    "month": "Unknown",
+    "title": "LISP Programming Language",
+    "description": "John McCarthy develops LISP, which becomes a foundational programming language for AI research.",
     "category": "Research Breakthroughs",
-    "link": "https://en.wikipedia.org/wiki/AlexNet"
-  },
-  {
-    "year": 2016,
-    "month": "March",
-    "title": "AlphaGo Defeats Lee Sedol",
-    "description": "DeepMind's AlphaGo defeats world champion Lee Sedol in Go, showcasing AI's ability to master complex, intuition-based games.",
-    "category": "Models & Architectures",
-    "link": "https://en.wikipedia.org/wiki/AlphaGo"
-  },
-  {
-    "year": 2022,
-    "month": "November",
-    "title": "ChatGPT Takes the World by Storm",
-    "description": "OpenAI releases ChatGPT to the public, sparking massive interest in conversational AI.",
-    "category": "Public Releases",
-    "link": "https://en.wikipedia.org/wiki/ChatGPT"
-  },
-  {
-    "year": 2023,
-    "month": "January",
-    "title": "Constitutional AI",
-    "description": "Anthropic introduces Constitutional AI, a method for aligning AI models with human values using explicit principles.",
-    "category": "Ethics & Policy",
-    "link": "https://www.anthropic.com/research/constitutional-ai"
-  },
-  {
-    "year": 2024,
-    "month": "February",
-    "title": "Gemini 1.5 Release",
-    "description": "Google DeepMind launches Gemini 1.5, showcasing massive context window capabilities.",
-    "category": "Public Releases",
-    "link": "https://deepmind.google/technologies/gemini/"
-  },
-  {
-    "year": 2025,
-    "month": "March",
-    "title": "GPT-5 Launch",
-    "description": "OpenAI introduces GPT-5 with advanced reasoning, planning, and tool integration.",
-    "category": "Public Releases",
-    "link": "https://openai.com"
+    "link": "https://en.wikipedia.org/wiki/Lisp_(programming_language)"
   }
 ]
