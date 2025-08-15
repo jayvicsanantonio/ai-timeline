@@ -75,30 +75,41 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
                 onHoverStart={() => setActiveInsight(insight.id)}
                 onHoverEnd={() => setActiveInsight(null)}
                 whileHover={{ y: -5 }}
+                className="h-[32rem] flex" // increased height to h-[32rem] (512px) to accommodate all content
               >
                 <CinematicCard
-                  className={`h-full transition-all duration-300 ${
+                  className={`w-full transition-all duration-300 ${
                     isActive ? "ring-2 ring-primary/50 shadow-lg shadow-primary/20" : ""
                   }`}
                   glowEffect={isActive}
                 >
-                  <div className="text-center space-y-4">
-                    <motion.div
-                      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary"
-                      animate={{ scale: isActive ? 1.1 : 1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Icon className="w-6 h-6" />
-                    </motion.div>
+                  <div className="flex flex-col h-full text-center p-6">
+                    <div className="h-80 flex flex-col">
+                      {/* Icon section - fixed height */}
+                      <div className="flex-shrink-0 mb-4">
+                        <motion.div
+                          className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mx-auto"
+                          animate={{ scale: isActive ? 1.1 : 1 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <Icon className="w-6 h-6" />
+                        </motion.div>
+                      </div>
 
-                    <div>
-                      <h3 className="font-bold text-foreground mb-2">{insight.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{insight.description}</p>
+                      {/* Title section - fixed height */}
+                      <div className="flex-shrink-0 mb-4">
+                        <h3 className="font-bold text-foreground text-lg leading-tight">{insight.title}</h3>
+                      </div>
+
+                      {/* Description section - flexible height within fixed container */}
+                      <div className="flex-1 flex items-start justify-center">
+                        <p className="text-sm text-muted-foreground leading-relaxed">{insight.description}</p>
+                      </div>
                     </div>
 
-                    <div className="pt-4 border-t border-border/50">
+                    <div className="flex-shrink-0 pt-4 border-t border-border/50">
                       <div className="text-2xl font-bold text-primary">{insight.stat}</div>
-                      <div className="text-xs text-muted-foreground">{insight.statLabel}</div>
+                      <div className="text-xs text-muted-foreground mt-1 leading-tight">{insight.statLabel}</div>
                     </div>
                   </div>
                 </CinematicCard>
