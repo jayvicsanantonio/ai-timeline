@@ -1,68 +1,87 @@
-"use client"
+'use client';
 
-import { motion, useScroll, useTransform } from "framer-motion"
-import { useRef, useMemo } from "react"
-import type { TimelineEvent } from "@/types/timeline"
-import { CinematicCard } from "@/components/ui/cinematic-card"
-import { TimelineBadge } from "@/components/ui/timeline-badge"
-import { AnimatedBackground } from "@/components/ui/animated-background"
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useMemo } from 'react';
+import type { TimelineEvent } from '@/types/timeline';
+import { CinematicCard } from '@/components/ui/cinematic-card';
+import { TimelineBadge } from '@/components/ui/timeline-badge';
+import { AnimatedBackground } from '@/components/ui/animated-background';
 
 interface TimelineStoryProps {
-  events: TimelineEvent[]
+  events: TimelineEvent[];
 }
 
 const categoryVariants = {
-  "Research Breakthroughs": "research" as const,
-  "Models & Architectures": "model" as const,
-  "Public Releases": "release" as const,
-  "Ethics & Policy": "ethics" as const,
-  "Hardware Advances": "hardware" as const,
-  "Companies & Investments": "research" as const,
-  "AI Tools": "model" as const,
-  "Bombshell News": "ethics" as const,
-  Agents: "hardware" as const,
-}
+  'Research Breakthroughs': 'research' as const,
+  'Models & Architectures': 'model' as const,
+  'Public Releases': 'release' as const,
+  'Ethics & Policy': 'ethics' as const,
+  'Hardware Advances': 'hardware' as const,
+  'Companies & Investments': 'research' as const,
+  'AI Tools': 'model' as const,
+  'Bombshell News': 'ethics' as const,
+  Agents: 'hardware' as const,
+};
 
 export function TimelineStory({ events }: TimelineStoryProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"],
-  })
+    offset: ['start end', 'end start'],
+  });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -200])
-  const midgroundY = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const backgroundY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, -200]
+  );
+  const midgroundY = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   // Memoize random values to prevent hydration mismatches
-  const starAnimations = useMemo(() => 
-    Array.from({ length: 80 }).map((_, i) => ({
-      size: 1 + (i * 0.037) % 3, // Deterministic size based on index
-      duration: 8 + (i * 0.05) % 4,
-      delay: (i * 0.075) % 6,
-      left: (i * 1.25) % 100,
-      top: (i * 1.618) % 100, // Using golden ratio for distribution
-    })), []
-  )
+  const starAnimations = useMemo(
+    () =>
+      Array.from({ length: 80 }).map((_, i) => ({
+        size: 1 + ((i * 0.037) % 3), // Deterministic size based on index
+        duration: 8 + ((i * 0.05) % 4),
+        delay: (i * 0.075) % 6,
+        left: (i * 1.25) % 100,
+        top: (i * 1.618) % 100, // Using golden ratio for distribution
+      })),
+    []
+  );
 
-  const connectionAnimations = useMemo(() =>
-    Array.from({ length: 12 }).map((_, i) => ({
-      width: 40 + ((i * 7.5) % 60),
-    })), []
-  )
+  const connectionAnimations = useMemo(
+    () =>
+      Array.from({ length: 12 }).map((_, i) => ({
+        width: 40 + ((i * 7.5) % 60),
+      })),
+    []
+  );
 
-  const codeAnimations = useMemo(() =>
-    Array.from({ length: 8 }).map((_, i) => ({
-      duration: 12 + ((i * 0.75) % 6),
-    })), []
-  )
+  const codeAnimations = useMemo(
+    () =>
+      Array.from({ length: 8 }).map((_, i) => ({
+        duration: 12 + ((i * 0.75) % 6),
+      })),
+    []
+  );
 
   return (
-    <section ref={containerRef} className="relative py-32 overflow-hidden">
-      <motion.div className="absolute inset-0 opacity-30" style={{ y: backgroundY }}>
+    <section
+      ref={containerRef}
+      className="relative py-32 overflow-hidden"
+    >
+      <motion.div
+        className="absolute inset-0 opacity-30"
+        style={{ y: backgroundY }}
+      >
         <AnimatedBackground variant="neural" className="opacity-50" />
       </motion.div>
 
-      <motion.div className="absolute inset-0 opacity-20" style={{ y: midgroundY }}>
+      <motion.div
+        className="absolute inset-0 opacity-20"
+        style={{ y: midgroundY }}
+      >
         <AnimatedBackground variant="dots" className="opacity-40" />
       </motion.div>
 
@@ -76,8 +95,10 @@ export function TimelineStory({ events }: TimelineStoryProps) {
               top: `${star.top}%`,
               width: `${star.size}px`,
               height: `${star.size}px`,
-              background: "rgba(5, 150, 105, 0.4)",
-              boxShadow: `0 0 ${star.size * 2}px rgba(5, 150, 105, 0.3)`,
+              background: 'rgba(5, 150, 105, 0.4)',
+              boxShadow: `0 0 ${
+                star.size * 2
+              }px rgba(5, 150, 105, 0.3)`,
             }}
             animate={{
               opacity: [0, 0.6, 0],
@@ -88,7 +109,7 @@ export function TimelineStory({ events }: TimelineStoryProps) {
               duration: star.duration,
               repeat: Number.POSITIVE_INFINITY,
               delay: star.delay,
-              ease: "linear",
+              ease: 'linear',
             }}
           />
         ))}
@@ -103,9 +124,10 @@ export function TimelineStory({ events }: TimelineStoryProps) {
               left: `${5 + i * 8}%`,
               top: `${10 + ((i * 15) % 80)}%`,
               width: `${connection.width}%`,
-              height: "2px",
-              background: "linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.5), transparent)",
-              transformOrigin: "left center",
+              height: '2px',
+              background:
+                'linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.5), transparent)',
+              transformOrigin: 'left center',
             }}
             animate={{
               scaleX: [0, 1, 0],
@@ -114,7 +136,7 @@ export function TimelineStory({ events }: TimelineStoryProps) {
             transition={{
               duration: 8 + i * 0.5,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
+              ease: 'easeInOut',
               delay: i * 0.3,
             }}
           />
@@ -123,7 +145,7 @@ export function TimelineStory({ events }: TimelineStoryProps) {
 
       <div className="absolute inset-0 overflow-hidden">
         {codeAnimations.map((code, i) => {
-          const delay = i * 0.8
+          const delay = i * 0.8;
 
           return (
             <motion.div
@@ -140,24 +162,24 @@ export function TimelineStory({ events }: TimelineStoryProps) {
               transition={{
                 duration: code.duration,
                 repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
+                ease: 'easeInOut',
                 delay,
               }}
             >
               {
                 [
-                  "neural.evolve()",
-                  "ai.breakthrough()",
-                  "machine.learn()",
-                  "deep.think()",
-                  "algorithm.adapt()",
-                  "intelligence.emerge()",
-                  "pattern.recognize()",
-                  "model.train()",
+                  'neural.evolve()',
+                  'ai.breakthrough()',
+                  'machine.learn()',
+                  'deep.think()',
+                  'algorithm.adapt()',
+                  'intelligence.emerge()',
+                  'pattern.recognize()',
+                  'model.train()',
                 ][i]
               }
             </motion.div>
-          )
+          );
         })}
       </div>
 
@@ -169,9 +191,9 @@ export function TimelineStory({ events }: TimelineStoryProps) {
             style={{
               left: `${15 + i * 15}%`,
               top: `${20 + ((i * 25) % 60)}%`,
-              width: "60px",
-              height: "60px",
-              borderRadius: i % 2 === 0 ? "50%" : "0%",
+              width: '60px',
+              height: '60px',
+              borderRadius: i % 2 === 0 ? '50%' : '0%',
             }}
             animate={{
               rotate: [0, 360],
@@ -181,7 +203,7 @@ export function TimelineStory({ events }: TimelineStoryProps) {
             transition={{
               duration: 20 + i * 5,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
+              ease: 'linear',
               delay: i * 2,
             }}
           />
@@ -196,8 +218,8 @@ export function TimelineStory({ events }: TimelineStoryProps) {
             style={{
               left: `${20 + i * 20}%`,
               top: `${30 + ((i * 25) % 50)}%`,
-              width: "200px",
-              height: "200px",
+              width: '200px',
+              height: '200px',
             }}
             animate={{
               x: [-50, 50, -50],
@@ -208,7 +230,7 @@ export function TimelineStory({ events }: TimelineStoryProps) {
             transition={{
               duration: 25 + i * 5,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
+              ease: 'easeInOut',
               delay: i * 3,
             }}
           />
@@ -222,10 +244,10 @@ export function TimelineStory({ events }: TimelineStoryProps) {
             scrollYProgress,
             [0, 0.5, 1],
             [
-              "radial-gradient(circle at 30% 70%, rgba(5, 150, 105, 0.15) 0%, transparent 70%)",
-              "radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.2) 0%, transparent 80%)",
-              "radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.1) 0%, transparent 90%)",
-            ],
+              'radial-gradient(circle at 30% 70%, rgba(5, 150, 105, 0.15) 0%, transparent 70%)',
+              'radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.2) 0%, transparent 80%)',
+              'radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.1) 0%, transparent 90%)',
+            ]
           ),
         }}
       />
@@ -238,39 +260,17 @@ export function TimelineStory({ events }: TimelineStoryProps) {
         transition={{
           duration: 15,
           repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
+          ease: 'easeInOut',
         }}
       />
 
       <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          viewport={{ once: true }}
-          className="text-center mb-24"
-        >
-          <h2 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent mb-8 leading-tight">
-            The Journey Unfolds
-          </h2>
-          <motion.p
-            className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-4xl mx-auto"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            From the first spark of artificial intelligence to the transformative breakthroughs of today, witness the
-            evolution of humanity's greatest technological achievement.
-          </motion.p>
-        </motion.div>
-
         <div className="relative">
           <motion.div
             className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary/30 via-primary to-accent/30 shadow-lg shadow-primary/20"
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
-            transition={{ duration: 2, ease: "easeOut" }}
+            transition={{ duration: 2, ease: 'easeOut' }}
             viewport={{ once: true }}
             style={{ originY: 0 }}
           />
@@ -288,53 +288,75 @@ export function TimelineStory({ events }: TimelineStoryProps) {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 interface TimelineEventCardProps {
-  event: TimelineEvent
-  index: number
-  isLeft: boolean
+  event: TimelineEvent;
+  index: number;
+  isLeft: boolean;
 }
 
-function TimelineEventCard({ event, index, isLeft }: TimelineEventCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null)
+function TimelineEventCard({
+  event,
+  index,
+  isLeft,
+}: TimelineEventCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: cardRef,
-    offset: ["start end", "end start"],
-  })
+    offset: ['start end', 'end start'],
+  });
 
-  const x = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [isLeft ? -200 : 200, 0, 0, isLeft ? -100 : 100])
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.3])
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.7, 1, 1, 0.8])
-  const rotateY = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [isLeft ? -15 : 15, 0, 0, isLeft ? -5 : 5])
+  const x = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [isLeft ? -200 : 200, 0, 0, isLeft ? -100 : 100]
+  );
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 1, 1, 0.3]
+  );
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0.7, 1, 1, 0.8]
+  );
+  const rotateY = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [isLeft ? -15 : 15, 0, 0, isLeft ? -5 : 5]
+  );
 
   return (
     <motion.div
       ref={cardRef}
-      className={`relative flex items-center ${isLeft ? "justify-start" : "justify-end"}`}
+      className={`relative flex items-center ${
+        isLeft ? 'justify-start' : 'justify-end'
+      }`}
       style={{ x, opacity, scale, rotateY }}
     >
       <div className="absolute left-1/2 transform -translate-x-1/2 z-20">
         <motion.div
           className="relative"
           whileInView={{ scale: [0, 1.2, 1] }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.1, ease: 'easeOut' }}
           viewport={{ once: true }}
         >
           <motion.div
             className="w-6 h-6 bg-primary rounded-full border-4 border-background shadow-xl shadow-primary/30"
             animate={{
               boxShadow: [
-                "0 0 10px rgba(5, 150, 105, 0.3)",
-                "0 0 20px rgba(5, 150, 105, 0.6)",
-                "0 0 10px rgba(5, 150, 105, 0.3)",
+                '0 0 10px rgba(5, 150, 105, 0.3)',
+                '0 0 20px rgba(5, 150, 105, 0.6)',
+                '0 0 10px rgba(5, 150, 105, 0.3)',
               ],
             }}
             transition={{
               duration: 3,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
+              ease: 'easeInOut',
             }}
           />
           <motion.div
@@ -343,22 +365,27 @@ function TimelineEventCard({ event, index, isLeft }: TimelineEventCardProps) {
             transition={{
               duration: 2,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
+              ease: 'easeInOut',
             }}
           />
         </motion.div>
       </div>
 
-      <div className={`w-full max-w-lg ${isLeft ? "pr-12" : "pl-12"}`}>
+      <div
+        className={`w-full max-w-lg ${isLeft ? 'pr-12' : 'pl-12'}`}
+      >
         <motion.div
           whileHover={{
             y: -10,
             rotateY: isLeft ? 5 : -5,
             scale: 1.02,
           }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
-          <CinematicCard className="relative group overflow-hidden" glowEffect>
+          <CinematicCard
+            className="relative group overflow-hidden"
+            glowEffect
+          >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10 space-y-6">
@@ -367,7 +394,7 @@ function TimelineEventCard({ event, index, isLeft }: TimelineEventCardProps) {
                   className="text-sm text-muted-foreground font-mono tracking-wider"
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.6, delay: index * 0.01 }}
                   viewport={{ once: true }}
                 >
                   {event.month} {event.year}
@@ -375,10 +402,17 @@ function TimelineEventCard({ event, index, isLeft }: TimelineEventCardProps) {
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.01 + 0.2,
+                  }}
                   viewport={{ once: true }}
                 >
-                  <TimelineBadge variant={categoryVariants[event.category] || "research"}>
+                  <TimelineBadge
+                    variant={
+                      categoryVariants[event.category] || 'research'
+                    }
+                  >
                     {event.category}
                   </TimelineBadge>
                 </motion.div>
@@ -388,7 +422,10 @@ function TimelineEventCard({ event, index, isLeft }: TimelineEventCardProps) {
                 className="text-2xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 + 0.1 }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.01 + 0.1,
+                }}
                 viewport={{ once: true }}
               >
                 {event.title}
@@ -398,7 +435,10 @@ function TimelineEventCard({ event, index, isLeft }: TimelineEventCardProps) {
                 className="text-muted-foreground leading-relaxed text-lg"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 + 0.2 }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.01 + 0.2,
+                }}
                 viewport={{ once: true }}
               >
                 {event.description}
@@ -408,7 +448,10 @@ function TimelineEventCard({ event, index, isLeft }: TimelineEventCardProps) {
                 className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
-                transition={{ duration: 1, delay: index * 0.1 + 0.5 }}
+                transition={{
+                  duration: 1,
+                  delay: index * 0.01 + 0.5,
+                }}
                 viewport={{ once: true }}
               />
             </div>
@@ -416,5 +459,5 @@ function TimelineEventCard({ event, index, isLeft }: TimelineEventCardProps) {
         </motion.div>
       </div>
     </motion.div>
-  )
+  );
 }
