@@ -329,6 +329,12 @@ function TimelineEventCard({
     [isLeft ? -15 : 15, 0, 0, isLeft ? -5 : 5]
   );
 
+  const handleCardClick = () => {
+    if (event.link) {
+      window.open(event.link, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <motion.div
       ref={cardRef}
@@ -381,6 +387,8 @@ function TimelineEventCard({
             scale: 1.02,
           }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          onClick={handleCardClick}
+          className="cursor-pointer"
         >
           <CinematicCard
             className="relative group overflow-hidden"
