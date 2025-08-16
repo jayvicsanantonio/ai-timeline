@@ -30,78 +30,156 @@ export function TimelineStory({ events }: TimelineStoryProps) {
     offset: ["start end", "end start"],
   })
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -300])
-  const midgroundY = useTransform(scrollYProgress, [0, 1], [0, -150])
-  const foregroundY = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -200])
+  const midgroundY = useTransform(scrollYProgress, [0, 1], [0, -100])
 
   return (
     <section ref={containerRef} className="relative py-32 overflow-hidden">
-      <motion.div className="absolute inset-0 opacity-10" style={{ y: backgroundY }}>
-        <AnimatedBackground variant="dots" className="opacity-30" />
+      <motion.div className="absolute inset-0 opacity-30" style={{ y: backgroundY }}>
+        <AnimatedBackground variant="neural" className="opacity-50" />
       </motion.div>
 
-      {/* Neural network-like connections */}
-      <div className="absolute inset-0 overflow-hidden opacity-20">
-        {Array.from({ length: 8 }).map((_, i) => (
+      <motion.div className="absolute inset-0 opacity-20" style={{ y: midgroundY }}>
+        <AnimatedBackground variant="dots" className="opacity-40" />
+      </motion.div>
+
+      <div className="absolute inset-0 overflow-hidden">
+        {Array.from({ length: 80 }).map((_, i) => {
+          const size = Math.random() * 3 + 1
+          const duration = 8 + Math.random() * 4
+          const delay = Math.random() * 6
+
+          return (
+            <motion.div
+              key={`star-${i}`}
+              className="absolute rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: `${size}px`,
+                height: `${size}px`,
+                background: "rgba(5, 150, 105, 0.4)",
+                boxShadow: `0 0 ${size * 2}px rgba(5, 150, 105, 0.3)`,
+              }}
+              animate={{
+                opacity: [0, 0.6, 0],
+                scale: [0, 1, 0],
+                y: [0, -100],
+              }}
+              transition={{
+                duration,
+                repeat: Number.POSITIVE_INFINITY,
+                delay,
+                ease: "linear",
+              }}
+            />
+          )
+        })}
+      </div>
+
+      <div className="absolute inset-0 overflow-hidden opacity-40">
+        {Array.from({ length: 12 }).map((_, i) => (
           <motion.div
             key={`connection-${i}`}
-            className="absolute h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+            className="absolute"
             style={{
-              left: `${10 + i * 12}%`,
-              top: `${20 + ((i * 15) % 60)}%`,
-              width: `${30 + Math.random() * 40}%`,
+              left: `${5 + i * 8}%`,
+              top: `${10 + ((i * 15) % 80)}%`,
+              width: `${40 + Math.random() * 60}%`,
+              height: "2px",
+              background: "linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.5), transparent)",
               transformOrigin: "left center",
             }}
             animate={{
-              scaleX: [0.3, 1, 0.3],
-              opacity: [0.1, 0.4, 0.1],
+              scaleX: [0, 1, 0],
+              opacity: [0, 0.6, 0],
             }}
             transition={{
-              duration: 6 + i * 0.5,
+              duration: 8 + i * 0.5,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
-              delay: i * 0.8,
+              delay: i * 0.3,
             }}
           />
         ))}
       </div>
 
-      {/* Geometric patterns */}
-      <div className="absolute inset-0 overflow-hidden opacity-15">
+      <div className="absolute inset-0 overflow-hidden">
+        {Array.from({ length: 8 }).map((_, i) => {
+          const randomDelay = i * 0.8
+          const randomDuration = 12 + Math.random() * 6
+
+          return (
+            <motion.div
+              key={`code-${i}`}
+              className="absolute text-sm font-mono text-primary/40 select-none"
+              style={{
+                left: `${10 + i * 12}%`,
+                top: `${20 + (i % 4) * 20}%`,
+              }}
+              animate={{
+                y: [-30, 30, -30],
+                opacity: [0.2, 0.5, 0.2],
+              }}
+              transition={{
+                duration: randomDuration,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: randomDelay,
+              }}
+            >
+              {
+                [
+                  "neural.evolve()",
+                  "ai.breakthrough()",
+                  "machine.learn()",
+                  "deep.think()",
+                  "algorithm.adapt()",
+                  "intelligence.emerge()",
+                  "pattern.recognize()",
+                  "model.train()",
+                ][i]
+              }
+            </motion.div>
+          )
+        })}
+      </div>
+
+      <div className="absolute inset-0 overflow-hidden opacity-20">
         {Array.from({ length: 6 }).map((_, i) => (
           <motion.div
             key={`geo-${i}`}
-            className="absolute border border-primary/20"
+            className="absolute border border-primary/30"
             style={{
-              left: `${15 + i * 20}%`,
-              top: `${30 + ((i * 25) % 50)}%`,
+              left: `${15 + i * 15}%`,
+              top: `${20 + ((i * 25) % 60)}%`,
               width: "60px",
               height: "60px",
+              borderRadius: i % 2 === 0 ? "50%" : "0%",
             }}
             animate={{
-              rotate: [0, 180, 360],
-              scale: [0.8, 1.1, 0.8],
+              rotate: [0, 360],
+              scale: [0.8, 1.2, 0.8],
               opacity: [0.1, 0.3, 0.1],
             }}
             transition={{
-              duration: 12 + i * 2,
+              duration: 20 + i * 5,
               repeat: Number.POSITIVE_INFINITY,
               ease: "linear",
-              delay: i * 1.5,
+              delay: i * 2,
             }}
           />
         ))}
       </div>
 
-      {/* Ambient light orbs */}
       <div className="absolute inset-0 overflow-hidden">
         {Array.from({ length: 4 }).map((_, i) => (
           <motion.div
             key={`orb-${i}`}
-            className="absolute rounded-full bg-gradient-radial from-primary/20 via-primary/10 to-transparent blur-xl"
+            className="absolute rounded-full bg-gradient-radial from-primary/20 via-primary/10 to-transparent blur-2xl"
             style={{
-              left: `${20 + i * 25}%`,
-              top: `${40 + ((i * 30) % 40)}%`,
+              left: `${20 + i * 20}%`,
+              top: `${30 + ((i * 25) % 50)}%`,
               width: "200px",
               height: "200px",
             }}
@@ -112,58 +190,41 @@ export function TimelineStory({ events }: TimelineStoryProps) {
               opacity: [0.1, 0.3, 0.1],
             }}
             transition={{
-              duration: 15 + i * 3,
+              duration: 25 + i * 5,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
-              delay: i * 2,
+              delay: i * 3,
             }}
           />
         ))}
       </div>
+
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: useTransform(
+            scrollYProgress,
+            [0, 0.5, 1],
+            [
+              "radial-gradient(circle at 30% 70%, rgba(5, 150, 105, 0.15) 0%, transparent 70%)",
+              "radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.2) 0%, transparent 80%)",
+              "radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.1) 0%, transparent 90%)",
+            ],
+          ),
+        }}
+      />
 
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/10 to-accent/5"
-        style={{ y: midgroundY }}
+        animate={{
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
       />
-
-      <motion.div
-        className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent"
-        style={{ y: foregroundY }}
-      />
-
-      {/* Enhanced floating particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 30 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${2 + Math.random() * 4}px`,
-              height: `${2 + Math.random() * 4}px`,
-              background:
-                i % 3 === 0
-                  ? "rgba(5, 150, 105, 0.3)"
-                  : i % 3 === 1
-                    ? "rgba(16, 185, 129, 0.2)"
-                    : "rgba(52, 211, 153, 0.1)",
-            }}
-            animate={{
-              y: [-30, 30, -30],
-              x: [-20, 20, -20],
-              opacity: [0.1, 0.6, 0.1],
-              scale: [0.5, 1.2, 0.5],
-            }}
-            transition={{
-              duration: 8 + Math.random() * 6,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              delay: Math.random() * 4,
-            }}
-          />
-        ))}
-      </div>
 
       <div className="container mx-auto px-6 relative z-10">
         <motion.div

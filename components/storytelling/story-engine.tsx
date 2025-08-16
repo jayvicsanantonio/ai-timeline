@@ -4,7 +4,6 @@ import { PrologueScene } from "./prologue-scene"
 import { TimelineStory } from "./timeline-story"
 import { EpilogueScene } from "./epilogue-scene"
 import { NarrativeBridge } from "./narrative-bridge"
-import { ScrollProgress } from "@/components/ui/scroll-progress"
 import { TimelineInsights } from "@/components/interactive/timeline-insights"
 import type { TimelineEvent } from "@/types/timeline"
 
@@ -36,8 +35,6 @@ export function StoryEngine({ events }: StoryEngineProps) {
 
   return (
     <div className="relative">
-      <ScrollProgress />
-
       <div className="relative">
         <PrologueScene />
 
