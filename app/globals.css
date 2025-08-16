@@ -124,10 +124,12 @@
   body {
     @apply bg-background text-foreground;
     cursor: none;
+    overflow-x: hidden; /* Prevent horizontal scrollbar by hiding overflow-x */
   }
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden; /* Prevent horizontal scrollbar at root level */
   }
 
   ::-webkit-scrollbar {
@@ -178,7 +180,7 @@
       transform: translateX(-100%);
     }
     100% {
-      transform: translateX(100vw);
+      transform: translateX(100%); /* Changed from 100vw to 100% to prevent overflow beyond container */
     }
   }
 

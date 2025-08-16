@@ -38,33 +38,38 @@ export function StoryEngine({ events }: StoryEngineProps) {
     <div className="relative">
       <ScrollProgress />
 
-      <div className="space-y-0">
+      <div className="relative">
         <PrologueScene />
 
         {eras.map((era, index) => (
-          <div key={era.name}>
+          <div key={era.name} className="relative">
             {index > 0 && (
               <NarrativeBridge
                 era={`Chapter ${index + 1}`}
                 title={era.name}
                 subtitle={`${era.range[0]}s - ${era.range[1]}s`}
                 description={getEraDescription(era.name)}
-                className="bg-gradient-to-b from-background/50 to-muted/10"
+                className="bg-gradient-to-b from-background/50 to-muted/10 -mt-32 pt-32"
               />
             )}
             <TimelineStory events={era.events} />
           </div>
         ))}
 
-        <NarrativeBridge
-          era="Reflection"
-          title="Patterns of Progress"
-          subtitle="Understanding the journey through data and insights"
-          description="As we reflect on decades of AI development, certain patterns emerge that help us understand not just where we've been, but where we might be heading."
-          className="bg-gradient-to-b from-muted/10 to-background/50"
-        />
+        <div className="relative -mt-64 pt-32">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background/90 h-64 z-10" />
+          <NarrativeBridge
+            era="Reflection"
+            title="Patterns of Progress"
+            subtitle="Understanding the journey through data and insights"
+            description="As we reflect on decades of AI development, certain patterns emerge that help us understand not just where we've been, but where we might be heading."
+            className="bg-gradient-to-b from-transparent to-background/50 pt-32 relative z-20"
+          />
+        </div>
 
-        <TimelineInsights events={events} />
+        <div className="-mt-16">
+          <TimelineInsights events={events} />
+        </div>
 
         <EpilogueScene />
       </div>

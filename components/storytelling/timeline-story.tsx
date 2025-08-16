@@ -40,6 +40,87 @@ export function TimelineStory({ events }: TimelineStoryProps) {
         <AnimatedBackground variant="dots" className="opacity-30" />
       </motion.div>
 
+      {/* Neural network-like connections */}
+      <div className="absolute inset-0 overflow-hidden opacity-20">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <motion.div
+            key={`connection-${i}`}
+            className="absolute h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+            style={{
+              left: `${10 + i * 12}%`,
+              top: `${20 + ((i * 15) % 60)}%`,
+              width: `${30 + Math.random() * 40}%`,
+              transformOrigin: "left center",
+            }}
+            animate={{
+              scaleX: [0.3, 1, 0.3],
+              opacity: [0.1, 0.4, 0.1],
+            }}
+            transition={{
+              duration: 6 + i * 0.5,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: i * 0.8,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Geometric patterns */}
+      <div className="absolute inset-0 overflow-hidden opacity-15">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <motion.div
+            key={`geo-${i}`}
+            className="absolute border border-primary/20"
+            style={{
+              left: `${15 + i * 20}%`,
+              top: `${30 + ((i * 25) % 50)}%`,
+              width: "60px",
+              height: "60px",
+            }}
+            animate={{
+              rotate: [0, 180, 360],
+              scale: [0.8, 1.1, 0.8],
+              opacity: [0.1, 0.3, 0.1],
+            }}
+            transition={{
+              duration: 12 + i * 2,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+              delay: i * 1.5,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Ambient light orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <motion.div
+            key={`orb-${i}`}
+            className="absolute rounded-full bg-gradient-radial from-primary/20 via-primary/10 to-transparent blur-xl"
+            style={{
+              left: `${20 + i * 25}%`,
+              top: `${40 + ((i * 30) % 40)}%`,
+              width: "200px",
+              height: "200px",
+            }}
+            animate={{
+              x: [-50, 50, -50],
+              y: [-30, 30, -30],
+              scale: [0.8, 1.2, 0.8],
+              opacity: [0.1, 0.3, 0.1],
+            }}
+            transition={{
+              duration: 15 + i * 3,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: i * 2,
+            }}
+          />
+        ))}
+      </div>
+
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/10 to-accent/5"
         style={{ y: midgroundY }}
@@ -50,25 +131,35 @@ export function TimelineStory({ events }: TimelineStoryProps) {
         style={{ y: foregroundY }}
       />
 
+      {/* Enhanced floating particles */}
       <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {Array.from({ length: 30 }).map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-primary/20 rounded-full"
+            className="absolute rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
+              width: `${2 + Math.random() * 4}px`,
+              height: `${2 + Math.random() * 4}px`,
+              background:
+                i % 3 === 0
+                  ? "rgba(5, 150, 105, 0.3)"
+                  : i % 3 === 1
+                    ? "rgba(16, 185, 129, 0.2)"
+                    : "rgba(52, 211, 153, 0.1)",
             }}
             animate={{
-              y: [-20, 20, -20],
-              opacity: [0.1, 0.4, 0.1],
-              scale: [0.5, 1, 0.5],
+              y: [-30, 30, -30],
+              x: [-20, 20, -20],
+              opacity: [0.1, 0.6, 0.1],
+              scale: [0.5, 1.2, 0.5],
             }}
             transition={{
-              duration: 8 + Math.random() * 4,
+              duration: 8 + Math.random() * 6,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
-              delay: Math.random() * 2,
+              delay: Math.random() * 4,
             }}
           />
         ))}
