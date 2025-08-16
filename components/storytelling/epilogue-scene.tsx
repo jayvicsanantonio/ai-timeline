@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useMemo } from "react"
 import { SectionHeader } from "@/components/ui/section-header"
 import { AnimatedBackground } from "@/components/ui/animated-background"
 import { TextReveal } from "@/components/animations/text-reveal"
@@ -18,6 +18,17 @@ export function EpilogueScene() {
   const scale = useTransform(smoothProgress, [0, 0.2], [0.8, 1])
   const backgroundY = useTransform(smoothProgress, [0, 1], [0, -200])
 
+  // Memoize particle data to prevent hydration mismatches
+  const particles = useMemo(() => 
+    Array.from({ length: 150 }).map((_, i) => ({
+      size: 1 + ((i * 0.019) % 3), // Deterministic size based on index
+      duration: 3 + ((i * 0.027) % 4),
+      delay: (i * 0.02) % 3,
+      left: (i * 0.67) % 100,
+      top: (i * 1.33) % 100,
+    })), []
+  )
+
   return (
     <motion.section
       ref={containerRef}
@@ -29,35 +40,29 @@ export function EpilogueScene() {
       </motion.div>
 
       <div className="absolute inset-0">
-        {Array.from({ length: 150 }).map((_, i) => {
-          const size = Math.random() * 3 + 1
-          const duration = 3 + Math.random() * 4
-          const delay = Math.random() * 3
-
-          return (
-            <motion.div
-              key={i}
-              className="absolute bg-white rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                width: `${size}px`,
-                height: `${size}px`,
-              }}
-              animate={{
-                opacity: [0, 0.8, 0.3, 0],
-                scale: [0, 1, 1.2, 0],
-                y: [0, -50 - i * 0.5],
-              }}
-              transition={{
-                duration,
-                repeat: Number.POSITIVE_INFINITY,
-                delay,
-                ease: "easeInOut",
-              }}
-            />
-          )
-        })}
+        {particles.map((particle, i) => (
+          <motion.div
+            key={i}
+            className="absolute bg-white rounded-full"
+            style={{
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+            }}
+            animate={{
+              opacity: [0, 0.8, 0.3, 0],
+              scale: [0, 1, 1.2, 0],
+              y: [0, -50 - i * 0.5],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Number.POSITIVE_INFINITY,
+              delay: particle.delay,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </div>
 
       <div className="absolute inset-0 pointer-events-none">

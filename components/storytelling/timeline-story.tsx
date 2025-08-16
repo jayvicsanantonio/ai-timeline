@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useScroll, useTransform } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useMemo } from "react"
 import type { TimelineEvent } from "@/types/timeline"
 import { CinematicCard } from "@/components/ui/cinematic-card"
 import { TimelineBadge } from "@/components/ui/timeline-badge"
@@ -33,6 +33,29 @@ export function TimelineStory({ events }: TimelineStoryProps) {
   const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -200])
   const midgroundY = useTransform(scrollYProgress, [0, 1], [0, -100])
 
+  // Memoize random values to prevent hydration mismatches
+  const starAnimations = useMemo(() => 
+    Array.from({ length: 80 }).map((_, i) => ({
+      size: 1 + (i * 0.037) % 3, // Deterministic size based on index
+      duration: 8 + (i * 0.05) % 4,
+      delay: (i * 0.075) % 6,
+      left: (i * 1.25) % 100,
+      top: (i * 1.618) % 100, // Using golden ratio for distribution
+    })), []
+  )
+
+  const connectionAnimations = useMemo(() =>
+    Array.from({ length: 12 }).map((_, i) => ({
+      width: 40 + ((i * 7.5) % 60),
+    })), []
+  )
+
+  const codeAnimations = useMemo(() =>
+    Array.from({ length: 8 }).map((_, i) => ({
+      duration: 12 + ((i * 0.75) % 6),
+    })), []
+  )
+
   return (
     <section ref={containerRef} className="relative py-32 overflow-hidden">
       <motion.div className="absolute inset-0 opacity-30" style={{ y: backgroundY }}>
@@ -44,48 +67,42 @@ export function TimelineStory({ events }: TimelineStoryProps) {
       </motion.div>
 
       <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 80 }).map((_, i) => {
-          const size = Math.random() * 3 + 1
-          const duration = 8 + Math.random() * 4
-          const delay = Math.random() * 6
-
-          return (
-            <motion.div
-              key={`star-${i}`}
-              className="absolute rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                width: `${size}px`,
-                height: `${size}px`,
-                background: "rgba(5, 150, 105, 0.4)",
-                boxShadow: `0 0 ${size * 2}px rgba(5, 150, 105, 0.3)`,
-              }}
-              animate={{
-                opacity: [0, 0.6, 0],
-                scale: [0, 1, 0],
-                y: [0, -100],
-              }}
-              transition={{
-                duration,
-                repeat: Number.POSITIVE_INFINITY,
-                delay,
-                ease: "linear",
-              }}
-            />
-          )
-        })}
+        {starAnimations.map((star, i) => (
+          <motion.div
+            key={`star-${i}`}
+            className="absolute rounded-full"
+            style={{
+              left: `${star.left}%`,
+              top: `${star.top}%`,
+              width: `${star.size}px`,
+              height: `${star.size}px`,
+              background: "rgba(5, 150, 105, 0.4)",
+              boxShadow: `0 0 ${star.size * 2}px rgba(5, 150, 105, 0.3)`,
+            }}
+            animate={{
+              opacity: [0, 0.6, 0],
+              scale: [0, 1, 0],
+              y: [0, -100],
+            }}
+            transition={{
+              duration: star.duration,
+              repeat: Number.POSITIVE_INFINITY,
+              delay: star.delay,
+              ease: "linear",
+            }}
+          />
+        ))}
       </div>
 
       <div className="absolute inset-0 overflow-hidden opacity-40">
-        {Array.from({ length: 12 }).map((_, i) => (
+        {connectionAnimations.map((connection, i) => (
           <motion.div
             key={`connection-${i}`}
             className="absolute"
             style={{
               left: `${5 + i * 8}%`,
               top: `${10 + ((i * 15) % 80)}%`,
-              width: `${40 + Math.random() * 60}%`,
+              width: `${connection.width}%`,
               height: "2px",
               background: "linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.5), transparent)",
               transformOrigin: "left center",
@@ -105,9 +122,8 @@ export function TimelineStory({ events }: TimelineStoryProps) {
       </div>
 
       <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 8 }).map((_, i) => {
-          const randomDelay = i * 0.8
-          const randomDuration = 12 + Math.random() * 6
+        {codeAnimations.map((code, i) => {
+          const delay = i * 0.8
 
           return (
             <motion.div
@@ -122,10 +138,10 @@ export function TimelineStory({ events }: TimelineStoryProps) {
                 opacity: [0.2, 0.5, 0.2],
               }}
               transition={{
-                duration: randomDuration,
+                duration: code.duration,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
-                delay: randomDelay,
+                delay,
               }}
             >
               {

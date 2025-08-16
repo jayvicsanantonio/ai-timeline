@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 
 interface AnimatedBackgroundProps {
   variant?: "dots" | "grid" | "neural"
@@ -15,28 +15,38 @@ export function AnimatedBackground({ variant = "dots", className }: AnimatedBack
     setMounted(true)
   }, [])
 
+  // Memoize dot positions to prevent hydration mismatches
+  const dotPositions = useMemo(() => 
+    Array.from({ length: 50 }).map((_, i) => ({
+      left: (i * 2.37) % 100, // Deterministic positioning
+      top: (i * 3.14) % 100,
+      duration: 3 + ((i * 0.04) % 2),
+      delay: (i * 0.04) % 2,
+    })), []
+  )
+
   if (!mounted) return null
 
   if (variant === "dots") {
     return (
       <div className={`absolute inset-0 overflow-hidden ${className}`}>
         <div className="absolute inset-0 opacity-20">
-          {Array.from({ length: 50 }).map((_, i) => (
+          {dotPositions.map((dot, i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-primary rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${dot.left}%`,
+                top: `${dot.top}%`,
               }}
               animate={{
                 opacity: [0.2, 0.8, 0.2],
                 scale: [1, 1.5, 1],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: dot.duration,
                 repeat: Number.POSITIVE_INFINITY,
-                delay: Math.random() * 2,
+                delay: dot.delay,
               }}
             />
           ))}
