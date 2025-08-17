@@ -1,6 +1,6 @@
 # AI Timeline: A Comprehensive History of Artificial Intelligence
 
-*An interactive, cinematic exploration of AI's evolution from 1943 to the present*
+_An interactive, cinematic exploration of AI's evolution from 1943 to the present_
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jayvic-san-antonios-projects/v0-image-analysis)
 [![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js%2015-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
@@ -9,7 +9,7 @@
 
 ## 🎯 Overview
 
-This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **1,400+ curated events** spanning from 1943 to 2024. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
+This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **183 curated events** spanning from 1943 to 2024. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
@@ -23,6 +23,7 @@ This project presents the complete history of artificial intelligence through an
 ## 🏗️ Technical Architecture
 
 ### Frontend Stack
+
 - **Next.js 15** with App Router and React 19
 - **TypeScript** for type safety
 - **Tailwind CSS 4** for styling
@@ -56,6 +57,7 @@ components/
 ```
 
 ### Data Management
+
 - **Structured Timeline Events**: TypeScript interfaces for type safety
 - **Era-based Grouping**: Foundation, Knowledge, Learning, and Transformation eras
 - **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances
@@ -64,6 +66,7 @@ components/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - pnpm (recommended) or npm
 
@@ -88,6 +91,7 @@ pnpm lint
 ```
 
 ### Development Scripts
+
 ```bash
 pnpm dev          # Start development server
 pnpm build        # Build for production
@@ -99,6 +103,7 @@ pnpm type-check   # Run TypeScript checks
 ## 🎨 User Experience Design
 
 ### Interactive Features
+
 - **Timeline Navigation**: Smooth scrolling with progress indicators
 - **Category Filtering**: Filter events by type (Research, Models, Releases, etc.)
 - **Responsive Timeline**: Adapts layout for different screen sizes
@@ -106,6 +111,7 @@ pnpm type-check   # Run TypeScript checks
 - **Expandable Cards**: Detailed event information on demand
 
 ### Accessibility Features
+
 - **Keyboard Navigation**: Full tab support and focus management
 - **Screen Reader Support**: Semantic HTML and ARIA labels
 - **Reduced Motion**: Respects user preferences for motion
@@ -113,6 +119,7 @@ pnpm type-check   # Run TypeScript checks
 - **Focus Indicators**: Clear visual focus states
 
 ### Performance Optimizations
+
 - **Lazy Loading**: Timeline sections load as needed
 - **Intersection Observer**: Efficient scroll-based animations
 - **Error Boundaries**: Graceful error handling
@@ -122,40 +129,49 @@ pnpm type-check   # Run TypeScript checks
 ## 📊 Data Quality & Verification
 
 ### Automated Link Checking
+
 - **Verification Scripts**: Regular validation of external links
 - **Broken Link Reports**: Automated detection and reporting
 - **Source Attribution**: Proper citation for all historical events
 - **Continuous Integration**: Link validation in CI/CD pipeline
 
 ### Data Structure
+
 ```typescript
 interface TimelineEvent {
-  year: number
-  month: string
-  title: string
-  description: string
-  category: "Models & Architectures" | "Research Breakthroughs" | 
-           "Public Releases" | "Ethics & Policy" | "Hardware Advances"
-  link: string
+  year: number;
+  month: string;
+  title: string;
+  description: string;
+  category:
+    | 'Models & Architectures'
+    | 'Research Breakthroughs'
+    | 'Public Releases'
+    | 'Ethics & Policy'
+    | 'Hardware Advances';
+  link: string;
 }
 ```
 
 ## 🔧 Advanced Features
 
 ### Animation System
+
 - **Scroll-triggered Animations**: Elements animate as they enter viewport
 - **Parallax Effects**: Depth-based scrolling animations
 - **Stagger Animations**: Sequential element reveals
 - **Magnetic Hover**: Interactive button effects
 
 ### Custom Hooks
+
 ```typescript
-useScrollAnimation()         // Scroll-based animation triggers
-useIntersectionObserver()   // Viewport intersection detection
-useIntersectionAnimation()  // Combines both for smooth reveals
+useScrollAnimation(); // Scroll-based animation triggers
+useIntersectionObserver(); // Viewport intersection detection
+useIntersectionAnimation(); // Combines both for smooth reveals
 ```
 
 ### Theme System
+
 - **Dark/Light Mode**: Seamless theme switching
 - **System Preference**: Respects OS theme settings
 - **Persistent Storage**: Theme preference remembering
@@ -163,18 +179,21 @@ useIntersectionAnimation()  // Combines both for smooth reveals
 ## 🌟 Standout Engineering Practices
 
 ### Code Quality
+
 - **TypeScript Strict Mode**: Zero `any` types, full type coverage
 - **Component Architecture**: Reusable, composable design patterns
 - **Custom Hook Pattern**: Shared logic abstraction
 - **Error Boundaries**: Robust error handling strategy
 
 ### Performance Monitoring
+
 - **Core Web Vitals**: Optimized for LCP, FID, and CLS
 - **Bundle Analysis**: Regular dependency auditing
 - **Lighthouse Scores**: 90+ across all metrics
 - **Memory Management**: Efficient component cleanup
 
 ### Development Workflow
+
 - **Git Hooks**: Pre-commit linting and formatting
 - **Continuous Integration**: Automated testing and deployment
 - **Type Safety**: Compile-time error prevention
@@ -183,6 +202,7 @@ useIntersectionAnimation()  // Combines both for smooth reveals
 ## 🎯 Impact & Learning Outcomes
 
 This project demonstrates:
+
 - **Full-Stack Development**: Modern React/Next.js patterns
 - **Data Visualization**: Complex timeline interactions
 - **Performance Engineering**: Large dataset optimization
@@ -210,4 +230,4 @@ This project demonstrates:
 
 ---
 
-*This project showcases advanced frontend engineering skills including React architecture, TypeScript mastery, animation programming, accessibility implementation, and performance optimization. It demonstrates the ability to handle complex data visualization while maintaining excellent user experience and code quality standards.*
+_This project showcases advanced frontend engineering skills including React architecture, TypeScript mastery, animation programming, accessibility implementation, and performance optimization. It demonstrates the ability to handle complex data visualization while maintaining excellent user experience and code quality standards._
