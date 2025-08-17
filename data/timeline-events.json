@@ -13,7 +13,7 @@
     "title": "The Turing Test",
     "description": "Alan Turing's paper 'Computing Machinery and Intelligence' proposes the 'Imitation Game' to assess a machine's ability to exhibit intelligent behavior indistinguishable from that of a human.",
     "category": "Research Breakthroughs",
-    "link": "https://academic.oup.com/mind/article/LIX/236/433/986238"
+    "link": "https://archive.org/details/MIND--COMPUTING-MACHINERY-AND-INTELLIGENCE"
   },
   {
     "year": 1951,
@@ -21,7 +21,7 @@
     "title": "First AI Programs",
     "description": "Christopher Strachey writes a checkers program and Dietrich Prinz writes a chess program for the Ferranti Mark 1 computer, among the first AI programs.",
     "category": "Models & Architectures",
-    "link": "https://www.computerhistory.org/chess/essays/prinz-and-strachey-a-brief-history-of-the-first-computer-chess-programs/"
+    "link": "https://www.computerhistory.org/chess/stl-430b9bbe6b611/"
   },
   {
     "year": 1952,
@@ -77,7 +77,7 @@
     "title": "Shakey the Robot",
     "description": "SRI International's Shakey becomes the first mobile robot to reason about its own actions, combining perception, planning, and problem-solving.",
     "category": "Hardware Advances",
-    "link": "https://www.ai.sri.com/shakey/"
+    "link": "https://en.wikipedia.org/wiki/Shakey_the_robot"
   },
   {
     "year": 1969,
@@ -93,7 +93,7 @@
     "title": "WABOT-1, the First Anthropomorphic Robot",
     "description": "Waseda University in Japan builds WABOT-1, the first full-scale humanoid intelligent robot.",
     "category": "Hardware Advances",
-    "link": "https://www.waseda.jp/top/en/about/work/organizations/presidents-office/archives/wabothistory"
+    "link": "https://en.wikipedia.org/wiki/WABOT-1"
   },
   {
     "year": 1973,
@@ -117,7 +117,7 @@
     "title": "First AAAI Conference",
     "description": "The first conference of the American Association for Artificial Intelligence (AAAI) is held at Stanford, signaling a resurgence of interest in the field.",
     "category": "Research Breakthroughs",
-    "link": "https://aaai.org/Conferences/AAAI/aaai-history.php"
+    "link": "https://aaai.org/about-aaai/aaai-history/"
   },
   {
     "year": 1986,
@@ -133,7 +133,7 @@
     "title": "LeNet and Convolutional Neural Networks (CNNs)",
     "description": "Yann LeCun develops LeNet, one of the first successful applications of Convolutional Neural Networks, for recognizing handwritten digits.",
     "category": "Models & Architectures",
-    "link": "http://yann.lecun.com/exdb/lenet/"
+    "link": "https://en.wikipedia.org/wiki/LeNet"
   },
   {
     "year": 1992,
@@ -157,7 +157,7 @@
     "title": "IBM Deep Blue Defeats Garry Kasparov",
     "description": "IBM's Deep Blue becomes the first computer to defeat a reigning world chess champion in a match under standard chess tournament time controls.",
     "category": "Hardware Advances",
-    "link": "https://www.ibm.com/history/deep-blue"
+    "link": "https://en.wikipedia.org/wiki/Deep_Blue_versus_Garry_Kasparov"
   },
   {
     "year": 1997,
@@ -173,7 +173,7 @@
     "title": "Kismet the Robot",
     "description": "Cynthia Breazeal at MIT builds Kismet, a robot that can recognize and display emotions.",
     "category": "Hardware Advances",
-    "link": "https://www.media.mit.edu/projects/kismet/overview/"
+    "link": "https://en.wikipedia.org/wiki/Kismet_(robot)"
   },
   {
     "year": 2002,
@@ -189,7 +189,7 @@
     "title": "Stanford's Stanley Wins DARPA Challenge",
     "description": "Stanford's autonomous vehicle, Stanley, wins the second DARPA Grand Challenge, a major milestone for self-driving cars.",
     "category": "Hardware Advances",
-    "link": "https://cs.stanford.edu/group/stanley/"
+    "link": "https://en.wikipedia.org/wiki/Stanley_(vehicle)"
   },
   {
     "year": 2006,
@@ -421,7 +421,7 @@
     "title": "Anthropic Founded",
     "description": "Former OpenAI employees found Anthropic, an AI safety and research company, with a focus on building reliable, interpretable, and steerable AI systems.",
     "category": "Companies & Investments",
-    "link": "https://www.anthropic.com/"
+    "link": "https://en.wikipedia.org/wiki/Anthropic"
   },
   {
     "year": 2021,
@@ -437,7 +437,7 @@
     "title": "OpenAI Releases DALL-E 2",
     "description": "OpenAI launches DALL-E 2, a new version of its text-to-image AI with higher resolution and better quality image generation.",
     "category": "Public Releases",
-    "link": "https://openai.com/research/dall-e-2"
+    "link": "https://openai.com/index/dall-e-2/"
   },
   {
     "year": 2022,
@@ -445,7 +445,7 @@
     "title": "Google's LaMDA 'Sentience' Controversy",
     "description": "A Google engineer claims that the LaMDA language model has become sentient, sparking a public debate about AI consciousness and ethics.",
     "category": "Bombshell News",
-    "link": "https://www.washingtonpost.com/technology/2022/06/11/google-ai-lamda-sentient/"
+    "link": "https://www.washingtonpost.com/technology/2022/06/11/google-ai-lamda-blake-lemoine/"
   },
   {
     "year": 2022,
@@ -477,7 +477,7 @@
     "title": "ChatGPT Takes the World by Storm",
     "description": "OpenAI releases ChatGPT, a conversational AI based on the GPT-3.5 architecture, to the public, sparking massive interest in conversational AI.",
     "category": "Public Releases",
-    "link": "https://openai.com/blog/chatgpt"
+    "link": "https://openai.com/index/chatgpt/"
   },
   {
     "year": 2022,
@@ -485,7 +485,7 @@
     "title": "Meta's Galactica LLM Pulled",
     "description": "Meta takes down its Galactica AI model, trained on scientific papers, after it was criticized for generating authoritative-sounding but often incorrect information.",
     "category": "Bombshell News",
-    "link": "https://www.technologyreview.com/2022/11/18/1063487/meta-large-language-model-ai-science-misinformation/"
+    "link": "https://www.theverge.com/2022/11/15/23460204/meta-galactica-ai-wikipedia-science-misinformation-research-paper"
   },
   {
     "year": 2022,
@@ -509,7 +509,7 @@
     "title": "Microsoft's Multi-billion Dollar Investment in OpenAI",
     "description": "Microsoft announces a new multi-year, multi-billion dollar investment in OpenAI, deepening their partnership.",
     "category": "Companies & Investments",
-    "link": "https://blogs.microsoft.com/blog/2023/01/23/microsoft-and-openai-extend-partnership/"
+    "link": "https://www.reuters.com/technology/microsoft-extends-openai-partnership-multi-year-multibillion-dollar-investment-2023-01-23/"
   },
   {
     "year": 2023,
@@ -557,7 +557,7 @@
     "title": "OpenAI Releases GPT-4",
     "description": "OpenAI launches GPT-4, a large multimodal model that can accept image and text inputs and produce text outputs, demonstrating improved performance over its predecessor.",
     "category": "Public Releases",
-    "link": "https://openai.com/research/gpt-4"
+    "link": "https://openai.com/index/gpt-4/"
   },
   {
     "year": 2023,
@@ -589,7 +589,7 @@
     "title": "ChatGPT Suffers Data Breach",
     "description": "OpenAI discloses a bug in ChatGPT that allowed some users to see the titles of other users' chat histories, raising privacy and data security concerns.",
     "category": "Bombshell News",
-    "link": "https://openai.com/blog/march-20-chatgpt-outage"
+    "link": "https://openai.com/index/march-20-chatgpt-outage/"
   },
   {
     "year": 2023,
@@ -597,7 +597,7 @@
     "title": "LLaMA 1 Model Weights Leaked",
     "description": "The weights for Meta's LLaMA model are leaked online via a BitTorrent link, making the powerful model widely accessible and sparking a wave of community-driven innovation and debate on open-access AI.",
     "category": "Bombshell News",
-    "link": "https://www.theverge.com/2023/3/8/23629362/meta-ai-llama-model-leaked-online-misuse"
+    "link": "https://www.axios.com/2023/03/08/meta-ai-llama-model-leaked-4chan"
   },
   {
     "year": 2023,
@@ -621,7 +621,7 @@
     "title": "Geoffrey Hinton Leaves Google",
     "description": "Geoffrey Hinton, a 'Godfather of AI,' quits his job at Google, warning about the dangers of artificial intelligence.",
     "category": "Bombshell News",
-    "link": "https://www.nytimes.com/2023/05/01/technology/ai-google-geoffrey-hinton.html"
+    "link": "https://www.cnn.com/2023/05/01/tech/geoffrey-hinton-leaves-google-ai-fears/index.html"
   },
   {
     "year": 2023,
@@ -629,7 +629,7 @@
     "title": "Hollywood Writers Strike Over AI Concerns",
     "description": "The Writers Guild of America goes on strike, with the use of AI in writing being one of the key issues in negotiations.",
     "category": "Ethics & Policy",
-    "link": "https://www.reuters.com/business/media-telecom/hollywood-writers-strike-ai-becomes-sticking-point-negotiations-2023-05-02/"
+    "link": "https://www.npr.org/2023/05/20/1177366800/striking-movie-and-tv-writers-worry-that-they-will-be-replaced-by-ai"
   },
   {
     "year": 2023,
@@ -645,7 +645,7 @@
     "title": "Meta Releases Llama 2",
     "description": "Meta and Microsoft release Llama 2, a large language model available for free for research and commercial use, making powerful LLMs more accessible.",
     "category": "Public Releases",
-    "link": "https://ai.meta.com/llama/"
+    "link": "https://about.meta.com/news/2023/07/llama-2/"
   },
   {
     "year": 2023,
@@ -677,7 +677,7 @@
     "title": "ChatGPT Gains Voice and Vision",
     "description": "OpenAI announces that ChatGPT can now see, hear, and speak, adding multimodal capabilities to its flagship chatbot.",
     "category": "Public Releases",
-    "link": "https://openai.com/blog/chatgpt-can-now-see-hear-and-speak"
+    "link": "https://openai.com/index/chatgpt-can-now-see-hear-and-speak/"
   },
   {
     "year": 2023,
