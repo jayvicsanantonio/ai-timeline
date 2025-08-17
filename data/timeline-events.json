@@ -813,7 +813,7 @@
     "title": "Taylor Swift Deepfake Controversy",
     "description": "Sexually explicit AI-generated deepfake images of Taylor Swift spread rapidly on social media, prompting calls for legislation to criminalize such content and highlighting the dangers of AI misuse.",
     "category": "Bombshell News",
-    "link": "https://www.theverge.com/2024/1/26/24051052/taylor-swift-ai-images-twitter-x-telegram-4chan"
+    "link": "https://www.nbcnews.com/tech/misinformation/taylor-swift-nude-deepfake-goes-viral-x-platform-rules-rcna135669"
   },
   {
     "year": 2024,
@@ -821,7 +821,7 @@
     "title": "Samsung Launches Galaxy AI",
     "description": "Samsung integrates a suite of generative AI features, branded as Galaxy AI and powered by Google's Gemini models, into its Galaxy S24 series of smartphones.",
     "category": "Public Releases",
-    "link": "https://news.samsung.com/global/a-new-era-of-mobile-ai-is-here-with-samsung-galaxy-s24-series"
+    "link": "https://news.samsung.com/global/enter-the-new-era-of-mobile-ai-with-samsung-galaxy-s24-series"
   },
   {
     "year": 2024,
@@ -829,7 +829,7 @@
     "title": "Meta AI Releases Code Llama 70B",
     "description": "Meta AI expands its Code Llama family with a more powerful 70B parameter model, further enhancing its capabilities for complex coding tasks.",
     "category": "Public Releases",
-    "link": "https://ai.meta.com/blog/code-llama-70b-generative-ai-coding/"
+    "link": "https://www.ciodive.com/news/meta-code-llama-70b-coding-model-generative-ai/706065/"
   },
   {
     "year": 2024,
@@ -837,7 +837,7 @@
     "title": "Mistral AI Partners with Microsoft",
     "description": "Mistral AI announces a major partnership with Microsoft, making its models available on the Azure platform and challenging OpenAI's dominance in the cloud AI space.",
     "category": "Companies & Investments",
-    "link": "https://techcrunch.com/2024/02/26/microsoft-invests-in-mistral-strikes-a-new-ai-partnership-that-goes-beyond-openai/"
+    "link": "https://azure.microsoft.com/en-us/blog/microsoft-and-mistral-ai-announce-new-partnership-to-accelerate-ai-innovation-and-introduce-mistral-large-first-on-azure/"
   },
   {
     "year": 2024,
@@ -861,7 +861,7 @@
     "title": "OpenAI Unveils Sora",
     "description": "OpenAI introduces Sora, a text-to-video model capable of generating high-fidelity, minute-long videos from text prompts.",
     "category": "Public Releases",
-    "link": "https://openai.com/sora"
+    "link": "https://openai.com/index/sora/"
   },
   {
     "year": 2024,
@@ -869,7 +869,7 @@
     "title": "NVIDIA's Valuation Soars",
     "description": "NVIDIA, a key provider of AI chips, sees its market valuation surge past $2 trillion, highlighting the massive investment in AI hardware.",
     "category": "Companies & Investments",
-    "link": "https://www.reuters.com/technology/nvidia-smashes-2-trillion-valuation-frenzy-over-ai-chips-2024-02-23/"
+    "link": "https://www.cnbc.com/2024/02/23/nvidia-briefly-surpasses-2-trillion-in-market-cap-during-intraday-trading.html"
   },
   {
     "year": 2024,
@@ -885,7 +885,7 @@
     "title": "Google Announces Gemini 1.5 Pro",
     "description": "Google introduces Gemini 1.5 Pro, a new model with a Mixture-of-Experts (MoE) architecture and a breakthrough context window of up to 1 million tokens, making it available in a limited preview.",
     "category": "Public Releases",
-    "link": "https://blog.google/technology/ai/google-gemini-1-5-pro-next-generation-model/"
+    "link": "https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/"
   },
   {
     "year": 2024,
@@ -917,7 +917,7 @@
     "title": "Figure 01 Robot with OpenAI Brain",
     "description": "Robotics company Figure releases a video demonstrating its Figure 01 humanoid robot having a conversation and reasoning with a human, powered by an OpenAI model.",
     "category": "Hardware Advances",
-    "link": "https://www.figure.ai/blog/figure-01-and-openai"
+    "link": "https://newatlas.com/robotics/figure-01-openai-humanoid-robot-real-time-conversations/"
   },
   {
     "year": 2024,
@@ -925,7 +925,7 @@
     "title": "Inflection AI's Leadership Joins Microsoft",
     "description": "In a major industry shake-up, Inflection AI's co-founders, Mustafa Suleyman and Karén Simonyan, and much of their staff are hired by Microsoft to lead a new consumer AI unit.",
     "category": "Companies & Investments",
-    "link": "https://blogs.microsoft.com/blog/2024/03/19/welcoming-mustafa-suleyman-karen-simonyan-and-the-inflection-ai-team-to-microsoft/"
+    "link": "https://blogs.microsoft.com/blog/2024/03/19/mustafa-suleyman-deepmind-and-inflection-co-founder-joins-microsoft-to-lead-copilot/"
   },
   {
     "year": 2024,
@@ -957,7 +957,7 @@
     "title": "Humane Ai Pin Ships to Negative Reviews",
     "description": "Humane's much-hyped Ai Pin begins shipping but receives largely negative reviews from major tech publications, highlighting the significant challenges of creating new AI-native hardware.",
     "category": "Bombshell News",
-    "link": "https://www.theverge.com/24124623/humane-ai-pin-review"
+    "link": "https://www.tomsguide.com/ai/humane-ai-pin-review-roundup-this-is-a-disaster"
   },
   {
     "year": 2024,
@@ -1021,7 +1021,7 @@
     "title": "Microsoft 'Recall' Feature Sparks Privacy Backlash",
     "description": "Microsoft's announcement of the 'Recall' feature for Copilot+ PCs, which takes continuous screenshots of user activity, sparks a major privacy and security backlash among experts and the public.",
     "category": "Bombshell News",
-    "link": "https://www.wired.com/story/microsoft-recall-ai-feature-privacy-nightmare/"
+    "link": "https://www.geekwire.com/2024/microsoft-updates-recall-feature-after-security-and-privacy-backlash/"
   },
   {
     "year": 2024,
@@ -1144,12 +1144,12 @@
     "link": "https://ssi.inc"
   },
   {
-    "year": 2024,
+    "year": 2023,
     "month": "July",
     "title": "OpenAI Partners with Associated Press",
     "description": "OpenAI announces a partnership with the Associated Press, gaining a license to its archive of news stories for training its models in a deal that highlights the value of quality data.",
     "category": "Companies & Investments",
-    "link": "https://www.ap.org/press-releases/2023/ap-openai-to-collaborate-on-news-and-technology"
+    "link": "https://fortune.com/2023/07/13/openai-associated-press-licensing-archive-news-stories-chatgpt/"
   },
   {
     "year": 2024,
@@ -1173,7 +1173,7 @@
     "title": "US Government Opens AI Antitrust Probes",
     "description": "The U.S. Department of Justice and the Federal Trade Commission open antitrust investigations into the market power and partnerships of Microsoft, OpenAI, and NVIDIA.",
     "category": "Ethics & Policy",
-    "link": "https://www.reuters.com/technology/us-doj-ftc-open-antitrust-probes-into-nvidia-microsoft-openai-nyt-reports-2024-06-06/"
+    "link": "https://www.cnbc.com/2024/06/06/us-regulators-to-open-antitrust-probes-into-nvidia-microsoft-and-openai.html"
   },
   {
     "year": 2024,
@@ -1197,7 +1197,7 @@
     "title": "Apple Intelligence Rolls Out with iOS 18",
     "description": "Apple releases iOS 18, bringing the first set of 'Apple Intelligence' features, including advanced writing tools, notification management, and image generation, to millions of iPhone users.",
     "category": "Public Releases",
-    "link": "https://www.apple.com/newsroom/2024/09/ios-18-is-available-today/"
+    "link": "https://www.apple.com/newsroom/2024/09/ios-18-is-available-today-making-iphone-more-personal-and-capable-than-ever/"
   },
   {
     "year": 2024,
@@ -1213,7 +1213,7 @@
     "title": "OpenAI Releases o1",
     "description": "OpenAI announces o1, a new class of model focused on reasoning and step-by-step thinking before providing an answer.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-o1/"
+    "link": "https://openai.com/index/introducing-openai-o1-preview/"
   },
   {
     "year": 2024,
@@ -1245,7 +1245,7 @@
     "title": "OpenAI Closes $6.6B Funding Round",
     "description": "OpenAI finalizes a massive $6.6 billion funding round led by Microsoft, Nvidia, and SoftBank, raising its valuation to $157 billion and making it one of the world's most valuable private companies.",
     "category": "Companies & Investments",
-    "link": "https://www.forbesindia.com/article/news/from-nonprofit-to-500-billion-sam-altmans-openais-dizzying-valuation-rise/95013/1"
+    "link": "https://www.cnbc.com/2024/10/02/openai-raises-at-157-billion-valuation-microsoft-nvidia-join-round.html"
   },
   {
     "year": 2024,
@@ -1253,15 +1253,15 @@
     "title": "NVIDIA Begins Shipping Blackwell B200 GPUs",
     "description": "NVIDIA confirms in its Q3 earnings report that its next-generation Blackwell B200 AI accelerators are in production and ramping up shipments to major cloud providers.",
     "category": "Hardware Advances",
-    "link": "https://s201.q4cdn.com/141608511/files/doc_financials/2025/q3/Q325-CFO-Commentary.pdf"
+    "link": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2025"
   },
   {
     "year": 2024,
     "month": "November",
-    "title": "Amazon Completes $4B Investment in Anthropic",
-    "description": "Amazon announces it has invested the final $2.75 billion tranche in AI startup Anthropic, completing its planned $4 billion investment and solidifying their strategic partnership.",
+    "title": "Amazon Announces Additional $4B Investment in Anthropic",
+    "description": "Amazon announces an additional $4 billion investment in AI startup Anthropic, bringing its total investment to $8 billion and solidifying their strategic partnership.",
     "category": "Companies & Investments",
-    "link": "https://www.cnbc.com/2024/03/27/amazon-spends-another-2point75-billion-on-ai-startup-anthropic.html"
+    "link": "https://www.cnbc.com/2024/11/22/amazon-to-invest-another-4-billion-in-anthropic-openais-biggest-rival.html"
   },
   {
     "year": 2024,
