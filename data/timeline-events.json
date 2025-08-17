@@ -5,7 +5,7 @@
     "title": "McCulloch-Pitts Neuron",
     "description": "Warren McCulloch and Walter Pitts publish 'A Logical Calculus of the Ideas Immanent in Nervous Activity,' proposing the first mathematical model of a neural network.",
     "category": "Research Breakthroughs",
-    "link": "https://www.cs.cmu.edu/~./epv/bib/papers/McCulloch-Pitts.pdf"
+    "link": "https://en.wikipedia.org/wiki/A_Logical_Calculus_of_the_Ideas_Immanent_in_Nervous_Activity"
   },
   {
     "year": 1950,
@@ -29,7 +29,7 @@
     "title": "Samuel's Checkers Program",
     "description": "Arthur Samuel develops a self-learning checkers program on an IBM 701, one of the first demonstrations of machine learning.",
     "category": "Models & Architectures",
-    "link": "https://www.ibm.com/ibm/history/exhibits/701/701_15.html"
+    "link": "https://history.computer.org/pioneers/samuel.html"
   },
   {
     "year": 1956,
@@ -45,7 +45,7 @@
     "title": "LISP Programming Language",
     "description": "John McCarthy develops LISP, which becomes a foundational programming language for AI research.",
     "category": "Research Breakthroughs",
-    "link": "http://jmc.stanford.edu/articles/lisp.html"
+    "link": "https://www-formal.stanford.edu/jmc/recursive.pdf"
   },
   {
     "year": 1961,
@@ -157,7 +157,7 @@
     "title": "IBM Deep Blue Defeats Garry Kasparov",
     "description": "IBM's Deep Blue becomes the first computer to defeat a reigning world chess champion in a match under standard chess tournament time controls.",
     "category": "Hardware Advances",
-    "link": "https://www.ibm.com/ibm/history/ibm100/us/en/icons/deepblue/"
+    "link": "https://www.ibm.com/history/deep-blue"
   },
   {
     "year": 1997,
@@ -213,7 +213,7 @@
     "title": "IBM Watson Wins Jeopardy!",
     "description": "IBM's Watson question-answering system defeats two of the greatest Jeopardy! champions, Ken Jennings and Brad Rutter.",
     "category": "Public Releases",
-    "link": "https://www.ibm.com/ibm/history/ibm100/us/en/icons/watson/"
+    "link": "https://www.ibm.com/history/watson-jeopardy"
   },
   {
     "year": 2012,
@@ -469,7 +469,7 @@
     "title": "White House AI Bill of Rights",
     "description": "The White House releases the 'Blueprint for an AI Bill of Rights,' a set of principles to guide the design, use, and deployment of automated systems.",
     "category": "Ethics & Policy",
-    "link": "https://www.whitehouse.gov/ostp/ai-bill-of-rights/"
+    "link": "https://bidenwhitehouse.archives.gov/ostp/ai-bill-of-rights/"
   },
   {
     "year": 2022,
@@ -749,7 +749,7 @@
     "title": "xAI Releases Grok-1",
     "description": "Elon Musk's xAI launches Grok-1, a conversational AI with real-time access to information from the X platform.",
     "category": "Public Releases",
-    "link": "https://x.ai/blog/grok"
+    "link": "https://en.wikipedia.org/wiki/Grok_(chatbot)"
   },
   {
     "year": 2023,
@@ -941,7 +941,7 @@
     "title": "Cognition AI unveils Devin",
     "description": "Cognition AI introduces Devin, claimed to be the first fully autonomous AI software engineer, capable of completing entire development projects.",
     "category": "Agents",
-    "link": "https://www.cognition-labs.com/blog/introducing-devin"
+    "link": "https://www.cognition.ai/blog/introducing-devin"
   },
   {
     "year": 2024,
@@ -1141,7 +1141,7 @@
     "title": "Ilya Sutskever Launches Safe Superintelligence Inc.",
     "description": "Former OpenAI chief scientist Ilya Sutskever announces the launch of Safe Superintelligence Inc. (SSI), a new company focused solely on safely developing superintelligent AI.",
     "category": "Companies & Investments",
-    "link": "https://ssi.inc/blog/ssi"
+    "link": "https://ssi.inc"
   },
   {
     "year": 2024,
