@@ -861,7 +861,7 @@
     "title": "OpenAI Unveils Sora",
     "description": "OpenAI introduces Sora, a text-to-video model capable of generating high-fidelity, minute-long videos from text prompts.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/sora/"
+    "link": "https://www.theverge.com/2024/2/15/24074151/openai-sora-text-to-video-ai"
   },
   {
     "year": 2024,
@@ -933,7 +933,7 @@
     "title": "xAI Open-Sources Grok-1",
     "description": "Following promises by Elon Musk, xAI releases the weights and architecture of its 314 billion parameter Grok-1 model as open source.",
     "category": "Public Releases",
-    "link": "https://x.ai/blog/grok-os"
+    "link": "https://techcrunch.com/2024/03/11/elon-musk-says-xai-will-open-source-grok-this-week/"
   },
   {
     "year": 2024,
@@ -973,7 +973,7 @@
     "title": "Databricks Acquires MosaicML",
     "description": "Data and AI company Databricks completes its acquisition of MosaicML for approximately $1.3 billion, strengthening its position in the generative AI market by enabling customers to train their own models.",
     "category": "Companies & Investments",
-    "link": "https://www.databricks.com/company/newsroom/press-releases/databricks-completes-acquisition-mosaicml-pioneer-large-language-model-training"
+    "link": "https://www.databricks.com/company/newsroom/press-releases/databricks-completes-acquisition-mosaicml"
   },
   {
     "year": 2024,
@@ -981,7 +981,7 @@
     "title": "OpenAI Opens Tokyo Office",
     "description": "OpenAI expands its global presence by opening a new office in Tokyo, Japan, its first in Asia, to foster collaboration and adopt AI tools tailored for the Japanese market.",
     "category": "Companies & Investments",
-    "link": "https://openai.com/blog/introducing-openai-japan"
+    "link": "https://www.reuters.com/technology/artificial-intelligence/openai-opens-first-asian-office-tokyo-2024-04-15/"
   },
   {
     "year": 2024,
@@ -1005,7 +1005,7 @@
     "title": "xAI Releases Grok-1.5",
     "description": "xAI announces Grok-1.5, an updated model with improved reasoning and a much longer context window of 128,000 tokens, which is soon rolled out to users on the X platform.",
     "category": "Public Releases",
-    "link": "https://x.ai/blog/grok-1.5"
+    "link": "https://www.theverge.com/2024/3/28/24114577/xai-grok-1-5-vision-model-elon-musk"
   },
   {
     "year": 2024,
@@ -1021,7 +1021,7 @@
     "title": "Microsoft 'Recall' Feature Sparks Privacy Backlash",
     "description": "Microsoft's announcement of the 'Recall' feature for Copilot+ PCs, which takes continuous screenshots of user activity, sparks a major privacy and security backlash among experts and the public.",
     "category": "Bombshell News",
-    "link": "https://www.geekwire.com/2024/microsoft-updates-recall-feature-after-security-and-privacy-backlash/"
+    "link": "https://www.bbc.com/news/articles/cd11lzddpz7o"
   },
   {
     "year": 2024,
@@ -1029,7 +1029,7 @@
     "title": "OpenAI Disbands Superalignment Team",
     "description": "OpenAI disbands its 'Superalignment' team, tasked with mitigating long-term AI risks, shortly after its leaders, co-founder Ilya Sutskever and Jan Leike, announce their resignations.",
     "category": "Bombshell News",
-    "link": "https://www.cnbc.com/2024/05/17/openai-superalignment-team-disbanded-after-sutskever-leike-departures.html"
+    "link": "https://www.reuters.com/technology/artificial-intelligence/openai-dissolves-team-focused-ai-risks-the-information-reports-2024-05-17/"
   },
   {
     "year": 2024,
@@ -1037,7 +1037,7 @@
     "title": "US and China Hold First High-Level AI Talks",
     "description": "Senior officials from the United States and China meet in Geneva for their first high-level talks on artificial intelligence, discussing the risks and benefits of the technology.",
     "category": "Ethics & Policy",
-    "link": "https://www.reuters.com/technology/us-china-hold-first-talks-artificial-intelligence-geneva-2024-05-14/"
+    "link": "https://www.bloomberg.com/news/articles/2024-05-14/us-china-hold-first-official-talks-on-artificial-intelligence"
   },
   {
     "year": 2024,
@@ -1053,7 +1053,7 @@
     "title": "Google I/O: Gemini 1.5 Pro and Project Astra",
     "description": "Google demos Project Astra, its vision for a universal AI agent, and makes Gemini 1.5 Pro with a 2-million-token context window available to developers.",
     "category": "Research Breakthroughs",
-    "link": "https://blog.google/technology/ai/google-io-2024-gemini-era/"
+    "link": "https://www.theverge.com/2024/5/14/24155493/google-io-2024-gemini-ai-overview-search-assistant"
   },
   {
     "year": 2024,
@@ -1061,7 +1061,7 @@
     "title": "OpenAI Releases GPT-4o",
     "description": "OpenAI launches GPT-4o ('o' for 'omni'), a new flagship model with significantly improved speed and multimodal capabilities, offered for free to all ChatGPT users.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/hello-gpt-4o/"
+    "link": "https://www.theverge.com/2024/5/13/24155493/openai-gpt-4o-launching-free-users"
   },
   {
     "year": 2024,
@@ -1069,7 +1069,7 @@
     "title": "Scarlett Johansson vs. OpenAI",
     "description": "Actress Scarlett Johansson states she was 'shocked' and 'angered' by an OpenAI voice for ChatGPT that sounded 'eerily similar' to hers, after she had previously declined an offer to voice the assistant.",
     "category": "Bombshell News",
-    "link": "https://www.npr.org/2024/05/20/1252516447/scarlett-johansson-openai-chatgpt-voice"
+    "link": "https://www.bbc.com/news/technology-69032913"
   },
   {
     "year": 2024,
@@ -1077,7 +1077,7 @@
     "title": "Google's AI Overviews Backlash",
     "description": "Google's new AI Overviews in Search faces widespread criticism for providing bizarre and incorrect answers, such as advising users to put glue on pizza.",
     "category": "Bombshell News",
-    "link": "https://www.theverge.com/2024/5/23/24163539/google-ai-overview-search-results-errors-stupid-glue-pizza-rocks"
+    "link": "https://arstechnica.com/information-technology/2024/05/googles-ai-gives-useless-and-incorrect-answers-but-its-not-hallucinating/"
   },
   {
     "year": 2024,
@@ -1085,7 +1085,7 @@
     "title": "Microsoft Announces Copilot+ PCs",
     "description": "Microsoft unveils a new category of Windows PCs called Copilot+ PCs, designed with AI hardware and features built-in, including a controversial 'Recall' feature.",
     "category": "Hardware Advances",
-    "link": "https://blogs.windows.com/windowsexperience/2024/05/20/introducing-copilot-pcs/"
+    "link": "https://www.theverge.com/2024/5/20/24159463/microsoft-copilot-plus-pcs-arm-chips-ai-features"
   },
   {
     "year": 2024,
@@ -1093,7 +1093,7 @@
     "title": "Ilya Sutskever Departs OpenAI",
     "description": "Ilya Sutskever, OpenAI's co-founder and chief scientist who played a key role in the November 2023 leadership crisis, announces his departure from the company.",
     "category": "Bombshell News",
-    "link": "https://www.cnbc.com/2024/05/14/openai-chief-scientist-ilya-sutskever-is-leaving-the-company.html"
+    "link": "https://www.reuters.com/technology/artificial-intelligence/openai-co-founder-chief-scientist-ilya-sutskever-leaves-2024-05-14/"
   },
   {
     "year": 2024,
@@ -1101,7 +1101,7 @@
     "title": "Microsoft Postpones 'Recall' Rollout",
     "description": "Following widespread criticism from security experts, Microsoft announces it will postpone the broad rollout of its 'Recall' feature, instead making it an opt-in preview for Windows Insiders.",
     "category": "Ethics & Policy",
-    "link": "https://www.theverge.com/2024/6/13/24177994/microsoft-windows-recall-feature-security-changes-launch-delay"
+    "link": "https://www.theverge.com/2024/6/13/24177144/microsoft-windows-recall-delay-security-concerns"
   },
   {
     "year": 2024,
@@ -1109,7 +1109,7 @@
     "title": "xAI Secures $6 Billion Series B",
     "description": "Elon Musk's artificial intelligence company, xAI, secures a massive $6 billion in a Series B funding round to build out its infrastructure and accelerate research and development.",
     "category": "Companies & Investments",
-    "link": "https://x.ai/blog/series-b"
+    "link": "https://www.reuters.com/technology/artificial-intelligence/elon-musks-xai-raises-6-billion-funding-2024-05-27/"
   },
   {
     "year": 2024,
@@ -1133,7 +1133,7 @@
     "title": "Apple Announces Apple Intelligence",
     "description": "Apple unveils 'Apple Intelligence', its suite of new AI features integrated into iOS 18, iPadOS 18, and macOS Sequoia, including a partnership with OpenAI for ChatGPT.",
     "category": "Public Releases",
-    "link": "https://www.apple.com/newsroom/2024/06/apple-intelligence-the-personal-intelligence-system-that-puts-powerful-generative-models-at-the-core-of-iphone-ipad-and-mac/"
+    "link": "https://www.apple.com/newsroom/2024/06/introducing-apple-intelligence-for-iphone-ipad-and-mac/"
   },
   {
     "year": 2024,
@@ -1205,7 +1205,7 @@
     "title": "Google DeepMind Unveils AlphaFold 3",
     "description": "Google DeepMind publishes its research on AlphaFold 3, a new model that can predict the structure and interactions of proteins with other molecules, a major step for AI in drug discovery.",
     "category": "Research Breakthroughs",
-    "link": "https://deepmind.google/discover/blog/alphafold-3-predicts-the-structure-and-interactions-of-all-of-lifes-molecules/"
+    "link": "https://www.nature.com/articles/s41586-024-07487-w"
   },
   {
     "year": 2024,
@@ -1213,7 +1213,7 @@
     "title": "OpenAI Releases o1",
     "description": "OpenAI announces o1, a new class of model focused on reasoning and step-by-step thinking before providing an answer.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-openai-o1-preview/"
+    "link": "https://www.theverge.com/2024/9/12/24242439/openai-o1-model-reasoning-strawberry-chatgpt"
   },
   {
     "year": 2024,
@@ -1237,7 +1237,7 @@
     "title": "Anthropic Releases Claude 3.5 Haiku",
     "description": "Anthropic releases Claude 3.5 Haiku, a fast and cost-effective model that matches the performance of the earlier, much larger Claude 3 Opus on several benchmarks.",
     "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-3-5-haiku"
+    "link": "https://www.anthropic.com/news/claude-3-5-sonnet"
   },
   {
     "year": 2024,
@@ -1293,7 +1293,7 @@
     "title": "xAI Releases Grok with Image Generation",
     "description": "xAI updates Grok with a new image generation model, code-named Aurora, making it available on the X platform.",
     "category": "Public Releases",
-    "link": "https://x.ai/news"
+    "link": "https://www.theverge.com/2024/12/7/24315445/xai-grok-aurora-image-generation-elon-musk"
   },
   {
     "year": 2025,
