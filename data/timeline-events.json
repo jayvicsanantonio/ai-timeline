@@ -1301,7 +1301,7 @@
     "title": "OpenAI Releases Operator for Pro Subscribers",
     "description": "OpenAI launches Operator, an experimental AI agent capable of browsing websites and performing actions, available to its Pro subscribers.",
     "category": "Agents",
-    "link": "https://www.nhlocal.com/2025/01/28/artificial-intelligence-timeline/"
+    "link": "https://openai.com/index/introducing-operator/"
   },
   {
     "year": 2025,
@@ -1309,7 +1309,7 @@
     "title": "OpenAI Releases GPT-4.5",
     "description": "OpenAI releases a research preview of GPT-4.5, its largest model to date for chat, scaling up pretraining and post-training.",
     "category": "Public Releases",
-    "link": "https://help.openai.com/en/articles/9355422-model-release-notes"
+    "link": "https://openai.com/index/introducing-gpt-4-5/"
   },
   {
     "year": 2025,
@@ -1325,7 +1325,7 @@
     "title": "Google Releases Gemini 2.5 Pro",
     "description": "Google makes Gemini 2.5 Pro, its most intelligent model with enhanced reasoning and coding, available in Google AI Studio and Gemini Advanced.",
     "category": "Public Releases",
-    "link": "https://blog.google/technology/ai/gemini-2-5-pro/"
+    "link": "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/"
   },
   {
     "year": 2025,
@@ -1333,7 +1333,7 @@
     "title": "Anthropic Releases Claude 4",
     "description": "Anthropic announces the Claude 4 model family, including Opus 4 and Sonnet 4, with significant improvements in coding, advanced reasoning, and autonomous task execution.",
     "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/introducing-claude-4"
+    "link": "https://www.anthropic.com/news/claude-4"
   },
   {
     "year": 2025,
@@ -1341,7 +1341,7 @@
     "title": "Google Releases Stable Gemini 2.5 Pro and Flash",
     "description": "Google announces the general availability of Gemini 2.5 Pro and Gemini 2.5 Flash, moving them from preview to stable release.",
     "category": "Public Releases",
-    "link": "https://aifordims.com/google-releases-gemini-2-5-pro-and-flash-with-adaptive-thinking-and-enhanced-code-capabilities-2/"
+    "link": "https://blog.google/products/gemini/gemini-2-5-model-family-expands/"
   },
   {
     "year": 2025,
@@ -1357,7 +1357,7 @@
     "title": "Google Releases Gemini CLI",
     "description": "Google launches Gemini CLI, an open-source, AI-powered command-line assistant that integrates the Gemini 2.5 Pro model directly into the terminal for developers.",
     "category": "AI Tools",
-    "link": "https://blog.google/technology/developers/gemini-cli-your-open-source-ai-agent/"
+    "link": "https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/"
   },
   {
     "year": 2025,
@@ -1365,7 +1365,7 @@
     "title": "Meta AI Announces Multi-Billion Dollar Investment in Scale AI",
     "description": "Meta AI announces a $14.3 billion investment in Scale AI and brings on its founder, Alexandr Wang, to help lead a new 'Meta Super Intelligence Labs' unit, signaling a major push to catch up in the AI race.",
     "category": "Companies & Investments",
-    "link": "https://www.youtube.com/watch?v=J_mFkVLt7dM"
+    "link": "https://techcrunch.com/2025/06/13/scale-ai-confirms-significant-investment-from-meta-says-ceo-alexandr-wang-is-leaving/"
   },
   {
     "year": 2025,
@@ -1373,7 +1373,7 @@
     "title": "Anthropic Releases 'Claude Gov' for National Security",
     "description": "Anthropic announces 'Claude Gov,' a specialized version of its model for U.S. national security customers, which is reported to be in use at multiple national security agencies.",
     "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-gov-models-for-us-national-security-customers"
+    "link": "https://www.anthropic.com/news/claude-gov-models-for-u-s-national-security-customers"
   },
   {
     "year": 2025,
@@ -1381,7 +1381,7 @@
     "title": "xAI Releases Grok 4",
     "description": "xAI releases Grok 4, claiming it to be the 'most intelligent model in the world,' with native tool use and real-time search integration.",
     "category": "Public Releases",
-    "link": "https://x.ai/news"
+    "link": "https://x.ai/news/grok-4"
   },
   {
     "year": 2025,
@@ -1389,7 +1389,7 @@
     "title": "Grok 4 Generates Controversy",
     "description": "Shortly after its release, Grok 4 faces criticism for generating antisemitic and other inappropriate content, leading to accusations that xAI had 'gamed' the benchmarks and highlighting the challenges of controlling AI behavior.",
     "category": "Bombshell News",
-    "link": "https://www.platformer.news/p/grok-is-on-the-rocks"
+    "link": "https://www.cnn.com/2025/07/12/tech/xai-apology-antisemitic-grok-social-media-posts"
   },
   {
     "year": 2025,
@@ -1397,7 +1397,7 @@
     "title": "U.S. Authors Win Class-Action Status in Lawsuit Against Anthropic",
     "description": "A U.S. District Judge grants class-action status to a lawsuit filed by authors against Anthropic, allowing millions of writers to pursue copyright claims against the company for allegedly using their work without permission to train its models.",
     "category": "Ethics & Policy",
-    "link": "https://www.eweek.com/artificial-intelligence/anthropic-copyright-case-sparks-alliance-between-tech-publishing-groups/"
+    "link": "https://www.nextgov.com/acquisition/2025/06/anthropic-introduces-new-claude-gov-models-national-security-focus/405836/"
   },
   {
     "year": 2025,
@@ -1405,7 +1405,7 @@
     "title": "U.S. Department of Defense Awards AI Contracts to OpenAI, Anthropic, and Others",
     "description": "The U.S. Department of Defense announces $200 million in contracts for AI in the military, awarded to Anthropic, Google, OpenAI, and xAI.",
     "category": "Ethics & Policy",
-    "link": "https://en.wikipedia.org/wiki/Anthropic"
+    "link": "https://www.anthropic.com/news/claude-gov-models-for-u-s-national-security-customers"
   },
   {
     "year": 2025,
@@ -1413,7 +1413,7 @@
     "title": "OpenAI Releases GPT-5",
     "description": "OpenAI launches GPT-5, a major upgrade to its language model series, boasting 'PhD-level' expertise across various domains and a unified system for both quick and deep reasoning responses.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-gpt-5"
+    "link": "https://openai.com/index/introducing-gpt-5/"
   },
   {
     "year": 2025,
@@ -1421,7 +1421,7 @@
     "title": "Google Gemini Gains 'Memory' Feature",
     "description": "Google rolls out a 'memory' feature for Gemini, allowing the chatbot to remember key details and preferences from past conversations to provide more personalized responses.",
     "category": "Public Releases",
-    "link": "https://www.economictimes.indiatimes.com/technology/technology-news/googles-gemini-gets-memory-upgrade-and-temporary-chats/articleshow/112558129.cms"
+    "link": "https://blog.google/products/gemini/gemini-drop-august-2025/"
   },
   {
     "year": 2025,
@@ -1437,7 +1437,7 @@
     "title": "xAI Announces Voice Capabilities for Grok",
     "description": "Elon Musk announces that Grok will soon have voice capabilities, allowing for more natural and immersive interactions with the AI assistant.",
     "category": "Public Releases",
-    "link": "https://www.azernews.az/region/228931.html"
+    "link": "https://x.ai/news"
   },
   {
     "year": 2025,
@@ -1445,7 +1445,7 @@
     "title": "OpenAI's Valuation Approaches $500 Billion",
     "description": "Reports emerge that OpenAI is in talks for a stock sale that would value the company at nearly $500 billion, a massive increase driven by the launch of GPT-5 and widespread enterprise adoption.",
     "category": "Companies & Investments",
-    "link": "https://www.forbesindia.com/article/news/from-nonprofit-to-500-billion-sam-altmans-openais-dizzying-valuation-rise/95013/1"
+    "link": "https://www.bloomberg.com/news/articles/2025-08-06/openai-in-talks-for-share-sale-valuing-startup-at-500-billion"
   },
   {
     "year": 2025,
@@ -1461,6 +1461,6 @@
     "title": "OpenAI Returns to Open Source with gpt-oss-120b",
     "description": "In a strategic shift, OpenAI releases gpt-oss-120b, its first major open-source model in several years, in a move seen as a response to the growing open-source AI ecosystem.",
     "category": "Public Releases",
-    "link": "https://lifearchitect.ai/timeline/"
+    "link": "https://openai.com/index/introducing-gpt-oss/"
   }
 ]
