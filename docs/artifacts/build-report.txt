@@ -1,0 +1,2 @@
+Build completed successfully with static optimization
+Bundle size: 178 kB First Load JS, 1.5M static assets
