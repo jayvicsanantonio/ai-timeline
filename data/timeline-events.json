@@ -17,7 +17,7 @@
   },
   {
     "year": 1951,
-    "month": "Unknown",
+    "month": "January",
     "title": "First AI Programs",
     "description": "Christopher Strachey writes a checkers program and Dietrich Prinz writes a chess program for the Ferranti Mark 1 computer, among the first AI programs.",
     "category": "Models & Architectures",
@@ -25,7 +25,7 @@
   },
   {
     "year": 1952,
-    "month": "Unknown",
+    "month": "January",
     "title": "Samuel's Checkers Program",
     "description": "Arthur Samuel develops a self-learning checkers program on an IBM 701, one of the first demonstrations of machine learning.",
     "category": "Models & Architectures",
@@ -41,7 +41,7 @@
   },
   {
     "year": 1958,
-    "month": "Unknown",
+    "month": "January",
     "title": "LISP Programming Language",
     "description": "John McCarthy develops LISP, which becomes a foundational programming language for AI research.",
     "category": "Research Breakthroughs",
@@ -49,7 +49,7 @@
   },
   {
     "year": 1961,
-    "month": "Unknown",
+    "month": "January",
     "title": "Unimate, the First Industrial Robot",
     "description": "The first industrial robot, Unimate, begins work on a General Motors assembly line.",
     "category": "Hardware Advances",
@@ -57,7 +57,7 @@
   },
   {
     "year": 1965,
-    "month": "Unknown",
+    "month": "January",
     "title": "DENDRAL, the First Expert System",
     "description": "Edward Feigenbaum and Joshua Lederberg create DENDRAL, an expert system that could identify chemical compounds, demonstrating the potential of AI for specialized knowledge tasks.",
     "category": "Models & Architectures",
@@ -65,7 +65,7 @@
   },
   {
     "year": 1966,
-    "month": "Unknown",
+    "month": "January",
     "title": "ELIZA, the First Chatbot",
     "description": "Joseph Weizenbaum at MIT creates ELIZA, an early natural language processing program that simulated conversation with a psychotherapist.",
     "category": "Public Releases",
@@ -73,7 +73,7 @@
   },
   {
     "year": 1969,
-    "month": "Unknown",
+    "month": "January",
     "title": "Shakey the Robot",
     "description": "SRI International's Shakey becomes the first mobile robot to reason about its own actions, combining perception, planning, and problem-solving.",
     "category": "Hardware Advances",
@@ -81,15 +81,15 @@
   },
   {
     "year": 1969,
-    "month": "Unknown",
+    "month": "January",
     "title": "The First AI Winter",
     "description": "The publication of 'Perceptrons' by Marvin Minsky and Seymour Papert, which highlighted the limitations of simple neural networks, contributed to a period of reduced funding and interest in AI.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://en.wikipedia.org/wiki/AI_winter"
   },
   {
     "year": 1970,
-    "month": "Unknown",
+    "month": "January",
     "title": "WABOT-1, the First Anthropomorphic Robot",
     "description": "Waseda University in Japan builds WABOT-1, the first full-scale humanoid intelligent robot.",
     "category": "Hardware Advances",
@@ -97,7 +97,7 @@
   },
   {
     "year": 1973,
-    "month": "Unknown",
+    "month": "January",
     "title": "Lighthill Report",
     "description": "The Lighthill Report in the UK leads to significant cuts in AI research funding, deepening the first AI winter.",
     "category": "Ethics & Policy",
@@ -105,7 +105,7 @@
   },
   {
     "year": 1980,
-    "month": "Unknown",
+    "month": "January",
     "title": "Neocognitron",
     "description": "Kunihiko Fukushima develops the Neocognitron, a hierarchical, multilayered artificial neural network that is a precursor to modern CNNs.",
     "category": "Models & Architectures",
@@ -113,7 +113,7 @@
   },
   {
     "year": 1980,
-    "month": "Unknown",
+    "month": "January",
     "title": "First AAAI Conference",
     "description": "The first conference of the American Association for Artificial Intelligence (AAAI) is held at Stanford, signaling a resurgence of interest in the field.",
     "category": "Research Breakthroughs",
@@ -121,7 +121,7 @@
   },
   {
     "year": 1986,
-    "month": "Unknown",
+    "month": "January",
     "title": "Backpropagation Popularized",
     "description": "David Rumelhart, Geoffrey Hinton, and Ronald Williams publish a paper that popularizes the backpropagation algorithm, enabling the training of deep neural networks.",
     "category": "Research Breakthroughs",
@@ -129,7 +129,7 @@
   },
   {
     "year": 1989,
-    "month": "Unknown",
+    "month": "January",
     "title": "LeNet and Convolutional Neural Networks (CNNs)",
     "description": "Yann LeCun develops LeNet, one of the first successful applications of Convolutional Neural Networks, for recognizing handwritten digits.",
     "category": "Models & Architectures",
@@ -137,7 +137,7 @@
   },
   {
     "year": 1992,
-    "month": "Unknown",
+    "month": "January",
     "title": "Reinforcement Learning Breakthrough",
     "description": "Gerald Tesauro's TD-Gammon, a backgammon program that learns through reinforcement learning, reaches the level of top human players.",
     "category": "Models & Architectures",
@@ -145,11 +145,19 @@
   },
   {
     "year": 1995,
-    "month": "Unknown",
+    "month": "January",
     "title": "Support Vector Machines (SVMs)",
     "description": "Corinna Cortes and Vladimir Vapnik introduce support vector machines, a powerful supervised learning algorithm.",
     "category": "Research Breakthroughs",
     "link": "https://en.wikipedia.org/wiki/Support-vector_machine"
+  },
+  {
+    "year": 1997,
+    "month": "January",
+    "title": "Long Short-Term Memory (LSTM)",
+    "description": "Sepp Hochreiter and Jürgen Schmidhuber propose Long Short-Term Memory (LSTM), a type of recurrent neural network (RNN) architecture that becomes widely used for natural language processing.",
+    "category": "Models & Architectures",
+    "link": "https://www.bioinf.jku.at/publications/older/2604.pdf"
   },
   {
     "year": 1997,
@@ -160,16 +168,8 @@
     "link": "https://en.wikipedia.org/wiki/Deep_Blue_versus_Garry_Kasparov"
   },
   {
-    "year": 1997,
-    "month": "Unknown",
-    "title": "Long Short-Term Memory (LSTM)",
-    "description": "Sepp Hochreiter and Jürgen Schmidhuber propose Long Short-Term Memory (LSTM), a type of recurrent neural network (RNN) architecture that becomes widely used for natural language processing.",
-    "category": "Models & Architectures",
-    "link": "https://www.bioinf.jku.at/publications/older/2604.pdf"
-  },
-  {
     "year": 1998,
-    "month": "Unknown",
+    "month": "January",
     "title": "Kismet the Robot",
     "description": "Cynthia Breazeal at MIT builds Kismet, a robot that can recognize and display emotions.",
     "category": "Hardware Advances",
@@ -177,7 +177,7 @@
   },
   {
     "year": 2002,
-    "month": "Unknown",
+    "month": "January",
     "title": "Roomba Vacuum Cleaner",
     "description": "iRobot releases the Roomba, one of the first commercially successful domestic robots.",
     "category": "Public Releases",
@@ -185,7 +185,7 @@
   },
   {
     "year": 2005,
-    "month": "Unknown",
+    "month": "January",
     "title": "Stanford's Stanley Wins DARPA Challenge",
     "description": "Stanford's autonomous vehicle, Stanley, wins the second DARPA Grand Challenge, a major milestone for self-driving cars.",
     "category": "Hardware Advances",
@@ -193,7 +193,7 @@
   },
   {
     "year": 2006,
-    "month": "Unknown",
+    "month": "January",
     "title": "Deep Belief Networks",
     "description": "Geoffrey Hinton, Simon Osindero, and Yee-Whye Teh introduce Deep Belief Networks, reigniting interest in deep learning.",
     "category": "Research Breakthroughs",
@@ -201,7 +201,7 @@
   },
   {
     "year": 2009,
-    "month": "Unknown",
+    "month": "January",
     "title": "ImageNet Database Created",
     "description": "Fei-Fei Li and colleagues launch ImageNet, a large-scale database of labeled images that becomes a crucial benchmark for computer vision research.",
     "category": "Research Breakthroughs",
@@ -225,7 +225,7 @@
   },
   {
     "year": 2013,
-    "month": "Unknown",
+    "month": "January",
     "title": "Word2Vec",
     "description": "Google researchers led by Tomas Mikolov release Word2Vec, a popular model for creating word embeddings.",
     "category": "Research Breakthroughs",
@@ -233,7 +233,7 @@
   },
   {
     "year": 2013,
-    "month": "Unknown",
+    "month": "January",
     "title": "DeepMind's Atari Breakthrough",
     "description": "DeepMind demonstrates an AI that can learn to play Atari games from raw pixel data, using deep reinforcement learning.",
     "category": "Research Breakthroughs",
@@ -244,7 +244,7 @@
     "month": "January",
     "title": "Google Acquires DeepMind",
     "description": "Google acquires the British artificial intelligence company DeepMind for a reported £400 million.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.theguardian.com/technology/2014/jan/27/google-acquires-uk-artificial-intelligence-startup-deepmind"
   },
   {
@@ -257,19 +257,19 @@
   },
   {
     "year": 2015,
-    "month": "December",
-    "title": "OpenAI Founded",
-    "description": "OpenAI is founded as a non-profit AI research company by Elon Musk, Sam Altman, and others with a mission to ensure that artificial general intelligence benefits all of humanity.",
-    "category": "Companies & Investments",
-    "link": "https://openai.com/blog/introducing-openai"
-  },
-  {
-    "year": 2015,
-    "month": "Unknown",
+    "month": "January",
     "title": "Diffusion Models Proposed",
     "description": "Stanford researchers publish work on diffusion models, a technique that would later become foundational for high-quality image generation.",
     "category": "Research Breakthroughs",
     "link": "https://arxiv.org/abs/1503.03585"
+  },
+  {
+    "year": 2015,
+    "month": "December",
+    "title": "OpenAI Founded",
+    "description": "OpenAI is founded as a non-profit AI research company by Elon Musk, Sam Altman, and others with a mission to ensure that artificial general intelligence benefits all of humanity.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/blog/introducing-openai"
   },
   {
     "year": 2016,
@@ -278,6 +278,14 @@
     "description": "DeepMind's AlphaGo defeats world champion Lee Sedol in Go, showcasing AI's ability to master complex, intuition-based games.",
     "category": "Models & Architectures",
     "link": "https://deepmind.google/research/case-studies/alphago-the-story-so-far"
+  },
+  {
+    "year": 2017,
+    "month": "January",
+    "title": "Canada's National AI Strategy",
+    "description": "Canada becomes the first country to release a national AI strategy, aiming to invest in research and talent.",
+    "category": "Ethics & Policy",
+    "link": "https://cifar.ca/ai/pan-canadian-artificial-intelligence-strategy/"
   },
   {
     "year": 2017,
@@ -296,14 +304,6 @@
     "link": "https://www.deepmind.com/blog/alphago-zero-learning-from-scratch"
   },
   {
-    "year": 2017,
-    "month": "Unknown",
-    "title": "Canada's National AI Strategy",
-    "description": "Canada becomes the first country to release a national AI strategy, aiming to invest in research and talent.",
-    "category": "Ethics & Policy",
-    "link": "https://cifar.ca/ai/pan-canadian-artificial-intelligence-strategy/"
-  },
-  {
     "year": 2018,
     "month": "June",
     "title": "OpenAI Releases GPT-1",
@@ -318,6 +318,14 @@
     "description": "Google releases Bidirectional Encoder Representations from Transformers (BERT), a new language representation model that achieves state-of-the-art results on a wide array of natural language processing tasks.",
     "category": "Research Breakthroughs",
     "link": "https://arxiv.org/abs/1810.04805"
+  },
+  {
+    "year": 2019,
+    "month": "January",
+    "title": "OECD AI Principles",
+    "description": "The Organisation for Economic Co-operation and Development (OECD) adopts a set of principles for responsible stewardship of trustworthy AI.",
+    "category": "Ethics & Policy",
+    "link": "https://oecd.ai/en/ai-principles"
   },
   {
     "year": 2019,
@@ -340,7 +348,7 @@
     "month": "July",
     "title": "Microsoft Invests $1 Billion in OpenAI",
     "description": "Microsoft announces a $1 billion investment in and partnership with OpenAI to build new Azure AI supercomputing technologies.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://blogs.microsoft.com/blog/2019/07/22/microsoft-and-openai-form-exclusive-computing-partnership-to-build-new-azure-ai-supercomputing-technologies/"
   },
   {
@@ -352,12 +360,12 @@
     "link": "https://www.deepmind.com/blog/alphastar-grandmaster-level-in-starcraft-ii-using-multi-agent-reinforcement-learning"
   },
   {
-    "year": 2019,
-    "month": "Unknown",
-    "title": "OECD AI Principles",
-    "description": "The Organisation for Economic Co-operation and Development (OECD) adopts a set of principles for responsible stewardship of trustworthy AI.",
-    "category": "Ethics & Policy",
-    "link": "https://oecd.ai/en/ai-principles"
+    "year": 2020,
+    "month": "January",
+    "title": "EleutherAI Founded",
+    "description": "A group of independent researchers forms EleutherAI, focusing on open-source AI research and releasing their own large language models.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.eleuther.ai/"
   },
   {
     "year": 2020,
@@ -384,20 +392,28 @@
     "link": "https://www.deepmind.com/blog/alphafold-a-solution-to-a-50-year-old-grand-challenge-in-biology"
   },
   {
-    "year": 2020,
-    "month": "Unknown",
-    "title": "EleutherAI Founded",
-    "description": "A group of independent researchers forms EleutherAI, focusing on open-source AI research and releasing their own large language models.",
-    "category": "Companies & Investments",
-    "link": "https://www.eleuther.ai/"
-  },
-  {
     "year": 2021,
     "month": "January",
     "title": "OpenAI Releases DALL-E",
     "description": "OpenAI introduces DALL-E, a neural network that can generate images from text descriptions, bridging the gap between language and vision in AI.",
     "category": "Public Releases",
     "link": "https://openai.com/research/dall-e"
+  },
+  {
+    "year": 2021,
+    "month": "January",
+    "title": "Anthropic Founded",
+    "description": "Former OpenAI employees found Anthropic, an AI safety and research company, with a focus on building reliable, interpretable, and steerable AI systems.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Anthropic"
+  },
+  {
+    "year": 2021,
+    "month": "January",
+    "title": "Character.AI Founded",
+    "description": "Former Google AI researchers Noam Shazeer and Daniel De Freitas found Character.AI, a platform for creating and interacting with AI-powered chatbots.",
+    "category": "Research Breakthroughs",
+    "link": "https://character.ai/"
   },
   {
     "year": 2021,
@@ -412,24 +428,16 @@
     "month": "June",
     "title": "GitHub Copilot Launched",
     "description": "GitHub and OpenAI launch GitHub Copilot, an AI pair programmer that suggests code and entire functions in real-time within the code editor.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://github.blog/2021-06-29-introducing-github-copilot-ai-pair-programmer/"
   },
   {
-    "year": 2021,
-    "month": "Unknown",
-    "title": "Anthropic Founded",
-    "description": "Former OpenAI employees found Anthropic, an AI safety and research company, with a focus on building reliable, interpretable, and steerable AI systems.",
-    "category": "Companies & Investments",
-    "link": "https://en.wikipedia.org/wiki/Anthropic"
-  },
-  {
-    "year": 2021,
-    "month": "Unknown",
-    "title": "Character.AI Founded",
-    "description": "Former Google AI researchers Noam Shazeer and Daniel De Freitas found Character.AI, a platform for creating and interacting with AI-powered chatbots.",
-    "category": "Companies & Investments",
-    "link": "https://character.ai/"
+    "year": 2022,
+    "month": "January",
+    "title": "Perplexity AI Founded",
+    "description": "Perplexity AI is founded, developing a conversational search engine that provides direct answers with citations.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.perplexity.ai/"
   },
   {
     "year": 2022,
@@ -444,7 +452,7 @@
     "month": "June",
     "title": "Google's LaMDA 'Sentience' Controversy",
     "description": "A Google engineer claims that the LaMDA language model has become sentient, sparking a public debate about AI consciousness and ethics.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.washingtonpost.com/technology/2022/06/11/google-ai-lamda-blake-lemoine/"
   },
   {
@@ -484,7 +492,7 @@
     "month": "November",
     "title": "Meta's Galactica LLM Pulled",
     "description": "Meta takes down its Galactica AI model, trained on scientific papers, after it was criticized for generating authoritative-sounding but often incorrect information.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.theverge.com/2022/11/15/23460204/meta-galactica-ai-wikipedia-science-misinformation-research-paper"
   },
   {
@@ -492,23 +500,15 @@
     "month": "November",
     "title": "DeepSeek Founded",
     "description": "Chinese AI company DeepSeek is founded, focusing on developing advanced, open-source Large Language Models.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.deepseek.com/en/about"
-  },
-  {
-    "year": 2022,
-    "month": "Unknown",
-    "title": "Perplexity AI Founded",
-    "description": "Perplexity AI is founded, developing a conversational search engine that provides direct answers with citations.",
-    "category": "Companies & Investments",
-    "link": "https://www.perplexity.ai/"
   },
   {
     "year": 2023,
     "month": "January",
     "title": "Microsoft's Multi-billion Dollar Investment in OpenAI",
     "description": "Microsoft announces a new multi-year, multi-billion dollar investment in OpenAI, deepening their partnership.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.reuters.com/technology/microsoft-extends-openai-partnership-multi-year-multibillion-dollar-investment-2023-01-23/"
   },
   {
@@ -548,7 +548,7 @@
     "month": "February",
     "title": "Google's Bard Demo Stumbles",
     "description": "In its first public demo, Google's Bard chatbot makes a factual error regarding the James Webb Space Telescope, causing a significant drop in Alphabet's stock price and sparking criticism of a 'rushed' rollout.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.reuters.com/technology/google-ai-chatbot-bard-offers-inaccurate-information-company-ad-2023-02-08/"
   },
   {
@@ -572,7 +572,7 @@
     "month": "March",
     "title": "Adobe Firefly Launch",
     "description": "Adobe launches Firefly, a family of creative generative AI models designed to be commercially safe by being trained on Adobe Stock images.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://www.adobe.com/sensei/generative-ai/firefly.html"
   },
   {
@@ -588,7 +588,7 @@
     "month": "March",
     "title": "ChatGPT Suffers Data Breach",
     "description": "OpenAI discloses a bug in ChatGPT that allowed some users to see the titles of other users' chat histories, raising privacy and data security concerns.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://openai.com/index/march-20-chatgpt-outage/"
   },
   {
@@ -596,7 +596,7 @@
     "month": "March",
     "title": "LLaMA 1 Model Weights Leaked",
     "description": "The weights for Meta's LLaMA model are leaked online via a BitTorrent link, making the powerful model widely accessible and sparking a wave of community-driven innovation and debate on open-access AI.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.axios.com/2023/03/08/meta-ai-llama-model-leaked-4chan"
   },
   {
@@ -604,7 +604,7 @@
     "month": "April",
     "title": "Auto-GPT and BabyAGI Emerge",
     "description": "Auto-GPT and BabyAGI, two of the first mainstream examples of autonomous AI agents using LLMs to create and execute tasks, are released, showcasing the potential of agentic AI.",
-    "category": "Agents",
+    "category": "Research Breakthroughs",
     "link": "https://en.wikipedia.org/wiki/Auto-GPT"
   },
   {
@@ -620,7 +620,7 @@
     "month": "May",
     "title": "Geoffrey Hinton Leaves Google",
     "description": "Geoffrey Hinton, a 'Godfather of AI,' quits his job at Google, warning about the dangers of artificial intelligence.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.cnn.com/2023/05/01/tech/geoffrey-hinton-leaves-google-ai-fears/index.html"
   },
   {
@@ -636,7 +636,7 @@
     "month": "June",
     "title": "Runway Releases Gen-2",
     "description": "AI video startup Runway releases Gen-2, a multimodal AI system that can generate videos from text prompts or images.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://runwayml.com/blog/presenting-gen-2/"
   },
   {
@@ -662,6 +662,14 @@
     "description": "Google, Microsoft, OpenAI, and Anthropic launch the Frontier Model Forum, an industry body to promote the safe and responsible development of large-scale AI models.",
     "category": "Ethics & Policy",
     "link": "https://www.frontiermodelforum.org/"
+  },
+  {
+    "year": 2023,
+    "month": "July",
+    "title": "OpenAI Partners with Associated Press",
+    "description": "OpenAI announces a partnership with the Associated Press, gaining a license to its archive of news stories for training its models in a deal that highlights the value of quality data.",
+    "category": "Research Breakthroughs",
+    "link": "https://fortune.com/2023/07/13/openai-associated-press-licensing-archive-news-stories-chatgpt/"
   },
   {
     "year": 2023,
@@ -700,7 +708,7 @@
     "month": "October",
     "title": "Amazon Invests in Anthropic",
     "description": "Amazon announces an initial investment of $1.25 billion in AI startup Anthropic, with the potential for the investment to grow to $4 billion.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://aws.amazon.com/blogs/aws/aws-and-anthropic-announce-strategic-collaboration-to-advance-generative-ai/"
   },
   {
@@ -716,7 +724,7 @@
     "month": "October",
     "title": "Vercel Launches v0 in Beta",
     "description": "Vercel, the company behind the popular Next.js framework, releases v0, a generative AI tool that allows developers to create front-end components and web interfaces using text prompts.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://vercel.com/blog/announcing-v0-generative-ui"
   },
   {
@@ -740,7 +748,7 @@
     "month": "November",
     "title": "Sam Altman Ousted and Reinstated as OpenAI CEO",
     "description": "In a shocking turn of events, OpenAI's board fires CEO Sam Altman, who is then hired by Microsoft, leading to an employee uproar and his eventual reinstatement as CEO of OpenAI five days later.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.nytimes.com/2023/11/22/technology/openai-sam-altman-ceo-return.html"
   },
   {
@@ -812,7 +820,7 @@
     "month": "January",
     "title": "Taylor Swift Deepfake Controversy",
     "description": "Sexually explicit AI-generated deepfake images of Taylor Swift spread rapidly on social media, prompting calls for legislation to criminalize such content and highlighting the dangers of AI misuse.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.nbcnews.com/tech/misinformation/taylor-swift-nude-deepfake-goes-viral-x-platform-rules-rcna135669"
   },
   {
@@ -836,7 +844,7 @@
     "month": "February",
     "title": "Mistral AI Partners with Microsoft",
     "description": "Mistral AI announces a major partnership with Microsoft, making its models available on the Azure platform and challenging OpenAI's dominance in the cloud AI space.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://azure.microsoft.com/en-us/blog/microsoft-and-mistral-ai-announce-new-partnership-to-accelerate-ai-innovation-and-introduce-mistral-large-first-on-azure/"
   },
   {
@@ -844,7 +852,7 @@
     "month": "February",
     "title": "Klarna's AI Assistant Handles 2/3 of Customer Service Chats",
     "description": "Fintech giant Klarna announces its OpenAI-powered AI assistant is handling two-thirds of all customer service chats, equivalent to the work of 700 full-time agents.",
-    "category": "Agents",
+    "category": "Research Breakthroughs",
     "link": "https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/"
   },
   {
@@ -868,7 +876,7 @@
     "month": "February",
     "title": "NVIDIA's Valuation Soars",
     "description": "NVIDIA, a key provider of AI chips, sees its market valuation surge past $2 trillion, highlighting the massive investment in AI hardware.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.cnbc.com/2024/02/23/nvidia-briefly-surpasses-2-trillion-in-market-cap-during-intraday-trading.html"
   },
   {
@@ -876,7 +884,7 @@
     "month": "February",
     "title": "Google's Gemini Image Generation Controversy",
     "description": "Google pauses the image generation of people in its Gemini model after it was criticized for producing historically inaccurate and diverse images, leading to accusations of bias.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.theverge.com/2024/2/21/24079371/google-gemini-generative-ai-people-inaccurate-historical-images"
   },
   {
@@ -924,7 +932,7 @@
     "month": "March",
     "title": "Inflection AI's Leadership Joins Microsoft",
     "description": "In a major industry shake-up, Inflection AI's co-founders, Mustafa Suleyman and Karén Simonyan, and much of their staff are hired by Microsoft to lead a new consumer AI unit.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://blogs.microsoft.com/blog/2024/03/19/mustafa-suleyman-deepmind-and-inflection-co-founder-joins-microsoft-to-lead-copilot/"
   },
   {
@@ -940,7 +948,7 @@
     "month": "March",
     "title": "Cognition AI unveils Devin",
     "description": "Cognition AI introduces Devin, claimed to be the first fully autonomous AI software engineer, capable of completing entire development projects.",
-    "category": "Agents",
+    "category": "Research Breakthroughs",
     "link": "https://www.cognition.ai/blog/introducing-devin"
   },
   {
@@ -956,7 +964,7 @@
     "month": "April",
     "title": "Humane Ai Pin Ships to Negative Reviews",
     "description": "Humane's much-hyped Ai Pin begins shipping but receives largely negative reviews from major tech publications, highlighting the significant challenges of creating new AI-native hardware.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.tomsguide.com/ai/humane-ai-pin-review-roundup-this-is-a-disaster"
   },
   {
@@ -964,7 +972,7 @@
     "month": "April",
     "title": "Suno AI Music Generator Raises $125M",
     "description": "Suno, an AI platform for music generation, raises $125 million in a funding round, signaling significant investor confidence and mainstream interest in AI-driven creativity tools.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.suno.ai/blog/125m-series-b"
   },
   {
@@ -972,7 +980,7 @@
     "month": "April",
     "title": "Databricks Acquires MosaicML",
     "description": "Data and AI company Databricks completes its acquisition of MosaicML for approximately $1.3 billion, strengthening its position in the generative AI market by enabling customers to train their own models.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.databricks.com/company/newsroom/press-releases/databricks-completes-acquisition-mosaicml"
   },
   {
@@ -980,7 +988,7 @@
     "month": "April",
     "title": "OpenAI Opens Tokyo Office",
     "description": "OpenAI expands its global presence by opening a new office in Tokyo, Japan, its first in Asia, to foster collaboration and adopt AI tools tailored for the Japanese market.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.reuters.com/technology/artificial-intelligence/openai-opens-first-asian-office-tokyo-2024-04-15/"
   },
   {
@@ -996,7 +1004,7 @@
     "month": "April",
     "title": "Udio AI Music Generator Launch",
     "description": "Udio, an AI music generation tool from former Google DeepMind researchers, launches and gains viral attention for its high-quality song creation capabilities.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://www.udio.com/"
   },
   {
@@ -1020,7 +1028,7 @@
     "month": "May",
     "title": "Microsoft 'Recall' Feature Sparks Privacy Backlash",
     "description": "Microsoft's announcement of the 'Recall' feature for Copilot+ PCs, which takes continuous screenshots of user activity, sparks a major privacy and security backlash among experts and the public.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.bbc.com/news/articles/cd11lzddpz7o"
   },
   {
@@ -1028,7 +1036,7 @@
     "month": "May",
     "title": "OpenAI Disbands Superalignment Team",
     "description": "OpenAI disbands its 'Superalignment' team, tasked with mitigating long-term AI risks, shortly after its leaders, co-founder Ilya Sutskever and Jan Leike, announce their resignations.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.reuters.com/technology/artificial-intelligence/openai-dissolves-team-focused-ai-risks-the-information-reports-2024-05-17/"
   },
   {
@@ -1044,7 +1052,7 @@
     "month": "May",
     "title": "ElevenLabs Launches AI Sound Effects Generator",
     "description": "Voice AI company ElevenLabs launches a new tool for generating sound effects from text prompts, expanding the reach of generative AI into new creative domains beyond text, images, and music.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://elevenlabs.io/blog/elevenlabs-launches-text-to-sound-effects/"
   },
   {
@@ -1068,7 +1076,7 @@
     "month": "May",
     "title": "Scarlett Johansson vs. OpenAI",
     "description": "Actress Scarlett Johansson states she was 'shocked' and 'angered' by an OpenAI voice for ChatGPT that sounded 'eerily similar' to hers, after she had previously declined an offer to voice the assistant.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.bbc.com/news/technology-69032913"
   },
   {
@@ -1076,7 +1084,7 @@
     "month": "May",
     "title": "Google's AI Overviews Backlash",
     "description": "Google's new AI Overviews in Search faces widespread criticism for providing bizarre and incorrect answers, such as advising users to put glue on pizza.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://arstechnica.com/information-technology/2024/05/googles-ai-gives-useless-and-incorrect-answers-but-its-not-hallucinating/"
   },
   {
@@ -1092,7 +1100,7 @@
     "month": "May",
     "title": "Ilya Sutskever Departs OpenAI",
     "description": "Ilya Sutskever, OpenAI's co-founder and chief scientist who played a key role in the November 2023 leadership crisis, announces his departure from the company.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.reuters.com/technology/artificial-intelligence/openai-co-founder-chief-scientist-ilya-sutskever-leaves-2024-05-14/"
   },
   {
@@ -1108,7 +1116,7 @@
     "month": "June",
     "title": "xAI Secures $6 Billion Series B",
     "description": "Elon Musk's artificial intelligence company, xAI, secures a massive $6 billion in a Series B funding round to build out its infrastructure and accelerate research and development.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.reuters.com/technology/artificial-intelligence/elon-musks-xai-raises-6-billion-funding-2024-05-27/"
   },
   {
@@ -1116,7 +1124,7 @@
     "month": "June",
     "title": "NVIDIA Becomes World's Most Valuable Company",
     "description": "Driven by the AI boom, chipmaker NVIDIA surpasses Microsoft and Apple to become the world's most valuable public company.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.reuters.com/technology/nvidia-overtakes-microsoft-worlds-most-valuable-company-2024-06-18/"
   },
   {
@@ -1140,16 +1148,8 @@
     "month": "June",
     "title": "Ilya Sutskever Launches Safe Superintelligence Inc.",
     "description": "Former OpenAI chief scientist Ilya Sutskever announces the launch of Safe Superintelligence Inc. (SSI), a new company focused solely on safely developing superintelligent AI.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://ssi.inc"
-  },
-  {
-    "year": 2023,
-    "month": "July",
-    "title": "OpenAI Partners with Associated Press",
-    "description": "OpenAI announces a partnership with the Associated Press, gaining a license to its archive of news stories for training its models in a deal that highlights the value of quality data.",
-    "category": "Companies & Investments",
-    "link": "https://fortune.com/2023/07/13/openai-associated-press-licensing-archive-news-stories-chatgpt/"
   },
   {
     "year": 2024,
@@ -1228,7 +1228,7 @@
     "month": "October",
     "title": "Bolt.new by StackBlitz Emerges",
     "description": "StackBlitz releases Bolt.new, an AI-powered tool that can build full-stack applications directly in the browser, allowing users to prompt, run, edit, and deploy without a local setup.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://github.com/stackblitz/bolt.new"
   },
   {
@@ -1244,7 +1244,7 @@
     "month": "October",
     "title": "OpenAI Closes $6.6B Funding Round",
     "description": "OpenAI finalizes a massive $6.6 billion funding round led by Microsoft, Nvidia, and SoftBank, raising its valuation to $157 billion and making it one of the world's most valuable private companies.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.cnbc.com/2024/10/02/openai-raises-at-157-billion-valuation-microsoft-nvidia-join-round.html"
   },
   {
@@ -1260,7 +1260,7 @@
     "month": "November",
     "title": "Amazon Announces Additional $4B Investment in Anthropic",
     "description": "Amazon announces an additional $4 billion investment in AI startup Anthropic, bringing its total investment to $8 billion and solidifying their strategic partnership.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.cnbc.com/2024/11/22/amazon-to-invest-another-4-billion-in-anthropic-openais-biggest-rival.html"
   },
   {
@@ -1268,7 +1268,7 @@
     "month": "November",
     "title": "Cursor Acquires Supermaven",
     "description": "The AI-first code editor Cursor acquires Supermaven, another AI coding assistant, to bolster its technology.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://cursor.sh/blog/supermaven"
   },
   {
@@ -1276,7 +1276,7 @@
     "month": "November",
     "title": "Codeium Launches Windsurf Editor",
     "description": "Codeium, an AI-powered code acceleration platform, launches the Windsurf Editor, an AI-native IDE designed for real-time collaboration between developers and AI.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://windsurf.ai/"
   },
   {
@@ -1300,7 +1300,7 @@
     "month": "January",
     "title": "OpenAI Releases Operator for Pro Subscribers",
     "description": "OpenAI launches Operator, an experimental AI agent capable of browsing websites and performing actions, available to its Pro subscribers.",
-    "category": "Agents",
+    "category": "Research Breakthroughs",
     "link": "https://openai.com/index/introducing-operator/"
   },
   {
@@ -1316,7 +1316,7 @@
     "month": "February",
     "title": "Anthropic Releases Claude Code in Research Preview",
     "description": "Anthropic launches a research preview of Claude Code, an agentic command-line tool that allows developers to delegate complex engineering tasks to Claude directly from their terminal.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://www.anthropic.com/news/claude-3-7-sonnet"
   },
   {
@@ -1348,7 +1348,7 @@
     "month": "June",
     "title": "Luma Labs Releases Dream Machine",
     "description": "Luma Labs launches Dream Machine, a publicly available text-to-video model capable of generating high-quality, realistic videos from text and image prompts.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://lumalabs.ai/dream-machine"
   },
   {
@@ -1356,7 +1356,7 @@
     "month": "June",
     "title": "Google Releases Gemini CLI",
     "description": "Google launches Gemini CLI, an open-source, AI-powered command-line assistant that integrates the Gemini 2.5 Pro model directly into the terminal for developers.",
-    "category": "AI Tools",
+    "category": "Research Breakthroughs",
     "link": "https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/"
   },
   {
@@ -1364,7 +1364,7 @@
     "month": "June",
     "title": "Meta AI Announces Multi-Billion Dollar Investment in Scale AI",
     "description": "Meta AI announces a $14.3 billion investment in Scale AI and brings on its founder, Alexandr Wang, to help lead a new 'Meta Super Intelligence Labs' unit, signaling a major push to catch up in the AI race.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://techcrunch.com/2025/06/13/scale-ai-confirms-significant-investment-from-meta-says-ceo-alexandr-wang-is-leaving/"
   },
   {
@@ -1388,7 +1388,7 @@
     "month": "July",
     "title": "Grok 4 Generates Controversy",
     "description": "Shortly after its release, Grok 4 faces criticism for generating antisemitic and other inappropriate content, leading to accusations that xAI had 'gamed' the benchmarks and highlighting the challenges of controlling AI behavior.",
-    "category": "Bombshell News",
+    "category": "Research Breakthroughs",
     "link": "https://www.cnn.com/2025/07/12/tech/xai-apology-antisemitic-grok-social-media-posts"
   },
   {
@@ -1444,7 +1444,7 @@
     "month": "August",
     "title": "OpenAI's Valuation Approaches $500 Billion",
     "description": "Reports emerge that OpenAI is in talks for a stock sale that would value the company at nearly $500 billion, a massive increase driven by the launch of GPT-5 and widespread enterprise adoption.",
-    "category": "Companies & Investments",
+    "category": "Research Breakthroughs",
     "link": "https://www.bloomberg.com/news/articles/2025-08-06/openai-in-talks-for-share-sale-valuing-startup-at-500-billion"
   },
   {
@@ -1462,5 +1462,29 @@
     "description": "In a strategic shift, OpenAI releases gpt-oss-120b, its first major open-source model in several years, in a move seen as a response to the growing open-source AI ecosystem.",
     "category": "Public Releases",
     "link": "https://openai.com/index/introducing-gpt-oss/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Event briefing for analysis: Title: OpenAI and NVIDIA announce strategic partnership to deploy 1",
+    "description": "Event briefing for analysis: Title: OpenAI and NVIDIA announce strategic partnership to deploy 10 gigawatts of NVIDIA systems Published on: September 22, 2025 Source: OpenAI Blog URL: https://openai.com/index/openai-nvidia-systems-partnership Full content: OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026. Return the JSON object now. Do not include explanations or comme",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Event briefing for analysis: Title: Creating a safe, observable AI infrastructure for 1 million ",
+    "description": "Event briefing for analysis: Title: Creating a safe, observable AI infrastructure for 1 million classrooms Published on: September 22, 2025 Source: OpenAI Blog URL: https://openai.com/index/schoolai Full content: Discover how SchoolAI, built on OpenAI’s GPT-4.1, image generation, and TTS, powers safe, teacher-guided AI tools for 1 million classrooms worldwide—boosting engagement, oversight, and personalized learning. Return the JSON object now. Do not include explanations or ",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/schoolai"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Event briefing for analysis: Title: CNA is transforming its newsroom with AI Published on: Septe",
+    "description": "Event briefing for analysis: Title: CNA is transforming its newsroom with AI Published on: September 22, 2025 Source: OpenAI Blog URL: https://openai.com/index/cna-walter-fernandez Full content: In this Executive Function series from OpenAI, discover how CNA is transforming its newsroom with AI. Editor-in-Chief Walter Fernandez shares insights on AI adoption, culture, and the future of journalism. Return the JSON object now. Do not include explanations or commentary.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/cna-walter-fernandez"
   }
 ]
