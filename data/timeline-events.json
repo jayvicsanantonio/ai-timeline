@@ -1462,5 +1462,29 @@
     "description": "In a strategic shift, OpenAI releases gpt-oss-120b, its first major open-source model in several years, in a move seen as a response to the growing open-source AI ecosystem.",
     "category": "Public Releases",
     "link": "https://openai.com/index/introducing-gpt-oss/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Event briefing for analysis: Title: OpenAI, Oracle, and SoftBank expand Stargate with five new A",
+    "description": "Event briefing for analysis: Title: OpenAI, Oracle, and SoftBank expand Stargate with five new AI datacenter sites Published on: September 23, 2025 Source: OpenAI Blog URL: https://openai.com/index/five-new-stargate-sites Full content: OpenAI, Oracle, and SoftBank announce five new Stargate AI datacenter sites, accelerating a $500B, 10-gigawatt U.S. infrastructure buildout to power next-generation AI and create tens of thousands of jobs. Return the JSON object now. Do not inc",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/five-new-stargate-sites"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Event briefing for analysis: Title: Creating a safe, observable AI infrastructure for 1 million ",
+    "description": "Event briefing for analysis: Title: Creating a safe, observable AI infrastructure for 1 million classrooms Published on: September 22, 2025 Source: OpenAI Blog URL: https://openai.com/index/schoolai Full content: Discover how SchoolAI, built on OpenAI’s GPT-4.1, image generation, and TTS, powers safe, teacher-guided AI tools for 1 million classrooms worldwide—boosting engagement, oversight, and personalized learning. Return the JSON object now. Do not include explanations or ",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/schoolai"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Event briefing for analysis: Title: OpenAI and NVIDIA announce strategic partnership to deploy 1",
+    "description": "Event briefing for analysis: Title: OpenAI and NVIDIA announce strategic partnership to deploy 10 gigawatts of NVIDIA systems Published on: September 22, 2025 Source: OpenAI Blog URL: https://openai.com/index/openai-nvidia-systems-partnership Full content: OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026. Return the JSON object now. Do not include explanations or comme",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/openai-nvidia-systems-partnership"
   }
 ]
