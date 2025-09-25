@@ -1510,5 +1510,85 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Windows ML now available, empowering developers to scale loc",
+    "description": "The post Windows ML now available, empowering developers to scale local AI across Windows devices appeared first on Source.",
+    "category": "Research Breakthroughs",
+    "link": "https://blogs.windows.com/windowsdeveloper/2025/09/23/windows-ml-is-generally-available-empowering-developers-to-scale-local-ai-across-windows-devices/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "The A.I. Bubble Is Coming for Your Browser - The New Yorker",
+    "description": "The A.I. Bubble Is Coming for Your Browser The New Yorker",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPX0lRWjRSdDJXZjNtaWNWekpLaXliVG16V3pMTFoycnBZWjlBb0JtbzJVMDVnRDIweElkTTdSR1BCb0dTSTNWY09NTzNnaXRjZkV6VkcwWmU5RFE0SGhFLUtaSW4wdHVaMFF5dlhqd2NObGVrdmgxRGVBSDlkWjhFX1lXZ1dnc0I3aDNwZk9XM01tVHNT?oc=5"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "SAP and OpenAI partner to launch sovereign ‘OpenAI for Germa",
+    "description": "SAP and OpenAI launch OpenAI for Germany, a 2026 partnership to bring secure, sovereign AI to Germany’s public sector, enabling safe, efficient public services.",
+    "category": "Public Releases",
+    "link": "https://openai.com/global-affairs/openai-for-germany"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "AI chips are getting hotter. A microfluidics breakthrough go",
+    "description": "The post AI chips are getting hotter. A microfluidics breakthrough goes straight to the silicon to cool up to three times better. appeared first on Source.",
+    "category": "Research Breakthroughs",
+    "link": "https://news.microsoft.com/source/features/innovation/microfluidics-liquid-cooling-ai-chips/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "OpenAI, Oracle, and SoftBank expand Stargate with five new A",
+    "description": "OpenAI, Oracle, and SoftBank announce five new Stargate AI datacenter sites, accelerating a $500B, 10-gigawatt U.S. infrastructure buildout to power next-generation AI and create tens of thousands of jobs.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/five-new-stargate-sites"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "CNA is transforming its newsroom with AI",
+    "description": "In this Executive Function series from OpenAI, discover how CNA is transforming its newsroom with AI. Editor-in-Chief Walter Fernandez shares insights on AI adoption, culture, and the future of journalism.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/cna-walter-fernandez"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Creating a safe, observable AI infrastructure for 1 million",
+    "description": "Discover how SchoolAI, built on OpenAI’s GPT-4.1, image generation, and TTS, powers safe, teacher-guided AI tools for 1 million classrooms worldwide—boosting engagement, oversight, and personalized learning.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/schoolai"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "OpenAI and NVIDIA announce strategic partnership to deploy 1",
+    "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "AI at work: Seeking the truth about AI for business Publishe",
+    "description": "The post AI at work: Seeking the truth about AI for business appeared first on Source.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/worklab/ai-at-work-seeking-the-truth-about-ai-for-business"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Enabling human-agent teams in Microsoft 365 Copilot Publishe",
+    "description": "The post Enabling human-agent teams in Microsoft 365 Copilot appeared first on Source.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/microsoft-365/blog/2025/09/18/microsoft-365-copilot-enabling-human-agent-teams/"
   }
 ]
