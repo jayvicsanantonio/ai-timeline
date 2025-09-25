@@ -1462,5 +1462,53 @@
     "description": "In a strategic shift, OpenAI releases gpt-oss-120b, its first major open-source model in several years, in a move seen as a response to the growing open-source AI ecosystem.",
     "category": "Public Releases",
     "link": "https://openai.com/index/introducing-gpt-oss/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Transforming the manufacturing industry with ChatGPT Publish",
+    "description": "By deploying ChatGPT Enterprise, ENEOS Materials transformed operations with faster research, safer plant design, and streamlined HR processes. Over 80% of employees report major workflow improvements, strengthening competitiveness in manufacturing.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/eneos-materials"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "SAP and OpenAI partner to launch sovereign ‘OpenAI for Germa",
+    "description": "SAP and OpenAI launch OpenAI for Germany, a 2026 partnership to bring secure, sovereign AI to Germany’s public sector, enabling safe, efficient public services.",
+    "category": "Public Releases",
+    "link": "https://openai.com/global-affairs/openai-for-germany"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "OpenAI, Oracle, and SoftBank expand Stargate with five new A",
+    "description": "OpenAI, Oracle, and SoftBank announce five new Stargate AI datacenter sites, accelerating a $500B, 10-gigawatt U.S. infrastructure buildout to power next-generation AI and create tens of thousands of jobs.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/five-new-stargate-sites"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "CNA is transforming its newsroom with AI",
+    "description": "In this Executive Function series from OpenAI, discover how CNA is transforming its newsroom with AI. Editor-in-Chief Walter Fernandez shares insights on AI adoption, culture, and the future of journalism.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/cna-walter-fernandez"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Creating a safe, observable AI infrastructure for 1 million",
+    "description": "Discover how SchoolAI, built on OpenAI’s GPT-4.1, image generation, and TTS, powers safe, teacher-guided AI tools for 1 million classrooms worldwide—boosting engagement, oversight, and personalized learning.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/schoolai"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "OpenAI and NVIDIA announce strategic partnership to deploy 1",
+    "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/openai-nvidia-systems-partnership"
   }
 ]
