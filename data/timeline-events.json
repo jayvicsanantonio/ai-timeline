@@ -1510,5 +1510,85 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Embodied AI: From LLMs to World Models",
+    "description": "arXiv:2509.20021v1 Announce Type: new Abstract: Embodied Artificial Intelligence (AI) is an intelligent system paradigm for achieving Artificial General Intelligence (AGI), serving as the cornerstone for various applications and driving the evolution from cyberspace to physical systems. Recent breakthroughs in Large Language Models (LLMs) and World Models (WMs) have drawn significant attention for embodied AI. On the one hand, LLMs empower embodied AI via semantic reasoning and task decomposition, bringing high-level natural language instructions and low-level natural language actions into embodied cognition. On the other hand, WMs empower embodied AI by building internal representations and future predictions of the external world, facilitating physical law-compliant embodied interactions. As such, this paper comprehensively explores the literature in embodied AI from basics to advances, covering both LLM driven and WM driven works. In particular, we first present the history, key tec",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/2509.20021"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "MACD: Multi-Agent Clinical Diagnosis with Self-Learned Knowl",
+    "description": "arXiv:2509.20067v1 Announce Type: new Abstract: Large language models (LLMs) have demonstrated notable potential in medical applications, yet they face substantial challenges in handling complex real-world clinical diagnoses using conventional prompting methods. Current prompt engineering and multi-agent approaches typically optimize isolated inferences, neglecting the accumulation of reusable clinical experience. To address this, this study proposes a novel Multi-Agent Clinical Diagnosis (MACD) framework, which allows LLMs to self-learn clinical knowledge via a multi-agent pipeline that summarizes, refines, and applies diagnostic insights. It mirrors how physicians develop expertise through experience, enabling more focused and accurate diagnosis on key disease-specific cues. We further extend it to a MACD-human collaborative workflow, where multiple LLM-based diagnostician agents engage in iterative consultations, supported by an evaluator agent and human oversight for cases where ag",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/2509.20067"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "From Pheromones to Policies: Reinforcement Learning for Engi",
+    "description": "arXiv:2509.20095v1 Announce Type: new Abstract: Swarm intelligence emerges from decentralised interactions among simple agents, enabling collective problem-solving. This study establishes a theoretical equivalence between pheromone-mediated aggregation in \\celeg\\ and reinforcement learning (RL), demonstrating how stigmergic signals function as distributed reward mechanisms. We model engineered nematode swarms performing foraging tasks, showing that pheromone dynamics mathematically mirror cross-learning updates, a fundamental RL algorithm. Experimental validation with data from literature confirms that our model accurately replicates empirical \\celeg\\ foraging patterns under static conditions. In dynamic environments, persistent pheromone trails create positive feedback loops that hinder adaptation by locking swarms into obsolete choices. Through computational experiments in multi-armed bandit scenarios, we reveal that introducing a minority of exploratory agents insensitive to pheromo",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/2509.20095"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "PEPS: Quantum-Inspired Reinforcement Learning for Coherent R",
+    "description": "arXiv:2509.20105v1 Announce Type: new Abstract: Large Language Models (LLMs) often struggle with maintaining coherent multi-step reasoning traces, particularly in tasks that require a structured logical flow. This work introduces a quantum-inspired approach to address the challenge by incorporating a fidelity-based reward derived from Projected Entangled Pair States (PEPS) into Proximal Policy Optimization. Unlike prior approaches that use direct supervision or contrastive objectives, the proposed method guides learning through structural consistency, offering a novel approach to enforce global coherence in generated reasoning traces. The proposed framework is evaluated using multiple coherence-determining metrics on diverse datasets such as GSM8K, StrategyQA, and EntailmentBank spanning arithmetic, intuitive, and entailment-based reasoning. Results show that the proposed quantum-inspired approach offers significant improvements over supervised, contrastive, and pretrained baseline app",
+    "category": "Ethics & Policy",
+    "link": "https://arxiv.org/abs/2509.20105"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "New AI system could accelerate clinical research - MIT News",
+    "description": "New AI system could accelerate clinical research MIT News",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNb1Z6MF8wd09Tc1JSREQ2NURLZFBjNC1OR21CdHNJR2R2T2dDaHZZd3cxblJhZTlXS3dsREZfemtQb3ZsR0tQUllYVTdDRmZIM2NwN2FVUHZ5LUNvbDRncUVUZ3YwdHUyRGRiazR0bk5aUjBvRWpsekxseWwxd2pnYmpVN1RzQQ?oc=5"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "University of Alaska Anchorage researchers look to solve Ala",
+    "description": "University of Alaska Anchorage researchers look to solve Alaskans' problems with AI Alaska Public Media",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOQlJoQk9zMk15czhZZ25wS0NqeXprSndEY09pWFFSbFlJX1ljVWhycG9udGZmenBGWlM0aDhZTDhOb19ac01seXhsUkd6aFVYalhtVEpYMEgtTWh0b21ZTmVraGk5Q2lzOUpRRjdHbmJLNllTcXlVQ19mb3ZXSlBVTUVkTjVMdjVweG5VSWlFYXgyV2RZdlBKRlE2OHNXaTg5NW5pUExZVmFFWksyTFA3ekU5X2ptM1FMTDVuOVJfTXRYTEs1Q25WS2U5b3NJdw?oc=5"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "VALUE: After Hours (S07 E32): CapEx, AI, and the Prisoner’s",
+    "description": "VALUE: After Hours (S07 E32): CapEx, AI, and the Prisoner’s Dilemma The Acquirer's Multiple",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOaUxiR2Y0S18tazFjMEJhd2hVRTJRWFA0T01LU1ZQelRvS3RuZ0Z3ZUIxcEdKWl9seWliR2J4UjY0QzRxUzZfNjhRTmktbkNySWVDWkNlWHRsSkk3ZzlGSGJCUW8tS1MtYnRZZlBvWE42dmZ2Wm1Bd0dRd3NxSng2dWpZUDZ1Zml2dUpOVHAxMUg1NGk0TGE1RXg2VjhicHEy?oc=5"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "As AI advances, doomers warn the superintelligence apocalyps",
+    "description": "As AI advances, doomers warn the superintelligence apocalypse is nigh NPR",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxObmx6Q1RNNW4xa2U5bkMzZy1RRnFHVmQ1R1lOWk5oQ2pBUlJuRExaVmlUa2dBR0dVSGh4cjVMMUFmRG5RSVpPN2NkOVlxX213SGZ5elpSa0F3NDJJWktXTTBFRGNhTjdfNndicVI1SFozbUVTTmNQOGljZG9lOFBVOV9VTjF2emlpWGNRQw?oc=5"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Newsom suggests he will sign major California AI bill - Poli",
+    "description": "Newsom suggests he will sign major California AI bill Politico",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOR2Qza0lJWVpvTTNLYmtrY2lxeUMtR21pUTZyTmJRMzBuV3c5WTZNT0IwY3Z1WWxObHB4bFJyTERLYzViLUFtYjd2SmhPWWVPUEpvT2NrRTJCbUEyVlc1eDZBQ2I4cjBodWwzRVlkVXpTWWtzQThzN0s5X2VmN0dlUA?oc=5"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Preparing students for a world shaped by artificial intellig",
+    "description": "Preparing students for a world shaped by artificial intelligence | Letters The Guardian",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNU1pWMnhqLWJ1bkYzRkJ4T3FMTUdlZEFyMkQ5bmpqSE1HVTBLLVNfZ0ZzZlJxZWhEdnVPUGVmNGw2ekoxeDFvZnhVQmU5bFUtS1QxLXJaMHZ6eW84bE4xZzVKc25zXzN2YVBBUGMwaGF2LXlVaElaUkNqMnZEYVNXdWlyMjJoLVVqZ1EtUWVPNW5zNExXbkpEVFNZQ3RwRUlIdUdjWlVoTlYxNW03OEk0bmlCSXBqZw?oc=5"
   }
 ]
