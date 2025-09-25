@@ -1466,14 +1466,6 @@
   {
     "year": 2025,
     "month": "September",
-    "title": "From Pheromones to Policies: Reinforcement Learning for Engi",
-    "description": "arXiv:2509.20095v1 Announce Type: new Abstract: Swarm intelligence emerges from decentralised interactions among simple agents, enabling collective problem-solving. This study establishes a theoretical equivalence between pheromone-mediated aggregation in \\celeg\\ and reinforcement learning (RL), demonstrating how stigmergic signals function as distributed reward mechanisms. We model engineered nematode swarms performing foraging tasks, showing that pheromone dynamics mathematically mirror cross-learning updates, a fundamental RL algorithm. Experimental validation with data from literature confirms that our model accurately replicates empirical \\celeg\\ foraging patterns under static conditions. In dynamic environments, persistent pheromone trails create positive feedback loops that hinder adaptation by locking swarms into obsolete choices. Through computational experiments in multi-armed bandit scenarios, we reveal that introducing a minority of exploratory agents insensitive to pheromo",
-    "category": "Research Breakthroughs",
-    "link": "https://arxiv.org/abs/2509.20095"
-  },
-  {
-    "year": 2025,
-    "month": "September",
     "title": "Transforming the manufacturing industry with ChatGPT Publish",
     "description": "By deploying ChatGPT Enterprise, ENEOS Materials transformed operations with faster research, safer plant design, and streamlined HR processes. Over 80% of employees report major workflow improvements, strengthening competitiveness in manufacturing.",
     "category": "Research Breakthroughs",
@@ -1519,28 +1511,4 @@
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
   },
-  {
-    "year": 2025,
-    "month": "September",
-    "title": "Smol2Operator: Post-Training GUI Agents for Computer Use Pub",
-    "description": "Smol2Operator: Post-Training GUI Agents for Computer Use",
-    "category": "Research Breakthroughs",
-    "link": "https://huggingface.co/blog/smol2operator"
-  },
-  {
-    "year": 2025,
-    "month": "September",
-    "title": "Scaleway on Hugging Face Inference Providers 🔥 Published on",
-    "description": "Scaleway on Hugging Face Inference Providers 🔥",
-    "category": "Research Breakthroughs",
-    "link": "https://huggingface.co/blog/inference-providers-scaleway"
-  },
-  {
-    "year": 2025,
-    "month": "September",
-    "title": "Gaia2 and ARE: Empowering the community to study agents Publ",
-    "description": "Gaia2 and ARE: Empowering the community to study agents",
-    "category": "Research Breakthroughs",
-    "link": "https://huggingface.co/blog/gaia2"
-  }
 ]
