@@ -92,7 +92,7 @@ export function AIQuoteCarousel() {
                   className="text-center space-y-6"
                 >
                   <blockquote className="text-lg md:text-xl lg:text-2xl font-medium text-foreground leading-relaxed">
-                    "{currentQuote.text}"
+                    &ldquo;{currentQuote.text}&rdquo;
                   </blockquote>
 
                   <div className="space-y-2">

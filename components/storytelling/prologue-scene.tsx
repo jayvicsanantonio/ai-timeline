@@ -1,9 +1,24 @@
 "use client"
 
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
-import { useRef } from "react"
+import { useMemo, useRef } from "react"
 import { HeroTitle } from "@/components/ui/hero-title"
 import { AnimatedBackground } from "@/components/ui/animated-background"
+
+const FLOATING_CODE_STRINGS = [
+  "if (intelligence)",
+  "neural.network()",
+  "machine.learn()",
+  "ai.evolve()",
+  "human.dream()",
+  "future.unfold()",
+  "algorithm.think()",
+  "consciousness.emerge()",
+  "data.transform()",
+  "mind.simulate()",
+  "logic.reason()",
+  "pattern.recognize()",
+] as const
 
 export function PrologueScene() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -24,6 +39,16 @@ export function PrologueScene() {
 
   const blur = useTransform(smoothProgress, [0, 0.8, 1], [0, 0, 8])
   const brightness = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.1, 0.6])
+
+  const floatingCode = useMemo(
+    () =>
+      Array.from({ length: 12 }).map((_, i) => ({
+        delay: i * 0.3,
+        duration: 6 + ((i * 0.37) % 4),
+        amplitude: 30 + ((i * 6.7) % 40),
+      })),
+    []
+  )
 
   return (
     <motion.section
@@ -47,53 +72,32 @@ export function PrologueScene() {
       </motion.div>
 
       <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 12 }).map((_, i) => {
-          const randomDelay = i * 0.3
-          const randomDuration = 6 + Math.random() * 4
-          const randomAmplitude = 30 + Math.random() * 40
-
-          return (
-            <motion.div
-              key={i}
-              className="absolute text-xs font-mono text-primary/30 select-none"
-              style={{
-                left: `${5 + i * 8}%`,
-                top: `${15 + (i % 3) * 25}%`,
-                transformStyle: "preserve-3d",
-              }}
-              animate={{
-                y: [-randomAmplitude, randomAmplitude, -randomAmplitude],
-                x: [-10, 10, -10],
-                opacity: [0.1, 0.8, 0.3, 0.1],
-                rotateZ: [-5, 5, -5],
-                scale: [0.8, 1.2, 0.8],
-              }}
-              transition={{
-                duration: randomDuration,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-                delay: randomDelay,
-              }}
-            >
-              {
-                [
-                  "if (intelligence)",
-                  "neural.network()",
-                  "machine.learn()",
-                  "ai.evolve()",
-                  "human.dream()",
-                  "future.unfold()",
-                  "algorithm.think()",
-                  "consciousness.emerge()",
-                  "data.transform()",
-                  "mind.simulate()",
-                  "logic.reason()",
-                  "pattern.recognize()",
-                ][i]
-              }
-            </motion.div>
-          )
-        })}
+        {floatingCode.map((code, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-xs font-mono text-primary/30 select-none"
+            style={{
+              left: `${5 + i * 8}%`,
+              top: `${15 + (i % 3) * 25}%`,
+              transformStyle: "preserve-3d",
+            }}
+            animate={{
+              y: [-code.amplitude, code.amplitude, -code.amplitude],
+              x: [-10, 10, -10],
+              opacity: [0.1, 0.8, 0.3, 0.1],
+              rotateZ: [-5, 5, -5],
+              scale: [0.8, 1.2, 0.8],
+            }}
+            transition={{
+              duration: code.duration,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: code.delay,
+            }}
+          >
+            {FLOATING_CODE_STRINGS[i]}
+          </motion.div>
+        ))}
       </div>
 
       <motion.div className="absolute inset-0" style={{ y: backgroundY3 }}>

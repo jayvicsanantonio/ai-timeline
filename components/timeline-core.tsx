@@ -301,7 +301,7 @@ export function TimelineCore({ events, progress }: { events: TimelineEvent[]; pr
           </h2>
           <p className="text-xl sm:text-2xl md:text-3xl text-muted-foreground max-w-4xl mx-auto leading-relaxed px-4 font-light">
             From the first spark of artificial intelligence to the transformative breakthroughs of today, witness the
-            evolution of humanity's greatest technological achievement.
+            evolution of humanity&rsquo;s greatest technological achievement.
           </p>
         </motion.div>
 
