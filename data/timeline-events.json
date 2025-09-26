@@ -1510,5 +1510,53 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "The A.I. Bubble Is Coming for Your Browser - The New Yorker",
+    "description": "The A.I. Bubble Is Coming for Your Browser The New Yorker",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPX0lRWjRSdDJXZjNtaWNWekpLaXliVG16V3pMTFoycnBZWjlBb0JtbzJVMDVnRDIweElkTTdSR1BCb0dTSTNWY09NTzNnaXRjZkV6VkcwWmU5RFE0SGhFLUtaSW4wdHVaMFF5dlhqd2NObGVrdmgxRGVBSDlkWjhFX1lXZ1dnc0I3aDNwZk9XM01tVHNT?oc=5"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "AI chips are getting hotter. A microfluidics breakthrough go",
+    "description": "AI chips are getting hotter. A microfluidics breakthrough goes straight to the silicon to cool up to three times better.",
+    "category": "Research Breakthroughs",
+    "link": "https://news.microsoft.com/source/features/innovation/microfluidics-liquid-cooling-ai-chips/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "CNA is transforming its newsroom with AI Published on: Septe",
+    "description": "In this Executive Function series from OpenAI, discover how CNA is transforming its newsroom with AI. Editor-in-Chief Walter Fernandez shares insights on AI adoption, culture, and the future of journalism.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/cna-walter-fernandez"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "AI at work: Seeking the truth about AI for business Publishe",
+    "description": "AI at work: Seeking the truth about AI for business",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/worklab/ai-at-work-seeking-the-truth-about-ai-for-business"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Enabling human-agent teams in Microsoft 365 Copilot Publishe",
+    "description": "Enabling human-agent teams in Microsoft 365 Copilot",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/microsoft-365/blog/2025/09/18/microsoft-365-copilot-enabling-human-agent-teams/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Using AI to assist in rare disease diagnosis Published on: S",
+    "description": "Using AI to assist in rare disease diagnosis",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/research/blog/using-ai-to-assist-in-rare-disease-diagnosis/"
   }
 ]
