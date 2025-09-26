@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useEffect, useState, useMemo } from "react"
+import { useMemo } from "react"
 
 interface AnimatedBackgroundProps {
   variant?: "dots" | "grid" | "neural"
@@ -9,12 +9,6 @@ interface AnimatedBackgroundProps {
 }
 
 export function AnimatedBackground({ variant = "dots", className }: AnimatedBackgroundProps) {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
   // Memoize dot positions to prevent hydration mismatches
   const dotPositions = useMemo(() => 
     Array.from({ length: 50 }).map((_, i) => ({
@@ -24,8 +18,6 @@ export function AnimatedBackground({ variant = "dots", className }: AnimatedBack
       delay: (i * 0.04) % 2,
     })), []
   )
-
-  if (!mounted) return null
 
   if (variant === "dots") {
     return (

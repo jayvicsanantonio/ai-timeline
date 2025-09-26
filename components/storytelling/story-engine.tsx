@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { PrologueScene } from './prologue-scene';
 import { TimelineStory } from './timeline-story';
 import { EpilogueScene } from './epilogue-scene';
@@ -11,50 +12,64 @@ interface StoryEngineProps {
   events: TimelineEvent[];
 }
 
+interface EraDefinition {
+  name: string;
+  range: [number, number];
+  description: string;
+}
+
+const ERA_DEFINITIONS: EraDefinition[] = [
+  {
+    name: 'The Foundation Era',
+    range: [1940, 1970],
+    description:
+      'The birth of artificial intelligence as a field of study, where visionary researchers laid the theoretical groundwork and created the first programs that could simulate human reasoning.',
+  },
+  {
+    name: 'The Knowledge Era',
+    range: [1970, 1990],
+    description:
+      'A period focused on encoding human expertise into computer systems, leading to the development of expert systems and the first commercial AI applications.',
+  },
+  {
+    name: 'The Learning Era',
+    range: [1990, 2010],
+    description:
+      'The emergence of machine learning as computers began to learn from data rather than relying solely on programmed rules, setting the stage for modern AI.',
+  },
+  {
+    name: 'The Deep Learning Revolution',
+    range: [2010, 2020],
+    description:
+      'A transformative period where neural networks with multiple layers achieved breakthrough performance in vision, speech, and language understanding.',
+  },
+  {
+    name: 'The Generative AI Era',
+    range: [2020, 2030],
+    description:
+      'The current era where AI systems can create original content, engage in natural conversations, and demonstrate capabilities that approach human-level performance in many domains.',
+  },
+];
+
 export function StoryEngine({ events }: StoryEngineProps) {
-  const groupEventsByEra = (events: TimelineEvent[]) => {
-    const eras = [
-      {
-        name: 'The Foundation Era',
-        range: [1940, 1970],
-        events: [] as TimelineEvent[],
-      },
-      {
-        name: 'The Knowledge Era',
-        range: [1970, 1990],
-        events: [] as TimelineEvent[],
-      },
-      {
-        name: 'The Learning Era',
-        range: [1990, 2010],
-        events: [] as TimelineEvent[],
-      },
-      {
-        name: 'The Deep Learning Revolution',
-        range: [2010, 2020],
-        events: [] as TimelineEvent[],
-      },
-      {
-        name: 'The Generative AI Era',
-        range: [2020, 2030],
-        events: [] as TimelineEvent[],
-      },
-    ];
+  const eras = useMemo(() => {
+    const erasWithEvents = ERA_DEFINITIONS.map((era) => ({
+      ...era,
+      events: [] as TimelineEvent[],
+    }));
 
     events.forEach((event) => {
-      const era = eras.find(
-        (era) =>
-          event.year >= era.range[0] && event.year < era.range[1]
+      const era = erasWithEvents.find(
+        ({ range }) => event.year >= range[0] && event.year < range[1]
       );
+
       if (era) {
         era.events.push(event);
       }
     });
 
-    return eras.filter((era) => era.events.length > 0);
-  };
-
-  const eras = groupEventsByEra(events);
+    return erasWithEvents.filter((era) => era.events.length > 0);
+  }, [events]);
 
   return (
     <div className="relative">
@@ -67,7 +82,7 @@ export function StoryEngine({ events }: StoryEngineProps) {
               era={`Chapter ${index + 1}`}
               title={era.name}
               subtitle={`${era.range[0]}s - ${era.range[1]}s`}
-              description={getEraDescription(era.name)}
+              description={era.description}
               className="bg-gradient-to-b from-background/50 to-muted/10 -mt-32 pt-32"
             />
             <TimelineStory events={era.events} />
@@ -93,21 +108,4 @@ export function StoryEngine({ events }: StoryEngineProps) {
       </div>
     </div>
   );
-}
-
-function getEraDescription(eraName: string): string {
-  const descriptions = {
-    'The Foundation Era':
-      'The birth of artificial intelligence as a field of study, where visionary researchers laid the theoretical groundwork and created the first programs that could simulate human reasoning.',
-    'The Knowledge Era':
-      'A period focused on encoding human expertise into computer systems, leading to the development of expert systems and the first commercial AI applications.',
-    'The Learning Era':
-      'The emergence of machine learning as computers began to learn from data rather than relying solely on programmed rules, setting the stage for modern AI.',
-    'The Deep Learning Revolution':
-      'A transformative period where neural networks with multiple layers achieved breakthrough performance in vision, speech, and language understanding.',
-    'The Generative AI Era':
-      'The current era where AI systems can create original content, engage in natural conversations, and demonstrate capabilities that approach human-level performance in many domains.',
-  };
-
-  return descriptions[eraName as keyof typeof descriptions] || '';
 }
