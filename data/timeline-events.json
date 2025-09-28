@@ -1510,5 +1510,29 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Introducing ChatGPT Pulse Published on: September 25, 2025 S",
+    "description": "Today we're releasing a preview of ChatGPT Pulse to Pro users on mobile. Pulse is a new experience where ChatGPT proactively does research to deliver personalized updates based on your chats, feedback, and connected apps like your calendar.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/introducing-chatgpt-pulse"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Anthropic joins the multi-model lineup in Microsoft Copilot",
+    "description": "Anthropic joins the multi-model lineup in Microsoft Copilot Studio",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/microsoft-copilot/blog/copilot-studio/anthropic-joins-the-multi-model-lineup-in-microsoft-copilot-studio/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Windows ML now available, empowering developers to scale loc",
+    "description": "Windows ML now available, empowering developers to scale local AI across Windows devices",
+    "category": "Research Breakthroughs",
+    "link": "https://blogs.windows.com/windowsdeveloper/2025/09/23/windows-ml-is-generally-available-empowering-developers-to-scale-local-ai-across-windows-devices/"
   }
 ]
