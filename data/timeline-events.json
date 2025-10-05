@@ -1510,5 +1510,29 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "Samsung and SK join OpenAI’s Stargate initiative to advance",
+    "description": "Samsung and SK join OpenAI’s Stargate initiative to expand global AI infrastructure, scaling advanced memory chip production and building next-gen data centers in Korea.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/samsung-and-sk-join-stargate"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "Grok 4 now available in Azure AI Foundry: Unlock frontier in",
+    "description": "Grok 4 now available in Azure AI Foundry: Unlock frontier intelligence, business-ready capabilities",
+    "category": "Research Breakthroughs",
+    "link": "https://azure.microsoft.com/en-us/blog/grok-4-is-now-available-in-azure-ai-foundry-unlock-frontier-intelligence-and-business-ready-capabilities/"
+  },
+  {
+    "year": 2025,
+    "month": "September",
+    "title": "The Sora feed philosophy Published on: September 30, 2025 So",
+    "description": "Discover the Sora feed philosophy—built to spark creativity, foster connections, and keep experiences safe with personalized recommendations, parental controls, and strong guardrails.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/sora-feed-philosophy"
   }
 ]
