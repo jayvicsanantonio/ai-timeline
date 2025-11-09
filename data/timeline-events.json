@@ -1510,5 +1510,29 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "Microsoft offers in-country data processing to 15 countries",
+    "description": "Microsoft offers in-country data processing to 15 countries to strengthen sovereign controls for Microsoft 365 Copilot",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/microsoft-365/blog/2025/11/04/microsoft-offers-in-country-data-processing-to-15-countries-to-strengthen-sovereign-controls-for-microsoft-365-copilot/"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "How Chime is redefining marketing through AI Published on: N",
+    "description": "Vineet Mehra, Chief Marketing Officer at Chime, shares how AI is reshaping marketing into an agent-driven discipline. He explains why CMOs who champion AI literacy and thoughtful adoption will lead in the new era of growth.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/chime-vineet-mehra"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "1 million business customers putting AI to work Published on",
+    "description": "More than 1 million business customers around the world now use OpenAI. Across healthcare, life sciences, financial services, and more, ChatGPT and our APIs are driving a new era of intelligent, AI-powered work.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/1-million-businesses-putting-ai-to-work"
   }
 ]
