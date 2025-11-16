@@ -1510,5 +1510,29 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "Over 1.2 Billion People Adopt AI Tools in Under 3 Years",
+    "description": "A recent report highlights that over 1.2 billion individuals have utilized AI tools within a span of less than three years, showcasing the rapid diffusion of AI technology globally. This significant milestone underscores the increasing reliance on AI across various sectors and its potential to transform industries and daily life.",
+    "category": "Public Releases",
+    "link": "https://blogs.microsoft.com/on-the-issues/2025/11/10/understanding-global-ai-diffusion/"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "New AI Agent Enables Multimodal Reasoning Over Video and Images",
+    "description": "Microsoft introduces a groundbreaking AI agent capable of understanding and reasoning across large collections of video and image data. This innovation enhances the ability to analyze and interpret multimedia content, paving the way for advanced applications in various fields such as content creation, surveillance, and education.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/research/blog/mmctagent-enabling-multimodal-reasoning-over-large-video-and-image-collections/"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "Philips Scales AI Literacy Across 70,000 Employees",
+    "description": "Philips is enhancing AI literacy among its workforce by training 70,000 employees with ChatGPT Enterprise. This initiative aims to ensure responsible AI usage and improve healthcare outcomes globally.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/philips"
   }
 ]
