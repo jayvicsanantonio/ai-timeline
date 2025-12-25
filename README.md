@@ -7,20 +7,20 @@ _An interactive, cinematic exploration of AI's evolution from 1943 to the presen
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Framer Motion](https://img.shields.io/badge/Framer%20Motion-purple?style=for-the-badge&logo=framer)](https://www.framer.com/motion)
 
-## 🎯 Overview
+##  Overview
 
 This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **183 curated events** spanning from 1943 to 2024. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
-- **📊 Comprehensive Dataset**: 1,465 meticulously researched AI milestones with verified sources
-- **🎬 Cinematic Experience**: Framer Motion-powered animations and transitions
-- **📱 Responsive Design**: Optimized for desktop, tablet, and mobile experiences
-- **♿ Accessibility First**: WCAG 2.1 compliant with focus management and reduced motion support
-- **🎨 Modern UI**: Shadcn/ui components with Radix UI primitives
-- **⚡ Performance Optimized**: Lazy loading, intersection observers, and error boundaries
+- ** Comprehensive Dataset**: 1,465 meticulously researched AI milestones with verified sources
+- ** Cinematic Experience**: Framer Motion-powered animations and transitions
+- ** Responsive Design**: Optimized for desktop, tablet, and mobile experiences
+- ** Accessibility First**: WCAG 2.1 compliant with focus management and reduced motion support
+- ** Modern UI**: Shadcn/ui components with Radix UI primitives
+- ** Performance Optimized**: Lazy loading, intersection observers, and error boundaries
 
-## 🏗️ Technical Architecture
+## ️ Technical Architecture
 
 ### Frontend Stack
 
@@ -63,7 +63,7 @@ components/
 - **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances
 - **Link Verification**: Automated scripts for source validation
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -100,7 +100,7 @@ pnpm lint         # Run ESLint
 pnpm type-check   # Run TypeScript checks
 ```
 
-## 🎨 User Experience Design
+##  User Experience Design
 
 ### Interactive Features
 
@@ -126,7 +126,7 @@ pnpm type-check   # Run TypeScript checks
 - **Image Optimization**: Next.js automatic optimization
 - **Bundle Analysis**: Optimized chunk splitting
 
-## 📊 Data Quality & Verification
+##  Data Quality & Verification
 
 ### Automated Link Checking
 
@@ -153,7 +153,7 @@ interface TimelineEvent {
 }
 ```
 
-## 🔧 Advanced Features
+##  Advanced Features
 
 ### Animation System
 
@@ -176,7 +176,7 @@ useIntersectionAnimation(); // Combines both for smooth reveals
 - **System Preference**: Respects OS theme settings
 - **Persistent Storage**: Theme preference remembering
 
-## 🌟 Standout Engineering Practices
+##  Standout Engineering Practices
 
 ### Code Quality
 
@@ -199,7 +199,7 @@ useIntersectionAnimation(); // Combines both for smooth reveals
 - **Type Safety**: Compile-time error prevention
 - **Documentation**: Comprehensive inline documentation
 
-## 🎯 Impact & Learning Outcomes
+##  Impact & Learning Outcomes
 
 This project demonstrates:
 
@@ -211,7 +211,7 @@ This project demonstrates:
 - **Animation Programming**: Sophisticated motion design
 - **User Experience Design**: Intuitive interaction patterns
 
-## 🚀 Future Enhancements
+##  Future Enhancements
 
 - **Search Functionality**: Full-text search across events
 - **Personalization**: User-customizable timeline views
@@ -220,7 +220,7 @@ This project demonstrates:
 - **API Integration**: Real-time AI news aggregation
 - **Internationalization**: Multi-language support
 
-## 📈 Metrics & Performance
+##  Metrics & Performance
 
 - **1,400+ Events**: Comprehensive historical coverage
 - **Zero Runtime Errors**: Robust error boundary implementation
