@@ -1510,5 +1510,29 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "WorkLab podcast: Pascal Bornet on deploying agents to hone y",
+    "description": "WorkLab podcast: Pascal Bornet on deploying agents to hone your competitive edge",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/worklab/podcast/pascal-bornet-on-deploying-agents-to-hone-your-competitive-edge"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "Expanding Stargate to Michigan Published on: October 30, 202",
+    "description": "OpenAI is expanding Stargate to Michigan with a new one-gigawatt campus that strengthens America’s AI infrastructure. The project will create jobs, drive investment, and support economic growth across the Midwest.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/expanding-stargate-to-michigan"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "Technical Report: Performance and baseline evaluations of gp",
+    "description": "gpt-oss-safeguard-120b and gpt-oss-safeguard-20b are two open-weight reasoning models post-trained from the gpt-oss models and trained to reason from a provided policy in order to label content under that policy. In this report, we describe gpt-oss-safeguard’s capabilities and provide our baseline safety evaluations on the gpt-oss-safeguard models, using the underlying gpt-oss models as a baseline. For more information about the development and architecture of the underlying gpt-oss models, see the original gpt-oss model model card⁠.",
+    "category": "Ethics & Policy",
+    "link": "https://openai.com/index/gpt-oss-safeguard-technical-report"
   }
 ]
