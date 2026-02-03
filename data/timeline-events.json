@@ -1510,5 +1510,29 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "The next chapter for UK sovereign AI Published on: October 2",
+    "description": "OpenAI expands its UK partnership with a new Ministry of Justice agreement, bringing ChatGPT to civil servants. It also introduces UK data residency for ChatGPT Enterprise, ChatGPT Edu, and the API Platform to support trusted and secure AI adoption.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/the-next-chapter-for-uk-sovereign-ai"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "Tell me when: Building agents that can wait, monitor and act",
+    "description": "Key takeaways: Event briefing for analysis: Title: Tell me when: Building agents that can wait, monitor and act Published on: October 22, 2025 Source: microsoft_ai_news URL: h. microsoft.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.microsoft.com/en-us/research/blog/tell-me-when-building-agents-that-can-wait-monitor-and-act/"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "'Just holding a Doritos bag': Student handcuffed after AI sy",
+    "description": "'Just holding a Doritos bag': Student handcuffed after AI system mistook bag of chips for weapon WBAL-TV",
+    "category": "Research Breakthroughs",
+    "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNMnNWenpQY3JwdVVVUENVVkZnMWdHaHlPNEtvZXNFMHNVb0FIRy1rV3d5NXpmVUlISXA1UnVCUFVCZHpraTdXaHZkU0hyUnMxTWRhcTU0enhNa1AtcG42SUhJYVFJSlNYeHB0TGhEUnBKRDcxV2ZveFRLVTFaZlQ1LWxaOGU1UGs5cktQV1BRUW9fdEVTZkVKQg?oc=5"
   }
 ]
