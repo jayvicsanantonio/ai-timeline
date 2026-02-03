@@ -1510,5 +1510,29 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "Helping 1,000 small businesses build with AI Published on: N",
+    "description": "OpenAI is partnering with DoorDash, SCORE, and local organizations to help 1,000 small businesses build with AI. The Small Business AI Jam gives Main Street business owners hands-on tools and training to compete and grow.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/small-business-ai-jam"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "Early experiments in accelerating science with GPT-5 Publish",
+    "description": "OpenAI introduces the first research cases showing how GPT-5 accelerates scientific progress across math, physics, biology, and computer science. Explore how AI and researchers collaborate to generate proofs, uncover new insights, and reshape the pace of discovery.",
+    "category": "Research Breakthroughs",
+    "link": "https://openai.com/index/accelerating-science-gpt-5"
+  },
+  {
+    "year": 2025,
+    "month": "November",
+    "title": "Infinite scale: The architecture behind the Azure AI superfa",
+    "description": "Infinite scale: The architecture behind the Azure AI superfactory",
+    "category": "Research Breakthroughs",
+    "link": "https://blogs.microsoft.com/blog/2025/11/12/infinite-scale-the-architecture-behind-the-azure-ai-superfactory/"
   }
 ]
