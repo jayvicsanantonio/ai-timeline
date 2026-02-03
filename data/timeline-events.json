@@ -1510,5 +1510,29 @@
     "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
     "category": "Public Releases",
     "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "Across the ambition gap: How AI users are gaining more than",
+    "description": "Across the ambition gap: How AI users are gaining more than answers",
+    "category": "Research Breakthroughs",
+    "link": "https://blogs.windows.com/windowsexperience/2025/10/13/across-the-ambition-gap-how-ai-users-are-gaining-more-than-answers/"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "LSEG and Microsoft transform access to AI-ready financial da",
+    "description": "LSEG and Microsoft transform access to AI-ready financial data in customer workflows",
+    "category": "Research Breakthroughs",
+    "link": "https://news.microsoft.com/source/2025/10/12/lseg-and-microsoft-transform-access-to-ai-ready-financial-data-in-customer-workflows/"
+  },
+  {
+    "year": 2025,
+    "month": "October",
+    "title": "OpenAI and Broadcom announce strategic collaboration to depl",
+    "description": "OpenAI and Broadcom announce a multi-year partnership to deploy 10 gigawatts of OpenAI-designed AI accelerators, co-developing next-generation systems and Ethernet solutions to power scalable, energy-efficient AI infrastructure by 2029.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/openai-and-broadcom-announce-strategic-collaboration"
   }
 ]
