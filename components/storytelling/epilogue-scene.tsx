@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion"
+import { motion, useInView, useReducedMotion, useScroll, useTransform, useSpring } from "framer-motion"
 import { useRef, useMemo } from "react"
 import { SectionHeader } from "@/components/ui/section-header"
 import { AnimatedBackground } from "@/components/ui/animated-background"
@@ -8,6 +8,10 @@ import { TextReveal } from "@/components/animations/text-reveal"
 
 export function EpilogueScene() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const reduceMotion = useReducedMotion()
+  const inView = useInView(containerRef, { amount: 0.15 })
+  const shouldAnimateAmbient = inView && !reduceMotion
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
@@ -39,56 +43,62 @@ export function EpilogueScene() {
         <AnimatedBackground variant="neural" className="opacity-30" />
       </motion.div>
 
-      <div className="absolute inset-0">
-        {particles.map((particle, i) => (
-          <motion.div
-            key={i}
-            className="absolute bg-white rounded-full"
-            style={{
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-            }}
-            animate={{
-              opacity: [0, 0.8, 0.3, 0],
-              scale: [0, 1, 1.2, 0],
-              y: [0, -50 - i * 0.5],
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Number.POSITIVE_INFINITY,
-              delay: particle.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+      {shouldAnimateAmbient ? (
+        <>
+          <div className="absolute inset-0">
+            {particles.map((particle, i) => (
+              <motion.div
+                key={i}
+                className="absolute bg-white rounded-full"
+                style={{
+                  left: `${particle.left}%`,
+                  top: `${particle.top}%`,
+                  width: `${particle.size}px`,
+                  height: `${particle.size}px`,
+                }}
+                animate={{
+                  opacity: [0, 0.8, 0.3, 0],
+                  scale: [0, 1, 1.2, 0],
+                  y: [0, -50 - i * 0.5],
+                }}
+                transition={{
+                  duration: particle.duration,
+                  repeat: Number.POSITIVE_INFINITY,
+                  delay: particle.delay,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </div>
 
-      <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <motion.div
-            key={`connection-${i}`}
-            className="absolute w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent"
-            style={{
-              left: `${10 + i * 4}%`,
-              height: "60vh",
-              top: "20%",
-            }}
-            animate={{
-              opacity: [0, 0.3, 0.1, 0],
-              scaleY: [0, 1, 0.8, 0],
-              y: [100, -100],
-            }}
-            transition={{
-              duration: 8 + i * 0.3,
-              repeat: Number.POSITIVE_INFINITY,
-              delay: i * 0.2,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+          <div className="absolute inset-0 pointer-events-none">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <motion.div
+                key={`connection-${i}`}
+                className="absolute w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent"
+                style={{
+                  left: `${10 + i * 4}%`,
+                  height: "60vh",
+                  top: "20%",
+                }}
+                animate={{
+                  opacity: [0, 0.3, 0.1, 0],
+                  scaleY: [0, 1, 0.8, 0],
+                  y: [100, -100],
+                }}
+                transition={{
+                  duration: 8 + i * 0.3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  delay: i * 0.2,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+      )}
 
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
         <motion.div
@@ -155,9 +165,7 @@ export function EpilogueScene() {
           >
             <motion.div
               className="flex items-center space-x-3"
-              animate={{
-                opacity: [0.5, 1, 0.5],
-              }}
+              animate={shouldAnimateAmbient ? { opacity: [0.5, 1, 0.5] } : undefined}
               transition={{
                 duration: 3,
                 repeat: Number.POSITIVE_INFINITY,
@@ -165,7 +173,7 @@ export function EpilogueScene() {
               }}
             >
               <motion.div
-                animate={{ rotate: 360 }}
+                animate={shouldAnimateAmbient ? { rotate: 360 } : undefined}
                 transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                 className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full"
               />
@@ -174,7 +182,7 @@ export function EpilogueScene() {
 
             <motion.div
               className="text-xs text-muted-foreground/60"
-              animate={{ opacity: [0.3, 0.7, 0.3] }}
+              animate={shouldAnimateAmbient ? { opacity: [0.3, 0.7, 0.3] } : undefined}
               transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
             >
               Built with passion for the future of artificial intelligence

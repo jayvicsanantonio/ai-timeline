@@ -1,7 +1,13 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useMemo } from 'react';
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
+import { useMemo, useRef } from 'react';
 import type { TimelineEvent } from '@/types/timeline';
 import { CinematicCard } from '@/components/ui/cinematic-card';
 import { TimelineBadge } from '@/components/ui/timeline-badge';
@@ -23,8 +29,20 @@ const categoryVariants = {
   Agents: 'hardware' as const,
 };
 
+const STAR_COUNT = 24;
+const CONNECTION_COUNT = 6;
+const CODE_COUNT = 4;
+const GEOMETRY_COUNT = 3;
+const ORB_COUNT = 2;
+
 export function TimelineStory({ events }: TimelineStoryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const inView = useInView(containerRef, {
+    margin: '-20% 0px -20% 0px',
+  });
+  const shouldAnimateAmbient = inView && !reduceMotion;
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start end', 'end start'],
@@ -33,35 +51,42 @@ export function TimelineStory({ events }: TimelineStoryProps) {
   const backgroundY = useTransform(
     scrollYProgress,
     [0, 1],
-    [0, -200]
+    [0, reduceMotion ? 0 : -120]
   );
-  const midgroundY = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const midgroundY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, reduceMotion ? 0 : -70]
+  );
 
-  // Memoize random values to prevent hydration mismatches
   const starAnimations = useMemo(
     () =>
-      Array.from({ length: 80 }).map((_, i) => ({
-        size: 1 + ((i * 0.037) % 3), // Deterministic size based on index
-        duration: 8 + ((i * 0.05) % 4),
-        delay: (i * 0.075) % 6,
-        left: (i * 1.25) % 100,
-        top: (i * 1.618) % 100, // Using golden ratio for distribution
+      Array.from({ length: STAR_COUNT }).map((_, i) => ({
+        size: 1 + ((i * 0.061) % 2.4),
+        duration: 7 + ((i * 0.17) % 3),
+        delay: (i * 0.2) % 4,
+        left: (i * 3.97) % 100,
+        top: (i * 5.71) % 100,
       })),
     []
   );
 
   const connectionAnimations = useMemo(
     () =>
-      Array.from({ length: 12 }).map((_, i) => ({
-        width: 40 + ((i * 7.5) % 60),
+      Array.from({ length: CONNECTION_COUNT }).map((_, i) => ({
+        width: 45 + ((i * 10.5) % 35),
+        left: 7 + i * 14,
+        top: 15 + ((i * 18) % 60),
       })),
     []
   );
 
   const codeAnimations = useMemo(
     () =>
-      Array.from({ length: 8 }).map((_, i) => ({
-        duration: 12 + ((i * 0.75) % 6),
+      Array.from({ length: CODE_COUNT }).map((_, i) => ({
+        duration: 10 + ((i * 1.2) % 3),
+        left: 14 + i * 18,
+        top: 26 + (i % 2) * 28,
       })),
     []
   );
@@ -72,170 +97,170 @@ export function TimelineStory({ events }: TimelineStoryProps) {
       className="relative py-32 overflow-hidden"
     >
       <motion.div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-30 pointer-events-none"
         style={{ y: backgroundY }}
       >
-        <AnimatedBackground variant="neural" className="opacity-50" />
+        <AnimatedBackground variant="neural" className="opacity-45" />
       </motion.div>
 
-      <motion.div
-        className="absolute inset-0 opacity-20"
-        style={{ y: midgroundY }}
-      >
-        <AnimatedBackground variant="dots" className="opacity-40" />
-      </motion.div>
+      {shouldAnimateAmbient ? (
+        <motion.div
+          className="absolute inset-0 opacity-18 pointer-events-none"
+          style={{ y: midgroundY }}
+        >
+          <AnimatedBackground variant="dots" className="opacity-25" />
+        </motion.div>
+      ) : (
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(5,150,105,0.08),transparent_72%)]" />
+      )}
 
-      <div className="absolute inset-0 overflow-hidden">
-        {starAnimations.map((star, i) => (
-          <motion.div
-            key={`star-${i}`}
-            className="absolute rounded-full"
-            style={{
-              left: `${star.left}%`,
-              top: `${star.top}%`,
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              background: 'rgba(5, 150, 105, 0.4)',
-              boxShadow: `0 0 ${
-                star.size * 2
-              }px rgba(5, 150, 105, 0.3)`,
-            }}
-            animate={{
-              opacity: [0, 0.6, 0],
-              scale: [0, 1, 0],
-              y: [0, -100],
-            }}
-            transition={{
-              duration: star.duration,
-              repeat: Number.POSITIVE_INFINITY,
-              delay: star.delay,
-              ease: 'linear',
-            }}
-          />
-        ))}
-      </div>
+      {shouldAnimateAmbient ? (
+        <>
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {starAnimations.map((star, i) => (
+              <motion.div
+                key={`star-${i}`}
+                className="absolute rounded-full"
+                style={{
+                  left: `${star.left}%`,
+                  top: `${star.top}%`,
+                  width: `${star.size}px`,
+                  height: `${star.size}px`,
+                  background: 'rgba(5, 150, 105, 0.34)',
+                  boxShadow: `0 0 ${star.size * 1.8}px rgba(5, 150, 105, 0.25)`,
+                }}
+                animate={{
+                  opacity: [0.1, 0.55, 0.1],
+                  scale: [0.8, 1, 0.8],
+                  y: [0, -50],
+                }}
+                transition={{
+                  duration: star.duration,
+                  repeat: Number.POSITIVE_INFINITY,
+                  delay: star.delay,
+                  ease: 'linear',
+                }}
+              />
+            ))}
+          </div>
 
-      <div className="absolute inset-0 overflow-hidden opacity-40">
-        {connectionAnimations.map((connection, i) => (
-          <motion.div
-            key={`connection-${i}`}
-            className="absolute"
-            style={{
-              left: `${5 + i * 8}%`,
-              top: `${10 + ((i * 15) % 80)}%`,
-              width: `${connection.width}%`,
-              height: '2px',
-              background:
-                'linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.5), transparent)',
-              transformOrigin: 'left center',
-            }}
-            animate={{
-              scaleX: [0, 1, 0],
-              opacity: [0, 0.6, 0],
-            }}
-            transition={{
-              duration: 8 + i * 0.5,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'easeInOut',
-              delay: i * 0.3,
-            }}
-          />
-        ))}
-      </div>
+          <div className="absolute inset-0 overflow-hidden opacity-35 pointer-events-none">
+            {connectionAnimations.map((connection, i) => (
+              <motion.div
+                key={`connection-${i}`}
+                className="absolute"
+                style={{
+                  left: `${connection.left}%`,
+                  top: `${connection.top}%`,
+                  width: `${connection.width}%`,
+                  height: '1.5px',
+                  background:
+                    'linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.5), transparent)',
+                  transformOrigin: 'left center',
+                }}
+                animate={{
+                  scaleX: [0, 1, 0],
+                  opacity: [0, 0.55, 0],
+                }}
+                transition={{
+                  duration: 7 + i * 0.6,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: 'easeInOut',
+                  delay: i * 0.5,
+                }}
+              />
+            ))}
+          </div>
 
-      <div className="absolute inset-0 overflow-hidden">
-        {codeAnimations.map((code, i) => {
-          const delay = i * 0.8;
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {codeAnimations.map((code, i) => (
+              <motion.div
+                key={`code-${i}`}
+                className="absolute text-xs font-mono text-primary/35 select-none"
+                style={{
+                  left: `${code.left}%`,
+                  top: `${code.top}%`,
+                }}
+                animate={{
+                  y: [-20, 18, -20],
+                  opacity: [0.15, 0.45, 0.15],
+                }}
+                transition={{
+                  duration: code.duration,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: 'easeInOut',
+                  delay: i * 0.9,
+                }}
+              >
+                {
+                  [
+                    'neural.evolve()',
+                    'ai.breakthrough()',
+                    'machine.learn()',
+                    'pattern.recognize()',
+                  ][i]
+                }
+              </motion.div>
+            ))}
+          </div>
 
-          return (
-            <motion.div
-              key={`code-${i}`}
-              className="absolute text-sm font-mono text-primary/40 select-none"
-              style={{
-                left: `${10 + i * 12}%`,
-                top: `${20 + (i % 4) * 20}%`,
-              }}
-              animate={{
-                y: [-30, 30, -30],
-                opacity: [0.2, 0.5, 0.2],
-              }}
-              transition={{
-                duration: code.duration,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: 'easeInOut',
-                delay,
-              }}
-            >
-              {
-                [
-                  'neural.evolve()',
-                  'ai.breakthrough()',
-                  'machine.learn()',
-                  'deep.think()',
-                  'algorithm.adapt()',
-                  'intelligence.emerge()',
-                  'pattern.recognize()',
-                  'model.train()',
-                ][i]
-              }
-            </motion.div>
-          );
-        })}
-      </div>
+          <div className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none">
+            {Array.from({ length: GEOMETRY_COUNT }).map((_, i) => (
+              <motion.div
+                key={`geo-${i}`}
+                className="absolute border border-primary/30"
+                style={{
+                  left: `${22 + i * 22}%`,
+                  top: `${25 + ((i * 22) % 45)}%`,
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: i % 2 === 0 ? '50%' : '0%',
+                }}
+                animate={{
+                  rotate: [0, 360],
+                  scale: [0.85, 1.12, 0.85],
+                  opacity: [0.1, 0.32, 0.1],
+                }}
+                transition={{
+                  duration: 20 + i * 4,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: 'linear',
+                  delay: i * 1.5,
+                }}
+              />
+            ))}
+          </div>
 
-      <div className="absolute inset-0 overflow-hidden opacity-20">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <motion.div
-            key={`geo-${i}`}
-            className="absolute border border-primary/30"
-            style={{
-              left: `${15 + i * 15}%`,
-              top: `${20 + ((i * 25) % 60)}%`,
-              width: '60px',
-              height: '60px',
-              borderRadius: i % 2 === 0 ? '50%' : '0%',
-            }}
-            animate={{
-              rotate: [0, 360],
-              scale: [0.8, 1.2, 0.8],
-              opacity: [0.1, 0.3, 0.1],
-            }}
-            transition={{
-              duration: 20 + i * 5,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'linear',
-              delay: i * 2,
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <motion.div
-            key={`orb-${i}`}
-            className="absolute rounded-full bg-gradient-radial from-primary/20 via-primary/10 to-transparent blur-2xl"
-            style={{
-              left: `${20 + i * 20}%`,
-              top: `${30 + ((i * 25) % 50)}%`,
-              width: '200px',
-              height: '200px',
-            }}
-            animate={{
-              x: [-50, 50, -50],
-              y: [-30, 30, -30],
-              scale: [0.8, 1.2, 0.8],
-              opacity: [0.1, 0.3, 0.1],
-            }}
-            transition={{
-              duration: 25 + i * 5,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'easeInOut',
-              delay: i * 3,
-            }}
-          />
-        ))}
-      </div>
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {Array.from({ length: ORB_COUNT }).map((_, i) => (
+              <motion.div
+                key={`orb-${i}`}
+                className="absolute rounded-full bg-gradient-radial from-primary/20 via-primary/8 to-transparent blur-2xl"
+                style={{
+                  left: `${26 + i * 30}%`,
+                  top: `${36 + ((i * 20) % 30)}%`,
+                  width: '160px',
+                  height: '160px',
+                }}
+                animate={{
+                  x: [-24, 24, -24],
+                  y: [-16, 16, -16],
+                  scale: [0.88, 1.1, 0.88],
+                  opacity: [0.08, 0.22, 0.08],
+                }}
+                transition={{
+                  duration: 24 + i * 4,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: 'easeInOut',
+                  delay: i * 2,
+                }}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(5,150,105,0.12),transparent_70%)]" />
+      )}
 
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -244,19 +269,21 @@ export function TimelineStory({ events }: TimelineStoryProps) {
             scrollYProgress,
             [0, 0.5, 1],
             [
-              'radial-gradient(circle at 30% 70%, rgba(5, 150, 105, 0.15) 0%, transparent 70%)',
-              'radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.2) 0%, transparent 80%)',
-              'radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.1) 0%, transparent 90%)',
+              'radial-gradient(circle at 30% 70%, rgba(5, 150, 105, 0.12) 0%, transparent 70%)',
+              'radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.15) 0%, transparent 80%)',
+              'radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.08) 0%, transparent 90%)',
             ]
           ),
         }}
       />
 
       <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/10 to-accent/5"
-        animate={{
-          opacity: [0.3, 0.5, 0.3],
-        }}
+        className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/8 to-accent/5 pointer-events-none"
+        animate={
+          shouldAnimateAmbient
+            ? { opacity: [0.24, 0.42, 0.24] }
+            : undefined
+        }
         transition={{
           duration: 15,
           repeat: Number.POSITIVE_INFINITY,
@@ -270,7 +297,7 @@ export function TimelineStory({ events }: TimelineStoryProps) {
             className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary/30 via-primary to-accent/30 shadow-lg shadow-primary/20"
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
-            transition={{ duration: 2, ease: 'easeOut' }}
+            transition={{ duration: 1.3, ease: 'easeOut' }}
             viewport={{ once: true }}
             style={{ originY: 0 }}
           />
@@ -278,10 +305,11 @@ export function TimelineStory({ events }: TimelineStoryProps) {
           <div className="space-y-24">
             {events.map((event, index) => (
               <TimelineEventCard
-                key={`${event.year}-${event.month}-${index}`}
+                key={`${event.year}-${event.month}-${event.title}-${index}`}
                 event={event}
                 index={index}
                 isLeft={index % 2 === 0}
+                reduceMotion={Boolean(reduceMotion)}
               />
             ))}
           </div>
@@ -295,40 +323,15 @@ interface TimelineEventCardProps {
   event: TimelineEvent;
   index: number;
   isLeft: boolean;
+  reduceMotion: boolean;
 }
 
 function TimelineEventCard({
   event,
   index,
   isLeft,
+  reduceMotion,
 }: TimelineEventCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'end start'],
-  });
-
-  const x = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [isLeft ? -200 : 200, 0, 0, isLeft ? -100 : 100]
-  );
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 1, 1, 0.3]
-  );
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0.7, 1, 1, 0.8]
-  );
-  const rotateY = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [isLeft ? -15 : 15, 0, 0, isLeft ? -5 : 5]
-  );
-
   const handleCardClick = () => {
     if (event.link) {
       window.open(event.link, '_blank', 'noopener,noreferrer');
@@ -336,44 +339,36 @@ function TimelineEventCard({
   };
 
   return (
-    <motion.div
-      ref={cardRef}
-      className={`relative flex items-center ${
-        isLeft ? 'justify-start' : 'justify-end'
-      }`}
-      style={{ x, opacity, scale, rotateY }}
+    <motion.article
+      className={`relative flex items-center ${isLeft ? 'justify-start' : 'justify-end'} transform-gpu`}
+      initial={
+        reduceMotion
+          ? undefined
+          : { opacity: 0, y: 36, x: isLeft ? -70 : 70 }
+      }
+      whileInView={
+        reduceMotion ? undefined : { opacity: 1, y: 0, x: 0 }
+      }
+      transition={{
+        duration: 0.55,
+        ease: 'easeOut',
+        delay: Math.min(index * 0.012, 0.22),
+      }}
+      viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
     >
       <div className="absolute left-1/2 transform -translate-x-1/2 z-20">
         <motion.div
           className="relative"
-          whileInView={{ scale: [0, 1.2, 1] }}
-          transition={{ duration: 0.1, ease: 'easeOut' }}
+          initial={
+            reduceMotion ? undefined : { scale: 0.8, opacity: 0 }
+          }
+          whileInView={
+            reduceMotion ? undefined : { scale: 1, opacity: 1 }
+          }
+          transition={{ duration: 0.25, ease: 'easeOut' }}
           viewport={{ once: true }}
         >
-          <motion.div
-            className="w-6 h-6 bg-primary rounded-full border-4 border-background shadow-xl shadow-primary/30"
-            animate={{
-              boxShadow: [
-                '0 0 10px rgba(5, 150, 105, 0.3)',
-                '0 0 20px rgba(5, 150, 105, 0.6)',
-                '0 0 10px rgba(5, 150, 105, 0.3)',
-              ],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'easeInOut',
-            }}
-          />
-          <motion.div
-            className="absolute inset-0 w-6 h-6 bg-primary/20 rounded-full"
-            animate={{ scale: [1, 1.5, 1] }}
-            transition={{
-              duration: 2,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'easeInOut',
-            }}
-          />
+          <div className="w-5 h-5 bg-primary rounded-full border-4 border-background shadow-xl shadow-primary/35" />
         </motion.div>
       </div>
 
@@ -381,91 +376,53 @@ function TimelineEventCard({
         className={`w-full max-w-lg ${isLeft ? 'pr-12' : 'pl-12'}`}
       >
         <motion.div
-          whileHover={{
-            y: -10,
-            rotateY: isLeft ? 5 : -5,
-            scale: 1.02,
-          }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          whileHover={
+            reduceMotion
+              ? undefined
+              : {
+                  y: -6,
+                  rotateY: isLeft ? 2.5 : -2.5,
+                  scale: 1.01,
+                }
+          }
+          transition={{ type: 'spring', stiffness: 260, damping: 28 }}
           onClick={handleCardClick}
-          className="cursor-pointer"
+          className={event.link ? 'cursor-pointer' : ''}
         >
           <CinematicCard
             className="relative group overflow-hidden"
             glowEffect
+            hoverEffect={false}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10 space-y-6">
-              <div className="flex items-center justify-between">
-                <motion.div
-                  className="text-sm text-muted-foreground font-mono tracking-wider"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.01 }}
-                  viewport={{ once: true }}
-                >
+              <div className="flex items-center justify-between gap-4">
+                <div className="text-sm text-muted-foreground font-mono tracking-wider">
                   {event.month} {event.year}
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: index * 0.01 + 0.2,
-                  }}
-                  viewport={{ once: true }}
+                </div>
+                <TimelineBadge
+                  variant={
+                    categoryVariants[event.category] || 'research'
+                  }
                 >
-                  <TimelineBadge
-                    variant={
-                      categoryVariants[event.category] || 'research'
-                    }
-                  >
-                    {event.category}
-                  </TimelineBadge>
-                </motion.div>
+                  {event.category}
+                </TimelineBadge>
               </div>
 
-              <motion.h3
-                className="text-2xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.01 + 0.1,
-                }}
-                viewport={{ once: true }}
-              >
+              <h3 className="text-2xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-300">
                 {event.title}
-              </motion.h3>
+              </h3>
 
-              <motion.p
-                className="text-muted-foreground leading-relaxed text-lg"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.01 + 0.2,
-                }}
-                viewport={{ once: true }}
-              >
+              <p className="text-muted-foreground leading-relaxed text-lg">
                 {event.description}
-              </motion.p>
+              </p>
 
-              <motion.div
-                className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                transition={{
-                  duration: 1,
-                  delay: index * 0.01 + 0.5,
-                }}
-                viewport={{ once: true }}
-              />
+              <div className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
             </div>
           </CinematicCard>
         </motion.div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
