@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion"
+import { motion, useInView, useReducedMotion, useScroll, useTransform, useSpring } from "framer-motion"
 import { useMemo, useRef } from "react"
 import { HeroTitle } from "@/components/ui/hero-title"
 import { AnimatedBackground } from "@/components/ui/animated-background"
@@ -22,6 +22,10 @@ const FLOATING_CODE_STRINGS = [
 
 export function PrologueScene() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const reduceMotion = useReducedMotion()
+  const inView = useInView(containerRef, { amount: 0.2 })
+  const shouldAnimateAmbient = inView && !reduceMotion
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -67,64 +71,70 @@ export function PrologueScene() {
         <AnimatedBackground variant="neural" className="opacity-20" />
       </motion.div>
 
-      <motion.div className="absolute inset-0" style={{ y: backgroundY2 }}>
-        <AnimatedBackground variant="dots" className="opacity-10" />
-      </motion.div>
-
-      <div className="absolute inset-0 overflow-hidden">
-        {floatingCode.map((code, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-xs font-mono text-primary/30 select-none"
-            style={{
-              left: `${5 + i * 8}%`,
-              top: `${15 + (i % 3) * 25}%`,
-              transformStyle: "preserve-3d",
-            }}
-            animate={{
-              y: [-code.amplitude, code.amplitude, -code.amplitude],
-              x: [-10, 10, -10],
-              opacity: [0.1, 0.8, 0.3, 0.1],
-              rotateZ: [-5, 5, -5],
-              scale: [0.8, 1.2, 0.8],
-            }}
-            transition={{
-              duration: code.duration,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              delay: code.delay,
-            }}
-          >
-            {FLOATING_CODE_STRINGS[i]}
+      {shouldAnimateAmbient ? (
+        <>
+          <motion.div className="absolute inset-0" style={{ y: backgroundY2 }}>
+            <AnimatedBackground variant="dots" className="opacity-10" />
           </motion.div>
-        ))}
-      </div>
 
-      <motion.div className="absolute inset-0" style={{ y: backgroundY3 }}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`shape-${i}`}
-            className="absolute w-2 h-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full"
-            style={{
-              left: `${10 + i * 12}%`,
-              top: `${20 + (i % 4) * 20}%`,
-            }}
-            animate={{
-              y: [-100, 100, -100],
-              x: [-20, 20, -20],
-              scale: [0.5, 1.5, 0.5],
-              opacity: [0, 0.6, 0],
-              rotateZ: [0, 360, 720],
-            }}
-            transition={{
-              duration: 8 + i * 0.5,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              delay: i * 0.4,
-            }}
-          />
-        ))}
-      </motion.div>
+          <div className="absolute inset-0 overflow-hidden">
+            {floatingCode.map((code, i) => (
+              <motion.div
+                key={i}
+                className="absolute text-xs font-mono text-primary/30 select-none"
+                style={{
+                  left: `${5 + i * 8}%`,
+                  top: `${15 + (i % 3) * 25}%`,
+                  transformStyle: "preserve-3d",
+                }}
+                animate={{
+                  y: [-code.amplitude, code.amplitude, -code.amplitude],
+                  x: [-10, 10, -10],
+                  opacity: [0.1, 0.8, 0.3, 0.1],
+                  rotateZ: [-5, 5, -5],
+                  scale: [0.8, 1.2, 0.8],
+                }}
+                transition={{
+                  duration: code.duration,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  delay: code.delay,
+                }}
+              >
+                {FLOATING_CODE_STRINGS[i]}
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div className="absolute inset-0" style={{ y: backgroundY3 }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <motion.div
+                key={`shape-${i}`}
+                className="absolute w-2 h-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full"
+                style={{
+                  left: `${10 + i * 12}%`,
+                  top: `${20 + (i % 4) * 20}%`,
+                }}
+                animate={{
+                  y: [-100, 100, -100],
+                  x: [-20, 20, -20],
+                  scale: [0.5, 1.5, 0.5],
+                  opacity: [0, 0.6, 0],
+                  rotateZ: [0, 360, 720],
+                }}
+                transition={{
+                  duration: 8 + i * 0.5,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  delay: i * 0.4,
+                }}
+              />
+            ))}
+          </motion.div>
+        </>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+      )}
 
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
         <motion.div
@@ -190,7 +200,7 @@ export function PrologueScene() {
           transition={{ duration: 1, delay: 3 }}
         >
           <motion.span
-            animate={{ opacity: [0.5, 1, 0.5] }}
+            animate={shouldAnimateAmbient ? { opacity: [0.5, 1, 0.5] } : undefined}
             transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
           >
             Scroll to begin the journey
@@ -198,10 +208,7 @@ export function PrologueScene() {
 
           <motion.div
             className="flex flex-col items-center space-y-1"
-            animate={{
-              y: [0, 8, 0],
-              scale: [1, 1.1, 1],
-            }}
+            animate={shouldAnimateAmbient ? { y: [0, 8, 0], scale: [1, 1.1, 1] } : undefined}
             transition={{
               duration: 2,
               repeat: Number.POSITIVE_INFINITY,
@@ -211,7 +218,7 @@ export function PrologueScene() {
             <div className="w-px h-8 bg-gradient-to-b from-transparent via-primary to-transparent" />
             <motion.div
               className="text-lg"
-              animate={{ rotateZ: [0, 5, -5, 0] }}
+              animate={shouldAnimateAmbient ? { rotateZ: [0, 5, -5, 0] } : undefined}
               transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
             >
               ↓
