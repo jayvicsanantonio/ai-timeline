@@ -1466,49 +1466,105 @@
   {
     "year": 2025,
     "month": "September",
-    "title": "Transforming the manufacturing industry with ChatGPT Publish",
-    "description": "By deploying ChatGPT Enterprise, ENEOS Materials transformed operations with faster research, safer plant design, and streamlined HR processes. Over 80% of employees report major workflow improvements, strengthening competitiveness in manufacturing.",
-    "category": "Research Breakthroughs",
-    "link": "https://openai.com/index/eneos-materials"
-  },
-  {
-    "year": 2025,
-    "month": "September",
-    "title": "SAP and OpenAI partner to launch sovereign ‘OpenAI for Germa",
-    "description": "SAP and OpenAI launch OpenAI for Germany, a 2026 partnership to bring secure, sovereign AI to Germany’s public sector, enabling safe, efficient public services.",
+    "title": "Anthropic Releases Claude Sonnet 4.5",
+    "description": "Anthropic introduces Claude Sonnet 4.5, improving coding performance and reducing hallucinations while keeping the same pricing as Sonnet 4.",
     "category": "Public Releases",
-    "link": "https://openai.com/global-affairs/openai-for-germany"
+    "link": "https://www.anthropic.com/news/claude-sonnet-4-5"
   },
   {
     "year": 2025,
-    "month": "September",
-    "title": "OpenAI, Oracle, and SoftBank expand Stargate with five new A",
-    "description": "OpenAI, Oracle, and SoftBank announce five new Stargate AI datacenter sites, accelerating a $500B, 10-gigawatt U.S. infrastructure buildout to power next-generation AI and create tens of thousands of jobs.",
-    "category": "Research Breakthroughs",
-    "link": "https://openai.com/index/five-new-stargate-sites"
+    "month": "October",
+    "title": "Google Introduces Gemini 2.5 Computer Use",
+    "description": "Google launches Gemini 2.5 Computer Use in preview, giving developers an experimental model that can operate web interfaces and complete browser tasks.",
+    "category": "Agents",
+    "link": "https://developers.googleblog.com/en/introducing-gemini-2-5-computer-use/"
   },
   {
     "year": 2025,
-    "month": "September",
-    "title": "CNA is transforming its newsroom with AI",
-    "description": "In this Executive Function series from OpenAI, discover how CNA is transforming its newsroom with AI. Editor-in-Chief Walter Fernandez shares insights on AI adoption, culture, and the future of journalism.",
+    "month": "November",
+    "title": "OpenAI Releases GPT-5.1",
+    "description": "OpenAI launches GPT-5.1 with improved coding performance, instruction following, and lower latency compared with GPT-5.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/cna-walter-fernandez"
+    "link": "https://openai.com/index/introducing-gpt-5-1/"
   },
   {
     "year": 2025,
-    "month": "September",
-    "title": "Creating a safe, observable AI infrastructure for 1 million",
-    "description": "Discover how SchoolAI, built on OpenAI’s GPT-4.1, image generation, and TTS, powers safe, teacher-guided AI tools for 1 million classrooms worldwide—boosting engagement, oversight, and personalized learning.",
-    "category": "Research Breakthroughs",
-    "link": "https://openai.com/index/schoolai"
-  },
-  {
-    "year": 2025,
-    "month": "September",
-    "title": "OpenAI and NVIDIA announce strategic partnership to deploy 1",
-    "description": "OpenAI and NVIDIA announce a strategic partnership to deploy 10 gigawatts of AI datacenters powered by NVIDIA systems, with the first phase launching in 2026.",
+    "month": "December",
+    "title": "OpenAI Releases GPT-5.2",
+    "description": "OpenAI releases GPT-5.2 as a major model update with stronger coding and math capabilities and improved reliability.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/openai-nvidia-systems-partnership"
+    "link": "https://openai.com/index/introducing-gpt-5-2/"
+  },
+  {
+    "year": 2025,
+    "month": "December",
+    "title": "OpenAI Releases GPT-5.2-Codex",
+    "description": "OpenAI introduces GPT-5.2-Codex, a coding-focused variant optimized for software engineering workflows and tool use.",
+    "category": "AI Tools",
+    "link": "https://openai.com/index/introducing-gpt-5-2-codex/"
+  },
+  {
+    "year": 2026,
+    "month": "January",
+    "title": "OpenAI Announces Retirement of Legacy ChatGPT Models",
+    "description": "OpenAI announces it will retire GPT-5 Instant, GPT-5 Thinking, GPT-4o, and older reasoning preview models in ChatGPT as newer models become default.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/updating-the-chatgpt-model-picker/"
+  },
+  {
+    "year": 2026,
+    "month": "February",
+    "title": "Anthropic Releases Claude Opus 4.6",
+    "description": "Anthropic introduces Claude Opus 4.6 with better reasoning, coding, and extended thinking capabilities for complex tasks.",
+    "category": "Public Releases",
+    "link": "https://www.anthropic.com/news/claude-opus-4-6"
+  },
+  {
+    "year": 2026,
+    "month": "February",
+    "title": "Anthropic Releases Claude Sonnet 4.6",
+    "description": "Anthropic launches Claude Sonnet 4.6, improving coding and instruction-following quality while reducing over-compliance in safety-sensitive prompts.",
+    "category": "Public Releases",
+    "link": "https://www.anthropic.com/news/claude-sonnet-4-6"
+  },
+  {
+    "year": 2026,
+    "month": "February",
+    "title": "Google Releases Gemini 3 Deep Think",
+    "description": "Google announces Gemini 3 Deep Think with stronger long-horizon reasoning and coding performance for advanced tasks.",
+    "category": "Public Releases",
+    "link": "https://blog.google/products/gemini/google-gemini-3-deep-think-updates/"
+  },
+  {
+    "year": 2026,
+    "month": "February",
+    "title": "OpenAI Releases GPT-5.3-Codex-Spark",
+    "description": "OpenAI releases GPT-5.3-Codex-Spark, a fast coding model tuned for agentic software development workflows.",
+    "category": "AI Tools",
+    "link": "https://openai.com/index/introducing-gpt-5-3-codex-spark/"
+  },
+  {
+    "year": 2026,
+    "month": "February",
+    "title": "Google Releases Gemini 3.1 Pro",
+    "description": "Google releases Gemini 3.1 Pro in Google AI Studio and Vertex AI, adding stronger multimodal reasoning and enterprise controls.",
+    "category": "Public Releases",
+    "link": "https://blog.google/products/gemini/gemini-3-1-pro/"
+  },
+  {
+    "year": 2026,
+    "month": "March",
+    "title": "OpenAI Releases GPT-5.3 Instant",
+    "description": "OpenAI introduces GPT-5.3 Instant, a lower-latency model optimized for interactive applications and production chat experiences.",
+    "category": "Public Releases",
+    "link": "https://openai.com/index/introducing-gpt-5-3-instant/"
+  },
+  {
+    "year": 2026,
+    "month": "March",
+    "title": "Google Releases Gemini 3.1 Flash-Lite",
+    "description": "Google launches Gemini 3.1 Flash-Lite, a smaller and lower-cost model aimed at high-throughput use cases.",
+    "category": "Public Releases",
+    "link": "https://blog.google/products/gemini/gemini-3-1-flash-lite/"
   }
 ]
