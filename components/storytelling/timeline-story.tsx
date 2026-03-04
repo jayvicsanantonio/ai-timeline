@@ -1,6 +1,12 @@
 'use client';
 
-import { motion, useInView, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
 import { useMemo, useRef } from 'react';
 import type { TimelineEvent } from '@/types/timeline';
 import { CinematicCard } from '@/components/ui/cinematic-card';
@@ -45,12 +51,12 @@ export function TimelineStory({ events }: TimelineStoryProps) {
   const backgroundY = useTransform(
     scrollYProgress,
     [0, 1],
-    [0, reduceMotion ? 0 : -120],
+    [0, reduceMotion ? 0 : -120]
   );
   const midgroundY = useTransform(
     scrollYProgress,
     [0, 1],
-    [0, reduceMotion ? 0 : -70],
+    [0, reduceMotion ? 0 : -70]
   );
 
   const starAnimations = useMemo(
@@ -62,7 +68,7 @@ export function TimelineStory({ events }: TimelineStoryProps) {
         left: (i * 3.97) % 100,
         top: (i * 5.71) % 100,
       })),
-    [],
+    []
   );
 
   const connectionAnimations = useMemo(
@@ -72,7 +78,7 @@ export function TimelineStory({ events }: TimelineStoryProps) {
         left: 7 + i * 14,
         top: 15 + ((i * 18) % 60),
       })),
-    [],
+    []
   );
 
   const codeAnimations = useMemo(
@@ -82,11 +88,14 @@ export function TimelineStory({ events }: TimelineStoryProps) {
         left: 14 + i * 18,
         top: 26 + (i % 2) * 28,
       })),
-    [],
+    []
   );
 
   return (
-    <section ref={containerRef} className="relative py-32 overflow-hidden">
+    <section
+      ref={containerRef}
+      className="relative py-32 overflow-hidden"
+    >
       <motion.div
         className="absolute inset-0 opacity-30 pointer-events-none"
         style={{ y: backgroundY }}
@@ -263,15 +272,23 @@ export function TimelineStory({ events }: TimelineStoryProps) {
               'radial-gradient(circle at 30% 70%, rgba(5, 150, 105, 0.12) 0%, transparent 70%)',
               'radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.15) 0%, transparent 80%)',
               'radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.08) 0%, transparent 90%)',
-            ],
+            ]
           ),
         }}
       />
 
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/8 to-accent/5 pointer-events-none"
-        animate={shouldAnimateAmbient ? { opacity: [0.24, 0.42, 0.24] } : undefined}
-        transition={{ duration: 15, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+        animate={
+          shouldAnimateAmbient
+            ? { opacity: [0.24, 0.42, 0.24] }
+            : undefined
+        }
+        transition={{
+          duration: 15,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: 'easeInOut',
+        }}
       />
 
       <div className="container mx-auto px-6 relative z-10">
@@ -309,7 +326,12 @@ interface TimelineEventCardProps {
   reduceMotion: boolean;
 }
 
-function TimelineEventCard({ event, index, isLeft, reduceMotion }: TimelineEventCardProps) {
+function TimelineEventCard({
+  event,
+  index,
+  isLeft,
+  reduceMotion,
+}: TimelineEventCardProps) {
   const handleCardClick = () => {
     if (event.link) {
       window.open(event.link, '_blank', 'noopener,noreferrer');
@@ -319,8 +341,14 @@ function TimelineEventCard({ event, index, isLeft, reduceMotion }: TimelineEvent
   return (
     <motion.article
       className={`relative flex items-center ${isLeft ? 'justify-start' : 'justify-end'} transform-gpu`}
-      initial={reduceMotion ? undefined : { opacity: 0, y: 36, x: isLeft ? -70 : 70 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, x: 0 }}
+      initial={
+        reduceMotion
+          ? undefined
+          : { opacity: 0, y: 36, x: isLeft ? -70 : 70 }
+      }
+      whileInView={
+        reduceMotion ? undefined : { opacity: 1, y: 0, x: 0 }
+      }
       transition={{
         duration: 0.55,
         ease: 'easeOut',
@@ -331,8 +359,12 @@ function TimelineEventCard({ event, index, isLeft, reduceMotion }: TimelineEvent
       <div className="absolute left-1/2 transform -translate-x-1/2 z-20">
         <motion.div
           className="relative"
-          initial={reduceMotion ? undefined : { scale: 0.8, opacity: 0 }}
-          whileInView={reduceMotion ? undefined : { scale: 1, opacity: 1 }}
+          initial={
+            reduceMotion ? undefined : { scale: 0.8, opacity: 0 }
+          }
+          whileInView={
+            reduceMotion ? undefined : { scale: 1, opacity: 1 }
+          }
           transition={{ duration: 0.25, ease: 'easeOut' }}
           viewport={{ once: true }}
         >
@@ -340,7 +372,9 @@ function TimelineEventCard({ event, index, isLeft, reduceMotion }: TimelineEvent
         </motion.div>
       </div>
 
-      <div className={`w-full max-w-lg ${isLeft ? 'pr-12' : 'pl-12'}`}>
+      <div
+        className={`w-full max-w-lg ${isLeft ? 'pr-12' : 'pl-12'}`}
+      >
         <motion.div
           whileHover={
             reduceMotion
@@ -355,7 +389,11 @@ function TimelineEventCard({ event, index, isLeft, reduceMotion }: TimelineEvent
           onClick={handleCardClick}
           className={event.link ? 'cursor-pointer' : ''}
         >
-          <CinematicCard className="relative group overflow-hidden" glowEffect>
+          <CinematicCard
+            className="relative group overflow-hidden"
+            glowEffect
+            hoverEffect={false}
+          >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10 space-y-6">
@@ -363,7 +401,11 @@ function TimelineEventCard({ event, index, isLeft, reduceMotion }: TimelineEvent
                 <div className="text-sm text-muted-foreground font-mono tracking-wider">
                   {event.month} {event.year}
                 </div>
-                <TimelineBadge variant={categoryVariants[event.category] || 'research'}>
+                <TimelineBadge
+                  variant={
+                    categoryVariants[event.category] || 'research'
+                  }
+                >
                   {event.category}
                 </TimelineBadge>
               </div>
@@ -372,7 +414,9 @@ function TimelineEventCard({ event, index, isLeft, reduceMotion }: TimelineEvent
                 {event.title}
               </h3>
 
-              <p className="text-muted-foreground leading-relaxed text-lg">{event.description}</p>
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                {event.description}
+              </p>
 
               <div className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
             </div>
