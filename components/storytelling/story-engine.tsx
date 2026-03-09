@@ -6,6 +6,7 @@ import { TimelineStory } from './timeline-story';
 import { EpilogueScene } from './epilogue-scene';
 import { NarrativeBridge } from './narrative-bridge';
 import { TimelineInsights } from '@/components/interactive/timeline-insights';
+import { TimelineNavigation } from '@/components/timeline/timeline-navigation';
 import type { TimelineEvent } from '@/types/timeline';
 
 interface StoryEngineProps {
@@ -16,6 +17,13 @@ interface EraDefinition {
   name: string;
   range: [number, number];
   description: string;
+}
+
+interface EraSection extends EraDefinition {
+  id: string;
+  chapter: string;
+  subtitle: string;
+  events: TimelineEvent[];
 }
 
 const ERA_DEFINITIONS: EraDefinition[] = [
@@ -51,10 +59,34 @@ const ERA_DEFINITIONS: EraDefinition[] = [
   },
 ];
 
+function createSectionId(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function createEraSubtitle(
+  range: EraDefinition['range'],
+  isCurrentEra: boolean
+) {
+  if (isCurrentEra) {
+    return `${range[0]}s - Present`;
+  }
+
+  return `${range[0]}s - ${(range[1] - 10).toString()}s`;
+}
+
 export function StoryEngine({ events }: StoryEngineProps) {
   const eras = useMemo(() => {
-    const erasWithEvents = ERA_DEFINITIONS.map((era) => ({
+    const erasWithEvents = ERA_DEFINITIONS.map((era, index) => ({
       ...era,
+      id: createSectionId(era.name),
+      chapter: `Chapter ${index + 1}`,
+      subtitle: createEraSubtitle(
+        era.range,
+        index === ERA_DEFINITIONS.length - 1
+      ),
       events: [] as TimelineEvent[],
     }));
 
@@ -68,25 +100,45 @@ export function StoryEngine({ events }: StoryEngineProps) {
       }
     });
 
-    return erasWithEvents.filter((era) => era.events.length > 0);
+    return erasWithEvents.filter(
+      (era): era is EraSection => era.events.length > 0
+    );
   }, [events]);
+
+  const navigationSections = useMemo(
+    () =>
+      eras.map((era) => ({
+        id: era.id,
+        label: era.name.replace(/^The\s+/i, ''),
+        subtitle: era.subtitle,
+        chapter: era.chapter,
+      })),
+    [eras]
+  );
 
   return (
     <div className="relative">
       <div className="relative">
+        <TimelineNavigation sections={navigationSections} />
+
         <PrologueScene />
 
-        {eras.map((era, index) => (
-          <div key={era.name} className="relative">
+        {eras.map((era) => (
+          <section
+            key={era.name}
+            id={era.id}
+            className="relative scroll-mt-24"
+            aria-label={era.name}
+          >
             <NarrativeBridge
-              era={`Chapter ${index + 1}`}
+              era={era.chapter}
               title={era.name}
-              subtitle={`${era.range[0]}s - ${era.range[1]}s`}
+              subtitle={era.subtitle}
               description={era.description}
               className="bg-gradient-to-b from-background/50 to-muted/10 -mt-32 pt-32"
             />
             <TimelineStory events={era.events} />
-          </div>
+          </section>
         ))}
 
         <div className="relative -mt-64 pt-32">
