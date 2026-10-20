@@ -98,6 +98,8 @@ pnpm build        # Build for production
 pnpm start        # Start production server
 pnpm lint         # Run ESLint
 pnpm type-check   # Run TypeScript checks
+pnpm test         # Run unit and integration tests (Vitest)
+pnpm test:e2e     # Build, serve and run end-to-end tests (Playwright)
 ```
 
 ##  User Experience Design
