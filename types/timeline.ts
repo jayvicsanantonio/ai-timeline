@@ -1,14 +1,23 @@
+export const TIMELINE_CATEGORIES = [
+  "Models & Architectures",
+  "Research Breakthroughs",
+  "Public Releases",
+  "Ethics & Policy",
+  "Hardware Advances",
+  "Companies & Investments",
+  "AI Tools",
+  "Bombshell News",
+  "Agents",
+] as const
+
+export type TimelineCategory = (typeof TIMELINE_CATEGORIES)[number]
+
 export interface TimelineEvent {
   year: number
   month: string
   title: string
   description: string
-  category:
-    | "Models & Architectures"
-    | "Research Breakthroughs"
-    | "Public Releases"
-    | "Ethics & Policy"
-    | "Hardware Advances"
+  category: TimelineCategory
   link: string
 }
 
@@ -18,8 +27,6 @@ export interface ExtendedTimelineEvent extends TimelineEvent {
   keyFigures?: string[]
   relatedEvents?: string[]
 }
-
-export type TimelineCategory = TimelineEvent["category"]
 
 export interface TimelineSection {
   decade: string

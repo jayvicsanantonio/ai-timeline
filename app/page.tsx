@@ -2,9 +2,10 @@
 
 import timelineData from "@/data/timeline-events.json"
 import type { TimelineEvent } from "@/types/timeline"
+import { parseTimelineEvents } from "@/lib/timeline-events"
 import { StoryEngine } from "@/components/storytelling/story-engine"
 
-const events: TimelineEvent[] = timelineData as TimelineEvent[]
+const events: TimelineEvent[] = parseTimelineEvents(timelineData)
 
 export default function AITimelinePage() {
   return (
