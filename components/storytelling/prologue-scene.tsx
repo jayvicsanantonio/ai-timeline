@@ -3,6 +3,7 @@
 import {
   motion,
   useInView,
+  useMotionTemplate,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -81,6 +82,7 @@ export function PrologueScene() {
     [0, 0.5, 1],
     [1, 1.1, 0.6]
   );
+  const filter = useMotionTemplate`blur(${blur}px) brightness(${brightness})`;
 
   const floatingCode = useMemo(
     () =>
@@ -101,7 +103,7 @@ export function PrologueScene() {
         scale,
         y,
         rotateX,
-        filter: `blur(${blur}px) brightness(${brightness})`,
+        filter,
         transformStyle: 'preserve-3d',
       }}
     >

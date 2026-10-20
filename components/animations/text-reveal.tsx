@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 import { useIntersectionAnimation } from "@/hooks/use-intersection-animation"
 import { cn } from "@/lib/utils"
 
@@ -29,7 +29,7 @@ export function TextReveal({ text, className, delay = 0, staggerDelay = 0.05, as
     },
   }
 
-  const wordVariants = {
+  const wordVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,

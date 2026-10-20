@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { motion } from "framer-motion"
+import { motion, useTransform } from "framer-motion"
 import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 import { cn } from "@/lib/utils"
 
@@ -16,30 +16,28 @@ interface ParallaxContainerProps {
 export function ParallaxContainer({ children, speed = "normal", className, intensity = 1 }: ParallaxContainerProps) {
   const { ref, parallaxY, parallaxSlow, parallaxFast, parallaxReverse } = useScrollAnimation()
 
-  const getTransform = () => {
-    const baseTransform = (() => {
-      switch (speed) {
-        case "reverse":
-          return parallaxReverse
-        case "slow":
-          return parallaxSlow
-        case "fast":
-          return parallaxFast
-        default:
-          return parallaxY
-      }
-    })()
+  const baseTransform = (() => {
+    switch (speed) {
+      case "reverse":
+        return parallaxReverse
+      case "slow":
+        return parallaxSlow
+      case "fast":
+        return parallaxFast
+      default:
+        return parallaxY
+    }
+  })()
 
-    // Apply intensity multiplier
-    return intensity !== 1 ? baseTransform.to((value) => value * intensity) : baseTransform
-  }
+  // Apply intensity multiplier
+  const y = useTransform(baseTransform, (value) => value * intensity)
 
   return (
     <motion.div
       ref={ref}
       className={cn("relative", className)}
       style={{
-        y: getTransform(),
+        y,
         transformStyle: "preserve-3d",
       }}
     >

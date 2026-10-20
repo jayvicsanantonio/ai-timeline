@@ -1,10 +1,10 @@
 "use client"
 
-import { useScroll, useTransform, useSpring } from "framer-motion"
+import { useScroll, useTransform, useSpring, type UseScrollOptions } from "framer-motion"
 import { useRef } from "react"
 
 interface UseScrollAnimationOptions {
-  offset?: [string, string]
+  offset?: UseScrollOptions["offset"]
   smooth?: boolean
   springConfig?: {
     stiffness: number
