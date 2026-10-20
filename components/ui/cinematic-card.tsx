@@ -1,8 +1,11 @@
+// Glassy card container used for the timeline events.
+// Adds a hover lift, a gradient sweep, a scan line and corner accents that only animate while hovered.
 "use client"
 
 import type React from "react"
 
-import { motion } from "framer-motion"
+import { useState } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface CinematicCardProps {
@@ -20,6 +23,11 @@ export function CinematicCard({
   hoverEffect = true,
   variant = "default",
 }: CinematicCardProps) {
+  const [isHovered, setIsHovered] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
+  // The sweep and scan line are only visible on hover, so they only loop while hovered.
+  const runHoverLoops = isHovered && !shouldReduceMotion
+
   const getVariantStyles = () => {
     switch (variant) {
       case "premium":
@@ -54,6 +62,8 @@ export function CinematicCard({
             }
           : undefined
       }
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5 rounded-xl" />
 
@@ -64,24 +74,32 @@ export function CinematicCard({
           backgroundSize: "200% 200%",
         }}
         animate={{
-          backgroundPosition: ["0% 0%", "100% 100%"],
+          backgroundPosition: runHoverLoops ? ["0% 0%", "100% 100%"] : "0% 0%",
         }}
-        transition={{
-          duration: 3,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "linear",
-        }}
+        transition={
+          runHoverLoops
+            ? {
+                duration: 3,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "linear",
+              }
+            : { duration: 0 }
+        }
       />
 
       <motion.div
         className="absolute inset-0 opacity-0 group-hover:opacity-30 pointer-events-none"
         initial={{ y: "100%" }}
-        animate={{ y: "-100%" }}
-        transition={{
-          duration: 2,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "linear",
-        }}
+        animate={{ y: runHoverLoops ? ["100%", "-100%"] : "100%" }}
+        transition={
+          runHoverLoops
+            ? {
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "linear",
+              }
+            : { duration: 0 }
+        }
         style={{
           background: "linear-gradient(to bottom, transparent 0%, rgba(5, 150, 105, 0.1) 50%, transparent 100%)",
           height: "200%",
