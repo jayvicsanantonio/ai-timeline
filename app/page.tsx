@@ -8,8 +8,8 @@ const events: TimelineEvent[] = timelineData as TimelineEvent[]
 
 export default function AITimelinePage() {
   return (
-    <main className="relative bg-background text-foreground">
+    <div className="relative bg-background text-foreground">
       <StoryEngine events={events} />
-    </main>
+    </div>
   )
 }

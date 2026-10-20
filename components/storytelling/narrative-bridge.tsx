@@ -47,6 +47,7 @@ export function NarrativeBridge({ title, subtitle, description, era, className }
           </motion.div>
 
           <TextReveal
+            as="h2"
             text={title}
             className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent"
             staggerDelay={0.1}

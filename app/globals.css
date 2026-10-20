@@ -123,8 +123,14 @@
 
   body {
     @apply bg-background text-foreground;
-    cursor: none;
     overflow-x: hidden; /* Prevent horizontal scrollbar by hiding overflow-x */
+  }
+
+  /* Hide the system cursor only where FuturisticCursor draws its replacement */
+  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    body {
+      cursor: none;
+    }
   }
 
   html {
