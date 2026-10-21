@@ -3,11 +3,29 @@
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 
+// Keep in sync with the media query in app/globals.css that hides the system cursor.
+const CUSTOM_CURSOR_MEDIA_QUERY = "(pointer: fine) and (prefers-reduced-motion: no-preference)"
+
 export function FuturisticCursor() {
+  const [isEnabled, setIsEnabled] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia(CUSTOM_CURSOR_MEDIA_QUERY)
+    const updateIsEnabled = () => setIsEnabled(mediaQuery.matches)
+
+    updateIsEnabled()
+    mediaQuery.addEventListener("change", updateIsEnabled)
+
+    return () => mediaQuery.removeEventListener("change", updateIsEnabled)
+  }, [])
+
+  useEffect(() => {
+    if (!isEnabled) {
+      return
+    }
+
     const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
@@ -26,10 +44,14 @@ export function FuturisticCursor() {
       window.removeEventListener("mousemove", updateMousePosition)
       window.removeEventListener("mouseover", handleMouseOver)
     }
-  }, [])
+  }, [isEnabled])
+
+  if (!isEnabled) {
+    return null
+  }
 
   return (
-    <>
+    <div aria-hidden="true" data-testid="futuristic-cursor">
       <motion.div
         className="fixed top-0 left-0 w-2 h-2 bg-primary rounded-full pointer-events-none z-50 mix-blend-difference"
         animate={{
@@ -72,6 +94,6 @@ export function FuturisticCursor() {
           damping: 20,
         }}
       />
-    </>
+    </div>
   )
 }

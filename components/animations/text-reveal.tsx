@@ -9,10 +9,12 @@ interface TextRevealProps {
   className?: string
   delay?: number
   staggerDelay?: number
+  as?: "div" | "h1" | "h2" | "h3" | "p"
 }
 
-export function TextReveal({ text, className, delay = 0, staggerDelay = 0.05 }: TextRevealProps) {
+export function TextReveal({ text, className, delay = 0, staggerDelay = 0.05, as = "div" }: TextRevealProps) {
   const { ref, isInView } = useIntersectionAnimation()
+  const MotionElement = motion[as] as typeof motion.div
 
   const words = text.split(" ")
 
@@ -40,18 +42,20 @@ export function TextReveal({ text, className, delay = 0, staggerDelay = 0.05 }: 
   }
 
   return (
-    <motion.div
+    <MotionElement
       ref={ref}
       className={cn("overflow-hidden", className)}
       variants={containerVariants}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
     >
+      {/* Screen readers get the whole text once instead of one animated word at a time */}
+      <span className="sr-only">{text}</span>
       {words.map((word, index) => (
-        <motion.span key={index} className="inline-block mr-2" variants={wordVariants}>
+        <motion.span key={index} aria-hidden="true" className="inline-block mr-2" variants={wordVariants}>
           {word}
         </motion.span>
       ))}
-    </motion.div>
+    </MotionElement>
   )
 }

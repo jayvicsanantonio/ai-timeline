@@ -1,5 +1,5 @@
 // Integration test for the SkipToContent accessibility link.
-// Renders the real component, framer-motion included, in jsdom.
+// Renders the real component, framer-motion included, in real Chromium.
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { SkipToContent } from "@/components/accessibility/skip-to-content"

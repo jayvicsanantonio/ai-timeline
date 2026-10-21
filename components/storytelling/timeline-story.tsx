@@ -7,7 +7,7 @@ import {
   useScroll,
   useTransform,
 } from 'framer-motion';
-import { useMemo, useRef } from 'react';
+import { useId, useMemo, useRef } from 'react';
 import type { TimelineEvent } from '@/types/timeline';
 import { CinematicCard } from '@/components/ui/cinematic-card';
 import { TimelineBadge } from '@/components/ui/timeline-badge';
@@ -332,11 +332,7 @@ function TimelineEventCard({
   isLeft,
   reduceMotion,
 }: TimelineEventCardProps) {
-  const handleCardClick = () => {
-    if (event.link) {
-      window.open(event.link, '_blank', 'noopener,noreferrer');
-    }
-  };
+  const newTabHintId = useId();
 
   return (
     <motion.article
@@ -386,8 +382,6 @@ function TimelineEventCard({
                 }
           }
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          onClick={handleCardClick}
-          className={event.link ? 'cursor-pointer' : ''}
         >
           <CinematicCard
             className="relative group overflow-hidden"
@@ -401,18 +395,34 @@ function TimelineEventCard({
                 <div className="text-sm text-muted-foreground font-mono tracking-wider">
                   {event.month} {event.year}
                 </div>
+                {/* z-10 lifts the badge above the title link's overlay so it still gets its own hover effects */}
                 <TimelineBadge
                   variant={
                     categoryVariants[event.category] || 'research'
                   }
+                  className="z-10"
                 >
                   {event.category}
                 </TimelineBadge>
               </div>
 
               <h3 className="text-2xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-300">
-                {event.title}
+                {/* The ::after overlay makes the whole card clickable and draws the focus
+                    outline. It reaches out over CinematicCard's p-6 padding, plus the
+                    description's space-y-6 margin that collapses out of the bottom. */}
+                <a
+                  href={event.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-describedby={newTabHintId}
+                  className="after:absolute after:-inset-x-6 after:-top-6 after:-bottom-12 after:rounded-xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-primary"
+                >
+                  {event.title}
+                </a>
               </h3>
+              <span id={newTabHintId} hidden>
+                Opens in a new tab
+              </span>
 
               <p className="text-muted-foreground leading-relaxed text-lg">
                 {event.description}
