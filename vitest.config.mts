@@ -10,7 +10,12 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
-    include: ["tests/unit/**/*.test.{ts,tsx}", "tests/integration/**/*.test.{ts,tsx}"],
+    // Source directories are listed explicitly so tests in nested git worktrees under .claude/ are never collected.
+    include: [
+      "tests/unit/**/*.test.{ts,tsx}",
+      "tests/integration/**/*.test.{ts,tsx}",
+      "{app,components,hooks,lib}/**/*.test.{ts,tsx}",
+    ],
     setupFiles: ["./tests/setup.ts"],
     browser: {
       enabled: true,

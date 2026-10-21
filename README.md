@@ -80,6 +80,9 @@ cd ai-timeline
 # Install dependencies
 pnpm install
 
+# Install the Chromium build that pnpm test and pnpm test:e2e run in
+pnpm exec playwright install chromium
+
 # Start development server
 pnpm dev
 
@@ -98,9 +101,11 @@ pnpm build        # Build for production
 pnpm start        # Start production server
 pnpm lint         # Run ESLint
 pnpm type-check   # Run TypeScript checks
-pnpm test         # Run unit and integration tests (Vitest)
+pnpm test         # Run unit and integration tests (Vitest in headless Chromium)
 pnpm test:e2e     # Build, serve and run end-to-end tests (Playwright)
 ```
+
+Both test commands need Playwright's Chromium; install it once with `pnpm exec playwright install chromium`.
 
 ##  User Experience Design
 

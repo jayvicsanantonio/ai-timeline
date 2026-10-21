@@ -24,14 +24,16 @@ describe("TimelineBadge hover effects", () => {
     expect((await elementsAnimatingWithin(badge)).size).toBe(0)
   })
 
-  it("runs the shimmer while the badge is hovered", async () => {
+  it("keeps looping the shimmer while the badge is hovered", async () => {
     const { badge, shimmer } = renderBadge()
     await wait(500)
 
     await userEvent.hover(badge)
+    // Longer than the 2s shimmer cycle, so a run that does not repeat would have stopped.
+    await wait(2100)
 
     expect(await elementsAnimatingWithin(badge)).toEqual(new Set([shimmer]))
-  })
+  }, 10_000)
 
   it("stops the shimmer after the pointer leaves", async () => {
     const { badge } = renderBadge()

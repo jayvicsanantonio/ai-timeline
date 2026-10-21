@@ -22,14 +22,16 @@ describe("CinematicCard hover effects", () => {
     expect((await elementsAnimatingWithin(card)).size).toBe(0)
   })
 
-  it("runs the sweep and scan line while the card is hovered", async () => {
+  it("keeps looping the sweep and scan line while the card is hovered", async () => {
     const { card, sweep, scanLine } = renderCard()
     await wait(700)
 
     await userEvent.hover(card)
+    // Longer than the 3s sweep cycle, so a run that does not repeat would have stopped.
+    await wait(3100)
 
     expect(await elementsAnimatingWithin(card)).toEqual(new Set([sweep, scanLine]))
-  })
+  }, 10_000)
 
   it("stops the sweep and scan line after the pointer leaves", async () => {
     const { card } = renderCard()
