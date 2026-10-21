@@ -1,0 +1,6 @@
+# pnpm workspace settings.
+# Install scripts stay off for these packages because their prebuilt platform binaries are used.
+allowBuilds:
+  '@tailwindcss/oxide': false
+  sharp: false
+  unrs-resolver: false
