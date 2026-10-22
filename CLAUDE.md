@@ -12,9 +12,12 @@ pnpm dev              # Start Next.js development server on port 3000
 pnpm build            # Build production version
 pnpm start            # Start production server
 pnpm lint             # Run ESLint checks
+pnpm type-check       # Run tsc --noEmit
+pnpm test             # Vitest: unit (tests/unit) and integration (tests/integration) tests in headless Chromium
+pnpm test:e2e         # Playwright end-to-end tests (tests/e2e) against `next build && next start` on E2E_PORT (default 3100)
 ```
 
-Note: This project uses pnpm for package management. TypeScript and ESLint errors are ignored during builds (configured in next.config.mjs).
+Note: This project uses pnpm for package management. `pnpm build` fails on TypeScript or ESLint errors.
 
 ## Project Architecture
 
@@ -30,27 +33,27 @@ app/page.tsx → StoryEngine → PrologueScene + TimelineStory + EpilogueScene
 
 ### Key Data Structures
 
-- **Timeline Events**: Central data stored in `/data/timeline-events.json` with TypeScript interfaces in `/types/timeline.ts`
+- **Timeline Events**: Central data stored in `/data/timeline-events.json` with TypeScript interfaces in `/types/timeline.ts`, loaded through `parseTimelineEvents` in `/lib/timeline-events.ts`, which throws on unknown categories
 - **Era-based Organization**: Events are grouped into Foundation (1940-1970), Knowledge (1970-1990), Learning (1990-2010), and Transformation (2010+) eras
-- **Category System**: Events categorized as Models & Architectures, Research Breakthroughs, Public Releases, Ethics & Policy, Hardware Advances
+- **Category System**: Events categorized as Models & Architectures, Research Breakthroughs, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents (`TIMELINE_CATEGORIES` in `/types/timeline.ts`). Each maps to its own `TimelineBadge` variant via `categoryVariants` in `timeline-story.tsx`
 
 ### Component Organization
 
 Components are organized by purpose rather than type:
 
 - **`/components/storytelling/`**: Narrative flow components (story-engine, prologue-scene, epilogue-scene, narrative-bridge)
-- **`/components/interactive/`**: User interaction features (timeline-filter, ai-quote-carousel, timeline-insights, expandable-timeline-card)
-- **`/components/animations/`**: Reusable animation components (reveal-animation, parallax-container, text-reveal, magnetic-hover)
-- **`/components/accessibility/`**: WCAG compliance components (focus-trap, skip-to-content, reduced-motion-wrapper)
-- **`/components/performance/`**: Optimization components (lazy-timeline-section, error-boundary, optimized-timeline)
-- **`/components/timeline/`**: Timeline-specific UI (timeline-navigation, responsive-timeline, mobile-timeline-controls)
+- **`/components/interactive/`**: User interaction features (timeline-insights)
+- **`/components/animations/`**: Reusable animation components (reveal-animation, parallax-container, stagger-animation, text-reveal)
+- **`/components/accessibility/`**: WCAG compliance components (skip-to-content)
+- **`/components/timeline/`**: Timeline-specific UI (timeline-navigation)
 
 ### Animation System
 
 Heavy use of Framer Motion with custom hooks for scroll-based animations:
 - `useScrollAnimation()` - Scroll-triggered animation triggers
-- `useIntersectionObserver()` - Viewport intersection detection
-- `useIntersectionAnimation()` - Combined scroll and intersection animations
+- `useIntersectionAnimation()` - Viewport detection (via `useInView`, `threshold` maps to its `amount`) with reveal variants
+
+Derive styles from MotionValues with `useTransform` or `useMotionTemplate`. Interpolating a MotionValue into a plain template string silently produces an invalid style.
 
 ### State Management
 
@@ -59,20 +62,18 @@ The application uses React's built-in state management with no external state li
 ### Styling Approach
 
 - Tailwind CSS 4 for styling with `@/*` path aliases
-- Shadcn/ui + Radix UI components for accessible UI primitives
 - CSS-in-JS animations via Framer Motion
 - Theme support via next-themes
 
 ### Performance Considerations
 
-- Lazy loading implemented for timeline sections
 - Intersection Observer for efficient scroll animations
-- Error boundaries for graceful error handling
 - Next.js automatic image optimization (unoptimized: true in config)
 
 ### Development Notes
 
-- TypeScript strict mode enabled but build errors are ignored in production
-- ESLint configured with Next.js defaults but errors ignored during builds
+- TypeScript strict mode enabled, and `next build` fails on type errors
+- ESLint configured with Next.js defaults, and `next build` fails on lint errors
+- Vitest tests render components in real Chromium (browser mode), so they use real browser APIs. Don't fake them or mock
 - Uses Next.js App Router (not Pages Router)
 - All timeline data is static JSON, no external APIs

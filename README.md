@@ -28,7 +28,6 @@ This project presents the complete history of artificial intelligence through an
 - **TypeScript** for type safety
 - **Tailwind CSS 4** for styling
 - **Framer Motion** for animations
-- **Shadcn/ui + Radix UI** for accessible components
 
 ### Key Components Architecture
 
@@ -39,28 +38,20 @@ components/
 │   ├── prologue-scene.tsx # Opening sequence
 │   └── epilogue-scene.tsx # Closing sequence
 ├── interactive/           # User interaction features
-│   ├── timeline-filter.tsx
-│   ├── ai-quote-carousel.tsx
 │   └── timeline-insights.tsx
 ├── animations/            # Reusable animation components
 │   ├── reveal-animation.tsx
 │   ├── parallax-container.tsx
 │   └── text-reveal.tsx
-├── accessibility/         # WCAG compliance
-│   ├── focus-trap.tsx
-│   ├── skip-to-content.tsx
-│   └── reduced-motion-wrapper.tsx
-└── performance/           # Optimization components
-    ├── lazy-timeline-section.tsx
-    ├── error-boundary.tsx
-    └── optimized-timeline.tsx
+└── accessibility/         # WCAG compliance
+    └── skip-to-content.tsx
 ```
 
 ### Data Management
 
 - **Structured Timeline Events**: TypeScript interfaces for type safety
 - **Era-based Grouping**: Foundation, Knowledge, Learning, and Transformation eras
-- **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances
+- **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents
 - **Link Verification**: Automated scripts for source validation
 
 ##  Getting Started
@@ -112,10 +103,7 @@ Both test commands need Playwright's Chromium; install it once with `pnpm exec p
 ### Interactive Features
 
 - **Timeline Navigation**: Smooth scrolling with progress indicators
-- **Category Filtering**: Filter events by type (Research, Models, Releases, etc.)
 - **Responsive Timeline**: Adapts layout for different screen sizes
-- **Quote Carousel**: Rotating insights from AI pioneers
-- **Expandable Cards**: Detailed event information on demand
 
 ### Accessibility Features
 
@@ -127,9 +115,7 @@ Both test commands need Playwright's Chromium; install it once with `pnpm exec p
 
 ### Performance Optimizations
 
-- **Lazy Loading**: Timeline sections load as needed
 - **Intersection Observer**: Efficient scroll-based animations
-- **Error Boundaries**: Graceful error handling
 - **Image Optimization**: Next.js automatic optimization
 - **Bundle Analysis**: Optimized chunk splitting
 
@@ -155,10 +141,16 @@ interface TimelineEvent {
     | 'Research Breakthroughs'
     | 'Public Releases'
     | 'Ethics & Policy'
-    | 'Hardware Advances';
+    | 'Hardware Advances'
+    | 'Companies & Investments'
+    | 'AI Tools'
+    | 'Bombshell News'
+    | 'Agents';
   link: string;
 }
 ```
+
+`app/page.tsx` loads `data/timeline-events.json` through `parseTimelineEvents` (`lib/timeline-events.ts`), which rejects unknown categories, so bad data fails `pnpm build`.
 
 ##  Advanced Features
 
@@ -167,21 +159,13 @@ interface TimelineEvent {
 - **Scroll-triggered Animations**: Elements animate as they enter viewport
 - **Parallax Effects**: Depth-based scrolling animations
 - **Stagger Animations**: Sequential element reveals
-- **Magnetic Hover**: Interactive button effects
 
 ### Custom Hooks
 
 ```typescript
 useScrollAnimation(); // Scroll-based animation triggers
-useIntersectionObserver(); // Viewport intersection detection
-useIntersectionAnimation(); // Combines both for smooth reveals
+useIntersectionAnimation(); // Viewport detection with reveal variants
 ```
-
-### Theme System
-
-- **Dark/Light Mode**: Seamless theme switching
-- **System Preference**: Respects OS theme settings
-- **Persistent Storage**: Theme preference remembering
 
 ##  Standout Engineering Practices
 
@@ -190,7 +174,6 @@ useIntersectionAnimation(); // Combines both for smooth reveals
 - **TypeScript Strict Mode**: Zero `any` types, full type coverage
 - **Component Architecture**: Reusable, composable design patterns
 - **Custom Hook Pattern**: Shared logic abstraction
-- **Error Boundaries**: Robust error handling strategy
 
 ### Performance Monitoring
 
@@ -230,7 +213,6 @@ This project demonstrates:
 ##  Metrics & Performance
 
 - **1,400+ Events**: Comprehensive historical coverage
-- **Zero Runtime Errors**: Robust error boundary implementation
 - **< 3s Load Time**: Optimized performance metrics
 - **AAA Accessibility**: Full WCAG compliance
 - **Mobile-First**: Responsive across all devices

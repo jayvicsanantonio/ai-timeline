@@ -1,12 +1,12 @@
 "use client"
 
-import { useInView } from "framer-motion"
+import { useInView, type UseInViewOptions } from "framer-motion"
 import { useRef } from "react"
 
 interface UseIntersectionAnimationOptions {
   threshold?: number
   once?: boolean
-  margin?: string
+  margin?: UseInViewOptions["margin"]
 }
 
 export function useIntersectionAnimation(options: UseIntersectionAnimationOptions = {}) {
@@ -14,7 +14,7 @@ export function useIntersectionAnimation(options: UseIntersectionAnimationOption
   const { threshold = 0.1, once = true, margin = "0px" } = options
 
   const isInView = useInView(ref, {
-    threshold,
+    amount: threshold,
     once,
     margin,
   })

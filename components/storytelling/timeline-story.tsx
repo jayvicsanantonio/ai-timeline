@@ -23,10 +23,10 @@ const categoryVariants = {
   'Public Releases': 'release' as const,
   'Ethics & Policy': 'ethics' as const,
   'Hardware Advances': 'hardware' as const,
-  'Companies & Investments': 'research' as const,
-  'AI Tools': 'model' as const,
-  'Bombshell News': 'ethics' as const,
-  Agents: 'hardware' as const,
+  'Companies & Investments': 'company' as const,
+  'AI Tools': 'tool' as const,
+  'Bombshell News': 'bombshell' as const,
+  Agents: 'agent' as const,
 };
 
 const STAR_COUNT = 24;
