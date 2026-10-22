@@ -294,7 +294,8 @@ export function TimelineStory({ events }: TimelineStoryProps) {
       <div className="container mx-auto px-6 relative z-10">
         <div className="relative">
           <motion.div
-            className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary/30 via-primary to-accent/30 shadow-lg shadow-primary/20"
+            data-testid="timeline-line"
+            className="absolute left-2.5 lg:left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary/30 via-primary to-accent/30 shadow-lg shadow-primary/20"
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             transition={{ duration: 1.3, ease: 'easeOut' }}
@@ -352,7 +353,10 @@ function TimelineEventCard({
       }}
       viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
     >
-      <div className="absolute left-1/2 transform -translate-x-1/2 z-20">
+      <div
+        data-testid="timeline-node"
+        className="absolute left-2.5 lg:left-1/2 transform -translate-x-1/2 z-20"
+      >
         <motion.div
           className="relative"
           initial={
@@ -368,8 +372,9 @@ function TimelineEventCard({
         </motion.div>
       </div>
 
+      {/* Below lg the line runs down a left gutter and every card sits to its right */}
       <div
-        className={`w-full max-w-lg ${isLeft ? 'pr-12' : 'pl-12'}`}
+        className={`w-full pl-10 lg:max-w-lg ${isLeft ? 'lg:pl-0 lg:pr-12' : 'lg:pl-12'}`}
       >
         <motion.div
           whileHover={
