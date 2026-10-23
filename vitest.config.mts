@@ -17,6 +17,8 @@ export default defineConfig({
       "{app,components,hooks,lib}/**/*.test.{ts,tsx}",
     ],
     setupFiles: ["./tests/setup.ts"],
+    // Processes CSS imports, so tests render with the app's real global styles from tests/setup.ts.
+    css: true,
     browser: {
       enabled: true,
       headless: true,
