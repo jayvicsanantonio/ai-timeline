@@ -9,7 +9,7 @@ _An interactive, cinematic exploration of AI's evolution from 1943 to the presen
 
 ##  Overview
 
-This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **183 curated events** spanning from 1943 to 2024. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
+This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **196 curated events** spanning from 1943 to March 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
@@ -50,7 +50,7 @@ components/
 ### Data Management
 
 - **Structured Timeline Events**: TypeScript interfaces for type safety
-- **Era-based Grouping**: Foundation, Knowledge, Learning, and Transformation eras
+- **Era-based Grouping**: Foundation, Knowledge, Learning, Deep Learning Revolution, and Generative AI eras
 - **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents
 - **Link Verification**: Automated scripts for source validation
 
@@ -212,7 +212,7 @@ This project demonstrates:
 
 ##  Metrics & Performance
 
-- **1,400+ Events**: Comprehensive historical coverage
+- **196 Events**: Comprehensive historical coverage
 - **< 3s Load Time**: Optimized performance metrics
 - **AAA Accessibility**: Full WCAG compliance
 - **Mobile-First**: Responsive across all devices

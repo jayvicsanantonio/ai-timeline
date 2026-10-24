@@ -21,7 +21,7 @@ Note: This project uses pnpm for package management. `pnpm build` fails on TypeS
 
 ## Project Architecture
 
-This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 183+ AI historical events from 1943-2024 through a cinematic, storytelling experience.
+This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 196 AI historical events from 1943 to March 2026 through a cinematic, storytelling experience.
 
 ### Core Architecture Pattern
 
@@ -34,7 +34,7 @@ app/page.tsx → StoryEngine → PrologueScene + TimelineStory + EpilogueScene
 ### Key Data Structures
 
 - **Timeline Events**: Central data stored in `/data/timeline-events.json` with TypeScript interfaces in `/types/timeline.ts`, loaded through `parseTimelineEvents` in `/lib/timeline-events.ts`, which throws on unknown categories
-- **Era-based Organization**: Events are grouped into Foundation (1940-1970), Knowledge (1970-1990), Learning (1990-2010), and Transformation (2010+) eras
+- **Era-based Organization**: Events are grouped into Foundation (1940-1970), Knowledge (1970-1990), Learning (1990-2010), Deep Learning Revolution (2010-2020), and Generative AI (2020-2030) eras
 - **Category System**: Events categorized as Models & Architectures, Research Breakthroughs, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents (`TIMELINE_CATEGORIES` in `/types/timeline.ts`). Each maps to its own `TimelineBadge` variant via `categoryVariants` in `timeline-story.tsx`
 
 ### Component Organization
