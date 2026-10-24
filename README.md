@@ -1,6 +1,6 @@
 # AI Timeline: A Comprehensive History of Artificial Intelligence
 
-_An interactive, cinematic exploration of AI's evolution from 1943 to the present_
+_An interactive, cinematic exploration of AI's evolution from 1943 to March 2026_
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jayvic-san-antonios-projects/v0-image-analysis)
 [![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js%2015-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
@@ -13,7 +13,7 @@ This project presents the complete history of artificial intelligence through an
 
 ### Key Features
 
-- ** Comprehensive Dataset**: 1,465 meticulously researched AI milestones with verified sources
+- ** Comprehensive Dataset**: 196 meticulously researched AI milestones with verified sources
 - ** Cinematic Experience**: Framer Motion-powered animations and transitions
 - ** Responsive Design**: Optimized for desktop, tablet, and mobile experiences
 - ** Accessibility First**: WCAG 2.1 compliant with focus management and reduced motion support
