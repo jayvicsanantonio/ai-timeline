@@ -134,6 +134,7 @@
   }
 
   html {
+    position: relative; /* framer-motion's useScroll measures scroll targets against a positioned scroll container */
     scroll-behavior: smooth;
     overflow-x: hidden; /* Prevent horizontal scrollbar at root level */
   }
