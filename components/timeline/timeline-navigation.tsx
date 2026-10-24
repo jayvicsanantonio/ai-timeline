@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { ChevronUp } from 'lucide-react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface TimelineNavigationSection {
@@ -29,6 +30,9 @@ export function TimelineNavigation({
   const reduceMotion = useReducedMotion();
   const [activeId, setActiveId] = useState(sections[0]?.id ?? '');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [isMobileListOpen, setIsMobileListOpen] = useState(false);
+  const mobileListId = useId();
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!sections.length) {
@@ -119,6 +123,13 @@ export function TimelineNavigation({
       behavior: reduceMotion ? 'auto' : 'smooth',
       block: 'start',
     });
+  };
+
+  const handleMobileNavigate = (sectionId: string) => {
+    handleNavigate(sectionId);
+    setIsMobileListOpen(false);
+    // The picked chapter's button unmounts with the list, so focus moves back to the toggle
+    mobileToggleRef.current?.focus({ preventScroll: true });
   };
 
   const activeIndex = useMemo(() => {
@@ -303,74 +314,90 @@ export function TimelineNavigation({
         aria-label="Timeline chapter navigation"
         className="fixed inset-x-0 bottom-4 z-40 px-4 lg:hidden"
       >
-        <div className="mx-auto max-w-lg overflow-hidden rounded-[1.75rem] border border-white/10 bg-background/72 p-3 shadow-[0_26px_80px_-45px_rgba(5,150,105,0.85)] backdrop-blur-2xl">
-          <div className="relative mb-3 overflow-hidden rounded-[1.25rem] border border-white/10 bg-background/45 px-3 py-3">
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),transparent_35%,transparent_70%,rgba(255,255,255,0.03))]" />
+        {/* The toggle comes first in DOM order so Tab moves from it into the open list,
+            and flex-col-reverse draws the list above it */}
+        <div className="mx-auto flex max-w-lg flex-col-reverse overflow-hidden rounded-[1.75rem] border border-white/10 bg-background/72 shadow-[0_26px_80px_-45px_rgba(5,150,105,0.85)] backdrop-blur-2xl">
+          <button
+            ref={mobileToggleRef}
+            type="button"
+            onClick={() => setIsMobileListOpen((isOpen) => !isOpen)}
+            aria-expanded={isMobileListOpen}
+            aria-controls={isMobileListOpen ? mobileListId : undefined}
+            className="relative flex w-full items-center justify-between gap-3 overflow-hidden px-4 py-2 text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40"
+          >
+            <span className="absolute inset-0 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),transparent_35%,transparent_70%,rgba(255,255,255,0.03))]" />
 
-            <div className="relative flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-primary/72">
-                  Current Era
-                </div>
-                <div className="mt-1 truncate text-sm font-medium text-foreground">
-                  {activeSection.label}
-                </div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  {activeSection.subtitle}
-                </div>
-              </div>
+            <span className="relative min-w-0">
+              <span className="block text-[10px] font-mono uppercase tracking-[0.3em] text-primary/72">
+                Current Era
+              </span>
+              <span className="block truncate text-sm font-medium text-foreground">
+                {activeSection.label}
+              </span>
+            </span>
 
-              <div className="shrink-0 rounded-full border border-white/10 bg-background/55 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="relative flex shrink-0 items-center gap-2">
+              <span className="rounded-full border border-white/10 bg-background/55 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
                 {formatIndex(activeIndex + 1)} / {formatIndex(sections.length)}
-              </div>
-            </div>
-          </div>
+              </span>
+              <ChevronUp
+                aria-hidden="true"
+                className={cn(
+                  'h-4 w-4 text-muted-foreground motion-safe:transition-transform',
+                  isMobileListOpen && 'rotate-180'
+                )}
+              />
+            </span>
+          </button>
 
-          <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {sections.map((section, index) => {
-              const isActive = section.id === activeId;
+          {isMobileListOpen ? (
+            <motion.div
+              id={mobileListId}
+              className="flex max-h-[calc(100dvh-6rem)] flex-col gap-2 overflow-y-auto border-b border-white/10 p-3"
+              initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            >
+              {sections.map((section, index) => {
+                const isActive = section.id === activeId;
 
-              return (
-                <motion.button
-                  key={section.id}
-                  type="button"
-                  onClick={() => handleNavigate(section.id)}
-                  aria-current={isActive ? 'location' : undefined}
-                  className={cn(
-                    'relative min-w-[9rem] snap-start overflow-hidden rounded-[1.2rem] border px-3 py-3 text-left backdrop-blur-xl transition-[border-color,background-color,color,box-shadow]',
-                    'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/40',
-                    isActive
-                      ? 'border-primary/40 bg-gradient-to-br from-primary/15 via-background/70 to-background/55 text-foreground shadow-[0_20px_50px_-34px_rgba(5,150,105,0.8)]'
-                      : 'border-white/10 bg-background/38 text-muted-foreground'
-                  )}
-                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                >
-                  <span className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),transparent_40%,transparent_75%,rgba(5,150,105,0.05))]" />
+                return (
+                  <motion.button
+                    key={section.id}
+                    type="button"
+                    onClick={() => handleMobileNavigate(section.id)}
+                    aria-current={isActive ? 'location' : undefined}
+                    className={cn(
+                      'relative flex items-center gap-3 overflow-hidden rounded-[1.2rem] border px-3 py-2.5 text-left backdrop-blur-xl transition-[border-color,background-color,color,box-shadow]',
+                      'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/40',
+                      isActive
+                        ? 'border-primary/40 bg-gradient-to-br from-primary/15 via-background/70 to-background/55 text-foreground shadow-[0_20px_50px_-34px_rgba(5,150,105,0.8)]'
+                        : 'border-white/10 bg-background/38 text-muted-foreground'
+                    )}
+                    whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                  >
+                    <span className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),transparent_40%,transparent_75%,rgba(5,150,105,0.05))]" />
 
-                  <span className="relative block">
-                    <span className="flex items-center justify-between gap-3">
-                      <span className="text-[10px] font-mono uppercase tracking-[0.24em] text-primary/72">
-                        {formatIndex(index + 1)}
-                      </span>
-                      <span
-                        className={cn(
-                          'h-1.5 w-6 rounded-full transition-colors',
-                          isActive ? 'bg-primary' : 'bg-border'
-                        )}
-                      />
+                    <span className="relative text-[10px] font-mono uppercase tracking-[0.24em] text-primary/72">
+                      {formatIndex(index + 1)}
                     </span>
-
-                    <span className="mt-3 block text-sm font-medium leading-tight">
+                    <span className="relative min-w-0 flex-1 truncate text-sm font-medium leading-tight">
                       {section.label}
                     </span>
-                    <span className="mt-1 block text-xs text-muted-foreground">
+                    <span className="relative shrink-0 text-xs text-muted-foreground">
                       {section.subtitle}
                     </span>
-                  </span>
-                </motion.button>
-              );
-            })}
-          </div>
+                    <span
+                      className={cn(
+                        'relative h-1.5 w-6 shrink-0 rounded-full transition-colors',
+                        isActive ? 'bg-primary' : 'bg-border'
+                      )}
+                    />
+                  </motion.button>
+                );
+              })}
+            </motion.div>
+          ) : null}
         </div>
       </nav>
     </>
