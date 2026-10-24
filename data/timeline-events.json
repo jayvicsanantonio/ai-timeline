@@ -65,7 +65,7 @@
   },
   {
     "year": 1966,
-    "month": "Unknown",
+    "month": "January",
     "title": "ELIZA, the First Chatbot",
     "description": "Joseph Weizenbaum at MIT creates ELIZA, an early natural language processing program that simulated conversation with a psychotherapist.",
     "category": "Public Releases",
@@ -105,7 +105,7 @@
   },
   {
     "year": 1980,
-    "month": "Unknown",
+    "month": "April",
     "title": "Neocognitron",
     "description": "Kunihiko Fukushima develops the Neocognitron, a hierarchical, multilayered artificial neural network that is a precursor to modern CNNs.",
     "category": "Models & Architectures",
@@ -113,7 +113,7 @@
   },
   {
     "year": 1980,
-    "month": "Unknown",
+    "month": "August",
     "title": "First AAAI Conference",
     "description": "The first conference of the American Association for Artificial Intelligence (AAAI) is held at Stanford, signaling a resurgence of interest in the field.",
     "category": "Research Breakthroughs",
@@ -121,7 +121,7 @@
   },
   {
     "year": 1986,
-    "month": "Unknown",
+    "month": "October",
     "title": "Backpropagation Popularized",
     "description": "David Rumelhart, Geoffrey Hinton, and Ronald Williams publish a paper that popularizes the backpropagation algorithm, enabling the training of deep neural networks.",
     "category": "Research Breakthroughs",
@@ -129,7 +129,7 @@
   },
   {
     "year": 1989,
-    "month": "Unknown",
+    "month": "December",
     "title": "LeNet and Convolutional Neural Networks (CNNs)",
     "description": "Yann LeCun develops LeNet, one of the first successful applications of Convolutional Neural Networks, for recognizing handwritten digits.",
     "category": "Models & Architectures",
@@ -145,7 +145,7 @@
   },
   {
     "year": 1995,
-    "month": "Unknown",
+    "month": "September",
     "title": "Support Vector Machines (SVMs)",
     "description": "Corinna Cortes and Vladimir Vapnik introduce support vector machines, a powerful supervised learning algorithm.",
     "category": "Research Breakthroughs",
@@ -161,7 +161,7 @@
   },
   {
     "year": 1997,
-    "month": "Unknown",
+    "month": "November",
     "title": "Long Short-Term Memory (LSTM)",
     "description": "Sepp Hochreiter and Jürgen Schmidhuber propose Long Short-Term Memory (LSTM), a type of recurrent neural network (RNN) architecture that becomes widely used for natural language processing.",
     "category": "Models & Architectures",
@@ -177,7 +177,7 @@
   },
   {
     "year": 2002,
-    "month": "Unknown",
+    "month": "September",
     "title": "Roomba Vacuum Cleaner",
     "description": "iRobot releases the Roomba, one of the first commercially successful domestic robots.",
     "category": "Public Releases",
@@ -185,7 +185,7 @@
   },
   {
     "year": 2005,
-    "month": "Unknown",
+    "month": "October",
     "title": "Stanford's Stanley Wins DARPA Challenge",
     "description": "Stanford's autonomous vehicle, Stanley, wins the second DARPA Grand Challenge, a major milestone for self-driving cars.",
     "category": "Hardware Advances",
@@ -193,7 +193,7 @@
   },
   {
     "year": 2006,
-    "month": "Unknown",
+    "month": "July",
     "title": "Deep Belief Networks",
     "description": "Geoffrey Hinton, Simon Osindero, and Yee-Whye Teh introduce Deep Belief Networks, reigniting interest in deep learning.",
     "category": "Research Breakthroughs",
@@ -201,7 +201,7 @@
   },
   {
     "year": 2009,
-    "month": "Unknown",
+    "month": "June",
     "title": "ImageNet Database Created",
     "description": "Fei-Fei Li and colleagues launch ImageNet, a large-scale database of labeled images that becomes a crucial benchmark for computer vision research.",
     "category": "Research Breakthroughs",
@@ -225,7 +225,7 @@
   },
   {
     "year": 2013,
-    "month": "Unknown",
+    "month": "January",
     "title": "Word2Vec",
     "description": "Google researchers led by Tomas Mikolov release Word2Vec, a popular model for creating word embeddings.",
     "category": "Research Breakthroughs",
@@ -233,7 +233,7 @@
   },
   {
     "year": 2013,
-    "month": "Unknown",
+    "month": "December",
     "title": "DeepMind's Atari Breakthrough",
     "description": "DeepMind demonstrates an AI that can learn to play Atari games from raw pixel data, using deep reinforcement learning.",
     "category": "Research Breakthroughs",
@@ -257,19 +257,19 @@
   },
   {
     "year": 2015,
+    "month": "March",
+    "title": "Diffusion Models Proposed",
+    "description": "Stanford researchers publish work on diffusion models, a technique that would later become foundational for high-quality image generation.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/1503.03585"
+  },
+  {
+    "year": 2015,
     "month": "December",
     "title": "OpenAI Founded",
     "description": "OpenAI is founded as a non-profit AI research company by Elon Musk, Sam Altman, and others with a mission to ensure that artificial general intelligence benefits all of humanity.",
     "category": "Companies & Investments",
     "link": "https://openai.com/blog/introducing-openai"
-  },
-  {
-    "year": 2015,
-    "month": "Unknown",
-    "title": "Diffusion Models Proposed",
-    "description": "Stanford researchers publish work on diffusion models, a technique that would later become foundational for high-quality image generation.",
-    "category": "Research Breakthroughs",
-    "link": "https://arxiv.org/abs/1503.03585"
   },
   {
     "year": 2016,
@@ -278,6 +278,14 @@
     "description": "DeepMind's AlphaGo defeats world champion Lee Sedol in Go, showcasing AI's ability to master complex, intuition-based games.",
     "category": "Models & Architectures",
     "link": "https://deepmind.google/research/case-studies/alphago-the-story-so-far"
+  },
+  {
+    "year": 2017,
+    "month": "March",
+    "title": "Canada's National AI Strategy",
+    "description": "Canada becomes the first country to release a national AI strategy, aiming to invest in research and talent.",
+    "category": "Ethics & Policy",
+    "link": "https://cifar.ca/ai/pan-canadian-artificial-intelligence-strategy/"
   },
   {
     "year": 2017,
@@ -294,14 +302,6 @@
     "description": "DeepMind introduces AlphaGo Zero, which learns to play Go from scratch, without any human data, and surpasses all previous versions of AlphaGo.",
     "category": "Models & Architectures",
     "link": "https://www.deepmind.com/blog/alphago-zero-learning-from-scratch"
-  },
-  {
-    "year": 2017,
-    "month": "Unknown",
-    "title": "Canada's National AI Strategy",
-    "description": "Canada becomes the first country to release a national AI strategy, aiming to invest in research and talent.",
-    "category": "Ethics & Policy",
-    "link": "https://cifar.ca/ai/pan-canadian-artificial-intelligence-strategy/"
   },
   {
     "year": 2018,
@@ -337,6 +337,14 @@
   },
   {
     "year": 2019,
+    "month": "May",
+    "title": "OECD AI Principles",
+    "description": "The Organisation for Economic Co-operation and Development (OECD) adopts a set of principles for responsible stewardship of trustworthy AI.",
+    "category": "Ethics & Policy",
+    "link": "https://oecd.ai/en/ai-principles"
+  },
+  {
+    "year": 2019,
     "month": "July",
     "title": "Microsoft Invests $1 Billion in OpenAI",
     "description": "Microsoft announces a $1 billion investment in and partnership with OpenAI to build new Azure AI supercomputing technologies.",
@@ -352,20 +360,20 @@
     "link": "https://www.deepmind.com/blog/alphastar-grandmaster-level-in-starcraft-ii-using-multi-agent-reinforcement-learning"
   },
   {
-    "year": 2019,
-    "month": "Unknown",
-    "title": "OECD AI Principles",
-    "description": "The Organisation for Economic Co-operation and Development (OECD) adopts a set of principles for responsible stewardship of trustworthy AI.",
-    "category": "Ethics & Policy",
-    "link": "https://oecd.ai/en/ai-principles"
-  },
-  {
     "year": 2020,
     "month": "June",
     "title": "OpenAI Releases GPT-3",
     "description": "OpenAI launches GPT-3, a 175-billion parameter language model, which demonstrates a remarkable ability to generate human-like text and perform a wide range of language tasks.",
     "category": "Public Releases",
     "link": "https://arxiv.org/abs/2005.14165"
+  },
+  {
+    "year": 2020,
+    "month": "July",
+    "title": "EleutherAI Founded",
+    "description": "A group of independent researchers forms EleutherAI, focusing on open-source AI research and releasing their own large language models.",
+    "category": "Companies & Investments",
+    "link": "https://www.eleuther.ai/"
   },
   {
     "year": 2020,
@@ -382,14 +390,6 @@
     "description": "DeepMind's AlphaFold 2 makes a major breakthrough in biology by accurately predicting the 3D structure of proteins, a long-standing grand challenge.",
     "category": "Research Breakthroughs",
     "link": "https://www.deepmind.com/blog/alphafold-a-solution-to-a-50-year-old-grand-challenge-in-biology"
-  },
-  {
-    "year": 2020,
-    "month": "Unknown",
-    "title": "EleutherAI Founded",
-    "description": "A group of independent researchers forms EleutherAI, focusing on open-source AI research and releasing their own large language models.",
-    "category": "Companies & Investments",
-    "link": "https://www.eleuther.ai/"
   },
   {
     "year": 2021,
@@ -417,19 +417,19 @@
   },
   {
     "year": 2021,
+    "month": "November",
+    "title": "Character.AI Founded",
+    "description": "Former Google AI researchers Noam Shazeer and Daniel De Freitas found Character.AI, a platform for creating and interacting with AI-powered chatbots.",
+    "category": "Companies & Investments",
+    "link": "https://character.ai/"
+  },
+  {
+    "year": 2021,
     "month": "Unknown",
     "title": "Anthropic Founded",
     "description": "Former OpenAI employees found Anthropic, an AI safety and research company, with a focus on building reliable, interpretable, and steerable AI systems.",
     "category": "Companies & Investments",
     "link": "https://en.wikipedia.org/wiki/Anthropic"
-  },
-  {
-    "year": 2021,
-    "month": "Unknown",
-    "title": "Character.AI Founded",
-    "description": "Former Google AI researchers Noam Shazeer and Daniel De Freitas found Character.AI, a platform for creating and interacting with AI-powered chatbots.",
-    "category": "Companies & Investments",
-    "link": "https://character.ai/"
   },
   {
     "year": 2022,
@@ -465,6 +465,14 @@
   },
   {
     "year": 2022,
+    "month": "August",
+    "title": "Perplexity AI Founded",
+    "description": "Perplexity AI is founded, developing a conversational search engine that provides direct answers with citations.",
+    "category": "Companies & Investments",
+    "link": "https://www.perplexity.ai/"
+  },
+  {
+    "year": 2022,
     "month": "October",
     "title": "White House AI Bill of Rights",
     "description": "The White House releases the 'Blueprint for an AI Bill of Rights,' a set of principles to guide the design, use, and deployment of automated systems.",
@@ -494,14 +502,6 @@
     "description": "Chinese AI company DeepSeek is founded, focusing on developing advanced, open-source Large Language Models.",
     "category": "Companies & Investments",
     "link": "https://www.deepseek.com/en/about"
-  },
-  {
-    "year": 2022,
-    "month": "Unknown",
-    "title": "Perplexity AI Founded",
-    "description": "Perplexity AI is founded, developing a conversational search engine that provides direct answers with citations.",
-    "category": "Companies & Investments",
-    "link": "https://www.perplexity.ai/"
   },
   {
     "year": 2023,
@@ -662,6 +662,14 @@
     "description": "Google, Microsoft, OpenAI, and Anthropic launch the Frontier Model Forum, an industry body to promote the safe and responsible development of large-scale AI models.",
     "category": "Ethics & Policy",
     "link": "https://www.frontiermodelforum.org/"
+  },
+  {
+    "year": 2023,
+    "month": "July",
+    "title": "OpenAI Partners with Associated Press",
+    "description": "OpenAI announces a partnership with the Associated Press, gaining a license to its archive of news stories for training its models in a deal that highlights the value of quality data.",
+    "category": "Companies & Investments",
+    "link": "https://fortune.com/2023/07/13/openai-associated-press-licensing-archive-news-stories-chatgpt/"
   },
   {
     "year": 2023,
@@ -1144,14 +1152,6 @@
     "link": "https://ssi.inc"
   },
   {
-    "year": 2023,
-    "month": "July",
-    "title": "OpenAI Partners with Associated Press",
-    "description": "OpenAI announces a partnership with the Associated Press, gaining a license to its archive of news stories for training its models in a deal that highlights the value of quality data.",
-    "category": "Companies & Investments",
-    "link": "https://fortune.com/2023/07/13/openai-associated-press-licensing-archive-news-stories-chatgpt/"
-  },
-  {
     "year": 2024,
     "month": "July",
     "title": "Google DeepMind Unveils V2A for Video Sound",
@@ -1237,7 +1237,7 @@
     "title": "Anthropic Releases Claude 3.5 Haiku",
     "description": "Anthropic releases Claude 3.5 Haiku, a fast and cost-effective model that matches the performance of the earlier, much larger Claude 3 Opus on several benchmarks.",
     "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-3-5-sonnet"
+    "link": "https://www.anthropic.com/news/3-5-models-and-computer-use"
   },
   {
     "year": 2024,
@@ -1403,9 +1403,9 @@
     "year": 2025,
     "month": "July",
     "title": "U.S. Department of Defense Awards AI Contracts to OpenAI, Anthropic, and Others",
-    "description": "The U.S. Department of Defense announces $200 million in contracts for AI in the military, awarded to Anthropic, Google, OpenAI, and xAI.",
+    "description": "The U.S. Department of Defense announces contracts worth up to $200 million each for AI in the military, awarded to Anthropic, Google, OpenAI, and xAI.",
     "category": "Ethics & Policy",
-    "link": "https://www.anthropic.com/news/claude-gov-models-for-u-s-national-security-customers"
+    "link": "https://www.anthropic.com/news/anthropic-and-the-department-of-defense-to-advance-responsible-ai-in-defense-operations"
   },
   {
     "year": 2025,
