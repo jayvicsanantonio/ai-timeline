@@ -3,6 +3,7 @@
 import { expect, test, type Page } from "@playwright/test"
 
 const PHONE = { width: 375, height: 812 }
+const PHONE_LANDSCAPE = { width: 812, height: 320 }
 const TABLET = { width: 900, height: 1000 }
 const DESKTOP = { width: 1280, height: 800 }
 
@@ -110,6 +111,25 @@ for (const [device, viewport] of Object.entries({ phone: PHONE, tablet: TABLET, 
 
       await expect.poll(() => findCardsUnderTheLine(page)).toEqual([])
     })
+
+    test("keeps every node dot on the line, even before its card enters", async ({ page }) => {
+      await page.goto("/")
+      await waitForHydration(page)
+
+      const offsets = await page.evaluate(() => {
+        const centerOf = (element: Element) => {
+          const rect = element.getBoundingClientRect()
+          return Math.round(rect.left + rect.width / 2)
+        }
+
+        return [...document.querySelectorAll("article")].map((article) => {
+          const line = article.closest("section")!.querySelector('[data-testid="timeline-line"]')!
+          return centerOf(article.querySelector('[data-testid="timeline-node"]')!) - centerOf(line)
+        })
+      })
+
+      expect(new Set(offsets)).toEqual(new Set([0]))
+    })
   })
 }
 
@@ -196,6 +216,23 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
     await expect(toggle).toContainText("Learning Era")
     await expect(toggle).toContainText("03 / 05")
     expect((await nav.boundingBox())!.height).toBeLessThanOrEqual(MAX_PHONE_NAV_HEIGHT)
+  })
+
+  test.describe(`in a short landscape viewport (${PHONE_LANDSCAPE.width}x${PHONE_LANDSCAPE.height})`, () => {
+    test.use({ viewport: PHONE_LANDSCAPE })
+
+    test("keeps the open chapter list on screen", async ({ page }) => {
+      await page.goto("/")
+      await waitForHydration(page)
+
+      const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
+      const toggle = nav.getByRole("button", { name: /current era/i })
+      await toggle.click()
+
+      const chapterList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
+      await expect(chapterList.getByRole("button").first()).toBeInViewport({ ratio: 1 })
+      expect((await nav.boundingBox())!.y).toBeGreaterThanOrEqual(0)
+    })
   })
 
   test.describe("with reduced motion", () => {

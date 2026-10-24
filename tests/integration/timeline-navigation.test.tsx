@@ -1,5 +1,5 @@
-// Integration tests for the phone chapter nav in TimelineNavigation: a bar that names
-// the current era and opens a chapter list, which closes again on a second tap or a pick.
+// Integration tests for the phone chapter nav in TimelineNavigation: a bar that names the current era and
+// opens a chapter list that follows it in keyboard order and closes again on a second tap or a pick.
 import { render, screen, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { userEvent } from "vitest/browser"
@@ -64,5 +64,27 @@ describe("TimelineNavigation on a phone", () => {
     expect(chapterListOf(toggle)).toBeNull()
     await expect.poll(() => toggle.textContent).toContain("Learning Era")
     await expect.poll(() => toggle.textContent).toContain("03 / 03")
+  })
+
+  it("lets the Tab key move from the bar into the opened chapter list", async () => {
+    const { toggle } = renderNavigation()
+
+    toggle.focus()
+    await userEvent.keyboard("{Enter}")
+    await userEvent.tab()
+
+    expect(within(chapterListOf(toggle)!).getAllByRole("button")[0]).toHaveFocus()
+  })
+
+  it("returns focus to the bar when a chapter picked from the keyboard closes the list", async () => {
+    const { toggle } = renderNavigation()
+
+    toggle.focus()
+    await userEvent.keyboard("{Enter}")
+    within(chapterListOf(toggle)!).getByRole("button", { name: /Learning Era/ }).focus()
+    await userEvent.keyboard("{Enter}")
+
+    expect(chapterListOf(toggle)).toBeNull()
+    expect(toggle).toHaveFocus()
   })
 })

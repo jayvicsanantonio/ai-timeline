@@ -336,22 +336,8 @@ function TimelineEventCard({
   const newTabHintId = useId();
 
   return (
-    <motion.article
-      className={`relative flex items-center ${isLeft ? 'justify-start' : 'justify-end'} transform-gpu`}
-      initial={
-        reduceMotion
-          ? undefined
-          : { opacity: 0, y: 36, x: isLeft ? -70 : 70 }
-      }
-      whileInView={
-        reduceMotion ? undefined : { opacity: 1, y: 0, x: 0 }
-      }
-      transition={{
-        duration: 0.55,
-        ease: 'easeOut',
-        delay: Math.min(index * 0.012, 0.22),
-      }}
-      viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+    <article
+      className={`relative flex items-center ${isLeft ? 'justify-start' : 'justify-end'}`}
     >
       <div
         data-testid="timeline-node"
@@ -372,9 +358,24 @@ function TimelineEventCard({
         </motion.div>
       </div>
 
-      {/* Below lg the line runs down a left gutter and every card sits to its right */}
-      <div
-        className={`w-full pl-10 lg:max-w-lg ${isLeft ? 'lg:pl-0 lg:pr-12' : 'lg:pl-12'}`}
+      {/* Below lg the line runs down a left gutter and every card sits to its right.
+          Only the card plays the entrance animation, so its node dot stays on the line. */}
+      <motion.div
+        className={`w-full pl-10 lg:max-w-lg ${isLeft ? 'lg:pl-0 lg:pr-12' : 'lg:pl-12'} transform-gpu`}
+        initial={
+          reduceMotion
+            ? undefined
+            : { opacity: 0, y: 36, x: isLeft ? -70 : 70 }
+        }
+        whileInView={
+          reduceMotion ? undefined : { opacity: 1, y: 0, x: 0 }
+        }
+        transition={{
+          duration: 0.55,
+          ease: 'easeOut',
+          delay: Math.min(index * 0.012, 0.22),
+        }}
+        viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
       >
         <motion.div
           whileHover={
@@ -437,7 +438,7 @@ function TimelineEventCard({
             </div>
           </CinematicCard>
         </motion.div>
-      </div>
-    </motion.article>
+      </motion.div>
+    </article>
   );
 }

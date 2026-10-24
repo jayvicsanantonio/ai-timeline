@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface TimelineNavigationSection {
@@ -32,6 +32,7 @@ export function TimelineNavigation({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isMobileListOpen, setIsMobileListOpen] = useState(false);
   const mobileListId = useId();
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!sections.length) {
@@ -118,11 +119,17 @@ export function TimelineNavigation({
     }
 
     setActiveId(sectionId);
-    setIsMobileListOpen(false);
     target.scrollIntoView({
       behavior: reduceMotion ? 'auto' : 'smooth',
       block: 'start',
     });
+  };
+
+  const handleMobileNavigate = (sectionId: string) => {
+    handleNavigate(sectionId);
+    setIsMobileListOpen(false);
+    // The picked chapter's button unmounts with the list, so focus moves back to the toggle
+    mobileToggleRef.current?.focus({ preventScroll: true });
   };
 
   const activeIndex = useMemo(() => {
@@ -307,11 +314,46 @@ export function TimelineNavigation({
         aria-label="Timeline chapter navigation"
         className="fixed inset-x-0 bottom-4 z-40 px-4 lg:hidden"
       >
-        <div className="mx-auto max-w-lg overflow-hidden rounded-[1.75rem] border border-white/10 bg-background/72 shadow-[0_26px_80px_-45px_rgba(5,150,105,0.85)] backdrop-blur-2xl">
+        {/* The toggle comes first in DOM order so Tab moves from it into the open list,
+            and flex-col-reverse draws the list above it */}
+        <div className="mx-auto flex max-w-lg flex-col-reverse overflow-hidden rounded-[1.75rem] border border-white/10 bg-background/72 shadow-[0_26px_80px_-45px_rgba(5,150,105,0.85)] backdrop-blur-2xl">
+          <button
+            ref={mobileToggleRef}
+            type="button"
+            onClick={() => setIsMobileListOpen((isOpen) => !isOpen)}
+            aria-expanded={isMobileListOpen}
+            aria-controls={isMobileListOpen ? mobileListId : undefined}
+            className="relative flex w-full items-center justify-between gap-3 overflow-hidden px-4 py-2 text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40"
+          >
+            <span className="absolute inset-0 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),transparent_35%,transparent_70%,rgba(255,255,255,0.03))]" />
+
+            <span className="relative min-w-0">
+              <span className="block text-[10px] font-mono uppercase tracking-[0.3em] text-primary/72">
+                Current Era
+              </span>
+              <span className="block truncate text-sm font-medium text-foreground">
+                {activeSection.label}
+              </span>
+            </span>
+
+            <span className="relative flex shrink-0 items-center gap-2">
+              <span className="rounded-full border border-white/10 bg-background/55 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
+                {formatIndex(activeIndex + 1)} / {formatIndex(sections.length)}
+              </span>
+              <ChevronUp
+                aria-hidden="true"
+                className={cn(
+                  'h-4 w-4 text-muted-foreground motion-safe:transition-transform',
+                  isMobileListOpen && 'rotate-180'
+                )}
+              />
+            </span>
+          </button>
+
           {isMobileListOpen ? (
             <motion.div
               id={mobileListId}
-              className="flex flex-col gap-2 border-b border-white/10 p-3"
+              className="flex max-h-[calc(100dvh-6rem)] flex-col gap-2 overflow-y-auto border-b border-white/10 p-3"
               initial={reduceMotion ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
@@ -323,7 +365,7 @@ export function TimelineNavigation({
                   <motion.button
                     key={section.id}
                     type="button"
-                    onClick={() => handleNavigate(section.id)}
+                    onClick={() => handleMobileNavigate(section.id)}
                     aria-current={isActive ? 'location' : undefined}
                     className={cn(
                       'relative flex items-center gap-3 overflow-hidden rounded-[1.2rem] border px-3 py-2.5 text-left backdrop-blur-xl transition-[border-color,background-color,color,box-shadow]',
@@ -356,38 +398,6 @@ export function TimelineNavigation({
               })}
             </motion.div>
           ) : null}
-
-          <button
-            type="button"
-            onClick={() => setIsMobileListOpen((isOpen) => !isOpen)}
-            aria-expanded={isMobileListOpen}
-            aria-controls={isMobileListOpen ? mobileListId : undefined}
-            className="relative flex w-full items-center justify-between gap-3 overflow-hidden px-4 py-2 text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40"
-          >
-            <span className="absolute inset-0 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),transparent_35%,transparent_70%,rgba(255,255,255,0.03))]" />
-
-            <span className="relative min-w-0">
-              <span className="block text-[10px] font-mono uppercase tracking-[0.3em] text-primary/72">
-                Current Era
-              </span>
-              <span className="block truncate text-sm font-medium text-foreground">
-                {activeSection.label}
-              </span>
-            </span>
-
-            <span className="relative flex shrink-0 items-center gap-2">
-              <span className="rounded-full border border-white/10 bg-background/55 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
-                {formatIndex(activeIndex + 1)} / {formatIndex(sections.length)}
-              </span>
-              <ChevronUp
-                aria-hidden="true"
-                className={cn(
-                  'h-4 w-4 text-muted-foreground motion-safe:transition-transform',
-                  isMobileListOpen && 'rotate-180'
-                )}
-              />
-            </span>
-          </button>
         </div>
       </nav>
     </>
