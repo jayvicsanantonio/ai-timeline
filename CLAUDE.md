@@ -62,6 +62,7 @@ The application uses React's built-in state management with no external state li
 ### Styling Approach
 
 - Tailwind CSS 4 for styling with `@/*` path aliases
+- Work Sans is self-hosted from `app/fonts/` via `next/font/local`. Don't switch to `next/font/google`: it downloads fonts during `next build`, which makes builds fail at random
 - CSS-in-JS animations via Framer Motion
 - Theme support via next-themes
 
