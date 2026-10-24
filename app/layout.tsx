@@ -1,4 +1,4 @@
-// Root layout for the AI Timeline: loads the Work Sans font, global styles and theme provider.
+// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts, global styles and theme provider.
 // Wraps every page with the skip link, custom cursor and main landmark.
 import type React from 'react';
 import type { Metadata } from 'next';
@@ -8,11 +8,18 @@ import { SkipToContent } from '@/components/accessibility/skip-to-content';
 import { FuturisticCursor } from '@/components/ui/futuristic-cursor';
 import './globals.css';
 
-// Work Sans ships with the app (latin subset, variable weight 300-700), so `next build` never fetches it from Google Fonts.
+// Work Sans and Open Sans ship with the app (latin subsets, variable weight 300-700), so `next build` never fetches them from Google Fonts.
 const workSans = localFont({
   src: './fonts/WorkSans-Latin.woff2',
   display: 'swap',
   variable: '--font-work-sans',
+  weight: '300 700',
+});
+
+const openSans = localFont({
+  src: './fonts/OpenSans-Latin.woff2',
+  display: 'swap',
+  variable: '--font-open-sans',
   weight: '300 700',
 });
 
@@ -32,7 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${workSans.variable} antialiased dark`}
+      className={`${workSans.variable} ${openSans.variable} antialiased dark`}
       suppressHydrationWarning
     >
       <body className="overflow-x-hidden">
