@@ -4,3 +4,6 @@ allowBuilds:
   '@tailwindcss/oxide': false
   sharp: false
   unrs-resolver: false
+# next pins postcss to an exact version that has security advisories, so its copy is raised to a patched release.
+overrides:
+  next>postcss: ^8.5.31

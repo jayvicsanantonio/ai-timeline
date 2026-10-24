@@ -2,9 +2,9 @@
 // The shimmer loop must run only on hover, and both effects must use valid CSS colors.
 import { render, screen } from "@testing-library/react"
 import { userEvent } from "vitest/browser"
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 import { TimelineBadge } from "@/components/ui/timeline-badge"
-import { elementsAnimatingWithin, wait } from "./hover-effects"
+import { elementsAnimatingWithin, restPointerOnBody, wait } from "./hover-effects"
 
 const variants = ["research", "model", "release", "ethics", "hardware", "company", "tool", "bombshell", "agent"] as const
 
@@ -17,6 +17,10 @@ function renderBadge(variant: (typeof variants)[number] = "research") {
 }
 
 describe("TimelineBadge hover effects", () => {
+  beforeEach(async () => {
+    await restPointerOnBody()
+  })
+
   it("keeps the shimmer still while the badge is not hovered", async () => {
     const { badge } = renderBadge()
     await wait(500)

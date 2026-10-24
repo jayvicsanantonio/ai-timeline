@@ -1,7 +1,7 @@
 // Unit tests for FuturisticCursor: the custom cursor only appears for fine pointers
 // with motion allowed, using Chromium's own media emulation for touch and reduced motion.
 import { act, render, screen } from "@testing-library/react"
-import { afterEach, describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, onTestFinished } from "vitest"
 import { cdp } from "vitest/browser"
 import { FuturisticCursor } from "@/components/ui/futuristic-cursor"
 
@@ -21,7 +21,6 @@ function emulateTouchScreen(enabled: boolean) {
 describe("FuturisticCursor", () => {
   afterEach(async () => {
     await emulateReducedMotion(false)
-    await emulateTouchScreen(false)
   })
 
   it("renders a decorative cursor for a fine pointer with motion allowed", () => {
@@ -32,14 +31,6 @@ describe("FuturisticCursor", () => {
 
   it("renders nothing when the user prefers reduced motion", async () => {
     await emulateReducedMotion(true)
-
-    render(<FuturisticCursor />)
-
-    expect(screen.queryByTestId("futuristic-cursor")).not.toBeInTheDocument()
-  })
-
-  it("renders nothing on touch screens", async () => {
-    await emulateTouchScreen(true)
 
     render(<FuturisticCursor />)
 
@@ -58,6 +49,19 @@ describe("FuturisticCursor", () => {
       await emulateReducedMotion(true)
       await reducedMotionChanged
     })
+
+    expect(screen.queryByTestId("futuristic-cursor")).not.toBeInTheDocument()
+  })
+
+  // Runs last: once touch emulation is turned off, Chromium on Linux reports no pointer at all,
+  // not the fine pointer the tests above need.
+  it("renders nothing on touch screens", async () => {
+    await emulateTouchScreen(true)
+    onTestFinished(async () => {
+      await emulateTouchScreen(false)
+    })
+
+    render(<FuturisticCursor />)
 
     expect(screen.queryByTestId("futuristic-cursor")).not.toBeInTheDocument()
   })

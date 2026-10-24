@@ -2,9 +2,9 @@
 // The sweep and scan-line loops must run only while the card is hovered.
 import { render, screen } from "@testing-library/react"
 import { userEvent } from "vitest/browser"
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 import { CinematicCard } from "@/components/ui/cinematic-card"
-import { elementsAnimatingWithin, wait } from "./hover-effects"
+import { elementsAnimatingWithin, restPointerOnBody, wait } from "./hover-effects"
 
 function renderCard() {
   render(<CinematicCard>Card content</CinematicCard>)
@@ -15,6 +15,10 @@ function renderCard() {
 }
 
 describe("CinematicCard hover effects", () => {
+  beforeEach(async () => {
+    await restPointerOnBody()
+  })
+
   it("keeps the sweep and scan line still while the card is not hovered", async () => {
     const { card } = renderCard()
     await wait(700)
