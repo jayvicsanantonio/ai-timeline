@@ -97,4 +97,32 @@ describe("data/timeline-events.json", () => {
     const sharedLinks = [...titlesByLink].filter(([, titles]) => titles.length > 1)
     expect(sharedLinks).toEqual([])
   })
+
+  test("marks the approved turning points as landmarks, and nothing else", () => {
+    const landmarks = timelineData.filter((event) => "landmark" in event)
+
+    expect(landmarks.map((event) => event.title)).toEqual([
+      "McCulloch-Pitts Neuron",
+      "The Turing Test",
+      "Dartmouth AI Conference",
+      "Rosenblatt's Perceptron",
+      "The First AI Winter Begins",
+      "Backpropagation Popularized",
+      "IBM Deep Blue Defeats Garry Kasparov",
+      "ImageNet Database Created",
+      "ImageNet Breakthrough",
+      "AlphaGo Defeats Lee Sedol",
+      "Attention Is All You Need",
+      "OpenAI Releases GPT-3",
+      "DeepMind's AlphaFold 2 Solves Protein Folding",
+      "ChatGPT Takes the World by Storm",
+      "OpenAI Releases GPT-4",
+      "EU AI Act Takes Effect",
+      "OpenAI Releases o1",
+      "Hopfield and Hinton Win the Nobel Prize in Physics",
+      "DeepSeek-R1 Shakes the AI Industry",
+      "AI Reaches Gold-Medal Level at the Math Olympiad",
+    ])
+    expect(landmarks.every((event) => (event as { landmark?: unknown }).landmark === true)).toBe(true)
+  })
 })

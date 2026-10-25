@@ -1,5 +1,5 @@
 // End-to-end tests for the timeline page in a real Next.js server: error-free loading with and without reduced
-// motion, cards that settle in place, card dates, the opening's events-per-year chart and the insight stats.
+// motion, cards that settle in place, card dates, the opening's events-per-year chart and an insight stat.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 
@@ -92,13 +92,16 @@ test("charts every year from the first event to the last, and labels the busiest
   await expect(chart).toContainText(`${busiestCount} events in ${busiestYear}`)
 })
 
-test("computes the 2010-or-later share in Timeline Insights from the real events", async ({ page }) => {
-  const recentCount = timelineData.filter((event) => event.year >= 2010).length
-  const expectedShare = `${Math.round((recentCount / timelineData.length) * 100)}%`
+test("compares the Generative AI Era with the decade before it in Timeline Insights, from the real events", async ({ page }) => {
+  const latest = timelineData.filter((event) => event.year >= 2020).length
+  const previous = timelineData.filter((event) => event.year >= 2010 && event.year < 2020).length
 
   await page.goto("/")
 
-  const statLabel = page.getByText(`of the ${timelineData.length} events happened in 2010 or later`, { exact: true })
+  const statLabel = page.getByText(
+    `${latest} events in the Generative AI Era, against ${previous} in the Deep Learning Revolution`,
+    { exact: true },
+  )
   await statLabel.scrollIntoViewIfNeeded()
-  await expect(statLabel.locator("xpath=preceding-sibling::div[1]")).toHaveText(expectedShare)
+  await expect(statLabel.locator("xpath=preceding-sibling::div[1]")).toHaveText(`${Math.round((latest / previous) * 10) / 10}×`)
 })

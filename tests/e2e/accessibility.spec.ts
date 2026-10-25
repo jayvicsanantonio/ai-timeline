@@ -1,5 +1,5 @@
 // End-to-end accessibility checks in real Chromium: landmarks, era headings, event links and their names,
-// keyboard access, focus rings, cursor behavior and a page that holds still when reduced motion is preferred.
+// keyboard access, focus rings, the system cursor and a page that holds still when reduced motion is preferred.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 
@@ -155,24 +155,12 @@ test.describe("event links", () => {
 })
 
 test.describe("cursor on a fine pointer with motion allowed", () => {
-  test("hides the system cursor and draws the custom cursor", async ({ page }) => {
-    await page.goto("/")
-    await waitForHydration(page)
-
-    await expect(page.getByTestId("futuristic-cursor")).toHaveCount(1)
-    await expect(page.locator("body")).toHaveCSS("cursor", "none")
-  })
-})
-
-test.describe("cursor when reduced motion is preferred", () => {
-  test.use({ reducedMotion: "reduce" })
-
-  test("keeps the system cursor and skips the custom cursor", async ({ page }) => {
+  test("keeps the system cursor, so pointing at the thin chart bars is exact", async ({ page }) => {
     await page.goto("/")
     await waitForHydration(page)
 
     await expect(page.locator("body")).toHaveCSS("cursor", "auto")
-    await expect(page.getByTestId("futuristic-cursor")).toHaveCount(0)
+    await expect(page.locator("[data-year-bar]").first()).toHaveCSS("cursor", "pointer")
   })
 })
 
@@ -217,17 +205,5 @@ test.describe("motion when reduced motion is preferred", () => {
     })
 
     expect(opacityJustAfterEntering).toEqual({ state: "visible", opacity: "1" })
-  })
-})
-
-test.describe("cursor on a touch screen", () => {
-  test.use({ hasTouch: true })
-
-  test("keeps the system cursor and skips the custom cursor", async ({ page }) => {
-    await page.goto("/")
-    await waitForHydration(page)
-
-    await expect(page.locator("body")).toHaveCSS("cursor", "auto")
-    await expect(page.getByTestId("futuristic-cursor")).toHaveCount(0)
   })
 })

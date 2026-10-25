@@ -2,7 +2,7 @@
 // Undated months show only the year, and every real event gets its own anchor id.
 import { describe, expect, it } from "vitest"
 import timelineData from "@/data/timeline-events.json"
-import { eventAnchorId, eventDateTime, formatEventDate, MONTHS } from "@/lib/event-format"
+import { eventAnchorId, eventDateTime, eventSource, formatEventDate, MONTHS } from "@/lib/event-format"
 import type { TimelineEvent } from "@/types/timeline"
 
 const dated: TimelineEvent = {
@@ -70,5 +70,17 @@ describe("eventAnchorId", () => {
   it("gives every event in data/timeline-events.json its own id", () => {
     const ids = timelineData.map((event) => eventAnchorId(event as TimelineEvent))
     expect(new Set(ids).size).toBe(ids.length)
+  })
+})
+
+describe("eventSource", () => {
+  it("names the site an event's link opens, without a leading www", () => {
+    expect(eventSource({ link: "https://www.nature.com/articles/nature16961" })).toBe("nature.com")
+    expect(eventSource({ link: "https://arxiv.org/abs/1706.03762" })).toBe("arxiv.org")
+  })
+
+  it("keeps other subdomains, which name the site", () => {
+    expect(eventSource({ link: "https://en.wikipedia.org/wiki/ELIZA" })).toBe("en.wikipedia.org")
+    expect(eventSource({ link: "https://blog.google/technology/ai/" })).toBe("blog.google")
   })
 })

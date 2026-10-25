@@ -1,4 +1,4 @@
-// Integration tests for TimelineInsights: every stat on its cards is computed from
+// Integration tests for TimelineInsights: every stat on its tiles is computed from
 // the events it is given, so the numbers always match the timeline data.
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
@@ -16,7 +16,8 @@ function makeEvent(year: number, category: TimelineCategory): TimelineEvent {
   }
 }
 
-// 8 events: 6 from 2010 on, 3 in 2024, 3 Companies & Investments, 2 Ethics & Policy.
+// 9 events: 2 in the Learning Era, 1 in the Deep Learning Revolution and 6 in the Generative AI Era;
+// 4 Research Breakthroughs, 3 Companies & Investments and 2 Ethics & Policy.
 const events = [
   makeEvent(1998, "Research Breakthroughs"),
   makeEvent(2005, "Research Breakthroughs"),
@@ -25,7 +26,8 @@ const events = [
   makeEvent(2024, "Companies & Investments"),
   makeEvent(2024, "Ethics & Policy"),
   makeEvent(2024, "Research Breakthroughs"),
-  makeEvent(2025, "Companies & Investments"),
+  makeEvent(2025, "Research Breakthroughs"),
+  makeEvent(2026, "Companies & Investments"),
 ]
 
 function labelFor(stat: string) {
@@ -33,23 +35,38 @@ function labelFor(stat: string) {
 }
 
 describe("TimelineInsights", () => {
-  it("shows one card for each insight in order", () => {
+  it("shows one tile for each insight in order", () => {
     render(<TimelineInsights events={events} />)
 
     const titles = screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent)
-    expect(titles).toEqual(["Accelerating Progress", "Busiest Year", "Industry Momentum", "Societal Impact"])
+    expect(titles).toEqual(["Era Over Era", "Most Common Milestone", "Industry Momentum", "Societal Impact"])
   })
 
-  it("computes the share of events from 2010 or later", () => {
+  it("compares the latest era's events with the era before it", () => {
     render(<TimelineInsights events={events} />)
 
-    expect(labelFor("75%")).toHaveTextContent("of the 8 events happened in 2010 or later")
+    expect(labelFor("6×")).toHaveTextContent("6 events in the Generative AI Era, against 1 in the Deep Learning Revolution")
   })
 
-  it("names the year with the most events", () => {
+  it("rounds the era multiple to one decimal place", () => {
+    const deepLearning = [2012, 2015, 2018].map((year) => makeEvent(year, "Research Breakthroughs"))
+    const generative = [2020, 2021, 2022, 2023, 2024, 2025, 2026].map((year) => makeEvent(year, "Public Releases"))
+    render(<TimelineInsights events={[...deepLearning, ...generative]} />)
+
+    expect(labelFor("2.3×")).toHaveTextContent("7 events in the Generative AI Era, against 3 in the Deep Learning Revolution")
+  })
+
+  it("shows a dash instead of a multiple when the era before the latest has no events", () => {
+    render(<TimelineInsights events={[makeEvent(2024, "Agents")]} />)
+
+    expect(labelFor("—")).toHaveTextContent("1 event in the Generative AI Era, against 0 in the Deep Learning Revolution")
+  })
+
+  it("names the most common kind of milestone", () => {
     render(<TimelineInsights events={events} />)
 
-    expect(labelFor("2024")).toHaveTextContent("3 events, more than any other year")
+    expect(labelFor("4")).toHaveTextContent("Research Breakthroughs events")
+    expect(screen.getByText("More of the timeline is Research Breakthroughs than any other kind of milestone.")).toBeInTheDocument()
   })
 
   it("counts the Companies & Investments and Ethics & Policy events", () => {

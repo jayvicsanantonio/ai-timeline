@@ -1,5 +1,5 @@
 // Draws the Learning Era as beveled windows cascading across a teal desktop, the look of 1990s PCs.
-// Each event is a window: its category icon and title in the title bar, its description inside, its date below.
+// Each event is a window: its date, icon and title in the title bar, its description inside, its category and source below.
 'use client';
 
 import { Info } from 'lucide-react';
@@ -8,17 +8,44 @@ import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-forma
 import { cn } from '@/lib/utils';
 import type { TimelineEvent } from '@/types/timeline';
 import {
+  CompactEraText,
   EventHeading,
-  NO_MATCHING_EVENTS,
+  EventSource,
+  LANDMARK_LABEL,
   eraEventCount,
   eraHeadingId,
+  eventCardAttributes,
   type EraInterfaceProps,
 } from './era-parts';
 
-// Each window steps right of the one before it, then the cascade starts over
-const CASCADE_OFFSETS = ['md:ml-0', 'md:ml-12', 'md:ml-24'];
+// Each window steps a little right of the one before it, then the cascade starts over. The steps
+// stay small so the dates in the title bars still line up for scanning.
+const CASCADE_OFFSETS = ['md:ml-0', 'md:ml-4', 'md:ml-8'];
 
 export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
+  if (era.events.length === 0) {
+    return (
+      <div className="desktop-wallpaper font-desktop px-4 py-6 sm:px-6">
+        <div className="desktop-window mx-auto max-w-2xl">
+          <div className="desktop-title-bar">
+            <Info aria-hidden="true" className="size-4 shrink-0" />
+            <p className="min-w-0 flex-1 truncate text-[15px] font-bold">{era.interfaceName}</p>
+            <WindowControls />
+          </div>
+          <div className="px-4 py-3 text-black">
+            <CompactEraText
+              era={era}
+              totalEvents={totalEvents}
+              metaClassName="text-[13px] text-[#333]"
+              headingClassName="mt-0.5 text-lg font-bold"
+              messageClassName="mt-0.5 text-[13px]"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="desktop-wallpaper font-desktop px-4 py-24 sm:px-6 sm:py-32">
       <div className="mx-auto max-w-4xl">
@@ -47,19 +74,13 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
           </div>
         </header>
 
-        {era.events.length > 0 ? (
-          <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
-            {era.events.map((event, index) => (
-              <li key={eventAnchorId(event)} className={CASCADE_OFFSETS[index % CASCADE_OFFSETS.length]}>
-                <EventWindow event={event} />
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="mt-14 text-center text-base text-white [text-shadow:1px_1px_0_#000]">
-            {NO_MATCHING_EVENTS}
-          </p>
-        )}
+        <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
+          {era.events.map((event, index) => (
+            <li key={eventAnchorId(event)} className={CASCADE_OFFSETS[index % CASCADE_OFFSETS.length]}>
+              <EventWindow event={event} />
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   );
@@ -68,25 +89,36 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
 function EventWindow({ event }: { event: TimelineEvent }) {
   return (
     <article
-      id={eventAnchorId(event)}
-      data-year={event.year}
+      {...eventCardAttributes(event)}
       className="reveal-on-scroll desktop-window group relative max-w-2xl scroll-mt-[var(--timeline-sticky-offset,0px)] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-white"
     >
       <div className="desktop-title-bar">
         <CategoryIcon category={event.category} className="size-4 shrink-0" />
+        <time
+          dateTime={eventDateTime(event)}
+          className="shrink-0 rounded-[2px] bg-white/20 px-1.5 text-[13px] font-bold"
+        >
+          {formatEventDate(event)}
+        </time>
         <EventHeading event={event} className="min-w-0 flex-1 text-[15px] font-bold leading-snug" />
-        <WindowControls />
+        <WindowControls className="hidden sm:flex" />
       </div>
       <div className="desktop-sunken m-1 bg-white px-4 py-3 text-[15px] leading-7 text-black">
         <p>{event.description}</p>
       </div>
       <div className="flex gap-1 px-1 pb-1 text-[13px] text-black">
-        <p className="desktop-sunken min-w-0 flex-1 px-2 py-0.5">
-          <time dateTime={eventDateTime(event)}>{formatEventDate(event)}</time>
-        </p>
-        <p className="desktop-sunken min-w-0 flex-[2] truncate px-2 py-0.5">
+        <p className="desktop-sunken min-w-0 flex-[3] truncate px-2 py-0.5">
           <span>{event.category}</span>
         </p>
+        <p className="desktop-sunken flex min-w-0 flex-[2] px-2 py-0.5">
+          <EventSource event={event} />
+        </p>
+        {event.landmark ? (
+          <p className="desktop-sunken shrink-0 px-2 py-0.5 font-bold">
+            <span aria-hidden="true">★ </span>
+            <span>{LANDMARK_LABEL}</span>
+          </p>
+        ) : null}
       </div>
     </article>
   );

@@ -3,52 +3,54 @@
 "use client"
 
 import { Lightbulb, TrendingUp, Users, Zap } from "lucide-react"
-import type { TimelineEvent } from "@/types/timeline"
+import { groupEventsByEra } from "@/lib/eras"
+import { countEventsByCategory } from "@/lib/timeline-filter"
+import { TIMELINE_CATEGORIES, type TimelineEvent } from "@/types/timeline"
 
 interface TimelineInsightsProps {
   events: TimelineEvent[]
 }
 
-function countEvents(events: TimelineEvent[], matches: (event: TimelineEvent) => boolean) {
-  return events.filter(matches).length
+function countLabel(count: number) {
+  return `${count} ${count === 1 ? "event" : "events"}`
 }
 
-// The year with the most events. On a tie, the year that comes first in events wins.
-function findBusiestYear(events: TimelineEvent[]) {
-  const countsByYear = new Map<number, number>()
-  for (const event of events) {
-    countsByYear.set(event.year, (countsByYear.get(event.year) ?? 0) + 1)
-  }
-
-  let busiest = { year: 0, count: 0 }
-  for (const [year, count] of countsByYear) {
-    if (count > busiest.count) busiest = { year, count }
-  }
-  return busiest
+// How many times more events the latest era has than the one before it, to one decimal place.
+// A dash stands in when the era before has no events to compare against.
+function formatMultiple(latest: number, previous: number) {
+  return previous > 0 ? `${Math.round((latest / previous) * 10) / 10}×` : "—"
 }
 
-// Every stat is computed from the events, so the cards stay true to the timeline data.
+// The category with the most events. On a tie, the category listed first in TIMELINE_CATEGORIES wins.
+function findMostCommonCategory(counts: ReturnType<typeof countEventsByCategory>) {
+  return TIMELINE_CATEGORIES.reduce((best, category) => (counts[category] > counts[best] ? category : best))
+}
+
+// Every stat is computed from the events, so the tiles stay true to the timeline data. None of them
+// repeats the opening chart, which already shows the busiest year and the climb since 2020.
 function getInsights(events: TimelineEvent[]) {
-  const recentShare = countEvents(events, (event) => event.year >= 2010) / events.length
-  const busiestYear = findBusiestYear(events)
+  const eras = groupEventsByEra(events)
+  const latest = eras[eras.length - 1]
+  const previous = eras[eras.length - 2]
+  const counts = countEventsByCategory(events)
+  const mostCommon = findMostCommonCategory(counts)
 
   return [
     {
-      id: "acceleration",
+      id: "era-over-era",
       icon: TrendingUp,
-      title: "Accelerating Progress",
-      description:
-        "AI development has exponentially accelerated, with more breakthroughs in the last decade than the previous 50 years.",
-      stat: `${Math.round(recentShare * 100)}%`,
-      statLabel: `of the ${events.length} events happened in 2010 or later`,
+      title: "Era Over Era",
+      description: "How the newest era of AI compares, by number of milestones, with the era that made it possible.",
+      stat: formatMultiple(latest.events.length, previous.events.length),
+      statLabel: `${countLabel(latest.events.length)} in the ${latest.label}, against ${previous.events.length} in the ${previous.label}`,
     },
     {
-      id: "busiest-year",
+      id: "most-common",
       icon: Lightbulb,
-      title: "Busiest Year",
-      description: "Each breakthrough builds upon previous discoveries, creating cascading waves of innovation.",
-      stat: String(busiestYear.year),
-      statLabel: `${busiestYear.count} events, more than any other year`,
+      title: "Most Common Milestone",
+      description: `More of the timeline is ${mostCommon} than any other kind of milestone.`,
+      stat: String(counts[mostCommon]),
+      statLabel: `${mostCommon} events`,
     },
     {
       id: "industry",
@@ -56,7 +58,7 @@ function getInsights(events: TimelineEvent[]) {
       title: "Industry Momentum",
       description:
         "Modern AI advances are built on international collaboration between researchers, institutions, and companies.",
-      stat: String(countEvents(events, (event) => event.category === "Companies & Investments")),
+      stat: String(counts["Companies & Investments"]),
       statLabel: "Companies & Investments events",
     },
     {
@@ -64,7 +66,7 @@ function getInsights(events: TimelineEvent[]) {
       icon: Zap,
       title: "Societal Impact",
       description: "AI is transforming every aspect of society, from healthcare to education to creative industries.",
-      stat: String(countEvents(events, (event) => event.category === "Ethics & Policy")),
+      stat: String(counts["Ethics & Policy"]),
       statLabel: "Ethics & Policy events",
     },
   ]

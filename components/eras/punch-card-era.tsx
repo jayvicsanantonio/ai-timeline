@@ -1,5 +1,5 @@
 // Draws the Foundation Era as a deck of 80-column punch cards under a teletype printout.
-// Each card carries its event's title punched in IBM 029 Hollerith code, with the date, category and description.
+// Each card leads with its date, then carries its title punched in IBM 029 Hollerith code, its description and source.
 'use client';
 
 import { useId } from 'react';
@@ -14,29 +14,46 @@ import {
 import { cn } from '@/lib/utils';
 import type { TimelineEvent } from '@/types/timeline';
 import {
+  CompactEraText,
   EventHeading,
-  NO_MATCHING_EVENTS,
+  EventSource,
+  LANDMARK_LABEL,
   eraEventCount,
   eraHeadingId,
+  eventCardAttributes,
   type EraInterfaceProps,
 } from './era-parts';
 
-// Card geometry in SVG units. Rows sit farther apart than columns, as on a real card.
+// Card geometry in SVG units. Rows sit farther apart than columns, as on a real card, but closer
+// than on paper, so the strip stays shallow beside the card's text.
 const COLUMN_WIDTH = 10;
-const ROW_HEIGHT = 13;
+const ROW_HEIGHT = 9;
 // The strip along the top edge where the keypunch printed each character above its column
-const PRINT_BAND = 12;
+const PRINT_BAND = 10;
 const CARD_WIDTH = PUNCH_CARD_COLUMNS * COLUMN_WIDTH;
 const CARD_HEIGHT = PRINT_BAND + PUNCH_CARD_ROWS.length * ROW_HEIGHT;
+const HOLE_WIDTH = 4.5;
 // Rows 0 to 9 have their digit printed in every column; rows 12 and 11 above them are blank
 const FIRST_DIGIT_ROW = PUNCH_CARD_ROWS.indexOf('0');
 const PRINTED_DIGITS = PUNCH_CARD_ROWS.slice(FIRST_DIGIT_ROW);
 
-function padNumber(value: number) {
-  return String(value).padStart(2, '0');
-}
-
 export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
+  if (era.events.length === 0) {
+    return (
+      <div className="punch-card-room px-4 py-6 sm:px-6">
+        <div className="teletype-paper mx-auto max-w-3xl px-10 py-4 font-mono text-[#3a3226] sm:px-16">
+          <CompactEraText
+            era={era}
+            totalEvents={totalEvents}
+            metaClassName="text-[11px] uppercase tracking-[0.2em] text-[#5e5139]"
+            headingClassName="mt-1 text-xl font-bold uppercase tracking-tight text-[#1f1a12]"
+            messageClassName="mt-1 text-xs uppercase tracking-[0.12em]"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="punch-card-room px-4 py-24 sm:px-6 sm:py-32">
       <div className="mx-auto max-w-3xl">
@@ -59,50 +76,45 @@ export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
           </p>
         </header>
 
-        {era.events.length > 0 ? (
-          <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
-            {era.events.map((event, index) => (
-              <li key={eventAnchorId(event)}>
-                <PunchCard event={event} cardNumber={index + 1} deckSize={era.events.length} />
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="mt-14 text-center font-mono text-sm uppercase leading-7 tracking-[0.2em] text-[#e2d7ba]">
-            {NO_MATCHING_EVENTS}
-          </p>
-        )}
+        <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
+          {era.events.map((event) => (
+            <li key={eventAnchorId(event)}>
+              <PunchCard event={event} />
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   );
 }
 
-interface PunchCardProps {
-  event: TimelineEvent;
-  cardNumber: number;
-  deckSize: number;
-}
-
-function PunchCard({ event, cardNumber, deckSize }: PunchCardProps) {
+function PunchCard({ event }: { event: TimelineEvent }) {
   return (
     <article
-      id={eventAnchorId(event)}
-      data-year={event.year}
+      {...eventCardAttributes(event)}
       className="reveal-on-scroll group relative scroll-mt-[var(--timeline-sticky-offset,0px)] motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-[#f3e9cf]"
     >
       <div className="punch-card bg-[#f3e9cf] px-5 pb-5 pt-5 text-[#2b2418] shadow-[0_24px_50px_-28px_rgba(0,0,0,0.95)] sm:px-8 sm:pb-6 sm:pt-6">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 pl-4 font-mono uppercase sm:pl-3">
-          <EventHeading
-            event={event}
-            className="min-w-0 text-sm font-bold tracking-[0.06em] sm:text-base"
-            linkClassName="decoration-2 underline-offset-4 group-hover:underline"
-          />
+        {/* Colored stripes marked special cards in a deck */}
+        {event.landmark ? (
+          <p className="-mx-5 -mt-5 mb-4 flex h-7 items-center justify-end gap-2 bg-[#a63a28] px-5 font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-[#fbefd5] sm:-mx-8 sm:-mt-6 sm:px-8">
+            <span aria-hidden="true">★</span>
+            <span>{LANDMARK_LABEL}</span>
+          </p>
+        ) : null}
+
+        <div className="pl-4 font-mono uppercase sm:pl-3">
           <time
             dateTime={eventDateTime(event)}
-            className="shrink-0 text-xs tracking-[0.2em] text-[#5e5139]"
+            className="block text-lg font-bold tracking-[0.12em] text-[#1f1a12] sm:text-xl"
           >
             {formatEventDate(event)}
           </time>
+          <EventHeading
+            event={event}
+            className="mt-1 text-sm font-semibold tracking-[0.06em] text-[#3b3324] sm:text-base"
+            linkClassName="decoration-2 underline-offset-4 group-hover:underline"
+          />
         </div>
 
         <PunchedTitle title={event.title} className="mt-3" />
@@ -116,9 +128,7 @@ function PunchCard({ event, cardNumber, deckSize }: PunchCardProps) {
             <CategoryIcon category={event.category} className="size-3.5 shrink-0" />
             <span>{event.category}</span>
           </span>
-          <span aria-hidden="true" className="text-[#6e604a]">
-            Card {padNumber(cardNumber)} / {padNumber(deckSize)}
-          </span>
+          <EventSource event={event} className="text-[#5e5139]" />
         </div>
       </div>
     </article>
@@ -152,9 +162,9 @@ export function PunchedTitle({ title, className }: { title: string; className?: 
             <text
               key={digit}
               x={COLUMN_WIDTH / 2}
-              y={index * ROW_HEIGHT + ROW_HEIGHT * 0.7}
+              y={index * ROW_HEIGHT + ROW_HEIGHT * 0.72}
               textAnchor="middle"
-              fontSize={7}
+              fontSize={6}
               fontFamily="ui-monospace, monospace"
               fill="#b29f76"
             >
@@ -168,9 +178,9 @@ export function PunchedTitle({ title, className }: { title: string; className?: 
         <text
           key={column}
           x={column * COLUMN_WIDTH + COLUMN_WIDTH / 2}
-          y={PRINT_BAND - 3}
+          y={PRINT_BAND - 2.5}
           textAnchor="middle"
-          fontSize={8}
+          fontSize={7}
           fontFamily="ui-monospace, monospace"
           fill="#4a3f2c"
         >
@@ -191,9 +201,9 @@ export function PunchedTitle({ title, className }: { title: string; className?: 
           <rect
             key={`${column}-${row}`}
             data-hole=""
-            x={column * COLUMN_WIDTH + 2.25}
+            x={column * COLUMN_WIDTH + (COLUMN_WIDTH - HOLE_WIDTH) / 2}
             y={PRINT_BAND + PUNCH_CARD_ROWS.indexOf(row) * ROW_HEIGHT + 1.5}
-            width={5.5}
+            width={HOLE_WIDTH}
             height={ROW_HEIGHT - 3}
             rx={1}
             fill="#101318"

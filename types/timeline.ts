@@ -19,6 +19,8 @@ export interface TimelineEvent {
   description: string
   category: TimelineCategory
   link: string
+  // One of the handful of turning points that every era interface sets apart
+  landmark?: boolean
 }
 
 export interface ExtendedTimelineEvent extends TimelineEvent {

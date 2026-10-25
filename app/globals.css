@@ -129,13 +129,6 @@
     overflow-x: clip; /* Prevent horizontal scrollbar by clipping overflow-x. Unlike hidden, clip keeps body from becoming a scroll container, so position: sticky still works */
   }
 
-  /* Hide the system cursor only where FuturisticCursor draws its replacement */
-  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    body {
-      cursor: none;
-    }
-  }
-
   html {
     position: relative; /* framer-motion's useScroll measures scroll targets against a positioned scroll container */
     scroll-behavior: smooth;
@@ -319,6 +312,16 @@
     background: linear-gradient(90deg, #0a1fa8, #2fa4f0);
   }
 
+  /* Landmark windows wear a rose title bar, one of the color schemes the desktops of the day offered */
+  .desktop-window[data-landmark] > .desktop-title-bar {
+    background: linear-gradient(90deg, #6e1238, #9a2f62);
+  }
+
+  .desktop-window[data-landmark]:hover > .desktop-title-bar,
+  .desktop-window[data-landmark]:focus-within > .desktop-title-bar {
+    background: linear-gradient(90deg, #851746, #b23b74);
+  }
+
   .desktop-progress {
     background: repeating-linear-gradient(90deg, #000080 0 0.7rem, transparent 0.7rem 0.85rem);
   }
@@ -343,7 +346,14 @@
     }
   }
 
-  /* Deep Learning Revolution: notebook cells with In and Out prompts */
+  /* Deep Learning Revolution: a notebook open on a dark desk, its cells marked with In and Out prompts.
+     The desk keeps the white page from flashing between the dark eras around it. */
+  .notebook-desk {
+    background-color: #17171a;
+    background-image: radial-gradient(70rem 36rem at 50% 0%, rgb(255 255 255 / 0.07), transparent 70%);
+    background-repeat: no-repeat;
+  }
+
   /* The left border marks the selected cell, as in the notebooks of the day */
   .notebook-cell {
     display: grid;

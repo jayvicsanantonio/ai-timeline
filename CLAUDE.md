@@ -38,6 +38,7 @@ app/page.tsx → StoryEngine → PrologueScene
 
 - **Timeline Events**: Central data stored in `/data/timeline-events.json` with TypeScript interfaces in `/types/timeline.ts`, loaded through `parseTimelineEvents` in `/lib/timeline-events.ts`, which throws on unknown categories
 - **Era-based Organization**: `ERA_DEFINITIONS` in `/lib/eras.ts` groups events into Foundation (1940-1970), Knowledge (1970-1990), Learning (1990-2010), Deep Learning Revolution (2010-2020), and Generative AI (2020-2030) eras. Each era names its interface (`punch-card`, `terminal`, `desktop`, `notebook`, `chat`) and an accent color; the five colors were validated together as a categorical palette on the dark chrome
+- **Landmarks**: About 20 turning points carry `"landmark": true` in the data, and each era interface sets them apart in its own style. Keep the list curated; a unit test pins it
 - **Category System**: Events categorized as Models & Architectures, Research Breakthroughs, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents (`TIMELINE_CATEGORIES` in `/types/timeline.ts`). Each has its own icon in `components/ui/category-icon.tsx`, always shown beside the category's name
 - **Filtering and activity**: `/lib/timeline-filter.ts` narrows events by picked categories and search words, and `/lib/timeline-activity.ts` counts events per year for the activity charts
 
@@ -46,16 +47,16 @@ app/page.tsx → StoryEngine → PrologueScene
 Components are organized by purpose rather than type:
 
 - **`/components/storytelling/`**: Narrative flow components (story-engine, prologue-scene, epilogue-scene)
-- **`/components/eras/`**: The five era interfaces (punch-card-era, terminal-era, desktop-era, notebook-era, chat-era), the era-chapter section that picks one, their shared era-parts, and the era-preview miniatures on the opening tiles. Every interface renders the same accessible structure: a section named by its h2, and one article per event whose h3 links to the source
+- **`/components/eras/`**: The five era interfaces (punch-card-era, terminal-era, desktop-era, notebook-era, chat-era), the era-chapter section that picks one, their shared era-parts, and the era-preview miniatures on the opening tiles. Every interface renders the same accessible structure: a section named by its h2, and one article per event (attributes from `eventCardAttributes`) whose date comes before its h3, whose h3 links to the source, and which names the source site. An era that the filters empty shrinks to a short row (`CompactEraText`)
 - **`/components/interactive/`**: User interaction features (timeline-insights)
 - **`/components/accessibility/`**: WCAG compliance components (skip-to-content)
 - **`/components/timeline/`**: Timeline-specific UI (timeline-controls, timeline-navigation, activity-chart)
-- **`/components/ui/`**: Shared pieces (category-icon, futuristic-cursor)
+- **`/components/ui/`**: Shared pieces (category-icon). The page keeps the system cursor
 
 ### Animation System
 
 Most motion is CSS in the `@layer components` block of `app/globals.css`, always inside `prefers-reduced-motion: no-preference`: event cards rise in with a scroll-driven animation (`animation-timeline: view()`), and the eras' carets, progress bar and typing dots run as keyframes. Framer Motion animates the phone chapter list. Hooks that move the reader around:
-- `useTimelinePosition()` - Measures, once per animation frame while scrolling, which era and event year sit at the reading line (`READING_LINE` in `/lib/timeline-scroll.ts`)
+- `useTimelinePosition()` - Measures, once per animation frame while scrolling, the era, event year and month at the reading line (`READING_LINE` in `/lib/timeline-scroll.ts`) and how far through the era the reader has come
 - `useTimelineShortcuts()` - J and K step between events, 1 to 5 jump to an era, and / focuses search
 
 Derive styles from MotionValues with `useTransform` or `useMotionTemplate`. Interpolating a MotionValue into a plain template string silently produces an invalid style.

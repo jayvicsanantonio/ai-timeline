@@ -32,6 +32,26 @@ function padNumber(value: number) {
   return String(value).padStart(2, '0');
 }
 
+interface EraProgressProps {
+  progress: number;
+  color: string;
+  className?: string;
+}
+
+// How far the reader has come through the current era. The year chart squeezes the busy 2020s
+// into a few rows, so this keeps the navigation moving while the reader scrolls through them.
+function EraProgress({ progress, color, className }: EraProgressProps) {
+  return (
+    <span aria-hidden="true" className={cn('block h-0.5 overflow-hidden rounded-full bg-white/10', className)}>
+      <span
+        data-era-progress=""
+        className="block h-full rounded-full"
+        style={{ width: `${Math.round(progress * 100)}%`, backgroundColor: color }}
+      />
+    </span>
+  );
+}
+
 export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavigationProps) {
   const reduceMotion = usePrefersReducedMotion();
   const eraIds = useMemo(() => eras.map((era) => era.id), [eras]);
@@ -75,6 +95,10 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
       >
         <div className="w-[8.75rem] rounded-2xl border border-white/10 bg-[#111114]/85 p-3 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
           <p className="px-1">
+            {/* The month keeps its line even when unknown, so the year never jumps up and down */}
+            <span className="block h-4 text-[11px] font-medium uppercase leading-4 tracking-[0.18em] text-zinc-400">
+              {position.month}
+            </span>
             <span className="block text-[1.75rem] font-semibold leading-none tabular-nums">{year}</span>
             <span className="mt-2 flex items-start gap-1.5 text-xs leading-tight text-zinc-300">
               <span
@@ -85,6 +109,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
               {activeEra.label}
             </span>
           </p>
+          <EraProgress progress={position.eraProgress} color={activeEra.color} className="mx-1 mt-2" />
 
           <div className="relative mt-4 h-[min(48vh,28rem)]">
             <ActivityChart
@@ -154,8 +179,13 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
             onClick={() => setIsPhoneListOpen((isOpen) => !isOpen)}
             aria-expanded={isPhoneListOpen}
             aria-controls={isPhoneListOpen ? phoneListId : undefined}
-            className="flex w-full items-center gap-3 px-4 pb-2.5 pt-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/40"
+            className="relative flex w-full items-center gap-3 px-4 pb-2.5 pt-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/40"
           >
+            <EraProgress
+              progress={position.eraProgress}
+              color={activeEra.color}
+              className="absolute inset-x-4 bottom-1"
+            />
             <span
               aria-hidden="true"
               className="size-2.5 shrink-0 rounded-full"

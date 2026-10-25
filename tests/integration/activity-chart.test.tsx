@@ -74,6 +74,30 @@ describe.each(["horizontal", "vertical"] as const)("ActivityChart drawn %s", (or
   })
 })
 
+describe("ActivityChart at small sizes", () => {
+  const sparse: YearActivity[] = [
+    { year: 2000, total: 1, matching: 1, eraId: "the-learning-era" },
+    { year: 2001, total: 0, matching: 0, eraId: "the-learning-era" },
+    { year: 2002, total: 64, matching: 64, eraId: "the-learning-era" },
+    { year: 2003, total: 2, matching: 0, eraId: "the-learning-era" },
+  ]
+
+  it.each([
+    ["horizontal", "h-2 w-60", "height"],
+    ["vertical", "h-60 w-8", "width"],
+  ] as const)("keeps every year with events visible when drawn %s and tiny", (orientation, size, length) => {
+    const { container } = render(<ActivityChart activity={sparse} orientation={orientation} className={size} />)
+    const [oneEvent, noEvents, , filteredOut] = bars(container)
+    const sizeOf = (element: HTMLElement) => element.getBoundingClientRect()[length]
+
+    expect(sizeOf(part(oneEvent, "total"))).toBeGreaterThanOrEqual(2)
+    expect(sizeOf(part(oneEvent, "matching"))).toBeGreaterThanOrEqual(2)
+    expect(sizeOf(part(noEvents, "total"))).toBe(0)
+    expect(sizeOf(part(filteredOut, "total"))).toBeGreaterThanOrEqual(2)
+    expect(sizeOf(part(filteredOut, "matching"))).toBe(0)
+  })
+})
+
 describe("ActivityChart interaction", () => {
   it("reads out a year's events while the pointer is over it", async () => {
     const { container, getByText } = render(<ActivityChart activity={activity} orientation="horizontal" className="h-40 w-80" />)

@@ -1,5 +1,5 @@
 // Integration tests for the app's global stylesheet, which tests/setup.ts loads for every test.
-// framer-motion's useScroll needs a positioned scroll container, and sticky parts need a body that does not scroll itself.
+// Covers the positioned scroll container useScroll needs, sideways clipping that keeps sticky parts working, and the cursor.
 import { describe, expect, it } from "vitest"
 
 describe("global styles", () => {
@@ -14,5 +14,9 @@ describe("global styles", () => {
       expect(style.overflowX).toBe("clip")
       expect(style.overflowY).toBe("visible")
     }
+  })
+
+  it("keeps the system cursor, even for a mouse with motion allowed", () => {
+    expect(getComputedStyle(document.body).cursor).toBe("auto")
   })
 })

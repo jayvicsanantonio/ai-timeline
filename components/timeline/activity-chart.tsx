@@ -54,6 +54,8 @@ export function ActivityChart({
   const hoveredPosition = hoveredIndex === null ? 0 : (hoveredIndex + 0.5) / activity.length;
   const alignment = readoutAlignment(hoveredPosition);
   const barEnd = isHorizontal ? 'inset-x-0 bottom-0 rounded-t-[2px]' : 'inset-y-0 left-0 rounded-r-[2px]';
+  // A year with even one event keeps a sliver, so it never vanishes next to the busiest years
+  const sliver = isHorizontal ? 'min-h-[2px]' : 'min-w-[2px]';
 
   return (
     <div
@@ -86,7 +88,7 @@ export function ActivityChart({
             >
               <span
                 data-part="total"
-                className={cn('absolute opacity-25', barEnd)}
+                className={cn('absolute opacity-25', barEnd, year.total > 0 && sliver)}
                 style={{ [length]: share(year.total, busiest), backgroundColor: color }}
               />
               <span
@@ -94,6 +96,7 @@ export function ActivityChart({
                 className={cn(
                   'absolute transition-opacity',
                   barEnd,
+                  year.matching > 0 && sliver,
                   hoveredIndex !== null && hoveredIndex !== index && !isCurrent && 'opacity-70'
                 )}
                 style={{ [length]: share(year.matching, busiest), backgroundColor: color }}

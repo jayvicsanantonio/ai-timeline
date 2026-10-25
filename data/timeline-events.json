@@ -5,7 +5,8 @@
     "title": "McCulloch-Pitts Neuron",
     "description": "Warren McCulloch and Walter Pitts publish 'A Logical Calculus of the Ideas Immanent in Nervous Activity,' proposing the first mathematical model of a neural network.",
     "category": "Research Breakthroughs",
-    "link": "https://en.wikipedia.org/wiki/A_Logical_Calculus_of_the_Ideas_Immanent_in_Nervous_Activity"
+    "link": "https://en.wikipedia.org/wiki/A_Logical_Calculus_of_the_Ideas_Immanent_in_Nervous_Activity",
+    "landmark": true
   },
   {
     "year": 1950,
@@ -13,7 +14,8 @@
     "title": "The Turing Test",
     "description": "Alan Turing's paper 'Computing Machinery and Intelligence' proposes the 'Imitation Game' to assess a machine's ability to exhibit intelligent behavior indistinguishable from that of a human.",
     "category": "Research Breakthroughs",
-    "link": "https://archive.org/details/MIND--COMPUTING-MACHINERY-AND-INTELLIGENCE"
+    "link": "https://archive.org/details/MIND--COMPUTING-MACHINERY-AND-INTELLIGENCE",
+    "landmark": true
   },
   {
     "year": 1951,
@@ -37,7 +39,8 @@
     "title": "Dartmouth AI Conference",
     "description": "The birth of AI as a field — researchers gathered at Dartmouth College to explore the idea of machines simulating human intelligence.",
     "category": "Research Breakthroughs",
-    "link": "https://en.wikipedia.org/wiki/Dartmouth_workshop"
+    "link": "https://en.wikipedia.org/wiki/Dartmouth_workshop",
+    "landmark": true
   },
   {
     "year": 1956,
@@ -53,7 +56,8 @@
     "title": "Rosenblatt's Perceptron",
     "description": "Frank Rosenblatt presents the perceptron, a neural network that learns to classify inputs from examples, at a U.S. Navy press event, and The New York Times reports on a 'New Navy Device' that 'Learns By Doing.'",
     "category": "Research Breakthroughs",
-    "link": "https://en.wikipedia.org/wiki/Perceptron"
+    "link": "https://en.wikipedia.org/wiki/Perceptron",
+    "landmark": true
   },
   {
     "year": 1958,
@@ -133,7 +137,8 @@
     "title": "The First AI Winter Begins",
     "description": "With DARPA cutting undirected research and the Lighthill Report dismantling UK programs, funding for AI dries up, starting the first AI winter, which lasts until around 1980.",
     "category": "Bombshell News",
-    "link": "https://en.wikipedia.org/wiki/AI_winter#The_setbacks_of_1974"
+    "link": "https://en.wikipedia.org/wiki/AI_winter#The_setbacks_of_1974",
+    "landmark": true
   },
   {
     "year": 1980,
@@ -181,7 +186,8 @@
     "title": "Backpropagation Popularized",
     "description": "David Rumelhart, Geoffrey Hinton, and Ronald Williams publish a paper that popularizes the backpropagation algorithm, enabling the training of multi-layer neural networks.",
     "category": "Research Breakthroughs",
-    "link": "https://www.nature.com/articles/323533a0"
+    "link": "https://www.nature.com/articles/323533a0",
+    "landmark": true
   },
   {
     "year": 1987,
@@ -221,7 +227,8 @@
     "title": "IBM Deep Blue Defeats Garry Kasparov",
     "description": "IBM's Deep Blue becomes the first computer to defeat a reigning world chess champion in a match under standard chess tournament time controls.",
     "category": "Hardware Advances",
-    "link": "https://en.wikipedia.org/wiki/Deep_Blue_versus_Garry_Kasparov"
+    "link": "https://en.wikipedia.org/wiki/Deep_Blue_versus_Garry_Kasparov",
+    "landmark": true
   },
   {
     "year": 1997,
@@ -293,7 +300,8 @@
     "title": "ImageNet Database Created",
     "description": "Fei-Fei Li and colleagues launch ImageNet, a large-scale database of labeled images that becomes a crucial benchmark for computer vision research.",
     "category": "Research Breakthroughs",
-    "link": "https://image-net.org/"
+    "link": "https://image-net.org/",
+    "landmark": true
   },
   {
     "year": 2010,
@@ -333,7 +341,8 @@
     "title": "ImageNet Breakthrough",
     "description": "AlexNet wins the ImageNet competition, drastically reducing error rates and proving the power of deep learning.",
     "category": "Research Breakthroughs",
-    "link": "https://papers.nips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf"
+    "link": "https://papers.nips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf",
+    "landmark": true
   },
   {
     "year": 2013,
@@ -413,7 +422,8 @@
     "title": "AlphaGo Defeats Lee Sedol",
     "description": "DeepMind's AlphaGo defeats world champion Lee Sedol in Go, showcasing AI's ability to master complex, intuition-based games.",
     "category": "Models & Architectures",
-    "link": "https://deepmind.google/research/case-studies/alphago-the-story-so-far"
+    "link": "https://deepmind.google/research/case-studies/alphago-the-story-so-far",
+    "landmark": true
   },
   {
     "year": 2016,
@@ -453,7 +463,8 @@
     "title": "Attention Is All You Need",
     "description": "Google researchers publish the paper 'Attention Is All You Need,' introducing the Transformer architecture, which becomes the foundation for most modern large language models.",
     "category": "Research Breakthroughs",
-    "link": "https://arxiv.org/abs/1706.03762"
+    "link": "https://arxiv.org/abs/1706.03762",
+    "landmark": true
   },
   {
     "year": 2017,
@@ -549,7 +560,8 @@
     "title": "OpenAI Releases GPT-3",
     "description": "OpenAI launches GPT-3, a 175-billion parameter language model, which demonstrates a remarkable ability to generate human-like text and perform a wide range of language tasks.",
     "category": "Public Releases",
-    "link": "https://arxiv.org/abs/2005.14165"
+    "link": "https://arxiv.org/abs/2005.14165",
+    "landmark": true
   },
   {
     "year": 2020,
@@ -573,7 +585,8 @@
     "title": "DeepMind's AlphaFold 2 Solves Protein Folding",
     "description": "DeepMind's AlphaFold 2 makes a major breakthrough in biology by accurately predicting the 3D structure of proteins, a long-standing grand challenge.",
     "category": "Research Breakthroughs",
-    "link": "https://www.deepmind.com/blog/alphafold-a-solution-to-a-50-year-old-grand-challenge-in-biology"
+    "link": "https://www.deepmind.com/blog/alphafold-a-solution-to-a-50-year-old-grand-challenge-in-biology",
+    "landmark": true
   },
   {
     "year": 2021,
@@ -677,7 +690,8 @@
     "title": "ChatGPT Takes the World by Storm",
     "description": "OpenAI releases ChatGPT, a conversational AI based on the GPT-3.5 architecture, to the public, sparking massive interest in conversational AI.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/chatgpt/"
+    "link": "https://openai.com/index/chatgpt/",
+    "landmark": true
   },
   {
     "year": 2022,
@@ -749,7 +763,8 @@
     "title": "OpenAI Releases GPT-4",
     "description": "OpenAI launches GPT-4, a large multimodal model that can accept image and text inputs and produce text outputs, demonstrating improved performance over its predecessor.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/gpt-4/"
+    "link": "https://openai.com/index/gpt-4/",
+    "landmark": true
   },
   {
     "year": 2023,
@@ -1445,7 +1460,8 @@
     "title": "EU AI Act Takes Effect",
     "description": "The EU's landmark AI Act officially enters into force, beginning a phased implementation over the next two years to regulate AI systems based on their level of risk.",
     "category": "Ethics & Policy",
-    "link": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai"
+    "link": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+    "landmark": true
   },
   {
     "year": 2024,
@@ -1453,7 +1469,8 @@
     "title": "OpenAI Releases o1",
     "description": "OpenAI announces o1, a new class of model focused on reasoning and step-by-step thinking before providing an answer.",
     "category": "Public Releases",
-    "link": "https://www.theverge.com/2024/9/12/24242439/openai-o1-model-reasoning-strawberry-chatgpt"
+    "link": "https://www.theverge.com/2024/9/12/24242439/openai-o1-model-reasoning-strawberry-chatgpt",
+    "landmark": true
   },
   {
     "year": 2024,
@@ -1501,7 +1518,8 @@
     "title": "Hopfield and Hinton Win the Nobel Prize in Physics",
     "description": "John Hopfield and Geoffrey Hinton win the Nobel Prize in Physics for foundational discoveries and inventions that enable machine learning with artificial neural networks.",
     "category": "Research Breakthroughs",
-    "link": "https://www.nobelprize.org/prizes/physics/2024/press-release/"
+    "link": "https://www.nobelprize.org/prizes/physics/2024/press-release/",
+    "landmark": true
   },
   {
     "year": 2024,
@@ -1581,7 +1599,8 @@
     "title": "DeepSeek-R1 Shakes the AI Industry",
     "description": "DeepSeek releases R1, an open-source reasoning model comparable to OpenAI's o1; on January 27, fears of cheaper competition wipe almost $600 billion off NVIDIA's market value, the biggest one-day drop for any company in U.S. history.",
     "category": "Bombshell News",
-    "link": "https://www.cnbc.com/2025/01/27/nvidia-sheds-almost-600-billion-in-market-cap-biggest-drop-ever.html"
+    "link": "https://www.cnbc.com/2025/01/27/nvidia-sheds-almost-600-billion-in-market-cap-biggest-drop-ever.html",
+    "landmark": true
   },
   {
     "year": 2025,
@@ -1741,7 +1760,8 @@
     "title": "AI Reaches Gold-Medal Level at the Math Olympiad",
     "description": "An advanced Gemini Deep Think model solves five of six International Mathematical Olympiad problems in natural language within the time limit, earning an officially graded gold-medal score; OpenAI reports a gold-level result from an experimental model too.",
     "category": "Research Breakthroughs",
-    "link": "https://deepmind.google/discover/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/"
+    "link": "https://deepmind.google/discover/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/",
+    "landmark": true
   },
   {
     "year": 2025,

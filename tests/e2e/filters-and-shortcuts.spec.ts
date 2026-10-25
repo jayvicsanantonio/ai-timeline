@@ -51,6 +51,31 @@ test.describe("search and category filters", () => {
     await expect(page.getByRole("button", { name: "Categories, 1 picked" })).toBeVisible()
   })
 
+  test("keeps eras without matches to a short row, so the results start near the top", async ({ page }) => {
+    await openPage(page)
+
+    await page.getByRole("button", { name: /^Categories/ }).click()
+    await page.getByRole("group", { name: "Filter by category" }).getByRole("button", { name: /^Agents/ }).click()
+
+    const layout = await page.evaluate(() => {
+      const sections = [...document.querySelectorAll("section[data-interface]")]
+      return {
+        emptyEraHeights: sections
+          .filter((section) => !section.querySelector("article"))
+          .map((section) => Math.round(section.getBoundingClientRect().height)),
+        firstMatchBelowTimelineStart: Math.round(
+          document.querySelector("article")!.getBoundingClientRect().top - sections[0].getBoundingClientRect().top,
+        ),
+      }
+    })
+
+    expect(layout.emptyEraHeights).toHaveLength(4)
+    for (const height of layout.emptyEraHeights) {
+      expect(height).toBeLessThan(200)
+    }
+    expect(layout.firstMatchBelowTimelineStart).toBeLessThan(1500)
+  })
+
   test("brings the start of the results into view when filtering from further down", async ({ page }) => {
     await openPage(page)
     await page.locator("#the-generative-ai-era article").nth(80).evaluate((card) =>

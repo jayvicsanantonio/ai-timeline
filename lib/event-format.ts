@@ -1,4 +1,4 @@
-// Formats a timeline event's date for display and for <time> elements, and gives each event an anchor id.
+// Formats a timeline event's date for display and for <time> elements, names its source site, and gives it an anchor id.
 // Events whose month is unknown show and machine-read as their year alone.
 import type { TimelineEvent } from '@/types/timeline';
 
@@ -45,4 +45,9 @@ export function slugify(text: string) {
 
 export function eventAnchorId(event: Pick<TimelineEvent, 'year' | 'title'>) {
   return `event-${event.year}-${slugify(event.title)}`;
+}
+
+// The site an event's link opens, such as "arxiv.org" or "en.wikipedia.org"
+export function eventSource(event: Pick<TimelineEvent, 'link'>) {
+  return new URL(event.link).hostname.replace(/^www\./, '');
 }

@@ -92,7 +92,7 @@ test.describe(`desktop layout at ${DESKTOP.width}x${DESKTOP.height}`, () => {
     await expect(page.getByRole("button", { name: /current era/i })).toBeHidden()
   })
 
-  test("marks the era being read on the rail and reads out the year", async ({ page }) => {
+  test("marks the era being read on the rail and reads out the month and year", async ({ page }) => {
     await enterTimeline(page)
 
     await page
@@ -102,6 +102,7 @@ test.describe(`desktop layout at ${DESKTOP.width}x${DESKTOP.height}`, () => {
     const rail = page.locator(CHAPTER_NAV).filter({ visible: true })
     await expect(rail.getByRole("button", { name: "Chapter 3: Learning Era" })).toHaveAttribute("aria-current", "location")
     await expect(rail.getByText("1997", { exact: true })).toBeVisible()
+    await expect(rail.getByText("May", { exact: true })).toBeVisible()
   })
 })
 

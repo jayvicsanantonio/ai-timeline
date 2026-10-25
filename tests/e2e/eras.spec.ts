@@ -1,6 +1,7 @@
 // End-to-end tests for the five era interfaces on the real page in Chromium.
 // Each era is drawn in its own interface, and each interface answers the pointer the way its original did.
 import { expect, test, type Locator, type Page } from "@playwright/test"
+import timelineData from "../../data/timeline-events.json"
 import { encodeHollerith } from "../../lib/hollerith"
 
 const INTERFACES = ["punch-card", "terminal", "desktop", "notebook", "chat"]
@@ -55,6 +56,36 @@ test("punches every card in the punch-card era with its title in Hollerith code"
   for (const card of cards) {
     expect(card.holes, card.title).toBe(encodeHollerith(card.title).flat().length)
   }
+})
+
+test("marks every approved landmark, in every era", async ({ page }) => {
+  await page.goto("/")
+  const landmarkCount = timelineData.filter((event) => "landmark" in event).length
+
+  const perEra = await page
+    .locator("section[data-interface]")
+    .evaluateAll((sections) => sections.map((section) => section.querySelectorAll("article[data-landmark]").length))
+
+  expect(perEra.reduce((sum, count) => sum + count, 0)).toBe(landmarkCount)
+  expect(perEra.every((count) => count > 0)).toBe(true)
+  await expect(page.locator("article[data-landmark]").getByText("Landmark", { exact: true })).toHaveCount(landmarkCount)
+})
+
+test("steps the window cascade only slightly, so the dates in the title bars stay in line", async ({ page }) => {
+  await page.goto("/")
+
+  const leftEdges = await page
+    .locator("#the-learning-era article")
+    .evaluateAll((windows) => windows.map((window) => Math.round(window.getBoundingClientRect().left)))
+
+  expect(Math.max(...leftEdges) - Math.min(...leftEdges)).toBeLessThanOrEqual(32)
+})
+
+test("opens each year of the chat thread with the reader's question", async ({ page }) => {
+  await page.goto("/")
+  const years = [...new Set(timelineData.filter((event) => event.year >= 2020).map((event) => event.year))]
+
+  await expect(page.locator("[data-year-prompt]")).toHaveText(years.map((year) => `What happened in ${year}?`))
 })
 
 test("inverts a terminal record's title while the pointer is over it", async ({ page }) => {

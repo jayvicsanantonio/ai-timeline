@@ -6,41 +6,48 @@ import { userEvent } from "vitest/browser"
 import { EraChapter } from "@/components/eras/era-chapter"
 import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
 import { ERA_DEFINITIONS, groupEventsByEra, type EraInterface } from "@/lib/eras"
-import { eventAnchorId, eventDateTime, formatEventDate } from "@/lib/event-format"
+import { eventAnchorId, eventDateTime, eventSource, formatEventDate } from "@/lib/event-format"
 import { encodeHollerith } from "@/lib/hollerith"
 import type { TimelineCategory, TimelineEvent } from "@/types/timeline"
 
-function makeEvent(year: number, month: string, title: string, category: TimelineCategory): TimelineEvent {
+function makeEvent(
+  year: number,
+  month: string,
+  title: string,
+  category: TimelineCategory,
+  landmark = false,
+): TimelineEvent {
   return {
     year,
     month,
     title,
     description: `What happened with ${title}.`,
     category,
-    link: `https://example.com/${encodeURIComponent(title)}`,
+    link: `https://www.example.com/${encodeURIComponent(title)}`,
+    ...(landmark ? { landmark } : {}),
   }
 }
 
 const eventsByInterface: Record<EraInterface, TimelineEvent[]> = {
   "punch-card": [
     makeEvent(1951, "Unknown", "First AI Programs", "Models & Architectures"),
-    makeEvent(1956, "June", "Dartmouth AI Conference", "Research Breakthroughs"),
+    makeEvent(1956, "June", "Dartmouth AI Conference", "Research Breakthroughs", true),
   ],
   terminal: [
     makeEvent(1974, "Unknown", "MYCIN Medical Expert System", "Models & Architectures"),
-    makeEvent(1980, "March", "XCON Brings Expert Systems to Business", "AI Tools"),
+    makeEvent(1980, "March", "XCON Brings Expert Systems to Business", "AI Tools", true),
   ],
   desktop: [
     makeEvent(1997, "May", "IBM Deep Blue Defeats Garry Kasparov", "Hardware Advances"),
-    makeEvent(2006, "July", "Deep Belief Networks", "Research Breakthroughs"),
+    makeEvent(2006, "July", "Deep Belief Networks", "Research Breakthroughs", true),
   ],
   notebook: [
     makeEvent(2012, "October", "ImageNet Breakthrough", "Research Breakthroughs"),
-    makeEvent(2017, "June", "Attention Is All You Need", "Research Breakthroughs"),
+    makeEvent(2017, "June", "Attention Is All You Need", "Research Breakthroughs", true),
   ],
   chat: [
     makeEvent(2023, "March", "OpenAI Releases GPT-4", "Public Releases"),
-    makeEvent(2023, "March", "Italy Temporarily Bans ChatGPT", "Ethics & Policy"),
+    makeEvent(2023, "March", "Italy Temporarily Bans ChatGPT", "Ethics & Policy", true),
     makeEvent(2024, "May", "OpenAI Releases GPT-4o", "Public Releases"),
   ],
 }
@@ -137,7 +144,7 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
       })
   })
 
-  it("anchors each event by id and year so navigation can jump to it", () => {
+  it("anchors each event by id, year and month so navigation can jump to it and read it out", () => {
     const { section } = renderEra(eraInterface)
 
     within(section)
@@ -145,6 +152,45 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
       .forEach((article, index) => {
         expect(article).toHaveAttribute("id", eventAnchorId(events[index]))
         expect(article).toHaveAttribute("data-year", String(events[index].year))
+        expect(article).toHaveAttribute("data-month", events[index].month)
+      })
+  })
+
+  it("puts each event's date ahead of its title, so the dates line up for scanning", () => {
+    const { section } = renderEra(eraInterface)
+
+    within(section)
+      .getAllByRole("article")
+      .forEach((article) => {
+        const date = article.querySelector("time")!
+        const heading = within(article).getByRole("heading", { level: 3 })
+        expect(date.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      })
+  })
+
+  it("names the site each event's link opens", () => {
+    const { section } = renderEra(eraInterface)
+
+    within(section)
+      .getAllByRole("article")
+      .forEach((article) => {
+        expect(within(article).getByText(eventSource(events[0]))).toBeInTheDocument()
+      })
+  })
+
+  it("labels landmark events, and only those", () => {
+    const { section } = renderEra(eraInterface)
+
+    within(section)
+      .getAllByRole("article")
+      .forEach((article, index) => {
+        if (events[index].landmark) {
+          expect(article).toHaveAttribute("data-landmark")
+          expect(within(article).getByText("Landmark")).toBeInTheDocument()
+        } else {
+          expect(article).not.toHaveAttribute("data-landmark")
+          expect(within(article).queryByText("Landmark")).not.toBeInTheDocument()
+        }
       })
   })
 
@@ -167,13 +213,29 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
     const { era, section } = renderEra(eraInterface, [], 12)
 
     expect(within(section).getByRole("heading", { level: 2, name: era.name })).toBeInTheDocument()
+    expect(within(section).getByRole("heading", { level: 2, name: era.name })).toHaveAttribute("tabindex", "-1")
     expect(section).toHaveTextContent("0 of 12 events")
     expect(within(section).getByText(NO_MATCHING_EVENTS)).toBeInTheDocument()
     expect(within(section).queryAllByRole("article")).toEqual([])
   })
+
+  // Filtering can empty several eras at once, and their full introductions would push the results far down
+  it("shrinks to a short row when none of its events match the filters", () => {
+    const { section } = renderEra(eraInterface, [], 12)
+
+    expect(section.getBoundingClientRect().height).toBeLessThan(300)
+  })
 })
 
 describe("the punch-card era", () => {
+  it("keeps the punched strip shallow, so it reads as a strip rather than a block", () => {
+    const { section } = renderEra("punch-card")
+
+    const strip = within(section).getAllByRole("article")[0].querySelector("svg")!
+    const { width, height } = strip.viewBox.baseVal
+    expect(height / width).toBeLessThan(0.16)
+  })
+
   it("punches each card with its event title in Hollerith code", () => {
     const { section } = renderEra("punch-card")
 
@@ -197,7 +259,37 @@ describe("the terminal era", () => {
   })
 })
 
+// Relative luminance of a computed rgb() color, from 0 for black to 1 for white
+function luminance(color: string) {
+  const [red, green, blue] = color.match(/\d+(\.\d+)?/g)!.slice(0, 3).map((channel) => {
+    const value = Number(channel) / 255
+    return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+  })
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+}
+
 describe("the notebook era", () => {
+  it("sets the white notebook on a dark desk, so it does not flash between the dark eras", () => {
+    const { section } = renderEra("notebook")
+
+    const desk = section.firstElementChild!
+    const page = desk.firstElementChild!
+    expect(luminance(getComputedStyle(desk).backgroundColor)).toBeLessThan(0.02)
+    expect(getComputedStyle(page).backgroundColor).toBe("rgb(255, 255, 255)")
+  })
+
+  it("prints each event's date once, in words", () => {
+    const { section } = renderEra("notebook")
+
+    within(section)
+      .getAllByRole("article")
+      .forEach((cell, index) => {
+        const event = eventsByInterface.notebook[index]
+        expect(cell.textContent!.split(formatEventDate(event))).toHaveLength(2)
+        expect(cell).not.toHaveTextContent(eventDateTime(event))
+      })
+  })
+
   it("numbers the event cells in run order after the introduction's cell", () => {
     const { section } = renderEra("notebook")
 
@@ -214,5 +306,15 @@ describe("the chat era", () => {
     const dividers = [...container.querySelectorAll("[data-month-divider]")]
     expect(dividers.map((divider) => divider.textContent)).toEqual(["March 2023", "May 2024"])
     expect(dividers[0].closest("[data-month]")!.querySelectorAll("article")).toHaveLength(2)
+  })
+
+  it("asks about each new year before that year's first message", () => {
+    const { container } = renderEra("chat")
+
+    const prompts = [...container.querySelectorAll("[data-year-prompt]")]
+    expect(prompts.map((prompt) => prompt.textContent)).toEqual(["What happened in 2023?", "What happened in 2024?"])
+    const firstOf2024 = container.querySelector('article[data-year="2024"]')!
+    expect(prompts[1].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(prompts[0].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 })

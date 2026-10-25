@@ -32,7 +32,8 @@ High-level architecture
     - Holds the search and category filters (lib/timeline-filter.ts) and renders PrologueScene → TimelineControls + one EraChapter per era → TimelineNavigation → Insights → EpilogueScene.
   - Era rendering (components/eras/):
     - EraChapter draws each era in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread.
-    - Every interface gives its events the same structure: an article per event with an h3 that links to the source (EventHeading in era-parts.tsx).
+    - Every interface gives its events the same structure: an article per event with its date ahead of an h3 that links to the source (EventHeading in era-parts.tsx), and the source site named on the card.
+    - Events marked "landmark": true in the data are set apart in every interface; the approved list is pinned by a unit test.
 - Data and types
   - Dataset: data/timeline-events.json, loaded by app/page.tsx through parseTimelineEvents (lib/timeline-events.ts), which throws on unknown categories so bad data fails the build.
   - Types live in types/timeline.ts. TIMELINE_CATEGORIES is the single list of categories, and TimelineCategory is derived from it.
@@ -40,10 +41,10 @@ High-level architecture
 - Animation and interaction
   - Most motion is CSS in app/globals.css, inside prefers-reduced-motion: no-preference: scroll-driven card reveals and the eras' carets, progress bar and typing dots. Framer Motion animates the phone chapter list.
   - Custom hooks in hooks/:
-    - use-timeline-position.ts measures the era and event year at the reading line once per animation frame while scrolling.
+    - use-timeline-position.ts measures the era, event year and month at the reading line, and the progress through the era, once per animation frame while scrolling.
     - use-timeline-shortcuts.ts adds J/K to step between events, 1-5 to jump to an era and / to focus search.
 - UI, accessibility, and theming
-  - Layout (app/layout.tsx) sets fonts, default dark theme, and injects accessibility helpers (SkipToContent) and FuturisticCursor.
+  - Layout (app/layout.tsx) sets fonts, default dark theme, and injects accessibility helpers (SkipToContent). The page keeps the system cursor.
   - Styling via Tailwind CSS 4, with utility helpers (lib/utils.ts cn merger) and custom components in components/ui/.
   - Accessibility helpers in components/accessibility/ (skip to content).
 - Configuration and conventions

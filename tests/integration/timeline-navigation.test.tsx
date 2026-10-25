@@ -9,10 +9,10 @@ import { eventAnchorId } from "@/lib/event-format"
 import { countEventsByYear } from "@/lib/timeline-activity"
 import type { TimelineEvent } from "@/types/timeline"
 
-function makeEvent(year: number, title: string): TimelineEvent {
+function makeEvent(year: number, title: string, month = "Unknown"): TimelineEvent {
   return {
     year,
-    month: "Unknown",
+    month,
     title,
     description: `What happened with ${title}.`,
     category: "Research Breakthroughs",
@@ -24,7 +24,7 @@ const events = [
   makeEvent(1956, "Dartmouth AI Conference"),
   makeEvent(1958, "Rosenblatt's Perceptron"),
   makeEvent(1980, "XCON Brings Expert Systems to Business"),
-  makeEvent(1997, "IBM Deep Blue Defeats Garry Kasparov"),
+  makeEvent(1997, "IBM Deep Blue Defeats Garry Kasparov", "May"),
   makeEvent(2012, "ImageNet Breakthrough"),
   makeEvent(2023, "OpenAI Releases GPT-4"),
 ]
@@ -40,7 +40,13 @@ function renderNavigation({ spacerBefore = false } = {}) {
         <section key={era.id} id={era.id} style={{ minHeight: "160vh" }}>
           <h2 tabIndex={-1}>{era.name}</h2>
           {era.events.map((event) => (
-            <article key={event.title} id={eventAnchorId(event)} data-year={event.year} style={{ height: "50vh" }}>
+            <article
+              key={event.title}
+              id={eventAnchorId(event)}
+              data-year={event.year}
+              data-month={event.month}
+              style={{ height: "50vh" }}
+            >
               <h3>
                 <a href={event.link} data-event-link="">
                   {event.title}
@@ -100,12 +106,27 @@ describe("TimelineNavigation on a wide screen", () => {
       .toBe("location")
   })
 
-  it("reads out the year of the event at the reading line", async () => {
+  it("reads out the month and year of the event at the reading line", async () => {
     renderNavigation()
 
     document.getElementById(eventAnchorId(events[3]))!.scrollIntoView({ block: "start", behavior: "instant" as ScrollBehavior })
 
     await expect.poll(() => within(rail()).queryByText("1997")).not.toBeNull()
+    expect(within(rail()).getByText("May")).toBeVisible()
+  })
+
+  it("shows how far through the current era the reader has come", async () => {
+    renderNavigation()
+    const progress = () => parseFloat(rail().querySelector<HTMLElement>("[data-era-progress]")!.style.width)
+
+    const learningEra = document.getElementById(eras[2].id)!
+    window.scrollTo({
+      top: window.scrollY + learningEra.getBoundingClientRect().top + learningEra.offsetHeight / 2 - window.innerHeight / 2,
+      behavior: "instant" as ScrollBehavior,
+    })
+
+    await expect.poll(progress).toBeGreaterThan(35)
+    expect(progress()).toBeLessThan(65)
   })
 
   it("jumps to the first event of a year picked on the activity chart", async () => {
