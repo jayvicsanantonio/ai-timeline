@@ -1,3 +1,5 @@
+// Timeline Insights section: four cards with stats computed from the timeline events.
+// Hovering a card highlights it.
 "use client"
 
 import { motion } from "framer-motion"
@@ -12,45 +14,70 @@ interface TimelineInsightsProps {
   events: TimelineEvent[]
 }
 
-const INSIGHTS = [
-  {
-    id: "acceleration",
-    icon: TrendingUp,
-    title: "Accelerating Progress",
-    description:
-      "AI development has exponentially accelerated, with more breakthroughs in the last decade than the previous 50 years.",
-    stat: "70%",
-    statLabel: "of major AI breakthroughs occurred after 2010",
-  },
-  {
-    id: "collaboration",
-    icon: Users,
-    title: "Global Collaboration",
-    description:
-      "Modern AI advances are built on international collaboration between researchers, institutions, and companies.",
-    stat: "15+",
-    statLabel: "countries contributing to major AI research",
-  },
-  {
-    id: "innovation",
-    icon: Lightbulb,
-    title: "Innovation Cycles",
-    description: "Each breakthrough builds upon previous discoveries, creating cascading waves of innovation.",
-    stat: "3-5",
-    statLabel: "year cycles between major paradigm shifts",
-  },
-  {
-    id: "impact",
-    icon: Zap,
-    title: "Societal Impact",
-    description: "AI is transforming every aspect of society, from healthcare to education to creative industries.",
-    stat: "∞",
-    statLabel: "potential applications across all sectors",
-  },
-]
+function countEvents(events: TimelineEvent[], matches: (event: TimelineEvent) => boolean) {
+  return events.filter(matches).length
+}
+
+// The year with the most events. On a tie, the year that comes first in events wins.
+function findBusiestYear(events: TimelineEvent[]) {
+  const countsByYear = new Map<number, number>()
+  for (const event of events) {
+    countsByYear.set(event.year, (countsByYear.get(event.year) ?? 0) + 1)
+  }
+
+  let busiest = { year: 0, count: 0 }
+  for (const [year, count] of countsByYear) {
+    if (count > busiest.count) busiest = { year, count }
+  }
+  return busiest
+}
+
+// Every stat is computed from the events, so the cards stay true to the timeline data.
+function getInsights(events: TimelineEvent[]) {
+  const recentShare = countEvents(events, (event) => event.year >= 2010) / events.length
+  const busiestYear = findBusiestYear(events)
+
+  return [
+    {
+      id: "acceleration",
+      icon: TrendingUp,
+      title: "Accelerating Progress",
+      description:
+        "AI development has exponentially accelerated, with more breakthroughs in the last decade than the previous 50 years.",
+      stat: `${Math.round(recentShare * 100)}%`,
+      statLabel: `of the ${events.length} events happened in 2010 or later`,
+    },
+    {
+      id: "busiest-year",
+      icon: Lightbulb,
+      title: "Busiest Year",
+      description: "Each breakthrough builds upon previous discoveries, creating cascading waves of innovation.",
+      stat: String(busiestYear.year),
+      statLabel: `${busiestYear.count} events, more than any other year`,
+    },
+    {
+      id: "industry",
+      icon: Users,
+      title: "Industry Momentum",
+      description:
+        "Modern AI advances are built on international collaboration between researchers, institutions, and companies.",
+      stat: String(countEvents(events, (event) => event.category === "Companies & Investments")),
+      statLabel: "Companies & Investments events",
+    },
+    {
+      id: "impact",
+      icon: Zap,
+      title: "Societal Impact",
+      description: "AI is transforming every aspect of society, from healthcare to education to creative industries.",
+      stat: String(countEvents(events, (event) => event.category === "Ethics & Policy")),
+      statLabel: "Ethics & Policy events",
+    },
+  ]
+}
 
 export function TimelineInsights({ events }: TimelineInsightsProps) {
   const [activeInsight, setActiveInsight] = useState<string | null>(null)
+  const insights = getInsights(events)
 
   return (
     <section className="py-16 bg-gradient-to-b from-background to-muted/20">
@@ -65,7 +92,7 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
         </RevealAnimation>
 
         <StaggerAnimation className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {INSIGHTS.map((insight) => {
+          {insights.map((insight) => {
             const Icon = insight.icon
             const isActive = activeInsight === insight.id
 

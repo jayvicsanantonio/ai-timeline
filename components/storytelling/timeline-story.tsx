@@ -404,8 +404,11 @@ function TimelineEventCard({
 
             <div className="relative z-10 space-y-6">
               <div className="flex items-center justify-between gap-4">
+                {/* Events whose month is unknown show only their year */}
                 <div className="text-sm text-muted-foreground font-mono tracking-wider">
-                  {event.month} {event.year}
+                  {event.month === 'Unknown'
+                    ? event.year
+                    : `${event.month} ${event.year}`}
                 </div>
                 {/* z-10 lifts the badge above the title link's overlay so it still gets its own hover effects */}
                 <TimelineBadge

@@ -1,5 +1,5 @@
 // Integration tests for TimelineStory event cards: each source link must be a real,
-// keyboard-reachable anchor named after its event.
+// keyboard-reachable anchor named after its event, and each card shows its date.
 import { render, screen, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { userEvent } from "vitest/browser"
@@ -47,5 +47,17 @@ describe("TimelineStory", () => {
       await userEvent.tab()
       expect(document.activeElement).toBe(screen.getByRole("link", { name: event.title }))
     }
+  })
+
+  it("shows the month and year, or only the year when the month is unknown", () => {
+    const datedEvents: TimelineEvent[] = [
+      { ...events[0], year: 1995, month: "Unknown", title: "Undated event" },
+      { ...events[0], year: 2017, month: "June", title: "Dated event" },
+    ]
+    render(<TimelineStory events={datedEvents} />)
+
+    expect(screen.getByText("1995")).toBeInTheDocument()
+    expect(screen.getByText("June 2017")).toBeInTheDocument()
+    expect(screen.queryByText(/Unknown/)).not.toBeInTheDocument()
   })
 })

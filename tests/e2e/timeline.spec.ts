@@ -1,7 +1,9 @@
 // End-to-end tests for the timeline page running in a real Next.js server.
 // Covers error-free loading with and without reduced motion, the prologue filter, category badge colors
-// on real data, the neural backgrounds, and timeline cards that show at once when reduced motion is preferred.
+// on real data, the neural backgrounds, timeline cards that show at once when reduced motion is preferred,
+// card dates, and insight stats.
 import { expect, test, type Page } from "@playwright/test"
+import timelineData from "../../data/timeline-events.json"
 
 // Loads the page, scrolls through all of it, and returns every console error and uncaught page error.
 async function loadAndScrollTimeline(page: Page) {
@@ -115,4 +117,22 @@ test("paints every neural background in the primary color, each with its own pat
   for (const pattern of patterns) {
     expect(new Set(pattern.colors)).toEqual(new Set([primary]))
   }
+})
+
+test("shows only the year on cards whose month is unknown", async ({ page }) => {
+  await page.goto("/")
+  await expect(page.getByRole("heading", { level: 3, name: "Kismet the Robot" })).toBeAttached()
+
+  await expect(page.getByText(/Unknown/)).toHaveCount(0)
+})
+
+test("computes the 2010-or-later share in Timeline Insights from the real events", async ({ page }) => {
+  const recentCount = timelineData.filter((event) => event.year >= 2010).length
+  const expectedShare = `${Math.round((recentCount / timelineData.length) * 100)}%`
+
+  await page.goto("/")
+
+  const statLabel = page.getByText(`of the ${timelineData.length} events happened in 2010 or later`, { exact: true })
+  await statLabel.scrollIntoViewIfNeeded()
+  await expect(statLabel.locator("xpath=preceding-sibling::div[1]")).toHaveText(expectedShare)
 })
