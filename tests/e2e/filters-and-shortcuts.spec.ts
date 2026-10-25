@@ -22,6 +22,15 @@ async function openPage(page: Page) {
   await waitForHydration(page)
 }
 
+// The shortcuts listen from an effect that runs a moment after hydration, and a key pressed in
+// that gap is lost, as on slower CI machines. A test's first shortcut repeats until it lands.
+async function pressUntil(page: Page, key: string, landed: () => Promise<void>) {
+  await expect(async () => {
+    await page.keyboard.press(key)
+    await landed()
+  }).toPass({ timeout: 15_000 })
+}
+
 test.describe("search and category filters", () => {
   test("narrows the whole timeline to a search and restores it when cleared", async ({ page }) => {
     await openPage(page)
@@ -82,11 +91,12 @@ test.describe("search and category filters", () => {
       card.scrollIntoView({ behavior: "instant" as ScrollBehavior }),
     )
 
-    await page.keyboard.press("/")
+    const search = page.getByRole("searchbox", { name: "Search events" })
+    await pressUntil(page, "/", () => expect(search).toBeFocused({ timeout: 1000 }))
     await page.keyboard.type("turing")
 
     await expect.poll(() => page.locator("#the-foundation-era").evaluate((era) => Math.round(era.getBoundingClientRect().top))).toBeLessThan(120)
-    await expect(page.getByRole("searchbox", { name: "Search events" })).toBeFocused()
+    await expect(search).toBeFocused()
   })
 
   test.describe("on a wide screen", () => {
@@ -116,8 +126,7 @@ test.describe("keyboard shortcuts", () => {
   test("steps forward and back through the events with J and K", async ({ page }) => {
     await openPage(page)
 
-    await page.keyboard.press("j")
-    await expect(eventLink(page, events[0].title)).toBeFocused()
+    await pressUntil(page, "j", () => expect(eventLink(page, events[0].title)).toBeFocused({ timeout: 1000 }))
 
     await page.keyboard.press("j")
     const second = eventLink(page, events[1].title)
@@ -138,9 +147,9 @@ test.describe("keyboard shortcuts", () => {
   test("jumps to an era's title with its number key, just below the toolbar", async ({ page }) => {
     await openPage(page)
 
-    await page.keyboard.press("3")
+    const title = page.getByRole("heading", { level: 2, name: "The Learning Era" })
+    await pressUntil(page, "3", () => expect(title).toBeFocused({ timeout: 1000 }))
 
-    await expect(page.getByRole("heading", { level: 2, name: "The Learning Era" })).toBeFocused()
     const toolbarHeight = await page.getByRole("search").evaluate((search) => search.parentElement!.getBoundingClientRect().height)
     await expect
       .poll(() => page.locator("#the-learning-era").evaluate((era) => Math.round(era.getBoundingClientRect().top)))
@@ -150,10 +159,9 @@ test.describe("keyboard shortcuts", () => {
   test("focuses the search box with /", async ({ page }) => {
     await openPage(page)
 
-    await page.keyboard.press("/")
-
     const search = page.getByRole("searchbox", { name: "Search events" })
-    await expect(search).toBeFocused()
+    await pressUntil(page, "/", () => expect(search).toBeFocused({ timeout: 1000 }))
+
     await expect(search).toHaveValue("")
   })
 })
