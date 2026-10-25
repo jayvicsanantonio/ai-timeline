@@ -1,6 +1,5 @@
-// End-to-end accessibility checks for the AI Timeline page in real Chromium:
-// landmarks, era headings, keyboard access to event links, focus styles, cursor behavior and
-// narrative bridges that hold still when reduced motion is preferred.
+// End-to-end accessibility checks in real Chromium: landmarks, era headings, event links and their names,
+// keyboard access, focus rings, cursor behavior and a page that holds still when reduced motion is preferred.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 
@@ -13,8 +12,6 @@ const ERA_TITLES = [
 ]
 
 const EVENT_LINKS = 'h3 a[target="_blank"]'
-
-const BRIDGE_TITLES = [...ERA_TITLES, "Patterns of Progress"]
 
 // React marks hydrated DOM nodes with a fiber key; checks that depend on client
 // effects wait for it so they cannot pass against the server-rendered HTML alone.
@@ -37,11 +34,6 @@ async function tabToFirstEventLink(page: Page) {
     }
   }
   throw new Error("No event link received focus within 100 Tab presses")
-}
-
-// A narrative bridge is the section that holds its level-2 title.
-function narrativeBridge(page: Page, title: string) {
-  return page.getByRole("heading", { level: 2, name: title, exact: true }).locator("xpath=ancestor::section[1]")
 }
 
 test.describe("landmarks and headings", () => {
@@ -72,6 +64,26 @@ test.describe("event links", () => {
     await expect(links.first()).toHaveAttribute("rel", "noopener noreferrer")
   })
 
+  test("names each event heading by its title alone in Chrome's accessibility tree", async ({ page }) => {
+    await page.goto("/")
+    const client = await page.context().newCDPSession(page)
+
+    const { nodes } = await client.send("Accessibility.getFullAXTree")
+    const headingNames = nodes
+      .filter(
+        (node) =>
+          node.role?.value === "heading" &&
+          node.properties?.some((property) => property.name === "level" && property.value.value === 3),
+      )
+      .map((node) => String(node.name?.value ?? ""))
+
+    // Some eras set their titles in capitals, which Chrome passes on to the name
+    const titles = new Set(timelineData.map((event) => event.title.toLowerCase()))
+    const eventHeadings = headingNames.filter((name) => titles.has(name.toLowerCase()))
+    expect(eventHeadings).toHaveLength(timelineData.length)
+    expect(headingNames.filter((name) => name.includes("new tab"))).toEqual([])
+  })
+
   test("reaches every event link using only the Tab key", async ({ page }) => {
     test.setTimeout(120_000)
     await page.goto("/")
@@ -94,7 +106,7 @@ test.describe("event links", () => {
     expect(focusedEventLinks.size).toBe(timelineData.length)
   })
 
-  test("shows a visible focus outline around a keyboard-focused card", async ({ page }) => {
+  test("rings a keyboard-focused card with a visible outline", async ({ page }) => {
     await page.goto("/")
     await waitForHydration(page)
 
@@ -102,10 +114,10 @@ test.describe("event links", () => {
 
     const outlineOf = (index: number) =>
       page
-        .locator(EVENT_LINKS)
+        .locator("article")
         .nth(index)
-        .evaluate((link) => {
-          const style = getComputedStyle(link, "::after")
+        .evaluate((card) => {
+          const style = getComputedStyle(card)
           return { style: style.outlineStyle, width: style.outlineWidth }
         })
 
@@ -113,30 +125,32 @@ test.describe("event links", () => {
     expect((await outlineOf(1)).style).toBe("none")
   })
 
-  test("opens the source when any part of the card is clicked, including its padding", async ({ page }) => {
+  test("opens the source when any part of a card is clicked, in every era's interface", async ({ page }) => {
     await page.goto("/")
     await waitForHydration(page)
 
-    const link = page.locator(EVENT_LINKS).first()
-    await link.scrollIntoViewIfNeeded()
+    for (const section of await page.locator("section[data-interface]").all()) {
+      const card = section.locator("article").first()
+      await card.evaluate((element) => element.scrollIntoView({ block: "center", behavior: "instant" as ScrollBehavior }))
 
-    const linkCoversCardCorners = () =>
-      link.evaluate((anchor) => {
-        const card = anchor.closest(".group")
-        if (!card) {
-          return false
-        }
-        const box = card.getBoundingClientRect()
-        const corners = [
-          [box.left + 8, box.top + 8],
-          [box.right - 8, box.top + 8],
-          [box.left + 8, box.bottom - 8],
-          [box.right - 8, box.bottom - 8],
-        ]
-        return corners.every(([x, y]) => document.elementFromPoint(x, y)?.closest("a") === anchor)
-      })
+      const missedPoints = () =>
+        card.evaluate((article) => {
+          const anchor = article.querySelector("a[data-event-link]")
+          const box = article.getBoundingClientRect()
+          const middle = box.top + box.height / 2
+          const points: [string, number, number][] = [
+            ["center", box.left + box.width / 2, middle],
+            ["left edge", box.left + 12, middle],
+            ["right edge", box.right - 12, middle],
+            ["bottom edge", box.left + box.width / 2, box.bottom - 6],
+          ]
+          return points
+            .filter(([, x, y]) => document.elementFromPoint(x, y)?.closest("a") !== anchor)
+            .map(([name]) => name)
+        })
 
-    await expect.poll(linkCoversCardCorners).toBe(true)
+      await expect.poll(missedPoints, { message: await section.getAttribute("data-interface") ?? "" }).toEqual([])
+    }
   })
 })
 
@@ -162,49 +176,47 @@ test.describe("cursor when reduced motion is preferred", () => {
   })
 })
 
-test.describe("narrative bridges when reduced motion is preferred", () => {
+test.describe("motion when reduced motion is preferred", () => {
   test.use({ reducedMotion: "reduce" })
 
-  test("shows every bridge fully opaque, without scaling or moving it", async ({ page }) => {
+  test("runs no animations anywhere on the page while it scrolls", async ({ page }) => {
+    test.setTimeout(120_000)
     await page.goto("/")
     await waitForHydration(page)
 
-    for (const title of BRIDGE_TITLES) {
-      const bridge = narrativeBridge(page, title)
-      await expect(bridge).toHaveCSS("opacity", "1")
-      await expect(bridge).toHaveCSS("transform", "none")
-    }
+    // Color transitions on hover or state changes are fine; anything that moves, fades or blinks is not.
+    const runningAnimations = await page.evaluate(async () => {
+      const found = new Set<string>()
+      for (let y = 0; y < document.body.scrollHeight; y += window.innerHeight / 2) {
+        window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior })
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+        for (const animation of document.getAnimations()) {
+          if (!(animation instanceof CSSTransition)) {
+            const target = (animation.effect as KeyframeEffect | null)?.target
+            found.add(`${(animation as CSSAnimation).animationName ?? "script"} on ${target?.className ?? "?"}`)
+          }
+        }
+      }
+      return [...found]
+    })
+
+    expect(runningAnimations).toEqual([])
   })
 
-  test("keeps the background and particles of an on-screen bridge still", async ({ page }) => {
+  test("shows the chapter navigation at once, without fading it in", async ({ page }) => {
     await page.goto("/")
     await waitForHydration(page)
 
-    const bridge = narrativeBridge(page, ERA_TITLES[0])
-    await bridge.evaluate((section) => section.scrollIntoView({ block: "center" }))
+    const opacityJustAfterEntering = await page.evaluate(async () => {
+      document.getElementById("the-foundation-era")!.scrollIntoView({ behavior: "instant" as ScrollBehavior })
+      // Gives the scroll handler a frame to measure and React a moment to render, far less than a fade takes
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 50))))
+      const navs = [...document.querySelectorAll('nav[aria-label="Timeline chapter navigation"]')]
+      const shown = navs.find((nav) => getComputedStyle(nav).display !== "none")!
+      return { state: (shown as HTMLElement).dataset.state, opacity: getComputedStyle(shown).opacity }
+    })
 
-    // Waits out the one-time entrance animations, after which nothing in the bridge is transformed.
-    const transformedElements = () =>
-      bridge.evaluate((section) =>
-        [section, ...section.querySelectorAll("*")]
-          .map((element) => getComputedStyle(element).transform)
-          .filter((transform) => transform !== "none"),
-      )
-    await expect.poll(transformedElements).toEqual([])
-
-    const styleChanges = await bridge.evaluate(
-      (section) =>
-        new Promise<number>((resolve) => {
-          const changed = new Set<Node>()
-          const observer = new MutationObserver((records) => records.forEach((record) => changed.add(record.target)))
-          observer.observe(section, { attributes: true, attributeFilter: ["style"], subtree: true })
-          setTimeout(() => {
-            observer.disconnect()
-            resolve(changed.size)
-          }, 1000)
-        }),
-    )
-    expect(styleChanges).toBe(0)
+    expect(opacityJustAfterEntering).toEqual({ state: "visible", opacity: "1" })
   })
 })
 

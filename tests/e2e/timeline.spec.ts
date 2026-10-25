@@ -1,7 +1,5 @@
-// End-to-end tests for the timeline page running in a real Next.js server.
-// Covers error-free loading with and without reduced motion, the prologue filter, category badge colors
-// on real data, the neural backgrounds, timeline cards that show at once when reduced motion is preferred,
-// card dates, and insight stats.
+// End-to-end tests for the timeline page in a real Next.js server: error-free loading with and without reduced
+// motion, cards that settle in place, card dates, the opening's events-per-year chart and the insight stats.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 
@@ -26,8 +24,35 @@ async function loadAndScrollTimeline(page: Page) {
   return errors
 }
 
+// Lists each event card that is still faded or offset from its resting place. A finished entrance
+// leaves an identity matrix rather than "none", which places the card just the same.
+function unsettledCards(page: Page) {
+  return page.locator("article").evaluateAll((cards) =>
+    cards.flatMap((card, index) => {
+      const style = getComputedStyle(card)
+      return style.opacity !== "1" || !new DOMMatrix(style.transform).isIdentity ? [`card ${index}`] : []
+    }),
+  )
+}
+
 test("loads and scrolls the whole timeline without console or page errors", async ({ page }) => {
   expect(await loadAndScrollTimeline(page)).toEqual([])
+})
+
+test("settles each card fully in place once it has scrolled into view", async ({ page }) => {
+  await page.goto("/")
+
+  const card = page.locator("#the-learning-era article").nth(3)
+  await card.evaluate((element) => element.scrollIntoView({ block: "center", behavior: "instant" as ScrollBehavior }))
+
+  await expect
+    .poll(() =>
+      card.evaluate((element) => {
+        const style = getComputedStyle(element)
+        return style.opacity === "1" && new DOMMatrix(style.transform).isIdentity
+      }),
+    )
+    .toBe(true)
 })
 
 test.describe("with reduced motion", () => {
@@ -37,86 +62,12 @@ test.describe("with reduced motion", () => {
     expect(await loadAndScrollTimeline(page)).toEqual([])
   })
 
-  test("shows every timeline card and node dot at once, without moving them in", async ({ page }) => {
+  test("shows every timeline card at once, without moving them in", async ({ page }) => {
     await page.goto("/")
     await expect(page.locator("article").first()).toBeAttached()
 
-    // Lists each card and node dot that is still faded or offset from its resting place.
-    const hiddenParts = () =>
-      page.locator("article").evaluateAll((articles) =>
-        articles.flatMap((article, index) => {
-          const parts = {
-            [`node ${index}`]: article.querySelector('[data-testid="timeline-node"] > div')!,
-            [`card ${index}`]: article.children[1],
-          }
-          return Object.entries(parts)
-            .filter(([, part]) => {
-              const style = getComputedStyle(part)
-              return style.opacity !== "1" || style.transform !== "none"
-            })
-            .map(([label]) => label)
-        }),
-      )
-
-    await expect.poll(hiddenParts).toEqual([])
+    expect(await unsettledCards(page)).toEqual([])
   })
-})
-
-test("applies the prologue blur and brightness filter", async ({ page }) => {
-  await page.goto("/")
-
-  const prologue = page.locator("section").first()
-  await expect(prologue).toBeVisible()
-  expect(await prologue.evaluate((element) => getComputedStyle(element).filter)).toBe("blur(0px) brightness(1)")
-})
-
-test("shows categories outside the original five in their own badge colors", async ({ page }) => {
-  await page.goto("/")
-
-  const expectedBadgeTextClass = {
-    "Companies & Investments": /text-indigo-400/,
-    "AI Tools": /text-pink-400/,
-    "Bombshell News": /text-red-400/,
-    Agents: /text-violet-400/,
-  }
-
-  for (const [category, textClass] of Object.entries(expectedBadgeTextClass)) {
-    const badgeLabel = page.getByText(category, { exact: true }).first()
-    await badgeLabel.scrollIntoViewIfNeeded()
-    await expect(badgeLabel.locator("xpath=..")).toHaveClass(textClass)
-  }
-})
-
-test("paints every neural background in the primary color, each with its own pattern id", async ({ page }) => {
-  await page.goto("/")
-  await expect(page.locator("section").first()).toBeVisible()
-
-  const { primary, patterns } = await page.evaluate(() => {
-    // Resolves --primary to the rgb() form that computed styles report.
-    const probe = document.createElement("div")
-    probe.style.color = "var(--primary)"
-    document.body.append(probe)
-    const primary = getComputedStyle(probe).color
-    probe.remove()
-
-    return {
-      primary,
-      patterns: Array.from(document.querySelectorAll("svg pattern"), (pattern) => ({
-        id: pattern.id,
-        colors: [
-          ...Array.from(pattern.querySelectorAll("circle"), (circle) => getComputedStyle(circle).fill),
-          ...Array.from(pattern.querySelectorAll("path"), (path) => getComputedStyle(path).stroke),
-        ],
-      })),
-    }
-  })
-
-  expect(primary).not.toBe("rgb(0, 0, 0)")
-  expect(patterns.length).toBeGreaterThan(1)
-  expect(new Set(patterns.map((pattern) => pattern.id)).size).toBe(patterns.length)
-  for (const pattern of patterns) {
-    expect(new Set(pattern.colors)).toEqual(new Set([primary]))
-  }
 })
 
 test("shows only the year on cards whose month is unknown", async ({ page }) => {
@@ -124,6 +75,21 @@ test("shows only the year on cards whose month is unknown", async ({ page }) => 
   await expect(page.getByRole("heading", { level: 3, name: "Kismet the Robot" })).toBeAttached()
 
   await expect(page.getByText(/Unknown/)).toHaveCount(0)
+})
+
+test("charts every year from the first event to the last, and labels the busiest one", async ({ page }) => {
+  const years = timelineData.map((event) => event.year)
+  const firstYear = Math.min(...years)
+  const lastYear = Math.max(...years)
+  const countsByYear = new Map<number, number>()
+  years.forEach((year) => countsByYear.set(year, (countsByYear.get(year) ?? 0) + 1))
+  const [busiestYear, busiestCount] = [...countsByYear].reduce((best, entry) => (entry[1] > best[1] ? entry : best))
+
+  await page.goto("/")
+
+  const chart = page.getByRole("figure")
+  await expect(chart.locator("[data-year-bar]")).toHaveCount(lastYear - firstYear + 1)
+  await expect(chart).toContainText(`${busiestCount} events in ${busiestYear}`)
 })
 
 test("computes the 2010-or-later share in Timeline Insights from the real events", async ({ page }) => {

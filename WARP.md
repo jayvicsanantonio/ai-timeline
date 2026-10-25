@@ -28,20 +28,20 @@ High-level architecture
 - Runtime model
   - App Router entry (app/page.tsx) loads static data from data/timeline-events.json into local state and renders <StoryEngine events={...} />.
   - Story orchestration (components/storytelling/story-engine.tsx):
-    - Groups events into eras by year ranges (Foundation, Knowledge, Learning, Deep Learning Revolution, Generative AI).
-    - Renders PrologueScene → per-era NarrativeBridge + TimelineStory → Insights → EpilogueScene.
-  - Timeline rendering (components/storytelling/timeline-story.tsx):
-    - Framer Motion-heavy section with layered animated backgrounds.
-    - Maps each event to an animated TimelineEventCard using CinematicCard (components/ui) and category styling via a categoryVariants map.
+    - Groups events into eras with groupEventsByEra (lib/eras.ts): Foundation, Knowledge, Learning, Deep Learning Revolution, Generative AI.
+    - Holds the search and category filters (lib/timeline-filter.ts) and renders PrologueScene → TimelineControls + one EraChapter per era → TimelineNavigation → Insights → EpilogueScene.
+  - Era rendering (components/eras/):
+    - EraChapter draws each era in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread.
+    - Every interface gives its events the same structure: an article per event with an h3 that links to the source (EventHeading in era-parts.tsx).
 - Data and types
   - Dataset: data/timeline-events.json, loaded by app/page.tsx through parseTimelineEvents (lib/timeline-events.ts), which throws on unknown categories so bad data fails the build.
   - Types live in types/timeline.ts. TIMELINE_CATEGORIES is the single list of categories, and TimelineCategory is derived from it.
-    - If adding a category, add it to TIMELINE_CATEGORIES and give it a TimelineBadge variant in the categoryVariants map in components/storytelling/timeline-story.tsx. tsc errors until the map covers it.
+    - If adding a category, add it to TIMELINE_CATEGORIES and give it an icon in components/ui/category-icon.tsx. tsc errors until the icon map covers it.
 - Animation and interaction
-  - Framer Motion is used broadly for parallax, scroll-tied transforms, and staged reveals.
+  - Most motion is CSS in app/globals.css, inside prefers-reduced-motion: no-preference: scroll-driven card reveals and the eras' carets, progress bar and typing dots. Framer Motion animates the phone chapter list.
   - Custom hooks in hooks/:
-    - use-scroll-animation.ts provides motion values (opacity/scale/rotate/parallax) tied to scroll.
-    - use-intersection-animation.ts provides in-view detection (useInView, with threshold passed as amount) and reveal variants.
+    - use-timeline-position.ts measures the era and event year at the reading line once per animation frame while scrolling.
+    - use-timeline-shortcuts.ts adds J/K to step between events, 1-5 to jump to an era and / to focus search.
 - UI, accessibility, and theming
   - Layout (app/layout.tsx) sets fonts, default dark theme, and injects accessibility helpers (SkipToContent) and FuturisticCursor.
   - Styling via Tailwind CSS 4, with utility helpers (lib/utils.ts cn merger) and custom components in components/ui/.

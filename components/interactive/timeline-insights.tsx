@@ -1,13 +1,8 @@
-// Timeline Insights section: four cards with stats computed from the timeline events.
-// Hovering a card highlights it.
+// Timeline Insights section: four stat tiles with numbers computed from the timeline events.
+// Each tile leads with its number, then names what the number says about AI's history.
 "use client"
 
-import { motion } from "framer-motion"
-import { useState } from "react"
 import { Lightbulb, TrendingUp, Users, Zap } from "lucide-react"
-import { CinematicCard } from "@/components/ui/cinematic-card"
-import { RevealAnimation } from "@/components/animations/reveal-animation"
-import { StaggerAnimation } from "@/components/animations/stagger-animation"
 import type { TimelineEvent } from "@/types/timeline"
 
 interface TimelineInsightsProps {
@@ -76,74 +71,37 @@ function getInsights(events: TimelineEvent[]) {
 }
 
 export function TimelineInsights({ events }: TimelineInsightsProps) {
-  const [activeInsight, setActiveInsight] = useState<string | null>(null)
   const insights = getInsights(events)
 
   return (
-    <section className="py-16 bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <RevealAnimation direction="up" className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-4">
-            Timeline Insights
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover the patterns and trends that emerge from decades of AI development
-          </p>
-        </RevealAnimation>
+    <section aria-labelledby="insights-title" className="border-t border-white/10 bg-[#0a0a0b] px-4 py-24 text-white sm:px-6 sm:py-32">
+      <div className="mx-auto max-w-6xl">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">By the numbers</p>
+        <h2 id="insights-title" className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+          Timeline Insights
+        </h2>
+        <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-400">
+          Discover the patterns and trends that emerge from decades of AI development
+        </p>
 
-        <StaggerAnimation className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {insights.map((insight) => {
             const Icon = insight.icon
-            const isActive = activeInsight === insight.id
 
             return (
-              <motion.div
+              <div
                 key={insight.id}
-                onHoverStart={() => setActiveInsight(insight.id)}
-                onHoverEnd={() => setActiveInsight(null)}
-                whileHover={{ y: -5 }}
-                className="h-[32rem] flex" // increased height to h-[32rem] (512px) to accommodate all content
+                className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25 hover:bg-white/[0.05]"
               >
-                <CinematicCard
-                  className={`w-full transition-all duration-300 ${
-                    isActive ? "ring-2 ring-primary/50 shadow-lg shadow-primary/20" : ""
-                  }`}
-                  glowEffect={isActive}
-                >
-                  <div className="flex flex-col h-full text-center p-6">
-                    <div className="h-80 flex flex-col">
-                      {/* Icon section - fixed height */}
-                      <div className="flex-shrink-0 mb-4">
-                        <motion.div
-                          className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mx-auto"
-                          animate={{ scale: isActive ? 1.1 : 1 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <Icon className="w-6 h-6" />
-                        </motion.div>
-                      </div>
-
-                      {/* Title section - fixed height */}
-                      <div className="flex-shrink-0 mb-4">
-                        <h3 className="font-bold text-foreground text-lg leading-tight">{insight.title}</h3>
-                      </div>
-
-                      {/* Description section - flexible height within fixed container */}
-                      <div className="flex-1 flex items-start justify-center">
-                        <p className="text-sm text-muted-foreground leading-relaxed">{insight.description}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex-shrink-0 pt-4 border-t border-border/50">
-                      <div className="text-2xl font-bold text-primary">{insight.stat}</div>
-                      <div className="text-xs text-muted-foreground mt-1 leading-tight">{insight.statLabel}</div>
-                    </div>
-                  </div>
-                </CinematicCard>
-              </motion.div>
+                <Icon aria-hidden="true" className="size-5 text-zinc-400" />
+                <div className="mt-8 text-5xl font-semibold tracking-tight text-white">{insight.stat}</div>
+                <div className="mt-2 text-sm leading-6 text-zinc-400">{insight.statLabel}</div>
+                <h3 className="mt-8 text-base font-semibold text-white">{insight.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">{insight.description}</p>
+              </div>
             )
           })}
-        </StaggerAnimation>
+        </div>
       </div>
     </section>
   )

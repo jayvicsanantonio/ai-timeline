@@ -1,0 +1,205 @@
+// Draws the Foundation Era as a deck of 80-column punch cards under a teletype printout.
+// Each card carries its event's title punched in IBM 029 Hollerith code, with the date, category and description.
+'use client';
+
+import { useId } from 'react';
+import { CategoryIcon } from '@/components/ui/category-icon';
+import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
+import {
+  encodeHollerith,
+  keypunchText,
+  PUNCH_CARD_COLUMNS,
+  PUNCH_CARD_ROWS,
+} from '@/lib/hollerith';
+import { cn } from '@/lib/utils';
+import type { TimelineEvent } from '@/types/timeline';
+import {
+  EventHeading,
+  NO_MATCHING_EVENTS,
+  eraEventCount,
+  eraHeadingId,
+  type EraInterfaceProps,
+} from './era-parts';
+
+// Card geometry in SVG units. Rows sit farther apart than columns, as on a real card.
+const COLUMN_WIDTH = 10;
+const ROW_HEIGHT = 13;
+// The strip along the top edge where the keypunch printed each character above its column
+const PRINT_BAND = 12;
+const CARD_WIDTH = PUNCH_CARD_COLUMNS * COLUMN_WIDTH;
+const CARD_HEIGHT = PRINT_BAND + PUNCH_CARD_ROWS.length * ROW_HEIGHT;
+// Rows 0 to 9 have their digit printed in every column; rows 12 and 11 above them are blank
+const FIRST_DIGIT_ROW = PUNCH_CARD_ROWS.indexOf('0');
+const PRINTED_DIGITS = PUNCH_CARD_ROWS.slice(FIRST_DIGIT_ROW);
+
+function padNumber(value: number) {
+  return String(value).padStart(2, '0');
+}
+
+export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
+  return (
+    <div className="punch-card-room px-4 py-24 sm:px-6 sm:py-32">
+      <div className="mx-auto max-w-3xl">
+        <header className="teletype-paper px-10 py-9 font-mono text-[#3a3226] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] sm:px-16 sm:py-12">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-xs uppercase tracking-[0.25em] text-[#5e5139]">
+            <span>{era.chapter}</span>
+            <span>{era.subtitle}</span>
+          </div>
+          <h2
+            id={eraHeadingId(era)}
+            tabIndex={-1}
+            className="mt-6 border-y-4 border-double border-[#3a3226]/70 py-4 text-3xl font-bold uppercase leading-none tracking-tight text-[#1f1a12] focus:outline-none sm:text-5xl"
+          >
+            {era.name}
+          </h2>
+          <p className="mt-6 text-sm leading-7 sm:text-base sm:leading-8">{era.description}</p>
+          <p className="mt-6 text-xs uppercase tracking-[0.25em] text-[#5e5139]">
+            {eraEventCount(era, totalEvents)} <span aria-hidden="true">·</span>{' '}
+            {era.interfaceName}
+          </p>
+        </header>
+
+        {era.events.length > 0 ? (
+          <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
+            {era.events.map((event, index) => (
+              <li key={eventAnchorId(event)}>
+                <PunchCard event={event} cardNumber={index + 1} deckSize={era.events.length} />
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="mt-14 text-center font-mono text-sm uppercase leading-7 tracking-[0.2em] text-[#e2d7ba]">
+            {NO_MATCHING_EVENTS}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface PunchCardProps {
+  event: TimelineEvent;
+  cardNumber: number;
+  deckSize: number;
+}
+
+function PunchCard({ event, cardNumber, deckSize }: PunchCardProps) {
+  return (
+    <article
+      id={eventAnchorId(event)}
+      data-year={event.year}
+      className="reveal-on-scroll group relative scroll-mt-[var(--timeline-sticky-offset,0px)] motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-[#f3e9cf]"
+    >
+      <div className="punch-card bg-[#f3e9cf] px-5 pb-5 pt-5 text-[#2b2418] shadow-[0_24px_50px_-28px_rgba(0,0,0,0.95)] sm:px-8 sm:pb-6 sm:pt-6">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 pl-4 font-mono uppercase sm:pl-3">
+          <EventHeading
+            event={event}
+            className="min-w-0 text-sm font-bold tracking-[0.06em] sm:text-base"
+            linkClassName="decoration-2 underline-offset-4 group-hover:underline"
+          />
+          <time
+            dateTime={eventDateTime(event)}
+            className="shrink-0 text-xs tracking-[0.2em] text-[#5e5139]"
+          >
+            {formatEventDate(event)}
+          </time>
+        </div>
+
+        <PunchedTitle title={event.title} className="mt-3" />
+
+        <p className="mt-4 font-mono text-[13px] leading-6 text-[#3b3324] sm:text-sm sm:leading-6">
+          {event.description}
+        </p>
+
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.16em]">
+          <span className="inline-flex items-center gap-1.5 border-[1.5px] border-[#9b3a26] px-2 py-1 text-[#8a3121]">
+            <CategoryIcon category={event.category} className="size-3.5 shrink-0" />
+            <span>{event.category}</span>
+          </span>
+          <span aria-hidden="true" className="text-[#6e604a]">
+            Card {padNumber(cardNumber)} / {padNumber(deckSize)}
+          </span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// The title's keypunched columns: printed characters along the top edge, the card's
+// printed digit grid, and the holes the 029 code punches for each character.
+export function PunchedTitle({ title, className }: { title: string; className?: string }) {
+  const digitPatternId = useId();
+  const printed = Array.from(keypunchText(title));
+  const columns = encodeHollerith(title);
+
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      viewBox={`0 0 ${CARD_WIDTH} ${CARD_HEIGHT}`}
+      className={cn('block h-auto w-full', className)}
+    >
+      <defs>
+        <pattern
+          id={digitPatternId}
+          x={0}
+          y={PRINT_BAND + FIRST_DIGIT_ROW * ROW_HEIGHT}
+          width={COLUMN_WIDTH}
+          height={PRINTED_DIGITS.length * ROW_HEIGHT}
+          patternUnits="userSpaceOnUse"
+        >
+          {PRINTED_DIGITS.map((digit, index) => (
+            <text
+              key={digit}
+              x={COLUMN_WIDTH / 2}
+              y={index * ROW_HEIGHT + ROW_HEIGHT * 0.7}
+              textAnchor="middle"
+              fontSize={7}
+              fontFamily="ui-monospace, monospace"
+              fill="#b29f76"
+            >
+              {digit}
+            </text>
+          ))}
+        </pattern>
+      </defs>
+
+      {printed.map((character, column) => (
+        <text
+          key={column}
+          x={column * COLUMN_WIDTH + COLUMN_WIDTH / 2}
+          y={PRINT_BAND - 3}
+          textAnchor="middle"
+          fontSize={8}
+          fontFamily="ui-monospace, monospace"
+          fill="#4a3f2c"
+        >
+          {character}
+        </text>
+      ))}
+
+      <rect
+        x={0}
+        y={PRINT_BAND + FIRST_DIGIT_ROW * ROW_HEIGHT}
+        width={CARD_WIDTH}
+        height={PRINTED_DIGITS.length * ROW_HEIGHT}
+        fill={`url(#${digitPatternId})`}
+      />
+
+      {columns.flatMap((rows, column) =>
+        rows.map((row) => (
+          <rect
+            key={`${column}-${row}`}
+            data-hole=""
+            x={column * COLUMN_WIDTH + 2.25}
+            y={PRINT_BAND + PUNCH_CARD_ROWS.indexOf(row) * ROW_HEIGHT + 1.5}
+            width={5.5}
+            height={ROW_HEIGHT - 3}
+            rx={1}
+            fill="#101318"
+          />
+        ))
+      )}
+    </svg>
+  );
+}

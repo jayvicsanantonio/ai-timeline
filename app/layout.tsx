@@ -42,7 +42,7 @@ export default function RootLayout({
       className={`${workSans.variable} ${openSans.variable} antialiased dark`}
       suppressHydrationWarning
     >
-      <body className="overflow-x-hidden">
+      <body className="overflow-x-clip">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
