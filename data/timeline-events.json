@@ -45,7 +45,7 @@
     "title": "LISP Programming Language",
     "description": "John McCarthy develops LISP, which becomes a foundational programming language for AI research.",
     "category": "Research Breakthroughs",
-    "link": "https://www-formal.stanford.edu/jmc/recursive.pdf"
+    "link": "https://doi.org/10.1145/367177.367199"
   },
   {
     "year": 1961,
@@ -75,17 +75,17 @@
     "year": 1969,
     "month": "Unknown",
     "title": "Shakey the Robot",
-    "description": "SRI International's Shakey becomes the first mobile robot to reason about its own actions, combining perception, planning, and problem-solving.",
+    "description": "Stanford Research Institute's Shakey becomes the first mobile robot to reason about its own actions, combining perception, planning, and problem-solving.",
     "category": "Hardware Advances",
     "link": "https://en.wikipedia.org/wiki/Shakey_the_robot"
   },
   {
     "year": 1969,
     "month": "Unknown",
-    "title": "The First AI Winter",
-    "description": "The publication of 'Perceptrons' by Marvin Minsky and Seymour Papert, which highlighted the limitations of simple neural networks, contributed to a period of reduced funding and interest in AI.",
+    "title": "Perceptrons Exposes the Limits of Neural Networks",
+    "description": "Marvin Minsky and Seymour Papert publish 'Perceptrons,' which highlights the limitations of simple neural networks and contributes to a long decline in neural network research.",
     "category": "Bombshell News",
-    "link": "https://en.wikipedia.org/wiki/AI_winter"
+    "link": "https://en.wikipedia.org/wiki/Perceptrons_(book)"
   },
   {
     "year": 1973,
@@ -99,7 +99,7 @@
     "year": 1973,
     "month": "Unknown",
     "title": "Lighthill Report",
-    "description": "The Lighthill Report in the UK leads to significant cuts in AI research funding, deepening the first AI winter.",
+    "description": "The Lighthill Report in the UK leads to significant cuts in AI research funding, helping bring on the first AI winter.",
     "category": "Ethics & Policy",
     "link": "https://en.wikipedia.org/wiki/Lighthill_report"
   },
@@ -123,7 +123,7 @@
     "year": 1986,
     "month": "October",
     "title": "Backpropagation Popularized",
-    "description": "David Rumelhart, Geoffrey Hinton, and Ronald Williams publish a paper that popularizes the backpropagation algorithm, enabling the training of deep neural networks.",
+    "description": "David Rumelhart, Geoffrey Hinton, and Ronald Williams publish a paper that popularizes the backpropagation algorithm, enabling the training of multi-layer neural networks.",
     "category": "Research Breakthroughs",
     "link": "https://www.nature.com/articles/323533a0"
   },
@@ -147,7 +147,7 @@
     "year": 1995,
     "month": "September",
     "title": "Support Vector Machines (SVMs)",
-    "description": "Corinna Cortes and Vladimir Vapnik introduce support vector machines, a powerful supervised learning algorithm.",
+    "description": "Corinna Cortes and Vladimir Vapnik publish 'Support-Vector Networks,' the soft-margin form of support vector machines, which becomes a widely used supervised learning algorithm.",
     "category": "Research Breakthroughs",
     "link": "https://en.wikipedia.org/wiki/Support-vector_machine"
   },
@@ -394,7 +394,7 @@
   {
     "year": 2021,
     "month": "January",
-    "title": "OpenAI Releases DALL-E",
+    "title": "OpenAI Unveils DALL-E",
     "description": "OpenAI introduces DALL-E, a neural network that can generate images from text descriptions, bridging the gap between language and vision in AI.",
     "category": "Public Releases",
     "link": "https://openai.com/index/dall-e/"
@@ -803,7 +803,7 @@
     "year": 2023,
     "month": "December",
     "title": "Google Launches Gemini 1.0",
-    "description": "Google DeepMind launches Gemini 1.0, its most capable and general AI model yet, built to be multimodal from the ground up and released in Pro, Ultra, and Nano sizes.",
+    "description": "Google DeepMind launches Gemini 1.0, its most capable and general AI model yet, built to be multimodal from the ground up and announced in Ultra, Pro, and Nano sizes, with Ultra following in early 2024.",
     "category": "Public Releases",
     "link": "https://blog.google/technology/ai/google-gemini-ai/"
   },
@@ -1395,7 +1395,7 @@
     "year": 2025,
     "month": "July",
     "title": "U.S. Authors Win Class-Action Status in Lawsuit Against Anthropic",
-    "description": "A U.S. District Judge grants class-action status to a lawsuit filed by authors against Anthropic, allowing millions of writers to pursue copyright claims against the company for allegedly using their work without permission to train its models.",
+    "description": "A U.S. District Judge certifies a class action by authors whose books Anthropic downloaded from the pirate libraries LibGen and PiLiMi, a month after ruling that training its models on books was fair use.",
     "category": "Ethics & Policy",
     "link": "https://news.bloomberglaw.com/bloomberg-government-news/authors-copyright-class-action-certified-against-anthropic"
   },
@@ -1435,7 +1435,7 @@
     "year": 2025,
     "month": "August",
     "title": "OpenAI's Valuation Approaches $500 Billion",
-    "description": "Reports emerge that OpenAI is in talks for a stock sale that would value the company at nearly $500 billion, a massive increase driven by the launch of GPT-5 and widespread enterprise adoption.",
+    "description": "Reports emerge that OpenAI is in talks for an employee share sale that would value the company at about $500 billion, up from $300 billion earlier in the year, as ChatGPT nears 700 million weekly users.",
     "category": "Companies & Investments",
     "link": "https://www.bloomberg.com/news/articles/2025-08-06/openai-in-talks-for-share-sale-valuing-startup-at-500-billion"
   },
@@ -1459,7 +1459,7 @@
     "year": 2025,
     "month": "September",
     "title": "Anthropic Releases Claude Sonnet 4.5",
-    "description": "Anthropic introduces Claude Sonnet 4.5, improving coding performance and reducing hallucinations while keeping the same pricing as Sonnet 4.",
+    "description": "Anthropic introduces Claude Sonnet 4.5, which it calls the best coding model in the world and its most aligned frontier model yet, with less sycophancy and deception, at the same price as Sonnet 4.",
     "category": "Public Releases",
     "link": "https://www.anthropic.com/news/claude-sonnet-4-5"
   },

@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   title:
     'The AI Timeline - Journey Through Artificial Intelligence History',
   description:
-    'An immersive exploration of artificial intelligence milestones from the 1950s to the present day',
+    'An immersive exploration of artificial intelligence milestones from the 1940s to the present day',
   generator: 'v0.app',
 };
 
