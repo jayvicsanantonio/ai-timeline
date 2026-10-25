@@ -88,12 +88,12 @@
     "link": "https://en.wikipedia.org/wiki/AI_winter"
   },
   {
-    "year": 1970,
+    "year": 1973,
     "month": "Unknown",
     "title": "WABOT-1, the First Anthropomorphic Robot",
     "description": "Waseda University in Japan builds WABOT-1, the first full-scale humanoid intelligent robot.",
     "category": "Hardware Advances",
-    "link": "https://en.wikipedia.org/wiki/WABOT-1"
+    "link": "https://www.waseda.jp/inst/cro/news-en/2025/06/03/19639/"
   },
   {
     "year": 1973,
@@ -117,7 +117,7 @@
     "title": "First AAAI Conference",
     "description": "The first conference of the American Association for Artificial Intelligence (AAAI) is held at Stanford, signaling a resurgence of interest in the field.",
     "category": "Research Breakthroughs",
-    "link": "https://aaai.org/about-aaai/aaai-history/"
+    "link": "https://purl.stanford.edu/pc756qc9834"
   },
   {
     "year": 1986,
@@ -165,7 +165,7 @@
     "title": "Long Short-Term Memory (LSTM)",
     "description": "Sepp Hochreiter and Jürgen Schmidhuber propose Long Short-Term Memory (LSTM), a type of recurrent neural network (RNN) architecture that becomes widely used for natural language processing.",
     "category": "Models & Architectures",
-    "link": "https://www.bioinf.jku.at/publications/older/2604.pdf"
+    "link": "https://doi.org/10.1162/neco.1997.9.8.1735"
   },
   {
     "year": 1998,
@@ -269,7 +269,7 @@
     "title": "OpenAI Founded",
     "description": "OpenAI is founded as a non-profit AI research company by Elon Musk, Sam Altman, and others with a mission to ensure that artificial general intelligence benefits all of humanity.",
     "category": "Companies & Investments",
-    "link": "https://openai.com/blog/introducing-openai"
+    "link": "https://openai.com/index/introducing-openai/"
   },
   {
     "year": 2016,
@@ -285,7 +285,7 @@
     "title": "Canada's National AI Strategy",
     "description": "Canada becomes the first country to release a national AI strategy, aiming to invest in research and talent.",
     "category": "Ethics & Policy",
-    "link": "https://cifar.ca/ai/pan-canadian-artificial-intelligence-strategy/"
+    "link": "https://cifar.ca/ai/"
   },
   {
     "year": 2017,
@@ -301,7 +301,7 @@
     "title": "AlphaGo Zero",
     "description": "DeepMind introduces AlphaGo Zero, which learns to play Go from scratch, without any human data, and surpasses all previous versions of AlphaGo.",
     "category": "Models & Architectures",
-    "link": "https://www.deepmind.com/blog/alphago-zero-learning-from-scratch"
+    "link": "https://deepmind.google/blog/alphago-zero-starting-from-scratch/"
   },
   {
     "year": 2018,
@@ -309,7 +309,7 @@
     "title": "OpenAI Releases GPT-1",
     "description": "OpenAI releases the first Generative Pre-trained Transformer (GPT-1), demonstrating the potential of large-scale unsupervised language models.",
     "category": "Public Releases",
-    "link": "https://openai.com/research/language-unsupervised"
+    "link": "https://openai.com/index/language-unsupervised/"
   },
   {
     "year": 2018,
@@ -325,7 +325,7 @@
     "title": "OpenAI Releases GPT-2",
     "description": "OpenAI announces GPT-2 but initially withholds the full model due to concerns about malicious use, sparking a debate about responsible AI disclosure.",
     "category": "Public Releases",
-    "link": "https://openai.com/blog/gpt-2-1-5b-release"
+    "link": "https://openai.com/index/gpt-2-1-5b-release/"
   },
   {
     "year": 2019,
@@ -333,7 +333,7 @@
     "title": "Turing Award for Deep Learning Pioneers",
     "description": "Geoffrey Hinton, Yann LeCun, and Yoshua Bengio receive the ACM A.M. Turing Award for their foundational work on deep learning.",
     "category": "Research Breakthroughs",
-    "link": "https://amturing.acm.org/award_winners/bengio_yoshua_1237255.cfm"
+    "link": "https://www.acm.org/media-center/2019/march/turing-award-2018"
   },
   {
     "year": 2019,
@@ -349,7 +349,7 @@
     "title": "Microsoft Invests $1 Billion in OpenAI",
     "description": "Microsoft announces a $1 billion investment in and partnership with OpenAI to build new Azure AI supercomputing technologies.",
     "category": "Companies & Investments",
-    "link": "https://blogs.microsoft.com/blog/2019/07/22/microsoft-and-openai-form-exclusive-computing-partnership-to-build-new-azure-ai-supercomputing-technologies/"
+    "link": "https://news.microsoft.com/source/2019/07/22/openai-forms-exclusive-computing-partnership-with-microsoft-to-build-new-azure-ai-supercomputing-technologies/"
   },
   {
     "year": 2019,
@@ -397,7 +397,7 @@
     "title": "OpenAI Releases DALL-E",
     "description": "OpenAI introduces DALL-E, a neural network that can generate images from text descriptions, bridging the gap between language and vision in AI.",
     "category": "Public Releases",
-    "link": "https://openai.com/research/dall-e"
+    "link": "https://openai.com/index/dall-e/"
   },
   {
     "year": 2021,
@@ -493,15 +493,7 @@
     "title": "Meta's Galactica LLM Pulled",
     "description": "Meta takes down its Galactica AI model, trained on scientific papers, after it was criticized for generating authoritative-sounding but often incorrect information.",
     "category": "Bombshell News",
-    "link": "https://www.theverge.com/2022/11/15/23460204/meta-galactica-ai-wikipedia-science-misinformation-research-paper"
-  },
-  {
-    "year": 2022,
-    "month": "November",
-    "title": "DeepSeek Founded",
-    "description": "Chinese AI company DeepSeek is founded, focusing on developing advanced, open-source Large Language Models.",
-    "category": "Companies & Investments",
-    "link": "https://www.deepseek.com/en/about"
+    "link": "https://www.technologyreview.com/2022/11/18/1063487/meta-large-language-model-ai-only-survived-three-days-gpt-3-science/"
   },
   {
     "year": 2023,
@@ -509,7 +501,7 @@
     "title": "Microsoft's Multi-billion Dollar Investment in OpenAI",
     "description": "Microsoft announces a new multi-year, multi-billion dollar investment in OpenAI, deepening their partnership.",
     "category": "Companies & Investments",
-    "link": "https://www.reuters.com/technology/microsoft-extends-openai-partnership-multi-year-multibillion-dollar-investment-2023-01-23/"
+    "link": "https://blogs.microsoft.com/blog/2023/01/23/microsoftandopenaiextendpartnership/"
   },
   {
     "year": 2023,
@@ -517,7 +509,7 @@
     "title": "Visual Artists Sue AI Art Generators",
     "description": "A class-action lawsuit is filed against Stability AI, Midjourney, and DeviantArt, alleging copyright infringement by training AI on artists' work without consent.",
     "category": "Ethics & Policy",
-    "link": "https://www.theverge.com/2023/1/16/23557028/ai-art-generators-stability-midjourney-deviantart-copyright-infringement-lawsuit"
+    "link": "https://www.theverge.com/2023/1/16/23557098/generative-ai-art-copyright-legal-lawsuit-stable-diffusion-midjourney-deviantart"
   },
   {
     "year": 2023,
@@ -597,7 +589,7 @@
     "title": "LLaMA 1 Model Weights Leaked",
     "description": "The weights for Meta's LLaMA model are leaked online via a BitTorrent link, making the powerful model widely accessible and sparking a wave of community-driven innovation and debate on open-access AI.",
     "category": "Bombshell News",
-    "link": "https://www.axios.com/2023/03/08/meta-ai-llama-model-leaked-4chan"
+    "link": "https://www.theverge.com/2023/3/8/23629362/meta-ai-language-model-llama-leak-online-misuse"
   },
   {
     "year": 2023,
@@ -609,11 +601,11 @@
   },
   {
     "year": 2023,
-    "month": "April",
+    "month": "May",
     "title": "Samsung Bans Generative AI",
     "description": "Samsung bans the use of generative AI tools like ChatGPT on its internal networks after discovering employees had leaked sensitive internal source code by uploading it to the platform.",
     "category": "Ethics & Policy",
-    "link": "https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-generative-ai-use-by-staff-after-chatgpt-leak"
+    "link": "https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-chatgpt-and-other-generative-ai-use-by-staff-after-leak"
   },
   {
     "year": 2023,
@@ -637,7 +629,15 @@
     "title": "Runway Releases Gen-2",
     "description": "AI video startup Runway releases Gen-2, a multimodal AI system that can generate videos from text prompts or images.",
     "category": "AI Tools",
-    "link": "https://runwayml.com/blog/presenting-gen-2/"
+    "link": "https://runway.com/research/gen-2"
+  },
+  {
+    "year": 2023,
+    "month": "July",
+    "title": "DeepSeek Founded",
+    "description": "Chinese AI company DeepSeek is founded, focusing on developing advanced, open-source Large Language Models.",
+    "category": "Companies & Investments",
+    "link": "https://en.wikipedia.org/wiki/DeepSeek"
   },
   {
     "year": 2023,
@@ -705,11 +705,11 @@
   },
   {
     "year": 2023,
-    "month": "October",
+    "month": "September",
     "title": "Amazon Invests in Anthropic",
     "description": "Amazon announces an initial investment of $1.25 billion in AI startup Anthropic, with the potential for the investment to grow to $4 billion.",
     "category": "Companies & Investments",
-    "link": "https://aws.amazon.com/blogs/aws/aws-and-anthropic-announce-strategic-collaboration-to-advance-generative-ai/"
+    "link": "https://www.aboutamazon.com/news/company-news/amazon-aws-anthropic-ai"
   },
   {
     "year": 2023,
@@ -717,7 +717,7 @@
     "title": "President Biden's Executive Order on AI",
     "description": "President Joe Biden signs a sweeping executive order to establish new standards for AI safety and security, protect privacy, and advance equity and civil rights.",
     "category": "Ethics & Policy",
-    "link": "https://www.whitehouse.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/"
+    "link": "https://bidenwhitehouse.archives.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/"
   },
   {
     "year": 2023,
@@ -733,7 +733,7 @@
     "title": "OpenAI DevDay: GPT-4 Turbo and Assistants API",
     "description": "OpenAI holds its first developer conference, announcing GPT-4 Turbo and the Assistants API for building agent-like experiences.",
     "category": "Public Releases",
-    "link": "https://openai.com/blog/new-models-and-developer-products-announced-at-devday"
+    "link": "https://openai.com/index/new-models-and-developer-products-announced-at-devday/"
   },
   {
     "year": 2023,
@@ -749,7 +749,7 @@
     "title": "Sam Altman Ousted and Reinstated as OpenAI CEO",
     "description": "In a shocking turn of events, OpenAI's board fires CEO Sam Altman, who is then hired by Microsoft, leading to an employee uproar and his eventual reinstatement as CEO of OpenAI five days later.",
     "category": "Bombshell News",
-    "link": "https://www.nytimes.com/2023/11/22/technology/openai-sam-altman-ceo-return.html"
+    "link": "https://openai.com/index/sam-altman-returns-as-ceo-openai-has-a-new-initial-board/"
   },
   {
     "year": 2023,
@@ -961,19 +961,19 @@
   },
   {
     "year": 2024,
+    "month": "March",
+    "title": "xAI Releases Grok-1.5",
+    "description": "xAI announces Grok-1.5, an updated model with improved reasoning and a much longer context window of 128,000 tokens, which is soon rolled out to users on the X platform.",
+    "category": "Public Releases",
+    "link": "https://x.ai/news/grok-1.5"
+  },
+  {
+    "year": 2024,
     "month": "April",
     "title": "Humane Ai Pin Ships to Negative Reviews",
     "description": "Humane's much-hyped Ai Pin begins shipping but receives largely negative reviews from major tech publications, highlighting the significant challenges of creating new AI-native hardware.",
     "category": "Bombshell News",
     "link": "https://www.tomsguide.com/ai/humane-ai-pin-review-roundup-this-is-a-disaster"
-  },
-  {
-    "year": 2024,
-    "month": "April",
-    "title": "Suno AI Music Generator Raises $125M",
-    "description": "Suno, an AI platform for music generation, raises $125 million in a funding round, signaling significant investor confidence and mainstream interest in AI-driven creativity tools.",
-    "category": "Companies & Investments",
-    "link": "https://www.suno.ai/blog/125m-series-b"
   },
   {
     "year": 2024,
@@ -989,7 +989,7 @@
     "title": "OpenAI Opens Tokyo Office",
     "description": "OpenAI expands its global presence by opening a new office in Tokyo, Japan, its first in Asia, to foster collaboration and adopt AI tools tailored for the Japanese market.",
     "category": "Companies & Investments",
-    "link": "https://www.reuters.com/technology/artificial-intelligence/openai-opens-first-asian-office-tokyo-2024-04-15/"
+    "link": "https://openai.com/index/introducing-openai-japan/"
   },
   {
     "year": 2024,
@@ -1009,11 +1009,11 @@
   },
   {
     "year": 2024,
-    "month": "April",
-    "title": "xAI Releases Grok-1.5",
-    "description": "xAI announces Grok-1.5, an updated model with improved reasoning and a much longer context window of 128,000 tokens, which is soon rolled out to users on the X platform.",
-    "category": "Public Releases",
-    "link": "https://www.theverge.com/2024/3/28/24114577/xai-grok-1-5-vision-model-elon-musk"
+    "month": "May",
+    "title": "Suno AI Music Generator Raises $125M",
+    "description": "Suno, an AI platform for music generation, raises $125 million in a funding round, signaling significant investor confidence and mainstream interest in AI-driven creativity tools.",
+    "category": "Companies & Investments",
+    "link": "https://suno.com/blog/fundraising-announcement-may-2024"
   },
   {
     "year": 2024,
@@ -1029,7 +1029,7 @@
     "title": "Microsoft 'Recall' Feature Sparks Privacy Backlash",
     "description": "Microsoft's announcement of the 'Recall' feature for Copilot+ PCs, which takes continuous screenshots of user activity, sparks a major privacy and security backlash among experts and the public.",
     "category": "Bombshell News",
-    "link": "https://www.bbc.com/news/articles/cd11lzddpz7o"
+    "link": "https://www.bbc.com/news/articles/cpwwqp6nx14o"
   },
   {
     "year": 2024,
@@ -1037,7 +1037,7 @@
     "title": "OpenAI Disbands Superalignment Team",
     "description": "OpenAI disbands its 'Superalignment' team, tasked with mitigating long-term AI risks, shortly after its leaders, co-founder Ilya Sutskever and Jan Leike, announce their resignations.",
     "category": "Bombshell News",
-    "link": "https://www.reuters.com/technology/artificial-intelligence/openai-dissolves-team-focused-ai-risks-the-information-reports-2024-05-17/"
+    "link": "https://www.wired.com/story/openai-superalignment-team-disbanded/"
   },
   {
     "year": 2024,
@@ -1045,7 +1045,7 @@
     "title": "US and China Hold First High-Level AI Talks",
     "description": "Senior officials from the United States and China meet in Geneva for their first high-level talks on artificial intelligence, discussing the risks and benefits of the technology.",
     "category": "Ethics & Policy",
-    "link": "https://www.bloomberg.com/news/articles/2024-05-14/us-china-hold-first-official-talks-on-artificial-intelligence"
+    "link": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/05/15/statement-from-nsc-spokesperson-adrienne-watson-on-the-u-s-prc-talks-on-ai-risk-and-safety-2/"
   },
   {
     "year": 2024,
@@ -1053,7 +1053,7 @@
     "title": "ElevenLabs Launches AI Sound Effects Generator",
     "description": "Voice AI company ElevenLabs launches a new tool for generating sound effects from text prompts, expanding the reach of generative AI into new creative domains beyond text, images, and music.",
     "category": "AI Tools",
-    "link": "https://elevenlabs.io/blog/elevenlabs-launches-text-to-sound-effects/"
+    "link": "https://elevenlabs.io/blog/sound-effects-are-here"
   },
   {
     "year": 2024,
@@ -1077,7 +1077,7 @@
     "title": "Scarlett Johansson vs. OpenAI",
     "description": "Actress Scarlett Johansson states she was 'shocked' and 'angered' by an OpenAI voice for ChatGPT that sounded 'eerily similar' to hers, after she had previously declined an offer to voice the assistant.",
     "category": "Bombshell News",
-    "link": "https://www.bbc.com/news/technology-69032913"
+    "link": "https://www.bbc.com/news/articles/c51188y6n6yo"
   },
   {
     "year": 2024,
@@ -1085,7 +1085,7 @@
     "title": "Google's AI Overviews Backlash",
     "description": "Google's new AI Overviews in Search faces widespread criticism for providing bizarre and incorrect answers, such as advising users to put glue on pizza.",
     "category": "Bombshell News",
-    "link": "https://arstechnica.com/information-technology/2024/05/googles-ai-gives-useless-and-incorrect-answers-but-its-not-hallucinating/"
+    "link": "https://blog.google/products-and-platforms/products/search/ai-overviews-update-may-2024/"
   },
   {
     "year": 2024,
@@ -1093,7 +1093,7 @@
     "title": "Microsoft Announces Copilot+ PCs",
     "description": "Microsoft unveils a new category of Windows PCs called Copilot+ PCs, designed with AI hardware and features built-in, including a controversial 'Recall' feature.",
     "category": "Hardware Advances",
-    "link": "https://www.theverge.com/2024/5/20/24159463/microsoft-copilot-plus-pcs-arm-chips-ai-features"
+    "link": "https://blogs.microsoft.com/blog/2024/05/20/introducing-copilot-pcs/"
   },
   {
     "year": 2024,
@@ -1101,7 +1101,23 @@
     "title": "Ilya Sutskever Departs OpenAI",
     "description": "Ilya Sutskever, OpenAI's co-founder and chief scientist who played a key role in the November 2023 leadership crisis, announces his departure from the company.",
     "category": "Bombshell News",
-    "link": "https://www.reuters.com/technology/artificial-intelligence/openai-co-founder-chief-scientist-ilya-sutskever-leaves-2024-05-14/"
+    "link": "https://www.theverge.com/2024/5/14/24156920/openai-chief-scientist-ilya-sutskever-leaves"
+  },
+  {
+    "year": 2024,
+    "month": "May",
+    "title": "xAI Secures $6 Billion Series B",
+    "description": "Elon Musk's artificial intelligence company, xAI, secures a massive $6 billion in a Series B funding round to build out its infrastructure and accelerate research and development.",
+    "category": "Companies & Investments",
+    "link": "https://x.ai/news/series-b"
+  },
+  {
+    "year": 2024,
+    "month": "May",
+    "title": "DeepSeek Releases V2 Language and Code Models",
+    "description": "DeepSeek AI open-sources DeepSeek-V2 and DeepSeek-Coder-V2, a powerful mixture-of-experts model and a specialized coding model, respectively, which are highly competitive with leading proprietary models.",
+    "category": "Public Releases",
+    "link": "https://arxiv.org/abs/2405.04434"
   },
   {
     "year": 2024,
@@ -1109,15 +1125,7 @@
     "title": "Microsoft Postpones 'Recall' Rollout",
     "description": "Following widespread criticism from security experts, Microsoft announces it will postpone the broad rollout of its 'Recall' feature, instead making it an opt-in preview for Windows Insiders.",
     "category": "Ethics & Policy",
-    "link": "https://www.theverge.com/2024/6/13/24177144/microsoft-windows-recall-delay-security-concerns"
-  },
-  {
-    "year": 2024,
-    "month": "June",
-    "title": "xAI Secures $6 Billion Series B",
-    "description": "Elon Musk's artificial intelligence company, xAI, secures a massive $6 billion in a Series B funding round to build out its infrastructure and accelerate research and development.",
-    "category": "Companies & Investments",
-    "link": "https://www.reuters.com/technology/artificial-intelligence/elon-musks-xai-raises-6-billion-funding-2024-05-27/"
+    "link": "https://blogs.windows.com/windowsexperience/2024/06/07/update-on-the-recall-preview-feature-for-copilot-pcs/"
   },
   {
     "year": 2024,
@@ -1125,7 +1133,7 @@
     "title": "NVIDIA Becomes World's Most Valuable Company",
     "description": "Driven by the AI boom, chipmaker NVIDIA surpasses Microsoft and Apple to become the world's most valuable public company.",
     "category": "Companies & Investments",
-    "link": "https://www.reuters.com/technology/nvidia-overtakes-microsoft-worlds-most-valuable-company-2024-06-18/"
+    "link": "https://www.cnbc.com/2024/06/18/nvidia-passes-microsoft-in-market-cap-is-most-valuable-public-company.html"
   },
   {
     "year": 2024,
@@ -1189,7 +1197,7 @@
     "title": "EU AI Act Takes Effect",
     "description": "The EU's landmark AI Act officially enters into force, beginning a phased implementation over the next two years to regulate AI systems based on their level of risk.",
     "category": "Ethics & Policy",
-    "link": "https://digital-strategy.ec.europa.eu/en/policies/ai-act"
+    "link": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai"
   },
   {
     "year": 2024,
@@ -1282,18 +1290,10 @@
   {
     "year": 2024,
     "month": "December",
-    "title": "DeepSeek Releases V2 Language and Code Models",
-    "description": "DeepSeek AI open-sources DeepSeek-V2 and DeepSeek-Coder-V2, a powerful mixture-of-experts model and a specialized coding model, respectively, which are highly competitive with leading proprietary models.",
-    "category": "Public Releases",
-    "link": "https://deepseek.com/blog/deepseek-v2"
-  },
-  {
-    "year": 2024,
-    "month": "December",
     "title": "xAI Releases Grok with Image Generation",
     "description": "xAI updates Grok with a new image generation model, code-named Aurora, making it available on the X platform.",
     "category": "Public Releases",
-    "link": "https://www.theverge.com/2024/12/7/24315445/xai-grok-aurora-image-generation-elon-musk"
+    "link": "https://x.ai/news/grok-image-generation-release"
   },
   {
     "year": 2025,
@@ -1477,7 +1477,7 @@
     "title": "Google Introduces Gemini 2.5 Computer Use",
     "description": "Google launches Gemini 2.5 Computer Use in preview, giving developers an experimental model that can operate web interfaces and complete browser tasks.",
     "category": "Agents",
-    "link": "https://developers.googleblog.com/en/introducing-gemini-2-5-computer-use/"
+    "link": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-computer-use-model/"
   },
   {
     "year": 2025,
@@ -1485,7 +1485,7 @@
     "title": "OpenAI Releases GPT-5.1",
     "description": "OpenAI launches GPT-5.1 with improved coding performance, instruction following, and lower latency compared with GPT-5.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-gpt-5-1/"
+    "link": "https://openai.com/index/gpt-5-1-for-developers/"
   },
   {
     "year": 2025,
@@ -1509,7 +1509,7 @@
     "title": "OpenAI Announces Retirement of Legacy ChatGPT Models",
     "description": "OpenAI announces it will retire GPT-5 Instant, GPT-5 Thinking, GPT-4o, and older reasoning preview models in ChatGPT as newer models become default.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/updating-the-chatgpt-model-picker/"
+    "link": "https://openai.com/index/retiring-gpt-4o-and-older-models/"
   },
   {
     "year": 2026,
@@ -1533,7 +1533,7 @@
     "title": "Google Releases Gemini 3 Deep Think",
     "description": "Google announces Gemini 3 Deep Think with stronger long-horizon reasoning and coding performance for advanced tasks.",
     "category": "Public Releases",
-    "link": "https://blog.google/products/gemini/google-gemini-3-deep-think-updates/"
+    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-deep-think/"
   },
   {
     "year": 2026,
@@ -1549,7 +1549,7 @@
     "title": "Google Releases Gemini 3.1 Pro",
     "description": "Google releases Gemini 3.1 Pro in Google AI Studio and Vertex AI, adding stronger multimodal reasoning and enterprise controls.",
     "category": "Public Releases",
-    "link": "https://blog.google/products/gemini/gemini-3-1-pro/"
+    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/"
   },
   {
     "year": 2026,
@@ -1557,7 +1557,7 @@
     "title": "OpenAI Releases GPT-5.3 Instant",
     "description": "OpenAI introduces GPT-5.3 Instant, a lower-latency model optimized for interactive applications and production chat experiences.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-gpt-5-3-instant/"
+    "link": "https://openai.com/index/gpt-5-3-instant/"
   },
   {
     "year": 2026,
@@ -1565,6 +1565,6 @@
     "title": "Google Releases Gemini 3.1 Flash-Lite",
     "description": "Google launches Gemini 3.1 Flash-Lite, a smaller and lower-cost model aimed at high-throughput use cases.",
     "category": "Public Releases",
-    "link": "https://blog.google/products/gemini/gemini-3-1-flash-lite/"
+    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-lite/"
   }
 ]
