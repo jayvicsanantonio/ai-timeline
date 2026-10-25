@@ -12,7 +12,7 @@ Common commands
 - Build and run production
   - pnpm build
   - pnpm start
-- Lint (ESLint via Next.js)
+- Lint (ESLint CLI, runs eslint .)
   - pnpm lint
   - Lint a single file: pnpm exec eslint path/to/file.tsx
   - Autofix: pnpm exec eslint . --fix
@@ -48,7 +48,7 @@ High-level architecture
   - Accessibility helpers in components/accessibility/ (skip to content).
 - Configuration and conventions
   - next.config.mjs: type and lint errors fail the build; outputFileTracingRoot is pinned to the project directory; images are unoptimized (no Next image optimizer).
-  - .eslintrc.json: extends "next" (defaults), with root: true so a parent checkout's config is not merged in.
+  - eslint.config.mjs: flat config that extends "next" (defaults) through FlatCompat, and ignores .claude/ so nested worktrees are not linted.
   - tsconfig.json:
     - strict: true, noEmit: true, moduleResolution: bundler, jsx: preserve.
     - Path alias: @/* → project root (used extensively for imports).

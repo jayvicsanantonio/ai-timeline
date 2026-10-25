@@ -343,15 +343,20 @@ function TimelineEventCard({
         data-testid="timeline-node"
         className="absolute left-2.5 lg:left-1/2 transform -translate-x-1/2 z-20"
       >
+        {/* The server always renders the hidden start state, so under reduced motion the node
+            and its card are shown at once after mounting instead of when they scroll into view */}
         <motion.div
           className="relative"
-          initial={
-            reduceMotion ? undefined : { scale: 0.8, opacity: 0 }
-          }
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={reduceMotion ? { scale: 1, opacity: 1 } : undefined}
           whileInView={
             reduceMotion ? undefined : { scale: 1, opacity: 1 }
           }
-          transition={{ duration: 0.25, ease: 'easeOut' }}
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { duration: 0.25, ease: 'easeOut' }
+          }
           viewport={{ once: true }}
         >
           <div className="w-5 h-5 bg-primary rounded-full border-4 border-background shadow-xl shadow-primary/35" />
@@ -362,19 +367,20 @@ function TimelineEventCard({
           Only the card plays the entrance animation, so its node dot stays on the line. */}
       <motion.div
         className={`w-full pl-10 lg:max-w-lg ${isLeft ? 'lg:pl-0 lg:pr-12' : 'lg:pl-12'} transform-gpu`}
-        initial={
-          reduceMotion
-            ? undefined
-            : { opacity: 0, y: 36, x: isLeft ? -70 : 70 }
-        }
+        initial={{ opacity: 0, y: 36, x: isLeft ? -70 : 70 }}
+        animate={reduceMotion ? { opacity: 1, y: 0, x: 0 } : undefined}
         whileInView={
           reduceMotion ? undefined : { opacity: 1, y: 0, x: 0 }
         }
-        transition={{
-          duration: 0.55,
-          ease: 'easeOut',
-          delay: Math.min(index * 0.012, 0.22),
-        }}
+        transition={
+          reduceMotion
+            ? { duration: 0 }
+            : {
+                duration: 0.55,
+                ease: 'easeOut',
+                delay: Math.min(index * 0.012, 0.22),
+              }
+        }
         viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
       >
         <motion.div

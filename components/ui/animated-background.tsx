@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useMemo } from "react"
+import { useId, useMemo } from "react"
 
 interface AnimatedBackgroundProps {
   variant?: "dots" | "grid" | "neural"
@@ -9,6 +9,9 @@ interface AnimatedBackgroundProps {
 }
 
 export function AnimatedBackground({ variant = "dots", className }: AnimatedBackgroundProps) {
+  // Each instance needs its own pattern id, since several neural backgrounds share the page
+  const patternId = useId()
+
   // Memoize dot positions to prevent hydration mismatches
   const dotPositions = useMemo(() => 
     Array.from({ length: 50 }).map((_, i) => ({
@@ -52,17 +55,17 @@ export function AnimatedBackground({ variant = "dots", className }: AnimatedBack
       <div className={`absolute inset-0 overflow-hidden ${className}`}>
         <svg className="absolute inset-0 w-full h-full opacity-10">
           <defs>
-            <pattern id="neural" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-              <circle cx="20" cy="20" r="2" fill="hsl(var(--primary))" />
-              <circle cx="80" cy="20" r="2" fill="hsl(var(--primary))" />
-              <circle cx="50" cy="50" r="3" fill="hsl(var(--primary))" />
-              <circle cx="20" cy="80" r="2" fill="hsl(var(--primary))" />
-              <circle cx="80" cy="80" r="2" fill="hsl(var(--primary))" />
-              <path d="M20 20 L50 50 L80 20" stroke="hsl(var(--primary))" strokeWidth="1" fill="none" />
-              <path d="M20 80 L50 50 L80 80" stroke="hsl(var(--primary))" strokeWidth="1" fill="none" />
+            <pattern id={patternId} x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <circle cx="20" cy="20" r="2" fill="var(--primary)" />
+              <circle cx="80" cy="20" r="2" fill="var(--primary)" />
+              <circle cx="50" cy="50" r="3" fill="var(--primary)" />
+              <circle cx="20" cy="80" r="2" fill="var(--primary)" />
+              <circle cx="80" cy="80" r="2" fill="var(--primary)" />
+              <path d="M20 20 L50 50 L80 20" stroke="var(--primary)" strokeWidth="1" fill="none" />
+              <path d="M20 80 L50 50 L80 80" stroke="var(--primary)" strokeWidth="1" fill="none" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#neural)" />
+          <rect width="100%" height="100%" fill={`url(#${patternId})`} />
         </svg>
       </div>
     )

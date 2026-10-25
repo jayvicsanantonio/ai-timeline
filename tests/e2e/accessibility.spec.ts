@@ -1,5 +1,6 @@
 // End-to-end accessibility checks for the AI Timeline page in real Chromium:
-// landmarks, era headings, keyboard access to event links, focus styles and cursor behavior.
+// landmarks, era headings, keyboard access to event links, focus styles, cursor behavior and
+// narrative bridges that hold still when reduced motion is preferred.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 
@@ -12,6 +13,8 @@ const ERA_TITLES = [
 ]
 
 const EVENT_LINKS = 'h3 a[target="_blank"]'
+
+const BRIDGE_TITLES = [...ERA_TITLES, "Patterns of Progress"]
 
 // React marks hydrated DOM nodes with a fiber key; checks that depend on client
 // effects wait for it so they cannot pass against the server-rendered HTML alone.
@@ -34,6 +37,11 @@ async function tabToFirstEventLink(page: Page) {
     }
   }
   throw new Error("No event link received focus within 100 Tab presses")
+}
+
+// A narrative bridge is the section that holds its level-2 title.
+function narrativeBridge(page: Page, title: string) {
+  return page.getByRole("heading", { level: 2, name: title, exact: true }).locator("xpath=ancestor::section[1]")
 }
 
 test.describe("landmarks and headings", () => {
@@ -151,6 +159,52 @@ test.describe("cursor when reduced motion is preferred", () => {
 
     await expect(page.locator("body")).toHaveCSS("cursor", "auto")
     await expect(page.getByTestId("futuristic-cursor")).toHaveCount(0)
+  })
+})
+
+test.describe("narrative bridges when reduced motion is preferred", () => {
+  test.use({ reducedMotion: "reduce" })
+
+  test("shows every bridge fully opaque, without scaling or moving it", async ({ page }) => {
+    await page.goto("/")
+    await waitForHydration(page)
+
+    for (const title of BRIDGE_TITLES) {
+      const bridge = narrativeBridge(page, title)
+      await expect(bridge).toHaveCSS("opacity", "1")
+      await expect(bridge).toHaveCSS("transform", "none")
+    }
+  })
+
+  test("keeps the background and particles of an on-screen bridge still", async ({ page }) => {
+    await page.goto("/")
+    await waitForHydration(page)
+
+    const bridge = narrativeBridge(page, ERA_TITLES[0])
+    await bridge.evaluate((section) => section.scrollIntoView({ block: "center" }))
+
+    // Waits out the one-time entrance animations, after which nothing in the bridge is transformed.
+    const transformedElements = () =>
+      bridge.evaluate((section) =>
+        [section, ...section.querySelectorAll("*")]
+          .map((element) => getComputedStyle(element).transform)
+          .filter((transform) => transform !== "none"),
+      )
+    await expect.poll(transformedElements).toEqual([])
+
+    const styleChanges = await bridge.evaluate(
+      (section) =>
+        new Promise<number>((resolve) => {
+          const changed = new Set<Node>()
+          const observer = new MutationObserver((records) => records.forEach((record) => changed.add(record.target)))
+          observer.observe(section, { attributes: true, attributeFilter: ["style"], subtree: true })
+          setTimeout(() => {
+            observer.disconnect()
+            resolve(changed.size)
+          }, 1000)
+        }),
+    )
+    expect(styleChanges).toBe(0)
   })
 })
 
