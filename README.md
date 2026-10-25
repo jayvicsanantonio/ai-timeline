@@ -1,6 +1,6 @@
 # AI Timeline: A Comprehensive History of Artificial Intelligence
 
-_An interactive, cinematic exploration of AI's evolution from 1943 to March 2026_
+_An interactive, cinematic exploration of AI's evolution from 1943 to October 2026_
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jayvic-san-antonios-projects/v0-image-analysis)
 [![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js%2015-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
@@ -9,11 +9,11 @@ _An interactive, cinematic exploration of AI's evolution from 1943 to March 2026
 
 ##  Overview
 
-This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **196 curated events** spanning from 1943 to March 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
+This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **218 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
-- ** Comprehensive Dataset**: 196 meticulously researched AI milestones with verified sources
+- ** Comprehensive Dataset**: 218 meticulously researched AI milestones with verified sources
 - ** Cinematic Experience**: Framer Motion-powered animations and transitions
 - ** Responsive Design**: Optimized for desktop, tablet, and mobile experiences
 - ** Accessibility First**: WCAG 2.1 compliant with focus management and reduced motion support
@@ -212,7 +212,7 @@ This project demonstrates:
 
 ##  Metrics & Performance
 
-- **196 Events**: Comprehensive historical coverage
+- **218 Events**: Comprehensive historical coverage
 - **< 3s Load Time**: Optimized performance metrics
 - **AAA Accessibility**: Full WCAG compliance
 - **Mobile-First**: Responsive across all devices
