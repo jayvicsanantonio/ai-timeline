@@ -1,8 +1,10 @@
 // End-to-end tests for the timeline page running in a real Next.js server.
-// Covers error-free loading, the prologue filter, category badge colors on real data, and the neural backgrounds.
-import { expect, test } from "@playwright/test"
+// Covers error-free loading with and without reduced motion, the prologue filter, category badge colors
+// on real data, the neural backgrounds, and timeline cards that show at once when reduced motion is preferred.
+import { expect, test, type Page } from "@playwright/test"
 
-test("loads and scrolls the whole timeline without console or page errors", async ({ page }) => {
+// Loads the page, scrolls through all of it, and returns every console error and uncaught page error.
+async function loadAndScrollTimeline(page: Page) {
   const errors: string[] = []
   page.on("console", (message) => {
     if (message.type() === "error") errors.push(message.text())
@@ -19,7 +21,43 @@ test("loads and scrolls the whole timeline without console or page errors", asyn
     }
   })
 
-  expect(errors).toEqual([])
+  return errors
+}
+
+test("loads and scrolls the whole timeline without console or page errors", async ({ page }) => {
+  expect(await loadAndScrollTimeline(page)).toEqual([])
+})
+
+test.describe("with reduced motion", () => {
+  test.use({ reducedMotion: "reduce" })
+
+  test("hydrates and scrolls the whole timeline without console or page errors", async ({ page }) => {
+    expect(await loadAndScrollTimeline(page)).toEqual([])
+  })
+
+  test("shows every timeline card and node dot at once, without moving them in", async ({ page }) => {
+    await page.goto("/")
+    await expect(page.locator("article").first()).toBeAttached()
+
+    // Lists each card and node dot that is still faded or offset from its resting place.
+    const hiddenParts = () =>
+      page.locator("article").evaluateAll((articles) =>
+        articles.flatMap((article, index) => {
+          const parts = {
+            [`node ${index}`]: article.querySelector('[data-testid="timeline-node"] > div')!,
+            [`card ${index}`]: article.children[1],
+          }
+          return Object.entries(parts)
+            .filter(([, part]) => {
+              const style = getComputedStyle(part)
+              return style.opacity !== "1" || style.transform !== "none"
+            })
+            .map(([label]) => label)
+        }),
+      )
+
+    await expect.poll(hiddenParts).toEqual([])
+  })
 })
 
 test("applies the prologue blur and brightness filter", async ({ page }) => {

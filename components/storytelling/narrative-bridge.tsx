@@ -1,9 +1,10 @@
 "use client"
 
-import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion"
+import { motion, useInView, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
 import { TextReveal } from "@/components/animations/text-reveal"
 import { ParallaxContainer } from "@/components/animations/parallax-container"
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 
 interface NarrativeBridgeProps {
   title: string
@@ -15,7 +16,7 @@ interface NarrativeBridgeProps {
 
 export function NarrativeBridge({ title, subtitle, description, era, className }: NarrativeBridgeProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = usePrefersReducedMotion()
   const inView = useInView(containerRef)
   const shouldAnimateAmbient = inView && !reduceMotion
 

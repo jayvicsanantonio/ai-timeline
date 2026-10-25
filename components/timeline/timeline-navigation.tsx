@@ -1,8 +1,9 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { cn } from '@/lib/utils';
 
 interface TimelineNavigationSection {
@@ -27,7 +28,7 @@ export function TimelineNavigation({
   sections,
   className,
 }: TimelineNavigationProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const [activeId, setActiveId] = useState(sections[0]?.id ?? '');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isMobileListOpen, setIsMobileListOpen] = useState(false);
