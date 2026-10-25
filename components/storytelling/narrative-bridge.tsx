@@ -1,9 +1,10 @@
 "use client"
 
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion, useInView, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
 import { TextReveal } from "@/components/animations/text-reveal"
 import { ParallaxContainer } from "@/components/animations/parallax-container"
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 
 interface NarrativeBridgeProps {
   title: string
@@ -15,14 +16,18 @@ interface NarrativeBridgeProps {
 
 export function NarrativeBridge({ title, subtitle, description, era, className }: NarrativeBridgeProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const reduceMotion = usePrefersReducedMotion()
+  const inView = useInView(containerRef)
+  const shouldAnimateAmbient = inView && !reduceMotion
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   })
 
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.9, 1, 1, 0.9])
-  const y = useTransform(scrollYProgress, [0, 1], [50, -50])
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], reduceMotion ? [1, 1, 1, 1] : [0, 1, 1, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], reduceMotion ? [1, 1, 1, 1] : [0.9, 1, 1, 0.9])
+  const y = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [50, -50])
 
   return (
     <motion.section
@@ -30,7 +35,7 @@ export function NarrativeBridge({ title, subtitle, description, era, className }
       className={`relative py-32 overflow-hidden ${className}`}
       style={{ opacity, scale, y }}
     >
-      <ParallaxContainer speed="slow" className="absolute inset-0">
+      <ParallaxContainer speed="slow" intensity={reduceMotion ? 0 : 1} className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
       </ParallaxContainer>
 
@@ -83,29 +88,31 @@ export function NarrativeBridge({ title, subtitle, description, era, className }
         </div>
       </div>
 
-      <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-primary/20 rounded-full"
-            style={{
-              left: `${20 + i * 15}%`,
-              top: `${30 + (i % 2) * 40}%`,
-            }}
-            animate={{
-              y: [-20, 20, -20],
-              opacity: [0.2, 0.6, 0.2],
-              scale: [0.5, 1, 0.5],
-            }}
-            transition={{
-              duration: 4 + i * 0.5,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              delay: i * 0.3,
-            }}
-          />
-        ))}
-      </div>
+      {shouldAnimateAmbient && (
+        <div className="absolute inset-0 pointer-events-none">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-primary/20 rounded-full"
+              style={{
+                left: `${20 + i * 15}%`,
+                top: `${30 + (i % 2) * 40}%`,
+              }}
+              animate={{
+                y: [-20, 20, -20],
+                opacity: [0.2, 0.6, 0.2],
+                scale: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: i * 0.3,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </motion.section>
   )
 }

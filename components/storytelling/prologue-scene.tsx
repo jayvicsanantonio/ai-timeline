@@ -4,7 +4,6 @@ import {
   motion,
   useInView,
   useMotionTemplate,
-  useReducedMotion,
   useScroll,
   useTransform,
   useSpring,
@@ -12,6 +11,7 @@ import {
 import { useMemo, useRef } from 'react';
 import { HeroTitle } from '@/components/ui/hero-title';
 import { AnimatedBackground } from '@/components/ui/animated-background';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 
 const FLOATING_CODE_STRINGS = [
   'if (intelligence)',
@@ -30,7 +30,7 @@ const FLOATING_CODE_STRINGS = [
 
 export function PrologueScene() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const inView = useInView(containerRef, {
     amount: 0.2,
     initial: true,
