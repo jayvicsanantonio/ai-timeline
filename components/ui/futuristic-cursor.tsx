@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 // Keep in sync with the media query in app/globals.css that hides the system cursor.
 const CUSTOM_CURSOR_MEDIA_QUERY = "(pointer: fine) and (prefers-reduced-motion: no-preference)"
 
+// Precision archival reticle cursor with near-instantaneous tracking (high stiffness, critical damping)
 export function FuturisticCursor() {
   const [isEnabled, setIsEnabled] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -53,45 +54,32 @@ export function FuturisticCursor() {
   return (
     <div aria-hidden="true" data-testid="futuristic-cursor">
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-primary rounded-full pointer-events-none z-50 mix-blend-difference"
+        className="fixed top-0 left-0 z-50 h-2 w-2 rounded-full bg-primary pointer-events-none mix-blend-difference"
         animate={{
           x: mousePosition.x - 4,
           y: mousePosition.y - 4,
-          scale: isHovering ? 1.5 : 1,
+          scale: isHovering ? 1.4 : 1,
         }}
         transition={{
           type: "spring",
-          stiffness: 500,
-          damping: 28,
-          scale: { duration: 0.2 },
+          stiffness: 1000,
+          damping: 50,
+          scale: { duration: 0.12 },
         }}
       />
 
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 border border-primary/50 rounded-full pointer-events-none z-50 mix-blend-difference"
+        className="fixed top-0 left-0 z-50 h-6 w-6 rounded-full border border-primary/50 pointer-events-none mix-blend-difference"
         animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-          scale: isHovering ? 1.5 : 1,
+          x: mousePosition.x - 12,
+          y: mousePosition.y - 12,
+          scale: isHovering ? 1.45 : 1,
         }}
         transition={{
           type: "spring",
-          stiffness: 150,
-          damping: 15,
-          scale: { duration: 0.2 },
-        }}
-      />
-
-      <motion.div
-        className="fixed top-0 left-0 w-1 h-1 bg-primary/30 rounded-full pointer-events-none z-50"
-        animate={{
-          x: mousePosition.x - 2,
-          y: mousePosition.y - 2,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 100,
-          damping: 20,
+          stiffness: 650,
+          damping: 38,
+          scale: { duration: 0.15 },
         }}
       />
     </div>

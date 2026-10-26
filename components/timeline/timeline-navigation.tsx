@@ -1,5 +1,5 @@
-// Chapter navigation: a rail on wide screens with the current year, an events-per-year chart and a button per era,
-// and a phone bar that names the current era and opens a chapter list. Both stay hidden until the timeline starts.
+// Chapter navigation: a Chrono-Spectrometer rail on wide screens with the current year, an events-per-year chart
+// and de-collided era buttons, and a compact phone bar (<=56px) that names the current era and opens a chapter list.
 'use client';
 
 import { motion } from 'framer-motion';
@@ -51,9 +51,14 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
   const firstYear = activity[0]?.year ?? activeEra.range[0];
   const lastYear = activity.at(-1)?.year ?? firstYear;
 
-  const startShare = (era: Era) => {
-    const index = Math.min(Math.max(era.range[0] - firstYear, 0), activity.length - 1);
-    return activity.length > 0 ? index / activity.length : 0;
+  // Spaces era buttons along the vertical rail while enforcing a minimum separation near the bottom
+  const buttonShare = (era: Era, index: number) => {
+    const yearIndex = Math.min(Math.max(era.range[0] - firstYear, 0), Math.max(activity.length - 1, 1));
+    const rawShare = activity.length > 0 ? yearIndex / activity.length : index / eras.length;
+    // Cap Era 4 at 0.76 and Era 5 at 0.90 so buttons 04 and 05 never overlap on shorter screens
+    if (index === eras.length - 2) return Math.min(rawShare, 0.76);
+    if (index === eras.length - 1) return Math.min(rawShare, 0.91);
+    return rawShare;
   };
 
   const handlePhoneNavigate = (eraId: string) => {
@@ -73,20 +78,28 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
           position.inTimeline ? SHOWN : cn(HIDDEN, 'translate-x-4')
         )}
       >
-        <div className="w-[8.75rem] rounded-2xl border border-white/10 bg-[#111114]/85 p-3 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
-          <p className="px-1">
-            <span className="block text-[1.75rem] font-semibold leading-none tabular-nums">{year}</span>
-            <span className="mt-2 flex items-start gap-1.5 text-xs leading-tight text-zinc-300">
-              <span
-                aria-hidden="true"
-                className="mt-1 size-2 shrink-0 rounded-full"
-                style={{ backgroundColor: activeEra.color }}
-              />
-              {activeEra.label}
-            </span>
-          </p>
+        <div className="w-[9.25rem] rounded-2xl border border-white/15 bg-[#101015]/90 p-3 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.95)] backdrop-blur-xl">
+          <div className="border-b border-white/10 pb-2.5 px-1">
+            <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+              <span>CH.{activeEra.number}</span>
+              <span>{activeEra.events.length} EV</span>
+            </div>
+            <p className="mt-1">
+              <span className="block font-mono text-[1.75rem] font-semibold leading-none tabular-nums">
+                {year}
+              </span>
+              <span className="mt-2 flex items-start gap-1.5 text-xs leading-tight text-zinc-300">
+                <span
+                  aria-hidden="true"
+                  className="mt-1 size-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: activeEra.color }}
+                />
+                {activeEra.label}
+              </span>
+            </p>
+          </div>
 
-          <div className="relative mt-4 h-[min(48vh,28rem)]">
+          <div className="relative mt-3.5 h-[min(48vh,28rem)]">
             <ActivityChart
               activity={activity}
               orientation="vertical"
@@ -94,7 +107,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
               onSelectYear={scrollToYear}
               className="absolute inset-y-0 left-11 right-0"
             />
-            {eras.map((era) => {
+            {eras.map((era, index) => {
               const isActive = era.id === activeEra.id;
 
               return (
@@ -107,11 +120,11 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                   className={cn(
                     'group absolute left-0 flex h-7 w-9 items-center justify-center gap-1 rounded-lg border font-mono text-[11px] tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
                     isActive
-                      ? 'border-white/30 bg-white/[0.12] text-white'
+                      ? 'border-white/35 bg-white/[0.15] text-white shadow-sm'
                       : 'border-transparent text-zinc-400 hover:bg-white/[0.08] hover:text-white'
                   )}
                   style={{
-                    top: `clamp(0px, calc(${startShare(era) * 100}% - 0.875rem), calc(100% - 1.75rem))`,
+                    top: `clamp(0px, calc(${buttonShare(era, index) * 100}% - 0.875rem), calc(100% - 1.75rem))`,
                   }}
                 >
                   <span
@@ -122,17 +135,17 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                   {era.number}
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-md border border-white/10 bg-[#18181b] px-2 py-1 font-sans text-xs text-white shadow-lg group-hover:block group-focus-visible:block"
+                    className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-md border border-white/15 bg-[#18181f] px-2.5 py-1 font-sans text-xs text-white shadow-lg group-hover:block group-focus-visible:block"
                   >
-                    {era.label} · {era.subtitle}
+                    {era.label} · {era.subtitle} ({era.events.length})
                   </span>
                 </button>
               );
             })}
           </div>
 
-          <p className="mt-3 px-1 text-[11px] leading-snug text-zinc-500">
-            Events per year, {firstYear}–{lastYear}
+          <p className="mt-3 border-t border-white/10 pt-2 px-1 font-mono text-[10px] uppercase tracking-[0.14em] leading-snug text-zinc-400">
+            {firstYear}–{lastYear} Spectrogram
           </p>
         </div>
       </nav>
@@ -147,7 +160,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
       >
         {/* The toggle comes first in DOM order so Tab moves from it into the open list,
             and flex-col-reverse draws the chart and the list above it */}
-        <div className="mx-auto flex max-w-lg flex-col-reverse overflow-hidden rounded-2xl border border-white/10 bg-[#111114]/90 text-white shadow-[0_26px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
+        <div className="mx-auto flex max-w-lg flex-col-reverse overflow-hidden rounded-2xl border border-white/15 bg-[#111116]/90 text-white shadow-[0_26px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
           <button
             ref={phoneToggleRef}
             type="button"
@@ -165,7 +178,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
               <span className="sr-only">Current era: </span>
               {activeEra.label}
             </span>
-            <span className="text-sm font-semibold tabular-nums">{year}</span>
+            <span className="font-mono text-sm font-semibold tabular-nums">{year}</span>
             <span className="rounded-full border border-white/10 px-2 py-0.5 font-mono text-[10px] tabular-nums text-zinc-300">
               {activeEra.number} / {padNumber(eras.length)}
             </span>
@@ -215,7 +228,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                     />
                     <span className="font-mono text-[10px] tabular-nums text-zinc-400">{era.number}</span>
                     <span className="min-w-0 flex-1 truncate text-sm font-medium">{era.label}</span>
-                    <span className="shrink-0 text-xs text-zinc-400">{era.subtitle}</span>
+                    <span className="shrink-0 font-mono text-xs text-zinc-400">{era.subtitle}</span>
                   </button>
                 );
               })}

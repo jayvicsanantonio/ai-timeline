@@ -1,10 +1,11 @@
-// The timeline's toolbar: a search box, a panel of category toggles and a live count of the events shown.
-// The filters narrow every era at once, and the panel closes on Escape, on a click outside or from its toggle.
+// The timeline's precision command bar: search box, category toggle matrix with density bars, live event count,
+// and keyboard shortcut telemetry. Closes on Escape, on a click outside, or from its toggle.
 'use client';
 
 import { ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type Ref } from 'react';
 import { CategoryIcon } from '@/components/ui/category-icon';
+import { ERA_DEFINITIONS } from '@/lib/eras';
 import { isFiltering, NO_FILTERS, type TimelineFilters } from '@/lib/timeline-filter';
 import { cn } from '@/lib/utils';
 import { TIMELINE_CATEGORIES, type TimelineCategory } from '@/types/timeline';
@@ -98,7 +99,7 @@ export function TimelineControls({
     <div
       ref={setRoot}
       className={cn(
-        'sticky top-0 z-40 border-b border-white/10 bg-[#0b0b0d]/85 text-white backdrop-blur-xl',
+        'sticky top-0 z-40 border-b border-white/10 bg-[#0a0a0e]/90 text-white backdrop-blur-xl',
         className
       )}
       onKeyDown={closePanelOnEscape}
@@ -120,11 +121,11 @@ export function TimelineControls({
             placeholder={`Search ${totalCount} events`}
             value={filters.query}
             onChange={(event) => onFiltersChange({ ...filters, query: event.target.value })}
-            className="h-10 w-full rounded-full border border-white/10 bg-white/[0.06] pl-10 pr-10 text-[15px] text-white placeholder:text-zinc-500 focus:border-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            className="h-10 w-full rounded-full border border-white/15 bg-white/[0.06] pl-10 pr-10 text-[15px] text-white placeholder:text-zinc-500 focus:border-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
           />
           <kbd
             aria-hidden="true"
-            className="pointer-events-none absolute right-3 hidden rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-400 lg:block"
+            className="pointer-events-none absolute right-3 hidden rounded border border-white/15 bg-white/[0.04] px-1.5 font-mono text-[11px] text-zinc-400 lg:block"
           >
             /
           </kbd>
@@ -140,14 +141,14 @@ export function TimelineControls({
           className={cn(
             'inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40',
             pickedCount > 0 || isPanelOpen
-              ? 'border-white/30 bg-white/[0.12] text-white'
-              : 'border-white/10 bg-white/[0.06] text-zinc-200 hover:bg-white/[0.1]'
+              ? 'border-white/35 bg-white/[0.14] text-white'
+              : 'border-white/15 bg-white/[0.06] text-zinc-200 hover:bg-white/[0.1]'
           )}
         >
           <SlidersHorizontal aria-hidden="true" className="size-4" />
           <span className="hidden sm:inline">Categories</span>
           {pickedCount > 0 ? (
-            <span className="grid min-w-5 place-items-center rounded-full bg-white px-1.5 text-xs font-semibold text-black">
+            <span className="grid min-w-5 place-items-center rounded-full bg-white px-1.5 font-mono text-xs font-semibold text-black">
               {pickedCount}
             </span>
           ) : null}
@@ -164,14 +165,14 @@ export function TimelineControls({
             filtering ? 'w-full sm:w-auto' : 'sr-only sm:not-sr-only'
           )}
         >
-          <p role="status" className="text-sm text-zinc-400">
+          <p role="status" className="font-mono text-xs uppercase tracking-[0.14em] text-zinc-300">
             {filtering ? `Showing ${shownCount} of ${totalCount} events` : `${totalCount} events`}
           </p>
           {filtering ? (
             <button
               type="button"
               onClick={clearFilters}
-              className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm font-medium text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-white/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
               <X aria-hidden="true" className="size-3.5" />
               Clear filters
@@ -179,26 +180,41 @@ export function TimelineControls({
           ) : null}
         </div>
 
-        <p
+        {/* Era Spectral Legend + Keyboard Shortcuts on wide viewports */}
+        <div
           aria-hidden="true"
-          className="ml-auto hidden items-center gap-1.5 text-xs text-zinc-500 xl:flex"
+          className="ml-auto hidden items-center gap-4 text-xs text-zinc-400 xl:flex"
         >
-          <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">J</kbd>
-          <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">K</kbd>
-          events
-          <span className="px-1">·</span>
-          <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">1</kbd>
-          –
-          <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">5</kbd>
-          eras
-        </p>
+          <span className="flex items-center gap-1.5 border-r border-white/10 pr-4 font-mono text-[11px] uppercase tracking-[0.16em]">
+            {ERA_DEFINITIONS.map((era) => (
+              <span
+                key={era.id}
+                className="size-2 rounded-full"
+                style={{ backgroundColor: era.color }}
+                title={era.label}
+              />
+            ))}
+            <span className="ml-1 text-zinc-500">5 Substrates</span>
+          </span>
+
+          <span className="flex items-center gap-1.5 font-mono text-[11px] text-zinc-400">
+            <kbd className="rounded border border-white/15 bg-white/[0.04] px-1.5 text-zinc-300">J</kbd>
+            <kbd className="rounded border border-white/15 bg-white/[0.04] px-1.5 text-zinc-300">K</kbd>
+            <span>step</span>
+            <span className="px-0.5">·</span>
+            <kbd className="rounded border border-white/15 bg-white/[0.04] px-1.5 text-zinc-300">1</kbd>
+            –
+            <kbd className="rounded border border-white/15 bg-white/[0.04] px-1.5 text-zinc-300">5</kbd>
+            <span>eras</span>
+          </span>
+        </div>
 
         {isPanelOpen ? (
           <div
             id={panelId}
             role="group"
             aria-label="Filter by category"
-            className="absolute inset-x-4 top-full mt-2 grid max-h-[70vh] gap-1.5 overflow-y-auto rounded-2xl border border-white/10 bg-[#141417] p-2 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:inset-x-auto sm:left-6 sm:w-[38rem] sm:grid-cols-2 lg:w-[46rem] lg:grid-cols-3"
+            className="absolute inset-x-4 top-full mt-2 grid max-h-[70vh] gap-1.5 overflow-y-auto rounded-2xl border border-white/15 bg-[#121217] p-2.5 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.95)] backdrop-blur-xl sm:inset-x-auto sm:left-6 sm:w-[38rem] sm:grid-cols-2 lg:w-[48rem] lg:grid-cols-3"
           >
             {TIMELINE_CATEGORIES.map((category) => {
               const isPicked = filters.categories.includes(category);
@@ -213,12 +229,17 @@ export function TimelineControls({
                     'flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40',
                     isPicked
                       ? 'border-white/40 bg-white text-black'
-                      : 'border-transparent text-zinc-200 hover:bg-white/[0.08]'
+                      : 'border-white/[0.06] bg-white/[0.02] text-zinc-200 hover:border-white/20 hover:bg-white/[0.08]'
                   )}
                 >
                   <CategoryIcon category={category} className="size-4 shrink-0" />
                   <span className="min-w-0 flex-1">{category}</span>{' '}
-                  <span className={cn('tabular-nums', isPicked ? 'text-black/60' : 'text-zinc-500')}>
+                  <span
+                    className={cn(
+                      'font-mono text-xs tabular-nums',
+                      isPicked ? 'text-black/70' : 'text-zinc-400'
+                    )}
+                  >
                     {categoryCounts[category]}
                     <span className="sr-only"> events</span>
                   </span>

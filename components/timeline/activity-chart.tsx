@@ -1,5 +1,5 @@
-// Draws how many timeline events happened each year as a seismograph of thin bars colored by era.
-// Events hidden by the filters stay as a faint ghost of each year's total, and a year can be picked to jump to it.
+// Draws how many timeline events happened each year as a Chrono-Spectrometer of thin bars colored by era.
+// Non-zero years carry a 3px minimum visual floor so early-era milestones stay legible and clickable.
 'use client';
 
 import { useState } from 'react';
@@ -54,6 +54,7 @@ export function ActivityChart({
   const hoveredPosition = hoveredIndex === null ? 0 : (hoveredIndex + 0.5) / activity.length;
   const alignment = readoutAlignment(hoveredPosition);
   const barEnd = isHorizontal ? 'inset-x-0 bottom-0 rounded-t-[2px]' : 'inset-y-0 left-0 rounded-r-[2px]';
+  const minFloor = isHorizontal ? 'min-h-[3px]' : 'min-w-[3px]';
 
   return (
     <div
@@ -86,7 +87,7 @@ export function ActivityChart({
             >
               <span
                 data-part="total"
-                className={cn('absolute opacity-25', barEnd)}
+                className={cn('absolute opacity-25', barEnd, year.total > 0 && minFloor)}
                 style={{ [length]: share(year.total, busiest), backgroundColor: color }}
               />
               <span
@@ -94,6 +95,7 @@ export function ActivityChart({
                 className={cn(
                   'absolute transition-opacity',
                   barEnd,
+                  year.matching > 0 && minFloor,
                   hoveredIndex !== null && hoveredIndex !== index && !isCurrent && 'opacity-70'
                 )}
                 style={{ [length]: share(year.matching, busiest), backgroundColor: color }}
@@ -117,7 +119,7 @@ export function ActivityChart({
       {hovered ? (
         <p
           className={cn(
-            'pointer-events-none absolute z-10 whitespace-nowrap rounded-md border border-white/10 bg-[#18181b] px-2 py-1 text-xs font-medium text-white shadow-lg',
+            'pointer-events-none absolute z-10 whitespace-nowrap rounded-md border border-white/15 bg-[#16161c] px-2.5 py-1 font-mono text-xs font-medium text-white shadow-lg',
             isHorizontal
               ? cn(
                   'bottom-full mb-2',

@@ -1,4 +1,4 @@
-/* Global styles: Tailwind, the theme tokens for the page chrome and base elements, and the five era interfaces.
+/* Global styles: Tailwind, the theme tokens for the Turing Archive observatory chrome, and the five era interfaces.
    Every animation here runs only when the reader allows motion. */
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -41,22 +41,22 @@
   --sidebar-ring: rgba(0, 0, 0, 0.1);
 }
 
-/* The page chrome is a neutral near-black, so each era's own interface carries the color */
+/* The page chrome is a neutral near-black archival observatory, so each era's own interface carries the color */
 .dark {
-  --background: #0a0a0b;
-  --foreground: #ededed;
-  --card: #141416;
-  --card-foreground: #ededed;
-  --popover: #141416;
-  --popover-foreground: #ededed;
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --card: #121216;
+  --card-foreground: #f4f4f5;
+  --popover: #121216;
+  --popover-foreground: #f4f4f5;
   --primary: #f4f4f5;
-  --primary-foreground: #0a0a0b;
+  --primary-foreground: #09090b;
   --secondary: #27272a;
-  --secondary-foreground: #ededed;
+  --secondary-foreground: #f4f4f5;
   --muted: #18181b;
   --muted-foreground: #a1a1aa;
   --accent: #27272a;
-  --accent-foreground: #ededed;
+  --accent-foreground: #f4f4f5;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
   --border: #27272a;
@@ -172,8 +172,15 @@
   }
 }
 
-/* The five era interfaces. Each era draws its events in the computer interface of its day. */
+/* The Turing Archive observatory grid and the five era interfaces. */
 @layer components {
+  .archive-grid-bg {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
   /* The opening's title, introduction and chart rise into place once, on load */
   @media (prefers-reduced-motion: no-preference) {
     .prologue-rise {
@@ -188,14 +195,14 @@
     }
   }
 
-  /* Event cards rise into place as they scroll in. Readers who prefer reduced motion, and
-     browsers without scroll-driven animations, see every card in place from the start. */
+  /* Event cards rise into place as they scroll in. Uses feature detection for both view()
+     and animation-range: entry to filter out partial browser support. */
   @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
+    @supports ((animation-timeline: view()) and (animation-range: entry)) {
       .reveal-on-scroll {
         animation: reveal-on-scroll linear both;
         animation-timeline: view();
-        animation-range: entry 0% entry 70%;
+        animation-range: entry 0% entry 65%;
       }
     }
   }
@@ -203,7 +210,7 @@
   @keyframes reveal-on-scroll {
     from {
       opacity: 0;
-      transform: translateY(1.5rem);
+      transform: translateY(1.25rem);
     }
     to {
       opacity: 1;
@@ -211,26 +218,28 @@
     }
   }
 
-  /* Foundation Era: punch cards under a teletype printout on green-bar paper */
+  /* Chapter 01 — Foundation Era: warm archival keypunch chamber & green-bar teletype paper */
   .punch-card-room {
-    background-color: #101318;
-    background-image: radial-gradient(rgb(243 233 207 / 0.07) 1px, transparent 1px);
-    background-size: 22px 22px;
+    background-color: #12100c;
+    background-image:
+      radial-gradient(56rem 28rem at 15% 0%, rgb(201 133 0 / 0.12), transparent 70%),
+      radial-gradient(rgb(243 233 207 / 0.08) 1px, transparent 1px);
+    background-size: auto, 22px 22px;
   }
 
   .teletype-paper {
     background:
-      radial-gradient(circle, #101318 0 0.3rem, transparent 0.33rem) left 0.4rem top 0.45rem / 1.2rem 1.5rem repeat-y,
-      radial-gradient(circle, #101318 0 0.3rem, transparent 0.33rem) right 0.4rem top 0.45rem / 1.2rem 1.5rem repeat-y,
+      radial-gradient(circle, #12100c 0 0.3rem, transparent 0.33rem) left 0.4rem top 0.45rem / 1.2rem 1.5rem repeat-y,
+      radial-gradient(circle, #12100c 0 0.3rem, transparent 0.33rem) right 0.4rem top 0.45rem / 1.2rem 1.5rem repeat-y,
       repeating-linear-gradient(to bottom, #f6f1e3 0 1.5rem, #e3ecd6 1.5rem 3rem);
   }
 
   /* The cut top-left corner that told an operator a card was the right way round */
   .punch-card {
-    clip-path: polygon(1.5rem 0, 100% 0, 100% 100%, 0 100%, 0 1.5rem);
+    clip-path: polygon(1.35rem 0, 100% 0, 100% 100%, 0 100%, 0 1.35rem);
   }
 
-  /* Knowledge Era: a green-phosphor terminal with scanlines */
+  /* Chapter 02 — Knowledge Era: P31 green-phosphor terminal with CRT bezel and scanlines */
   .crt-screen {
     box-shadow:
       inset 0 0 90px rgb(0 0 0 / 0.85),
@@ -272,9 +281,14 @@
     }
   }
 
-  /* Learning Era: beveled windows on a teal desktop */
+  /* Chapter 03 — Learning Era: dark-room slate-teal workstation desk with beveled Win9x dialogs */
   .desktop-wallpaper {
-    background-color: #008080;
+    background-color: #0b2429;
+    background-image:
+      radial-gradient(60rem 30rem at 80% 0%, rgb(57 135 229 / 0.16), transparent 70%),
+      linear-gradient(to right, rgb(255 255 255 / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.03) 1px, transparent 1px);
+    background-size: auto, 32px 32px, 32px 32px;
   }
 
   .font-desktop {
@@ -284,19 +298,19 @@
   .desktop-window,
   .desktop-raised {
     border: 1px solid;
-    border-color: #dfdfdf #000000 #000000 #dfdfdf;
+    border-color: #dfdfdf #0a0a0a #0a0a0a #dfdfdf;
     box-shadow:
       inset 1px 1px #ffffff,
       inset -1px -1px #808080;
   }
 
   .desktop-window {
-    background-color: #c0c0c0;
+    background-color: #d4d0c8;
     padding: 3px;
     box-shadow:
       inset 1px 1px #ffffff,
       inset -1px -1px #808080,
-      8px 10px 0 rgb(0 0 0 / 0.22);
+      8px 10px 0 rgb(0 0 0 / 0.35);
   }
 
   .desktop-sunken {
@@ -309,7 +323,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.2rem 0.2rem 0.2rem 0.45rem;
+    padding: 0.25rem 0.25rem 0.25rem 0.5rem;
     color: #ffffff;
     background: linear-gradient(90deg, #000080, #1084d0);
   }
@@ -325,7 +339,7 @@
 
   /* The progress bar fills as the dialog scrolls into view */
   @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
+    @supports ((animation-timeline: view()) and (animation-range: entry)) {
       .desktop-progress {
         animation: desktop-progress linear both;
         animation-timeline: view();
@@ -343,13 +357,21 @@
     }
   }
 
-  /* Deep Learning Revolution: notebook cells with In and Out prompts */
-  /* The left border marks the selected cell, as in the notebooks of the day */
+  /* Chapter 04 — Deep Learning Revolution: dark compute lab framing a studio notebook sheet */
+  .notebook-room {
+    background-color: #14161f;
+    background-image:
+      radial-gradient(56rem 26rem at 20% 0%, rgb(217 89 38 / 0.14), transparent 70%),
+      linear-gradient(to right, rgb(255 255 255 / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.03) 1px, transparent 1px);
+    background-size: auto, 40px 40px, 40px 40px;
+  }
+
   .notebook-cell {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     column-gap: 0.75rem;
-    row-gap: 0.25rem;
+    row-gap: 0.35rem;
     border-left: 4px solid transparent;
     padding-left: 0.5rem;
   }
@@ -364,9 +386,9 @@
 
   .notebook-code {
     min-width: 0;
-    border: 1px solid #e0e0e0;
-    border-radius: 0.25rem;
-    background-color: #f7f7f7;
+    border: 1px solid #dcdce0;
+    border-radius: 0.375rem;
+    background-color: #f6f6f8;
     padding: 0.5rem 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.875rem;
@@ -381,7 +403,7 @@
 
   @media (min-width: 640px) {
     .notebook-cell {
-      grid-template-columns: 5.5rem minmax(0, 1fr);
+      grid-template-columns: 5.75rem minmax(0, 1fr);
     }
 
     .notebook-prompt {
@@ -389,9 +411,9 @@
     }
   }
 
-  /* Generative AI Era: a chat thread under a soft glow */
+  /* Chapter 05 — Generative AI Era: transformer stream under a spectral aurora glow */
   .chat-backdrop {
-    background-color: #0c0c10;
+    background-color: #0c0c12;
     background-image:
       radial-gradient(60rem 30rem at 15% 0%, rgb(144 133 233 / 0.18), transparent 70%),
       radial-gradient(50rem 26rem at 90% 8%, rgb(57 135 229 / 0.12), transparent 70%);

@@ -1,8 +1,8 @@
-// The close of the page: an empty frame for the interface of the next era, a last word, and a way back to the start.
-// Every era so far brought a new way to talk to machines, so the next chapter is left open.
+// The close of the Turing Archive: an architectural blueprint frame for the uninvented interface of Chapter 6,
+// a closing monograph reflection, and a direct return trigger to the start of the timeline.
 'use client';
 
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Terminal } from 'lucide-react';
 
 interface EpilogueSceneProps {
   firstEraId: string;
@@ -13,18 +13,33 @@ export function EpilogueScene({ firstEraId, firstYear }: EpilogueSceneProps) {
   return (
     <section
       aria-labelledby="epilogue-title"
-      className="bg-[#0a0a0b] px-4 pb-32 pt-24 text-center text-white sm:px-6 sm:pt-32"
+      className="archive-grid-bg relative overflow-hidden border-t border-white/10 bg-[#09090b] px-4 pb-32 pt-24 text-center text-white sm:px-6 sm:pt-32"
     >
-      <div className="mx-auto max-w-3xl">
-        <div className="mx-auto max-w-md rounded-3xl border border-dashed border-white/20 px-8 py-10">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">Chapter 6</p>
-          <p className="mt-3 text-lg text-zinc-200">Interface not yet invented</p>
-          <p aria-hidden="true" className="mt-4 font-mono text-sm text-zinc-500">
-            &gt; <span className="terminal-caret">█</span>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-96 bg-[radial-gradient(50rem_20rem_at_50%_100%,rgba(144,133,233,0.14),transparent_70%)]"
+      />
+
+      <div className="relative mx-auto max-w-3xl">
+        <div className="mx-auto max-w-lg rounded-3xl border border-dashed border-white/20 bg-[#111116]/90 px-8 py-10 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.9)]">
+          <div
+            aria-hidden="true"
+            className="mb-4 flex items-center justify-between border-b border-white/10 pb-3 font-mono text-[11px] uppercase tracking-[0.24em] text-zinc-500"
+          >
+            <span className="flex items-center gap-1.5">
+              <Terminal className="size-3.5 text-violet-400" />
+              Speculative Substrate
+            </span>
+            <span>2030+ // Open Slot</span>
+          </div>
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-400/90">Chapter 6</p>
+          <p className="mt-3 text-xl font-medium text-zinc-100">Interface not yet invented</p>
+          <p aria-hidden="true" className="mt-4 font-mono text-sm text-zinc-400">
+            &gt; AWAITING_NEXT_PARADIGM <span className="terminal-caret">█</span>
           </p>
         </div>
 
-        <h2 id="epilogue-title" className="mt-20 text-4xl font-semibold tracking-tight sm:text-6xl">
+        <h2 id="epilogue-title" className="mt-16 text-4xl font-semibold tracking-tight sm:text-6xl">
           The Story Continues
         </h2>
         <div className="mx-auto mt-8 max-w-2xl space-y-5 text-lg leading-8 text-zinc-300">
@@ -43,14 +58,14 @@ export function EpilogueScene({ firstEraId, firstYear }: EpilogueSceneProps) {
 
         <a
           href={`#${firstEraId}`}
-          className="mt-14 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          className="mt-14 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/[0.06] px-6 py-3 text-sm font-medium text-white transition-colors hover:border-white/40 hover:bg-white/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
         >
           Back to {firstYear}
           <ArrowUp aria-hidden="true" className="size-4" />
         </a>
 
-        <p className="mt-20 text-xs text-zinc-500">
-          Built with passion for the future of artificial intelligence
+        <p className="mt-20 font-mono text-xs uppercase tracking-[0.22em] text-zinc-500">
+          Turing Archive // Built with passion for the future of artificial intelligence
         </p>
       </div>
     </section>

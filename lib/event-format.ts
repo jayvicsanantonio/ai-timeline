@@ -1,5 +1,5 @@
-// Formats a timeline event's date for display and for <time> elements, and gives each event an anchor id.
-// Events whose month is unknown show and machine-read as their year alone.
+// Formats a timeline event's date for display and for <time> elements, extracts source provenance domains,
+// and gives each event a deterministic anchor id.
 import type { TimelineEvent } from '@/types/timeline';
 
 export const MONTHS = [
@@ -37,7 +37,7 @@ export function eventDateTime({ year, month }: EventDate) {
 export function slugify(text: string) {
   return text
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
@@ -45,4 +45,14 @@ export function slugify(text: string) {
 
 export function eventAnchorId(event: Pick<TimelineEvent, 'year' | 'title'>) {
   return `event-${event.year}-${slugify(event.title)}`;
+}
+
+// Extracts a concise, human-readable provenance domain (e.g. "arxiv.org", "nature.com") from an event URL
+export function eventSourceDomain(link: string): string {
+  try {
+    const hostname = new URL(link).hostname.toLowerCase();
+    return hostname.replace(/^(www|en)\./, '');
+  } catch {
+    return 'source';
+  }
 }

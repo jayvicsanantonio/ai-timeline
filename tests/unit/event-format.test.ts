@@ -1,8 +1,8 @@
-// Unit tests for how a timeline event's date is shown and machine-read, and for its anchor id.
-// Undated months show only the year, and every real event gets its own anchor id.
+// Unit tests for how a timeline event's date is shown and machine-read, for its anchor id,
+// and for source provenance domain extraction.
 import { describe, expect, it } from "vitest"
 import timelineData from "@/data/timeline-events.json"
-import { eventAnchorId, eventDateTime, formatEventDate, MONTHS } from "@/lib/event-format"
+import { eventAnchorId, eventDateTime, eventSourceDomain, formatEventDate, MONTHS } from "@/lib/event-format"
 import type { TimelineEvent } from "@/types/timeline"
 
 const dated: TimelineEvent = {
@@ -70,5 +70,13 @@ describe("eventAnchorId", () => {
   it("gives every event in data/timeline-events.json its own id", () => {
     const ids = timelineData.map((event) => eventAnchorId(event as TimelineEvent))
     expect(new Set(ids).size).toBe(ids.length)
+  })
+})
+
+describe("eventSourceDomain", () => {
+  it("strips leading www. and en. prefixes from URL hostnames", () => {
+    expect(eventSourceDomain("https://www.nature.com/articles/s41586")).toBe("nature.com")
+    expect(eventSourceDomain("https://en.wikipedia.org/wiki/Dartmouth_workshop")).toBe("wikipedia.org")
+    expect(eventSourceDomain("https://arxiv.org/abs/1706.03762")).toBe("arxiv.org")
   })
 })
