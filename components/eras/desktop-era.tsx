@@ -52,7 +52,7 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
   const years = groupEventsByYear(era.events);
 
   return (
-    <div className="desktop-wallpaper font-desktop px-4 py-24 sm:px-6 sm:py-32">
+    <div className="desktop-wallpaper font-desktop relative px-4 py-24 sm:px-6 sm:py-32">
       <div className="mx-auto max-w-4xl">
         <header className="desktop-window mx-auto max-w-2xl">
           <div className="desktop-title-bar">
@@ -88,7 +88,10 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
                 className="mb-6 text-sm font-bold text-white [text-shadow:1px_1px_0_#000]"
               />
               <div className="md:grid md:grid-cols-[9rem_minmax(0,1fr)] md:gap-6">
-                <YearColumn group={group} className="mb-3 md:mb-0">
+                <YearColumn
+                  group={group}
+                  className="mb-3 border-b border-black/25 pb-2 shadow-[0_1px_0_rgb(255_255_255/0.3)] md:mb-0 md:border-b-0 md:border-r md:pb-0 md:pr-5 md:shadow-[1px_0_0_rgb(255_255_255/0.3)]"
+                >
                   <div className="flex items-center gap-3 md:block">
                     <p className="inline-flex items-center gap-2 rounded bg-black/30 px-2.5 py-1 text-white ring-1 ring-white/15">
                       <FolderOpen className="size-4 shrink-0 text-amber-300" />
@@ -114,6 +117,15 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
           ))}
         </ol>
       </div>
+
+      {/* The words the desktops of the day left on screen once they had shut down, set where the
+          wallpaper has faded to black */}
+      <p
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-9 px-4 text-center text-sm font-bold tracking-wide text-[#ff9d2e] sm:bottom-12 sm:text-base"
+      >
+        It&apos;s now safe to turn off your computer.
+      </p>
     </div>
   );
 }

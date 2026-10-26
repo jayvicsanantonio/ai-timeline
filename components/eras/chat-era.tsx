@@ -168,7 +168,10 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
             data-year-group={group.year}
             className="mt-16 md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8"
           >
-            <YearColumn group={group} className="mb-6 md:mb-0">
+            <YearColumn
+              group={group}
+              className="mb-6 border-b border-white/10 pb-2 md:mb-0 md:border-b-0 md:border-r md:pb-0 md:pr-5"
+            >
               <ChatYearLabel group={group} />
             </YearColumn>
             <div className="min-w-0">

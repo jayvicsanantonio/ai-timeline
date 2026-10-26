@@ -97,7 +97,8 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
                 </span>
                 <span className="mt-1.5 px-1.5 text-base font-semibold leading-snug text-white">{era.name}</span>
                 <span className="mt-1 px-1.5 pb-1.5 text-sm text-zinc-400">
-                  {era.interfaceName} <span aria-hidden="true">·</span> {era.events.length} events
+                  {era.interfaceName} <span aria-hidden="true">·</span>{' '}
+                  <span className="whitespace-nowrap">{era.events.length} events</span>
                 </span>
               </a>
             </li>

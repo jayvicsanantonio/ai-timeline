@@ -101,7 +101,10 @@ export function NotebookEra({ era, totalEvents }: EraInterfaceProps) {
                 key={group.year}
                 className="mt-4 border-t border-[#ececef] pt-2 first:mt-0 first:border-t-0 first:pt-0 md:grid md:grid-cols-[6.5rem_minmax(0,1fr)] md:gap-4"
               >
-                <YearColumn group={group} className="mt-4 md:pt-4">
+                <YearColumn
+                  group={group}
+                  className="mt-4 border-b border-[#e6e6e9] pb-2 md:border-b-0 md:border-r md:pb-0 md:pr-4 md:pt-4"
+                >
                   <p className="flex items-baseline gap-3 font-mono md:block">
                     <span className="block text-base font-bold text-[#1f1f1f] md:text-xl">
                       <span className="text-[#d95926]"># </span>

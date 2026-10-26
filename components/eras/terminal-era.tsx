@@ -21,7 +21,7 @@ import {
 export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
   if (era.events.length === 0) {
     return (
-      <div className="bg-[#020503] px-3 py-6 sm:px-6">
+      <div className="terminal-room px-3 py-6 sm:px-6">
         <div className="crt-scanlines mx-auto max-w-4xl rounded-2xl border border-[#173b26] bg-[#04100a] px-5 py-4 font-mono text-[#5cf09a] shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] sm:px-8">
           <CompactEraText
             era={era}
@@ -38,7 +38,7 @@ export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
   const years = groupEventsByYear(era.events);
 
   return (
-    <div className="bg-[#020503] px-3 py-24 sm:px-6 sm:py-32">
+    <div className="terminal-room px-3 py-24 sm:px-6 sm:py-32">
       <div className="crt-screen crt-scanlines mx-auto max-w-4xl rounded-[1.75rem] border border-[#173b26] bg-[#04100a] px-5 py-8 font-mono text-[#5cf09a] sm:rounded-[2.5rem] sm:px-12 sm:py-14">
         <header>
           <p
@@ -80,8 +80,11 @@ export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
                 index={index}
                 className="border-b border-dashed border-[#1d5236] py-3 text-xs uppercase tracking-[0.2em] text-[#38b874]"
               />
-              <div className="md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-6">
-                <YearColumn group={group} className="mt-5 md:mt-0 md:pt-6">
+              <div className="md:grid md:grid-cols-[8.5rem_minmax(0,1fr)] md:gap-6">
+                <YearColumn
+                  group={group}
+                  className="mt-5 border-b border-dashed border-[#1d5236] pb-2 md:mt-0 md:border-b-0 md:border-r md:pb-0 md:pr-5 md:pt-6"
+                >
                   <div className="flex items-baseline gap-3 md:block">
                     <p className="crt-glow text-lg font-bold text-[#9dffc4] md:text-2xl">{group.year}</p>
                     <p className="text-[11px] tracking-[0.18em] text-[#38b874] md:mt-1">

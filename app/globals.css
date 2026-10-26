@@ -167,6 +167,17 @@
 
 /* The five era interfaces. Each era draws its events in the computer interface of its day. */
 @layer components {
+  /* Every era's backdrop starts and ends in the page's black, so one era dissolves into the next.
+     A short row, such as an era the filters have emptied, fades over less of its height. */
+  :root {
+    --era-seam: linear-gradient(
+      #0a0a0b,
+      transparent min(8rem, 25%),
+      transparent max(calc(100% - 8rem), 75%),
+      #0a0a0b
+    );
+  }
+
   /* The opening's title, introduction and chart rise into place once, on load */
   @media (prefers-reduced-motion: no-preference) {
     .prologue-rise {
@@ -204,11 +215,17 @@
     }
   }
 
-  /* Foundation Era: punch cards under a teletype printout on green-bar paper */
+  /* Foundation Era: punch cards under a teletype printout on green-bar paper, laid out on
+     engineering graph paper in the pool of a desk lamp */
   .punch-card-room {
-    background-color: #101318;
-    background-image: radial-gradient(rgb(243 233 207 / 0.07) 1px, transparent 1px);
-    background-size: 22px 22px;
+    background-color: #0f1318;
+    background-image:
+      var(--era-seam),
+      radial-gradient(64rem 36rem at 50% 0%, rgb(201 133 0 / 0.14), transparent 70%),
+      repeating-linear-gradient(to right, rgb(243 233 207 / 0.06) 0 1px, transparent 1px 6rem),
+      repeating-linear-gradient(to bottom, rgb(243 233 207 / 0.06) 0 1px, transparent 1px 6rem),
+      repeating-linear-gradient(to right, rgb(243 233 207 / 0.025) 0 1px, transparent 1px 1.5rem),
+      repeating-linear-gradient(to bottom, rgb(243 233 207 / 0.025) 0 1px, transparent 1px 1.5rem);
   }
 
   .teletype-paper {
@@ -223,13 +240,23 @@
     clip-path: polygon(1.5rem 0, 100% 0, 100% 100%, 0 100%, 0 1.5rem);
   }
 
-  /* Knowledge Era: a green-phosphor terminal with scanlines */
+  /* Knowledge Era: a green-phosphor terminal with scanlines, in a dark machine room whose walls
+     catch the screen's glow and its faint raster lines */
+  .terminal-room {
+    background-color: #020503;
+    background-image:
+      var(--era-seam),
+      radial-gradient(72rem 40rem at 50% 20rem, rgb(25 158 112 / 0.13), transparent 70%),
+      repeating-linear-gradient(to bottom, rgb(92 240 154 / 0.03) 0 1px, transparent 1px 4px);
+  }
+
   .crt-screen {
     box-shadow:
       inset 0 0 90px rgb(0 0 0 / 0.85),
       0 0 0 10px #0b1a12,
       0 0 0 11px #1d3a29,
-      0 40px 120px -40px rgb(25 158 112 / 0.45);
+      0 40px 120px -40px rgb(25 158 112 / 0.45),
+      0 0 10rem 1rem rgb(25 158 112 / 0.12);
   }
 
   .crt-scanlines {
@@ -265,9 +292,15 @@
     }
   }
 
-  /* Learning Era: beveled windows on a teal desktop */
+  /* Learning Era: beveled windows on a teal desktop, dithered the way 256-color screens drew it
+     and darkening toward the monitor's edges */
   .desktop-wallpaper {
     background-color: #008080;
+    background-image:
+      var(--era-seam),
+      radial-gradient(ellipse 75% 120% at 50% 50%, transparent 45%, rgb(0 0 0 / 0.24)),
+      repeating-conic-gradient(rgb(0 0 0 / 0.07) 0 25%, transparent 0 50%);
+    background-size: auto, auto, 4px 4px;
   }
 
   .font-desktop {
@@ -346,12 +379,17 @@
     }
   }
 
-  /* Deep Learning Revolution: a notebook open on a dark desk, its cells marked with In and Out prompts.
-     The desk keeps the white page from flashing between the dark eras around it. */
+  /* Deep Learning Revolution: a notebook open on a dark lab bench, its cells marked with In and Out
+     prompts. The bench, lit by the screen above and warmed by the GPUs below, keeps the white page
+     from flashing between the dark eras around it. */
   .notebook-desk {
-    background-color: #17171a;
-    background-image: radial-gradient(70rem 36rem at 50% 0%, rgb(255 255 255 / 0.07), transparent 70%);
-    background-repeat: no-repeat;
+    background-color: #141416;
+    background-image:
+      var(--era-seam),
+      radial-gradient(70rem 36rem at 50% 0%, rgb(255 255 255 / 0.07), transparent 70%),
+      radial-gradient(72rem 32rem at 50% calc(100% - 6rem), rgb(217 89 38 / 0.16), transparent 70%),
+      radial-gradient(circle, rgb(255 255 255 / 0.06) 1px, transparent 1.5px);
+    background-size: auto, auto, auto, 1.25rem 1.25rem;
   }
 
   /* The left border marks the selected cell, as in the notebooks of the day */
@@ -399,13 +437,19 @@
     }
   }
 
-  /* Generative AI Era: a chat thread under a soft glow */
+  /* Generative AI Era: a chat thread under a soft aurora, its glows returning from either side all
+     the way down the long thread */
   .chat-backdrop {
     background-color: #0c0c10;
     background-image:
+      var(--era-seam),
       radial-gradient(60rem 30rem at 15% 0%, rgb(144 133 233 / 0.18), transparent 70%),
-      radial-gradient(50rem 26rem at 90% 8%, rgb(57 135 229 / 0.12), transparent 70%);
-    background-repeat: no-repeat;
+      radial-gradient(50rem 26rem at 90% 8%, rgb(57 135 229 / 0.12), transparent 70%),
+      radial-gradient(44rem 30rem at 0% 50%, rgb(144 133 233 / 0.08), transparent 70%),
+      radial-gradient(44rem 30rem at 100% 50%, rgb(57 135 229 / 0.07), transparent 70%);
+    background-size: auto, auto, auto, 100% 140rem, 100% 140rem;
+    background-position: 0 0, 0 0, 0 0, 0 40rem, 0 110rem;
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat-y, repeat-y;
   }
 
   .chat-typing span {

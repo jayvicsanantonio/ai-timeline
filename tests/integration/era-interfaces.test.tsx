@@ -220,6 +220,18 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
     expect(within(section).queryAllByRole("article")).toEqual([])
   })
 
+  // One era's backdrop meets the next in the page's black, so moving between eras dissolves instead of cutting
+  it("fades its backdrop into the page's black at the top and bottom, with or without matches", () => {
+    const seam = /^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\), /
+
+    const full = renderEra(eraInterface)
+    expect(getComputedStyle(full.section.firstElementChild!).backgroundImage).toMatch(seam)
+    full.unmount()
+
+    const empty = renderEra(eraInterface, [], 12)
+    expect(getComputedStyle(empty.section.firstElementChild!).backgroundImage).toMatch(seam)
+  })
+
   // Filtering can empty several eras at once, and their full introductions would push the results far down
   it("shrinks to a short row when none of its events match the filters", () => {
     const { section } = renderEra(eraInterface, [], 12)
@@ -298,6 +310,14 @@ describe.each(INTERFACES)("the %s era's year column", (eraInterface) => {
     expect(column.getBoundingClientRect().bottom).toBeLessThanOrEqual(firstCard.getBoundingClientRect().top)
   })
 
+  it("rules the year off from its events with a line under it on a phone", () => {
+    const { section } = renderEra(eraInterface)
+
+    const style = getComputedStyle(yearColumns(section)[0])
+    expect(style.borderBottomStyle).not.toBe("none")
+    expect(parseFloat(style.borderBottomWidth)).toBeGreaterThan(0)
+  })
+
   describe("on a wide screen", () => {
     beforeEach(async () => {
       await page.viewport(1280, 800)
@@ -315,6 +335,15 @@ describe.each(INTERFACES)("the %s era's year column", (eraInterface) => {
       expect(getComputedStyle(column.firstElementChild!).position).toBe("sticky")
       expect(column.getBoundingClientRect().right).toBeLessThanOrEqual(firstCard.getBoundingClientRect().left)
     })
+
+    it("rules the year off from its events with a line between them", () => {
+      const { section } = renderEra(eraInterface)
+
+      const style = getComputedStyle(yearColumns(section)[0])
+      expect(style.borderRightStyle).not.toBe("none")
+      expect(parseFloat(style.borderRightWidth)).toBeGreaterThan(0)
+      expect(parseFloat(style.borderBottomWidth)).toBe(0)
+    })
   })
 })
 
@@ -331,6 +360,15 @@ describe("the punch-card era", () => {
     expect(year1956.querySelectorAll("[data-month-square]")).toHaveLength(12)
     expect(litMonths(year1956)).toEqual(["June"])
     expect(litMonths(year1951)).toEqual([])
+  })
+
+  it("signs off the deck with an end-of-job line, as the printouts did", () => {
+    const { section } = renderEra("punch-card")
+
+    const signOff = within(section).getByText("END OF JOB")
+    const lastCard = within(section).getAllByRole("article").at(-1)!
+    expect(lastCard.compareDocumentPosition(signOff) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(signOff.closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
   it("keeps the punched strip shallow, so it reads as a strip rather than a block", () => {
@@ -378,6 +416,15 @@ describe("the desktop era", () => {
     const [year1997] = yearColumns(section)
     expect(drawnYear(year1997)).toHaveTextContent("C:\\AI\\1997 (1)")
     expect(drawnYear(year1997).querySelector("svg")).not.toBeNull()
+  })
+
+  it("shuts down at the end of the era, as the desktops of the day did", () => {
+    const { section } = renderEra("desktop")
+
+    const signOff = within(section).getByText("It's now safe to turn off your computer.")
+    const lastWindow = within(section).getAllByRole("article").at(-1)!
+    expect(lastWindow.compareDocumentPosition(signOff) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(signOff.closest('[aria-hidden="true"]')).not.toBeNull()
   })
 })
 

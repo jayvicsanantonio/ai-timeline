@@ -3,6 +3,7 @@
 'use client';
 
 import { ArrowUp } from 'lucide-react';
+import { ERA_DEFINITIONS } from '@/lib/eras';
 
 interface EpilogueSceneProps {
   firstEraId: string;
@@ -17,6 +18,18 @@ export function EpilogueScene({ firstEraId, firstYear }: EpilogueSceneProps) {
     >
       <div className="mx-auto max-w-3xl">
         <div className="mx-auto max-w-md rounded-3xl border border-dashed border-white/20 px-8 py-10">
+          {/* The five eras so far in their colors, running up to the open slot for the next one */}
+          <div data-era-trail="" aria-hidden="true" className="mb-8 flex items-center gap-1.5">
+            {ERA_DEFINITIONS.map((era) => (
+              <span
+                key={era.id}
+                data-era-color=""
+                className="h-1 flex-1 rounded-full"
+                style={{ backgroundColor: era.color }}
+              />
+            ))}
+            <span data-next-era="" className="ml-1 flex-[1.5] border-t-2 border-dashed border-white/30" />
+          </div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">Chapter 6</p>
           <p className="mt-3 text-lg text-zinc-200">Interface not yet invented</p>
           <p aria-hidden="true" className="mt-4 font-mono text-sm text-zinc-500">

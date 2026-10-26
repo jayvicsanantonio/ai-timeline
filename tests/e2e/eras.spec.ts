@@ -214,3 +214,16 @@ test("keeps a year in view beside its events while they scroll past", async ({ p
   // The year rests a rem and a half below the toolbar
   expect(gapBelowToolbar).toBeCloseTo(24, 0)
 })
+
+test("dissolves each era into the next through the page's black", async ({ page }) => {
+  await page.goto("/")
+
+  const backdrops = await page
+    .locator("section[data-interface]")
+    .evaluateAll((sections) => sections.map((section) => getComputedStyle(section.firstElementChild!).backgroundImage))
+
+  expect(backdrops).toHaveLength(5)
+  for (const backdrop of backdrops) {
+    expect(backdrop).toMatch(/^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\), /)
+  }
+})

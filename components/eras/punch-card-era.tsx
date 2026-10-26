@@ -91,7 +91,10 @@ export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
                 className="mb-8 flex items-center gap-4 font-mono text-xs uppercase tracking-[0.3em] text-[#b9aa89] before:h-px before:flex-1 before:bg-[#b9aa89]/30 after:h-px after:flex-1 after:bg-[#b9aa89]/30 sm:mb-10"
               />
               <div className="md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8">
-                <YearColumn group={group} className="mb-4 md:mb-0">
+                <YearColumn
+                  group={group}
+                  className="mb-4 border-b border-dashed border-[#f3e9cf]/20 pb-2 md:mb-0 md:border-b-0 md:border-r md:pb-0 md:pr-6"
+                >
                   <div className="flex items-baseline gap-3 font-mono md:block">
                     <p className="text-lg font-bold text-[#f3e9cf] md:text-3xl">{group.year}</p>
                     <p className="text-[11px] uppercase tracking-[0.18em] text-[#b9aa89] md:mt-1">
@@ -111,6 +114,14 @@ export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
             </li>
           ))}
         </ol>
+
+        {/* The teletype's last line once the deck has run, the way a job's printout ended */}
+        <p
+          aria-hidden="true"
+          className="teletype-paper mx-auto mt-16 max-w-3xl px-10 py-4 text-center font-mono text-xs uppercase tracking-[0.3em] text-[#3a3226] sm:mt-20 sm:px-16"
+        >
+          <span>***</span> <span>END OF JOB</span> <span>***</span>
+        </p>
       </div>
     </div>
   );

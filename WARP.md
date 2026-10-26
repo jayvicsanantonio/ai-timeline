@@ -36,7 +36,8 @@ High-level architecture
     - Events marked "landmark": true in the data are set apart in every interface; the approved list is pinned by a unit test.
     - The punch-card, terminal and desktop eras say how many years passed between two events when more than one did (YearGap in era-parts.tsx, yearsSincePreviousEvent in lib/year-gaps.ts).
     - The chat thread answers each year's question with a one-sentence summary from data/year-summaries.json (lib/year-summaries.ts); a unit test requires one for every year with events.
-    - Every interface groups its events by year (lib/year-groups.ts) beside a YearColumn in era-parts.tsx that stays in view from md up and is a one-line label on phones. Keep eras within max-w-4xl so they clear the rail at 1280px.
+    - Every interface groups its events by year (lib/year-groups.ts) beside a YearColumn in era-parts.tsx that stays in view from md up and is a one-line label on phones, ruled off from its events by a divider in the era's style. Keep eras within max-w-4xl so they clear the rail at 1280px.
+    - Every era's backdrop in app/globals.css starts with var(--era-seam), which fades it into the page's black at the top and bottom so eras dissolve into each other. Keep that layer first.
 - Data and types
   - Dataset: data/timeline-events.json, loaded by app/page.tsx through parseTimelineEvents (lib/timeline-events.ts), which throws on unknown categories so bad data fails the build.
   - Types live in types/timeline.ts. TIMELINE_CATEGORIES is the single list of categories, and TimelineCategory is derived from it.

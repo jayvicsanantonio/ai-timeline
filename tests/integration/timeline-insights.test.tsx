@@ -1,7 +1,8 @@
 // Integration tests for TimelineInsights: every stat on its tiles is computed from
 // the events it is given, so the numbers always match the timeline data.
 import { render, screen } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
+import { afterEach, beforeEach, describe, expect, it } from "vitest"
+import { page } from "vitest/browser"
 import { TimelineInsights } from "@/components/interactive/timeline-insights"
 import type { TimelineCategory, TimelineEvent } from "@/types/timeline"
 
@@ -74,5 +75,25 @@ describe("TimelineInsights", () => {
 
     expect(labelFor("3")).toHaveTextContent("Companies & Investments events")
     expect(labelFor("2")).toHaveTextContent("Ethics & Policy events")
+  })
+
+  describe("on a wide screen", () => {
+    beforeEach(async () => {
+      await page.viewport(1280, 800)
+    })
+
+    afterEach(async () => {
+      await page.viewport(414, 896)
+    })
+
+    // Labels of different lengths would otherwise push each tile's title to its own height
+    it("lines up the tiles' titles and descriptions across the row", () => {
+      render(<TimelineInsights events={events} />)
+
+      const titles = screen.getAllByRole("heading", { level: 3 })
+      const tops = (elements: Element[]) => new Set(elements.map((element) => Math.round(element.getBoundingClientRect().top)))
+      expect(tops(titles).size).toBe(1)
+      expect(tops(titles.map((title) => title.nextElementSibling!)).size).toBe(1)
+    })
   })
 })

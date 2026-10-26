@@ -39,6 +39,15 @@ describe("PrologueScene", () => {
     })
   })
 
+  it("keeps each tile's event count together on one line", () => {
+    renderPrologue()
+
+    const tiles = within(screen.getByRole("list", { name: "Eras" })).getAllByRole("link")
+    eras.forEach((era, index) => {
+      expect(getComputedStyle(within(tiles[index]).getByText(`${era.events.length} events`)).whiteSpace).toBe("nowrap")
+    })
+  })
+
   it("sums up how many events fall in the latest era under the chart", () => {
     renderPrologue()
 

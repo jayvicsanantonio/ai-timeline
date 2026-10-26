@@ -76,7 +76,7 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
   const insights = getInsights(events)
 
   return (
-    <section aria-labelledby="insights-title" className="border-t border-white/10 bg-[#0a0a0b] px-4 py-24 text-white sm:px-6 sm:py-32">
+    <section aria-labelledby="insights-title" className="bg-[#0a0a0b] px-4 py-24 text-white sm:px-6 sm:py-32">
       <div className="mx-auto max-w-6xl">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">By the numbers</p>
         <h2 id="insights-title" className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -86,6 +86,8 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
           Discover the patterns and trends that emerge from decades of AI development
         </p>
 
+        {/* Each tile's five rows share the row's tracks, so titles and descriptions line up across a row
+            however long the label above them runs */}
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {insights.map((insight) => {
             const Icon = insight.icon
@@ -93,7 +95,7 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
             return (
               <div
                 key={insight.id}
-                className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25 hover:bg-white/[0.05]"
+                className="row-span-5 grid grid-rows-subgrid gap-y-0 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25 hover:bg-white/[0.05]"
               >
                 <Icon aria-hidden="true" className="size-5 text-zinc-400" />
                 <div className="mt-8 text-5xl font-semibold tracking-tight text-white">{insight.stat}</div>
