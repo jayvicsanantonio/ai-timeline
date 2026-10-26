@@ -772,7 +772,8 @@
     "title": "Anthropic Releases Claude",
     "description": "Anthropic releases its AI assistant, Claude, making it available to businesses through an API.",
     "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/introducing-claude"
+    "link": "https://www.anthropic.com/news/introducing-claude",
+    "highlight": true
   },
   {
     "year": 2023,
@@ -884,7 +885,8 @@
     "title": "Meta Releases Llama 2",
     "description": "Meta and Microsoft release Llama 2, a large language model available for free for research and commercial use, making powerful LLMs more accessible.",
     "category": "Public Releases",
-    "link": "https://about.meta.com/news/2023/07/llama-2/"
+    "link": "https://about.meta.com/news/2023/07/llama-2/",
+    "highlight": true
   },
   {
     "year": 2023,
@@ -964,7 +966,8 @@
     "title": "President Biden's Executive Order on AI",
     "description": "President Joe Biden signs a sweeping executive order to establish new standards for AI safety and security, protect privacy, and advance equity and civil rights.",
     "category": "Ethics & Policy",
-    "link": "https://bidenwhitehouse.archives.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/"
+    "link": "https://bidenwhitehouse.archives.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/",
+    "highlight": true
   },
   {
     "year": 2023,
@@ -1044,7 +1047,8 @@
     "title": "Google Launches Gemini 1.0",
     "description": "Google DeepMind launches Gemini 1.0, its most capable and general AI model yet, built to be multimodal from the ground up and announced in Ultra, Pro, and Nano sizes, with Ultra following in early 2024.",
     "category": "Public Releases",
-    "link": "https://blog.google/technology/ai/google-gemini-ai/"
+    "link": "https://blog.google/technology/ai/google-gemini-ai/",
+    "highlight": true
   },
   {
     "year": 2023,
@@ -1316,7 +1320,8 @@
     "title": "OpenAI Releases GPT-4o",
     "description": "OpenAI launches GPT-4o ('o' for 'omni'), a new flagship model with significantly improved speed and multimodal capabilities, offered for free to all ChatGPT users.",
     "category": "Public Releases",
-    "link": "https://www.theverge.com/2024/5/13/24155493/openai-gpt-4o-launching-free-users"
+    "link": "https://www.theverge.com/2024/5/13/24155493/openai-gpt-4o-launching-free-users",
+    "highlight": true
   },
   {
     "year": 2024,
@@ -1486,7 +1491,8 @@
     "title": "DeepMind Researchers Win Nobel Prize",
     "description": "Demis Hassabis and John Jumper win the Nobel Prize in Chemistry, shared with David Baker, for their work on AlphaFold 2 and protein structure prediction.",
     "category": "Research Breakthroughs",
-    "link": "https://www.nobelprize.org/prizes/chemistry/2024/press-release/"
+    "link": "https://www.nobelprize.org/prizes/chemistry/2024/press-release/",
+    "highlight": true
   },
   {
     "year": 2024,
@@ -1632,7 +1638,8 @@
     "title": "Anthropic Releases Claude Code in Research Preview",
     "description": "Anthropic launches a research preview of Claude Code, an agentic command-line tool that allows developers to delegate complex engineering tasks to Claude directly from their terminal.",
     "category": "AI Tools",
-    "link": "https://www.anthropic.com/news/claude-3-7-sonnet"
+    "link": "https://www.anthropic.com/news/claude-3-7-sonnet",
+    "highlight": true
   },
   {
     "year": 2025,
@@ -1777,7 +1784,8 @@
     "title": "OpenAI Releases GPT-5",
     "description": "OpenAI launches GPT-5, a major upgrade to its language model series, boasting 'PhD-level' expertise across various domains and a unified system for both quick and deep reasoning responses.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-gpt-5/"
+    "link": "https://openai.com/index/introducing-gpt-5/",
+    "highlight": true
   },
   {
     "year": 2025,
@@ -1881,7 +1889,8 @@
     "title": "Google Releases Gemini 3",
     "description": "Google releases Gemini 3, which it calls its most intelligent model, bringing it to the Gemini app and to AI Mode in Search.",
     "category": "Public Releases",
-    "link": "https://blog.google/products/gemini/gemini-3/"
+    "link": "https://blog.google/products/gemini/gemini-3/",
+    "highlight": true
   },
   {
     "year": 2025,
@@ -2065,7 +2074,8 @@
     "title": "Google Unveils Gemini 3.5 at I/O",
     "description": "At Google I/O, Google releases Gemini 3.5, a series of models combining frontier intelligence with action, starting with Gemini 3.5 Flash as the default model in the Gemini app and AI Mode in Search.",
     "category": "Public Releases",
-    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/"
+    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2129,7 +2139,8 @@
     "title": "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
     "description": "Agents driven by OpenAI models break into Hugging Face's production systems from an internal capability evaluation; OpenAI calls it an unprecedented cyber incident.",
     "category": "Bombshell News",
-    "link": "https://huggingface.co/blog/agent-intrusion-technical-timeline"
+    "link": "https://huggingface.co/blog/agent-intrusion-technical-timeline",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2137,7 +2148,8 @@
     "title": "Anthropic Releases Claude Opus 5",
     "description": "Anthropic releases Claude Opus 5, which comes close to the frontier intelligence of Claude Fable 5 at half the price and greatly improves on Opus 4.8 at the same cost.",
     "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-opus-5"
+    "link": "https://www.anthropic.com/news/claude-opus-5",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2153,7 +2165,8 @@
     "title": "OpenAI Releases GPT-6 Astra",
     "description": "OpenAI releases GPT-6 Astra, which it calls its most intelligent model and says marks the start of an 'AGI era', initially for a limited set of organizations.",
     "category": "Public Releases",
-    "link": "https://www.theverge.com/ai-artificial-intelligence/989601/openai-gpt-6-astra-release"
+    "link": "https://www.theverge.com/ai-artificial-intelligence/989601/openai-gpt-6-astra-release",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2193,7 +2206,8 @@
     "title": "OpenAI Claims a Navier–Stokes Proof",
     "description": "OpenAI publishes an AI-generated proof, formalized in Lean, that a smooth fluid can develop a singularity in finite time, which it says resolves the Navier–Stokes Millennium Prize problem; the claim awaits independent review amid a dispute over credit.",
     "category": "Research Breakthroughs",
-    "link": "https://openai.com/index/navier-stokes-solution/"
+    "link": "https://openai.com/index/navier-stokes-solution/",
+    "highlight": true
   },
   {
     "year": 2026,

@@ -524,3 +524,117 @@ describe("the chat era", () => {
     expect(container.querySelector("[data-year-summary]")).toBeNull()
   })
 })
+
+// A busy year has more than one event a month. Its landmarks and highlights stay full chat messages,
+// and the rest are listed one line each until the reader asks to see them all in full.
+describe("the chat era's busy years", () => {
+  const MONTHS_IN_ORDER = ["January", "February", "March", "April", "May", "June", "July"]
+  // Fourteen events, two a month, with a landmark first and a highlight fourth
+  const busyYear: TimelineEvent[] = Array.from({ length: 14 }, (_, index) => ({
+    ...makeEvent(2024, MONTHS_IN_ORDER[Math.floor(index / 2)], `Release ${index + 1}`, "Public Releases", index === 0),
+    ...(index === 3 ? { highlight: true } : {}),
+  }))
+  const fullSizeTitles = ["Release 1", "Release 4"]
+
+  function cards(section: HTMLElement) {
+    return within(section).getAllByRole("article")
+  }
+
+  function briefCards(section: HTMLElement) {
+    return cards(section).filter((card) => card.hasAttribute("data-brief"))
+  }
+
+  function showAllButton(section: HTMLElement) {
+    return within(section).getByRole("button", { name: "Show all 14 in full" })
+  }
+
+  it("keeps the landmarks and highlights in full and lists every other event in brief", () => {
+    const { section } = renderEra("chat", busyYear)
+
+    expect(cards(section)).toHaveLength(14)
+    const full = cards(section).filter((card) => !card.hasAttribute("data-brief"))
+    expect(full.map((card) => within(card).getByRole("link").textContent)).toEqual(fullSizeTitles)
+    for (const card of full) {
+      expect(card).toHaveTextContent(`What happened with ${within(card).getByRole("link").textContent}.`)
+    }
+    expect(briefCards(section)).toHaveLength(12)
+  })
+
+  it("gives each brief event its date, its linked title and its source, but not its description", () => {
+    const { section } = renderEra("chat", busyYear)
+
+    expect(briefCards(section)).toHaveLength(12)
+    for (const card of briefCards(section)) {
+      const event = busyYear.find((candidate) => candidate.title === within(card).getByRole("link").textContent)!
+      const time = card.querySelector("time")!
+      const heading = within(card).getByRole("heading", { level: 3, name: event.title })
+      expect(time).toHaveAttribute("datetime", eventDateTime(event))
+      expect(time.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(within(card).getByRole("link")).toHaveAttribute("href", event.link)
+      expect(card).toHaveTextContent(eventSource(event))
+      expect(card).not.toHaveTextContent(event.description)
+    }
+  })
+
+  it("shows the whole year in full from its Show all button, and lists it in brief again on a second press", async () => {
+    const { section } = renderEra("chat", busyYear)
+    const button = showAllButton(section)
+    expect(button).toHaveAttribute("aria-pressed", "false")
+
+    await userEvent.click(button)
+
+    expect(button).toHaveAttribute("aria-pressed", "true")
+    expect(briefCards(section)).toEqual([])
+    for (const event of busyYear) {
+      expect(section).toHaveTextContent(event.description)
+    }
+
+    await userEvent.click(button)
+
+    expect(button).toHaveAttribute("aria-pressed", "false")
+    expect(briefCards(section)).toHaveLength(12)
+  })
+
+  it("offers the Show all button right after the year's question, before its first event", () => {
+    const { section } = renderEra("chat", busyYear)
+
+    const prompt = section.querySelector("[data-year-prompt]")!
+    const button = showAllButton(section)
+    const firstCard = cards(section)[0]
+    expect(prompt.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(button.compareDocumentPosition(firstCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it("shows every match in full while the reader filters, without a Show all button", () => {
+    const { section } = renderEra("chat", busyYear, 40)
+
+    expect(briefCards(section)).toEqual([])
+    expect(within(section).queryByRole("button", { name: /^Show all/ })).toBeNull()
+  })
+
+  it("keeps a year with a dozen events or fewer in full, without a Show all button", () => {
+    const { section } = renderEra("chat", busyYear.slice(0, 12))
+
+    expect(briefCards(section)).toEqual([])
+    expect(within(section).queryByRole("button", { name: /^Show all/ })).toBeNull()
+  })
+
+  describe("on a wide screen", () => {
+    beforeEach(async () => {
+      await page.viewport(1280, 800)
+    })
+
+    afterEach(async () => {
+      await page.viewport(414, 896)
+    })
+
+    it("fits each brief event on one short line", () => {
+      const { section } = renderEra("chat", busyYear)
+
+      expect(briefCards(section)).toHaveLength(12)
+      for (const card of briefCards(section)) {
+        expect(card.getBoundingClientRect().height).toBeLessThan(48)
+      }
+    })
+  })
+})

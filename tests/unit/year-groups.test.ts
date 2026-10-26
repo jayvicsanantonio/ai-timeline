@@ -1,7 +1,7 @@
 // Unit tests for grouping an era's events by year and counting a year's events by month.
 // The groups keep the events' order, and the month counts run January to December.
 import { describe, expect, it } from "vitest"
-import { countEventsByMonth, groupEventsByYear } from "@/lib/year-groups"
+import { countEventsByMonth, groupEventsByYear, isBusyYear } from "@/lib/year-groups"
 import type { TimelineEvent } from "@/types/timeline"
 
 function makeEvent(year: number, month: string, title: string): TimelineEvent {
@@ -46,5 +46,20 @@ describe("countEventsByMonth", () => {
 
   it("leaves events whose month is unknown out of every month", () => {
     expect(countEventsByMonth([logicTheorist])).toEqual(Array(12).fill(0))
+  })
+})
+
+describe("isBusyYear", () => {
+  const eventsOfYear = (count: number) =>
+    Array.from({ length: count }, (_, index) => makeEvent(2024, "May", `Event ${index + 1}`))
+
+  it("counts a year as busy once it has more than one event a month", () => {
+    expect(isBusyYear(eventsOfYear(13))).toBe(true)
+    expect(isBusyYear(eventsOfYear(64))).toBe(true)
+  })
+
+  it("leaves a year with a dozen events or fewer at its usual pace", () => {
+    expect(isBusyYear(eventsOfYear(12))).toBe(false)
+    expect(isBusyYear(eventsOfYear(1))).toBe(false)
   })
 })

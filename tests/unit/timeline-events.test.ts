@@ -3,6 +3,7 @@
 import { describe, expect, test } from "vitest"
 import timelineData from "@/data/timeline-events.json"
 import { parseTimelineEvents } from "@/lib/timeline-events"
+import { groupEventsByYear, isBusyYear } from "@/lib/year-groups"
 import { TIMELINE_CATEGORIES } from "@/types/timeline"
 
 const MONTHS = [
@@ -124,5 +125,47 @@ describe("data/timeline-events.json", () => {
       "AI Reaches Gold-Medal Level at the Math Olympiad",
     ])
     expect(landmarks.every((event) => (event as { landmark?: unknown }).landmark === true)).toBe(true)
+  })
+
+  test("marks the approved highlights of the busy years, and nothing else", () => {
+    const highlights = timelineData.filter((event) => "highlight" in event)
+
+    expect(highlights.map((event) => event.title)).toEqual([
+      "Anthropic Releases Claude",
+      "Meta Releases Llama 2",
+      "President Biden's Executive Order on AI",
+      "Google Launches Gemini 1.0",
+      "OpenAI Releases GPT-4o",
+      "DeepMind Researchers Win Nobel Prize",
+      "Anthropic Releases Claude Code in Research Preview",
+      "OpenAI Releases GPT-5",
+      "Google Releases Gemini 3",
+      "Google Unveils Gemini 3.5 at I/O",
+      "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
+      "Anthropic Releases Claude Opus 5",
+      "OpenAI Releases GPT-6 Astra",
+      "OpenAI Claims a Navier–Stokes Proof",
+    ])
+    expect(highlights.every((event) => (event as { highlight?: unknown }).highlight === true)).toBe(true)
+    expect(highlights.filter((event) => "landmark" in event)).toEqual([])
+  })
+
+  // A highlight only matters where the rest of the year is listed in brief
+  test("keeps five events at full size in every busy year, and highlights nothing in the others", () => {
+    const fullSizeByBusyYear = groupEventsByYear(parseTimelineEvents(timelineData)).flatMap((group) => {
+      const fullSize = group.events.filter((event) => event.landmark || event.highlight)
+      if (!isBusyYear(group.events)) {
+        expect(group.events.filter((event) => event.highlight), String(group.year)).toEqual([])
+        return []
+      }
+      return [[group.year, fullSize.length]]
+    })
+
+    expect(fullSizeByBusyYear).toEqual([
+      [2023, 5],
+      [2024, 5],
+      [2025, 5],
+      [2026, 5],
+    ])
   })
 })

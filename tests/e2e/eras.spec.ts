@@ -5,7 +5,9 @@ import timelineData from "../../data/timeline-events.json"
 import yearSummaryData from "../../data/year-summaries.json"
 import { groupEventsByEra } from "../../lib/eras"
 import { encodeHollerith } from "../../lib/hollerith"
+import { describePace } from "../../lib/pace"
 import { yearsSincePreviousEvent } from "../../lib/year-gaps"
+import { groupEventsByYear, isBusyYear } from "../../lib/year-groups"
 import type { TimelineEvent } from "../../types/timeline"
 
 const INTERFACES = ["punch-card", "terminal", "desktop", "notebook", "chat"]
@@ -226,4 +228,74 @@ test("dissolves each era into the next through the page's black", async ({ page 
   for (const backdrop of backdrops) {
     expect(backdrop).toMatch(/^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\), /)
   }
+})
+
+const busyYears = groupEventsByYear(timelineData as TimelineEvent[]).filter((group) => isBusyYear(group.events))
+
+test("keeps only each busy year's landmarks and highlights in full, and lists the rest in brief", async ({ page }) => {
+  await page.goto("/")
+
+  expect(busyYears.map((group) => group.year)).toEqual([2023, 2024, 2025, 2026])
+  await expect(page.locator("article")).toHaveCount(timelineData.length)
+  for (const group of busyYears) {
+    const fullSize = group.events.filter((event) => event.landmark || event.highlight).map((event) => event.title)
+    const shown = await page
+      .locator(`#the-generative-ai-era article[data-year="${group.year}"]:not([data-brief])`)
+      .evaluateAll((cards) => cards.map((card) => card.querySelector("a[data-event-link]")!.textContent))
+    expect(shown, String(group.year)).toEqual(fullSize)
+    await expect(page.locator(`article[data-year="${group.year}"][data-brief]`)).toHaveCount(
+      group.events.length - fullSize.length,
+    )
+  }
+})
+
+test("shows a busy year in full from its Show all button", async ({ page }) => {
+  await page.goto("/")
+  await waitForHydration(page)
+
+  const button = page.getByRole("button", { name: "Show all 64 in full" })
+  await expect(async () => {
+    await button.click()
+    await expect(button).toHaveAttribute("aria-pressed", "true", { timeout: 1000 })
+  }).toPass({ timeout: 15_000 })
+
+  await expect(page.locator('article[data-year="2024"][data-brief]')).toHaveCount(0)
+  await expect(page.locator('article[data-year="2023"][data-brief]')).not.toHaveCount(0)
+})
+
+test("lists the busy years in brief in under half the length of showing them in full", async ({ page }) => {
+  await page.goto("/")
+  await waitForHydration(page)
+  const chat = page.locator("#the-generative-ai-era")
+  const inBrief = await chat.evaluate((section) => section.getBoundingClientRect().height)
+
+  for (const group of busyYears) {
+    const button = page.getByRole("button", { name: `Show all ${group.events.length} in full` })
+    await expect(async () => {
+      await button.click()
+      await expect(button).toHaveAttribute("aria-pressed", "true", { timeout: 1000 })
+    }).toPass({ timeout: 15_000 })
+  }
+  const inFull = await chat.evaluate((section) => section.getBoundingClientRect().height)
+
+  expect(inBrief).toBeLessThan(inFull / 2)
+})
+
+test("opens the 2020s with how much faster the events come", async ({ page }) => {
+  const pace = describePace(timelineData as TimelineEvent[], 2020)!
+  await page.goto("/")
+
+  const paceLine = page.locator("[data-pace-line]")
+  await expect(paceLine).toHaveText(
+    `The next ${pace.years} years hold ${pace.events} events, ${pace.multiple} times as many as the ${pace.yearsBefore} years before them.`,
+  )
+  const order = await paceLine.evaluate((line) => {
+    const notebook = document.getElementById("the-deep-learning-revolution")!
+    const chat = document.getElementById("the-generative-ai-era")!
+    return [
+      Boolean(notebook.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(line.compareDocumentPosition(chat) & Node.DOCUMENT_POSITION_FOLLOWING),
+    ]
+  })
+  expect(order).toEqual([true, true])
 })

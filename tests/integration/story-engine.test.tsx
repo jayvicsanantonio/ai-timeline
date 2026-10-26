@@ -86,4 +86,25 @@ describe("StoryEngine", () => {
 
     expect(screen.getByRole("searchbox", { name: "Search events" })).toHaveFocus()
   })
+
+  it("opens the final era with how much faster its events come, between it and the era before", () => {
+    const { container } = render(<StoryEngine events={events} />)
+
+    const paceLine = container.querySelector("[data-pace-line]")!
+    expect(paceLine).toHaveTextContent(
+      "The next 7 years hold 207 events, 3 times as many as the 77 years before them.",
+    )
+    const deepLearning = screen.getByRole("region", { name: "The Deep Learning Revolution" })
+    const generative = screen.getByRole("region", { name: "The Generative AI Era" })
+    expect(deepLearning.compareDocumentPosition(paceLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(paceLine.compareDocumentPosition(generative) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it("leaves the pace line out while the reader filters", async () => {
+    const { container } = render(<StoryEngine events={events} />)
+
+    await userEvent.type(screen.getByRole("searchbox", { name: "Search events" }), "chess")
+
+    await expect.poll(() => container.querySelector("[data-pace-line]")).toBeNull()
+  })
 })
