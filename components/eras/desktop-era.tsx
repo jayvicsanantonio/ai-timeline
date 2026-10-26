@@ -12,6 +12,7 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  YearGap,
   eraEventCount,
   eraHeadingId,
   eventCardAttributes,
@@ -77,6 +78,11 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
         <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
           {era.events.map((event, index) => (
             <li key={eventAnchorId(event)} className={CASCADE_OFFSETS[index % CASCADE_OFFSETS.length]}>
+              <YearGap
+                events={era.events}
+                index={index}
+                className="mb-6 text-sm font-bold text-white [text-shadow:1px_1px_0_#000]"
+              />
               <EventWindow event={event} />
             </li>
           ))}

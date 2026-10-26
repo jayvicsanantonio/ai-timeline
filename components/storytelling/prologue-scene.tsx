@@ -64,7 +64,9 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
             {latestEra ? (
               <p>
                 Events per year. {latestEra.events.length} of the {totalEvents} events happened in the{' '}
-                {latestEra.range[0]}s.
+                {latestEra.range[0]}s.{' '}
+                {/* The bars answer only the pointer, so assistive technology skips this with the chart */}
+                <span aria-hidden="true">Click a bar to jump to that year.</span>
               </p>
             ) : null}
             <YearTable activity={activity} />

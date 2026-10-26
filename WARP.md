@@ -34,6 +34,8 @@ High-level architecture
     - EraChapter draws each era in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread.
     - Every interface gives its events the same structure: an article per event with its date ahead of an h3 that links to the source (EventHeading in era-parts.tsx), and the source site named on the card.
     - Events marked "landmark": true in the data are set apart in every interface; the approved list is pinned by a unit test.
+    - The punch-card, terminal and desktop eras say how many years passed between two events when more than one did (YearGap in era-parts.tsx, yearsSincePreviousEvent in lib/year-gaps.ts).
+    - The chat thread answers each year's question with a one-sentence summary from data/year-summaries.json (lib/year-summaries.ts); a unit test requires one for every year with events.
 - Data and types
   - Dataset: data/timeline-events.json, loaded by app/page.tsx through parseTimelineEvents (lib/timeline-events.ts), which throws on unknown categories so bad data fails the build.
   - Types live in types/timeline.ts. TIMELINE_CATEGORIES is the single list of categories, and TimelineCategory is derived from it.

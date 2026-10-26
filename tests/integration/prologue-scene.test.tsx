@@ -48,6 +48,14 @@ describe("PrologueScene", () => {
     )
   })
 
+  it("tells pointer users that a bar in the chart jumps to its year", () => {
+    renderPrologue()
+
+    const hint = within(screen.getByRole("figure")).getByText("Click a bar to jump to that year.")
+    // The bars answer only the pointer, so assistive technology skips the hint along with the chart
+    expect(hint).toHaveAttribute("aria-hidden", "true")
+  })
+
   it("offers the chart's numbers as a table of every year that has events", async () => {
     renderPrologue()
 

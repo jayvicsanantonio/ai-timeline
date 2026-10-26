@@ -5,6 +5,7 @@
 import { useId, type ReactNode } from 'react';
 import type { Era } from '@/lib/eras';
 import { eventAnchorId, eventSource } from '@/lib/event-format';
+import { yearsSincePreviousEvent } from '@/lib/year-gaps';
 import type { TimelineEvent } from '@/types/timeline';
 import { cn } from '@/lib/utils';
 
@@ -90,6 +91,23 @@ export function EventSource({ event, className }: { event: TimelineEvent; classN
       <span aria-hidden="true">↗</span>
     </span>
   );
+}
+
+interface YearGapProps {
+  events: TimelineEvent[];
+  index: number;
+  className?: string;
+}
+
+// Says how many years passed before the event at `index` when more than one did, so an era's
+// quiet stretches show between its cards. It goes ahead of the event's card, outside it.
+export function YearGap({ events, index, className }: YearGapProps) {
+  const years = yearsSincePreviousEvent(events, index);
+  if (years === null) {
+    return null;
+  }
+
+  return <p className={className}>{years} years later</p>;
 }
 
 interface CompactEraTextProps extends EraInterfaceProps {

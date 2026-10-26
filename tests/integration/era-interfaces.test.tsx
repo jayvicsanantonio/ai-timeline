@@ -8,6 +8,7 @@ import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
 import { ERA_DEFINITIONS, groupEventsByEra, type EraInterface } from "@/lib/eras"
 import { eventAnchorId, eventDateTime, eventSource, formatEventDate } from "@/lib/event-format"
 import { encodeHollerith } from "@/lib/hollerith"
+import { yearSummary } from "@/lib/year-summaries"
 import type { TimelineCategory, TimelineEvent } from "@/types/timeline"
 
 function makeEvent(
@@ -227,6 +228,38 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
   })
 })
 
+// The eras whose events come years apart mark the quiet stretches between their cards
+describe.each(["punch-card", "terminal", "desktop"] as const)("the %s era's year gaps", (eraInterface) => {
+  const [first, second] = eventsByInterface[eraInterface]
+
+  it("says how many years passed before an event, when more than one did", () => {
+    const { section } = renderEra(eraInterface)
+
+    const markers = within(section).getAllByText(/^\d+ years later$/)
+    expect(markers.map((marker) => marker.textContent)).toEqual([`${second.year - first.year} years later`])
+  })
+
+  it("sits ahead of the event's card in its list item, where assistive technology reads it too", () => {
+    const { section } = renderEra(eraInterface)
+
+    const marker = within(section).getByText(/^\d+ years later$/)
+    const card = section.querySelector(`#${eventAnchorId(second)}`)!
+    expect(marker.closest("li")).toBe(card.closest("li"))
+    expect(marker.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(marker.closest("article")).toBeNull()
+    expect(marker.closest('[aria-hidden="true"]')).toBeNull()
+  })
+
+  it("leaves events a year apart unmarked", () => {
+    const { section } = renderEra(eraInterface, [
+      first,
+      makeEvent(first.year + 1, "June", "The Next Year", "AI Tools"),
+    ])
+
+    expect(within(section).queryByText(/years later/)).toBeNull()
+  })
+})
+
 describe("the punch-card era", () => {
   it("keeps the punched strip shallow, so it reads as a strip rather than a block", () => {
     const { section } = renderEra("punch-card")
@@ -316,5 +349,24 @@ describe("the chat era", () => {
     const firstOf2024 = container.querySelector('article[data-year="2024"]')!
     expect(prompts[1].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(prompts[0].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it("answers each year's question with that year's summary, ahead of its first message", () => {
+    const { container } = renderEra("chat")
+
+    const answers = [...container.querySelectorAll("[data-year-summary]")]
+    expect(answers.map((answer) => answer.textContent)).toEqual([yearSummary(2023), yearSummary(2024)])
+    const prompt2024 = container.querySelectorAll("[data-year-prompt]")[1]
+    const firstOf2024 = container.querySelector('article[data-year="2024"]')!
+    expect(prompt2024.compareDocumentPosition(answers[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(answers[1].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(answers[1].closest('[aria-hidden="true"]')).toBeNull()
+  })
+
+  it("goes straight to a year's messages when the year has no summary yet", () => {
+    const { container } = renderEra("chat", [makeEvent(2027, "January", "A Later Release", "Public Releases")])
+
+    expect(container.querySelector("[data-year-prompt]")).toHaveTextContent("What happened in 2027?")
+    expect(container.querySelector("[data-year-summary]")).toBeNull()
   })
 })

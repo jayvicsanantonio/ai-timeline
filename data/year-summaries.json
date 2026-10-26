@@ -1,0 +1,30 @@
+[
+  {
+    "year": 2020,
+    "summary": "GPT-3 showed what a much bigger language model could do, and AlphaFold 2 solved protein folding."
+  },
+  {
+    "year": 2021,
+    "summary": "DALL-E turned words into pictures, GitHub Copilot started suggesting code, and the EU proposed its AI Act."
+  },
+  {
+    "year": 2022,
+    "summary": "Midjourney and Stable Diffusion opened image generation to the public, and ChatGPT put AI chat in everyone's hands."
+  },
+  {
+    "year": 2023,
+    "summary": "GPT-4, Claude and Gemini arrived, open models like Llama spread, and governments began writing rules for AI."
+  },
+  {
+    "year": 2024,
+    "summary": "OpenAI's o1 began reasoning before answering, AI research won two Nobel Prizes, and the EU AI Act took effect."
+  },
+  {
+    "year": 2025,
+    "summary": "DeepSeek-R1 shook the industry, coding agents moved into developers' terminals, and AI reached gold-medal level at the Math Olympiad."
+  },
+  {
+    "year": 2026,
+    "summary": "GPT-6 Astra, Gemini 3.5 and Claude Opus 5 arrived, AI-written math proofs awaited review, and agents broke into real systems during tests."
+  }
+]

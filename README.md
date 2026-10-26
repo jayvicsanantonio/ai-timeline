@@ -17,6 +17,7 @@ This project presents the complete history of artificial intelligence through an
 - ** Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread
 - ** Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–5 and /
 - ** Landmarks and Sources**: Twenty turning points stand out in every era, and each card names the site its link opens
+- ** Pace and Context**: The early eras mark the quiet years between events, and the chat thread sums up each year in a sentence
 - ** Responsive Design**: Optimized for desktop, tablet, and mobile experiences
 - ** Accessibility First**: WCAG 2.1 compliant with focus management and reduced motion support
 - ** Modern UI**: Shadcn/ui components with Radix UI primitives

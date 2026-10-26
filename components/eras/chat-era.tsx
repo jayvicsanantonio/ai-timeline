@@ -1,5 +1,5 @@
 // Draws the Generative AI Era as a chat thread, the interface the era made familiar.
-// Each year opens with the reader's question, its events answer as messages under month dividers, and the thread ends still typing.
+// Each year opens with the reader's question and a one-sentence answer, its events follow as messages under month dividers, and the thread ends still typing.
 'use client';
 
 import { Sparkles } from 'lucide-react';
@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { CategoryIcon } from '@/components/ui/category-icon';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { cn } from '@/lib/utils';
+import { yearSummary } from '@/lib/year-summaries';
 import type { TimelineEvent } from '@/types/timeline';
 import {
   CompactEraText,
@@ -50,17 +51,44 @@ function UserBubble({ children, className }: { children: ReactNode; className?: 
 const USER_BUBBLE_CLASS =
   'max-w-md rounded-3xl rounded-br-lg bg-[#2a2a33] px-5 py-3 text-[15px] leading-7 text-[#ececf1]';
 
+// The assistant's avatar, beside the era's introduction and each year's answer
+function AssistantAvatar() {
+  return (
+    <span
+      aria-hidden="true"
+      className="grid size-9 shrink-0 place-items-center rounded-full bg-[#9085e9] text-[#0c0c10]"
+    >
+      <Sparkles className="size-4" />
+    </span>
+  );
+}
+
+// The assistant's one-sentence answer to the year's question, kept in the data beside the events
+function YearAnswer({ year }: { year: number }) {
+  const summary = yearSummary(year);
+  if (!summary) {
+    return null;
+  }
+
+  return (
+    <div className="mt-8 flex gap-3 sm:gap-4">
+      <AssistantAvatar />
+      <p
+        data-year-summary=""
+        className="min-w-0 pt-1 text-base leading-7 text-[#d4d4d8] sm:text-lg sm:leading-8"
+      >
+        {summary}
+      </p>
+    </div>
+  );
+}
+
 export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
   if (era.events.length === 0) {
     return (
       <div className="chat-backdrop px-4 py-6 text-[#ececf1] sm:px-6">
         <div className="mx-auto flex max-w-3xl gap-3 sm:gap-4">
-          <span
-            aria-hidden="true"
-            className="grid size-9 shrink-0 place-items-center rounded-full bg-[#9085e9] text-[#0c0c10]"
-          >
-            <Sparkles className="size-4" />
-          </span>
+          <AssistantAvatar />
           <div className="min-w-0">
             <CompactEraText
               era={era}
@@ -85,12 +113,7 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
             <p className={USER_BUBBLE_CLASS}>What happened to AI after 2020?</p>
           </UserBubble>
           <div className="mt-8 flex gap-3 sm:gap-4">
-            <span
-              aria-hidden="true"
-              className="grid size-9 shrink-0 place-items-center rounded-full bg-[#9085e9] text-[#0c0c10]"
-            >
-              <Sparkles className="size-4" />
-            </span>
+            <AssistantAvatar />
             <div className="min-w-0">
               <p className="text-sm text-[#a1a1aa]">
                 {era.chapter} <span aria-hidden="true">·</span> {era.subtitle}
@@ -122,6 +145,7 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
                 What happened in <span className="font-semibold text-white">{year.key}</span>?
               </p>
             </UserBubble>
+            <YearAnswer year={year.key} />
 
             {groupEvents(year.events, formatEventDate).map((month) => (
               <div key={month.key} data-month={month.key} className="relative mt-10">

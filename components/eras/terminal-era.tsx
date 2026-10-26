@@ -9,6 +9,7 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  YearGap,
   eraEventCount,
   eraHeadingId,
   eventCardAttributes,
@@ -68,8 +69,13 @@ export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
         </header>
 
         <ol className="mt-10 border-b border-dashed border-[#1d5236]">
-          {era.events.map((event) => (
+          {era.events.map((event, index) => (
             <li key={eventAnchorId(event)}>
+              <YearGap
+                events={era.events}
+                index={index}
+                className="border-t border-dashed border-[#1d5236] py-3 text-xs uppercase tracking-[0.2em] text-[#38b874]"
+              />
               <TerminalRecord event={event} />
             </li>
           ))}

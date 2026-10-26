@@ -2,7 +2,11 @@
 // Each era is drawn in its own interface, and each interface answers the pointer the way its original did.
 import { expect, test, type Locator, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
+import yearSummaryData from "../../data/year-summaries.json"
+import { groupEventsByEra } from "../../lib/eras"
 import { encodeHollerith } from "../../lib/hollerith"
+import { yearsSincePreviousEvent } from "../../lib/year-gaps"
+import type { TimelineEvent } from "../../types/timeline"
 
 const INTERFACES = ["punch-card", "terminal", "desktop", "notebook", "chat"]
 
@@ -81,11 +85,40 @@ test("steps the window cascade only slightly, so the dates in the title bars sta
   expect(Math.max(...leftEdges) - Math.min(...leftEdges)).toBeLessThanOrEqual(32)
 })
 
+test("marks each stretch of more than a year between events, ahead of the event that ends it", async ({ page }) => {
+  await page.goto("/")
+  const erasWithGaps = groupEventsByEra(timelineData as TimelineEvent[]).filter((era) =>
+    ["punch-card", "terminal", "desktop"].includes(era.interface),
+  )
+
+  for (const era of erasWithGaps) {
+    const expected = era.events.flatMap((event, index) => {
+      const years = yearsSincePreviousEvent(era.events, index)
+      return years === null ? [] : [`${years} years later, then ${event.title}`]
+    })
+    const marked = await page.locator(`#${era.id} li`).evaluateAll((items) =>
+      items.flatMap((item) => {
+        const marker = [...item.children].find((child) => /^\d+ years later$/.test(child.textContent ?? ""))
+        return marker ? [`${marker.textContent}, then ${item.querySelector("a[data-event-link]")!.textContent}`] : []
+      }),
+    )
+
+    expect(expected, era.name).not.toHaveLength(0)
+    expect(marked, era.name).toEqual(expected)
+  }
+})
+
 test("opens each year of the chat thread with the reader's question", async ({ page }) => {
   await page.goto("/")
   const years = [...new Set(timelineData.filter((event) => event.year >= 2020).map((event) => event.year))]
 
   await expect(page.locator("[data-year-prompt]")).toHaveText(years.map((year) => `What happened in ${year}?`))
+})
+
+test("answers each year's question in the chat thread with its summary from the data", async ({ page }) => {
+  await page.goto("/")
+
+  await expect(page.locator("[data-year-summary]")).toHaveText(yearSummaryData.map(({ summary }) => summary))
 })
 
 test("inverts a terminal record's title while the pointer is over it", async ({ page }) => {

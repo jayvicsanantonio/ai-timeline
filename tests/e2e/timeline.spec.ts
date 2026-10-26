@@ -92,6 +92,23 @@ test("charts every year from the first event to the last, and labels the busiest
   await expect(chart).toContainText(`${busiestCount} events in ${busiestYear}`)
 })
 
+test("jumps to a year's first event from its bar in the opening chart, as the chart's hint says", async ({ page }) => {
+  const year = 1956
+  const firstOfYear = timelineData.find((event) => event.year === year)!
+  // Some eras set titles in capitals, so the link is matched by its whole title in any case
+  const escapedTitle = firstOfYear.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+  await page.goto("/")
+
+  const chart = page.getByRole("figure")
+  await expect(chart).toContainText("Click a bar to jump to that year.")
+  // The bars answer clicks once the page hydrates, so the first click repeats until it lands
+  await expect(async () => {
+    await chart.locator(`[data-year-bar][data-year="${year}"]`).click()
+    await expect(page.getByRole("link", { name: new RegExp(`^${escapedTitle}$`, "i") })).toBeFocused({ timeout: 1000 })
+  }).toPass({ timeout: 15_000 })
+})
+
 test("compares the Generative AI Era with the decade before it in Timeline Insights, from the real events", async ({ page }) => {
   const latest = timelineData.filter((event) => event.year >= 2020).length
   const previous = timelineData.filter((event) => event.year >= 2010 && event.year < 2020).length

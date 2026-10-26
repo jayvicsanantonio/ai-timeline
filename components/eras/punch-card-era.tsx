@@ -18,6 +18,7 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  YearGap,
   eraEventCount,
   eraHeadingId,
   eventCardAttributes,
@@ -77,8 +78,13 @@ export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
         </header>
 
         <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
-          {era.events.map((event) => (
+          {era.events.map((event, index) => (
             <li key={eventAnchorId(event)}>
+              <YearGap
+                events={era.events}
+                index={index}
+                className="mb-8 flex items-center gap-4 font-mono text-xs uppercase tracking-[0.3em] text-[#b9aa89] before:h-px before:flex-1 before:bg-[#b9aa89]/30 after:h-px after:flex-1 after:bg-[#b9aa89]/30 sm:mb-10"
+              />
               <PunchCard event={event} />
             </li>
           ))}
