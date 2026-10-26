@@ -1,8 +1,8 @@
 // Integration tests for the five era interfaces rendered by EraChapter in real Chromium.
 // Every interface must give its events the same accessible structure, plus the details that make it its own.
 import { render, screen, within } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
-import { userEvent } from "vitest/browser"
+import { afterEach, beforeEach, describe, expect, it } from "vitest"
+import { page, userEvent } from "vitest/browser"
 import { EraChapter } from "@/components/eras/era-chapter"
 import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
 import { ERA_DEFINITIONS, groupEventsByEra, type EraInterface } from "@/lib/eras"
@@ -239,12 +239,12 @@ describe.each(["punch-card", "terminal", "desktop"] as const)("the %s era's year
     expect(markers.map((marker) => marker.textContent)).toEqual([`${second.year - first.year} years later`])
   })
 
-  it("sits ahead of the event's card in its list item, where assistive technology reads it too", () => {
+  it("sits ahead of the year's first card in its list item, where assistive technology reads it too", () => {
     const { section } = renderEra(eraInterface)
 
     const marker = within(section).getByText(/^\d+ years later$/)
     const card = section.querySelector(`#${eventAnchorId(second)}`)!
-    expect(marker.closest("li")).toBe(card.closest("li"))
+    expect(marker.closest("li")!.contains(card)).toBe(true)
     expect(marker.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(marker.closest("article")).toBeNull()
     expect(marker.closest('[aria-hidden="true"]')).toBeNull()
@@ -260,7 +260,79 @@ describe.each(["punch-card", "terminal", "desktop"] as const)("the %s era's year
   })
 })
 
+function yearColumns(section: HTMLElement) {
+  return [...section.querySelectorAll<HTMLElement>("[data-year-column]")]
+}
+
+// The era's own drawing of a year in its column, which assistive technology skips
+function drawnYear(column: HTMLElement) {
+  return column.querySelector<HTMLElement>('[aria-hidden="true"]')!
+}
+
+// Every era groups its events by year, beside a column that names the year in the era's own style
+describe.each(INTERFACES)("the %s era's year column", (eraInterface) => {
+  const events = eventsByInterface[eraInterface]
+  const years = [...new Set(events.map((event) => event.year))]
+
+  it("names each year ahead of its events, in plain words for assistive technology", () => {
+    const { section } = renderEra(eraInterface)
+
+    const columns = yearColumns(section)
+    expect(columns.map((column) => Number(column.dataset.yearColumn))).toEqual(years)
+    columns.forEach((column, index) => {
+      const year = years[index]
+      const count = events.filter((event) => event.year === year).length
+      expect(within(column).getByText(`${year}, ${count} ${count === 1 ? "event" : "events"}`)).toHaveClass("sr-only")
+      expect(drawnYear(column)).toHaveTextContent(String(year))
+      const firstOfYear = section.querySelector(`#${eventAnchorId(events.find((event) => event.year === year)!)}`)!
+      expect(column.compareDocumentPosition(firstOfYear) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    })
+  })
+
+  it("puts the year on one short line above its events on a phone", () => {
+    const { section } = renderEra(eraInterface)
+
+    const [column] = yearColumns(section)
+    const firstCard = within(section).getAllByRole("article")[0]
+    expect(column.getBoundingClientRect().height).toBeLessThan(48)
+    expect(column.getBoundingClientRect().bottom).toBeLessThanOrEqual(firstCard.getBoundingClientRect().top)
+  })
+
+  describe("on a wide screen", () => {
+    beforeEach(async () => {
+      await page.viewport(1280, 800)
+    })
+
+    afterEach(async () => {
+      await page.viewport(414, 896)
+    })
+
+    it("keeps the year in view beside its events while they scroll past", () => {
+      const { section } = renderEra(eraInterface)
+
+      const [column] = yearColumns(section)
+      const firstCard = within(section).getAllByRole("article")[0]
+      expect(getComputedStyle(column.firstElementChild!).position).toBe("sticky")
+      expect(column.getBoundingClientRect().right).toBeLessThanOrEqual(firstCard.getBoundingClientRect().left)
+    })
+  })
+})
+
 describe("the punch-card era", () => {
+  it("counts each year's cards as records and lights the months they fall in", () => {
+    const { section } = renderEra("punch-card")
+
+    const [year1951, year1956] = yearColumns(section)
+    const litMonths = (column: HTMLElement) =>
+      [...column.querySelectorAll<HTMLElement>("[data-month-square]")]
+        .filter((square) => square.dataset.count !== "0")
+        .map((square) => square.dataset.monthSquare)
+    expect(drawnYear(year1956)).toHaveTextContent("1 record")
+    expect(year1956.querySelectorAll("[data-month-square]")).toHaveLength(12)
+    expect(litMonths(year1956)).toEqual(["June"])
+    expect(litMonths(year1951)).toEqual([])
+  })
+
   it("keeps the punched strip shallow, so it reads as a strip rather than a block", () => {
     const { section } = renderEra("punch-card")
 
@@ -289,6 +361,23 @@ describe("the terminal era", () => {
     const [mycin, xcon] = within(section).getAllByRole("article")
     expect(mycin).toHaveTextContent("> RECALL 1974")
     expect(xcon).toHaveTextContent("> RECALL March 1980")
+  })
+
+  it("prints each year in hex beside its count of records, as the terminal would", () => {
+    const { section } = renderEra("terminal")
+
+    const [year1974] = yearColumns(section)
+    expect(drawnYear(year1974)).toHaveTextContent("0X7B6 · 1 REC")
+  })
+})
+
+describe("the desktop era", () => {
+  it("files each year in a folder named for it, as the desktop would", () => {
+    const { section } = renderEra("desktop")
+
+    const [year1997] = yearColumns(section)
+    expect(drawnYear(year1997)).toHaveTextContent("C:\\AI\\1997 (1)")
+    expect(drawnYear(year1997).querySelector("svg")).not.toBeNull()
   })
 })
 
@@ -330,6 +419,14 @@ describe("the notebook era", () => {
     expect(cells[0]).toHaveTextContent("In [2]:")
     expect(cells[1]).toHaveTextContent("In [3]:")
   })
+
+  it("heads each year like a markdown cell, with its count of cells", () => {
+    const { section } = renderEra("notebook")
+
+    const [year2012] = yearColumns(section)
+    expect(drawnYear(year2012)).toHaveTextContent("# 2012")
+    expect(drawnYear(year2012)).toHaveTextContent("1 cell")
+  })
 })
 
 describe("the chat era", () => {
@@ -361,6 +458,16 @@ describe("the chat era", () => {
     expect(prompt2024.compareDocumentPosition(answers[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(answers[1].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(answers[1].closest('[aria-hidden="true"]')).toBeNull()
+  })
+
+  it("counts each year's events and landmarks beside them", () => {
+    const { section } = renderEra("chat")
+
+    const [year2023, year2024] = yearColumns(section)
+    expect(drawnYear(year2023)).toHaveTextContent("2 events")
+    expect(drawnYear(year2023)).toHaveTextContent("★ 1 landmark")
+    expect(drawnYear(year2024)).toHaveTextContent("1 event")
+    expect(drawnYear(year2024)).not.toHaveTextContent("landmark")
   })
 
   it("goes straight to a year's messages when the year has no summary yet", () => {

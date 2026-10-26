@@ -1,10 +1,10 @@
-// Draws the Foundation Era as a deck of 80-column punch cards under a teletype printout.
+// Draws the Foundation Era as a deck of 80-column punch cards under a teletype printout, grouped beside each year's label.
 // Each card leads with its date, then carries its title punched in IBM 029 Hollerith code, its description and source.
 'use client';
 
 import { useId } from 'react';
 import { CategoryIcon } from '@/components/ui/category-icon';
-import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
+import { eventAnchorId, eventDateTime, formatEventDate, MONTHS } from '@/lib/event-format';
 import {
   encodeHollerith,
   keypunchText,
@@ -12,13 +12,16 @@ import {
   PUNCH_CARD_ROWS,
 } from '@/lib/hollerith';
 import { cn } from '@/lib/utils';
+import { countEventsByMonth, groupEventsByYear } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import {
   CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  YearColumn,
   YearGap,
+  countOf,
   eraEventCount,
   eraHeadingId,
   eventCardAttributes,
@@ -55,10 +58,12 @@ export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
     );
   }
 
+  const years = groupEventsByYear(era.events);
+
   return (
     <div className="punch-card-room px-4 py-24 sm:px-6 sm:py-32">
-      <div className="mx-auto max-w-3xl">
-        <header className="teletype-paper px-10 py-9 font-mono text-[#3a3226] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] sm:px-16 sm:py-12">
+      <div className="mx-auto max-w-4xl">
+        <header className="teletype-paper mx-auto max-w-3xl px-10 py-9 font-mono text-[#3a3226] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] sm:px-16 sm:py-12">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-xs uppercase tracking-[0.25em] text-[#5e5139]">
             <span>{era.chapter}</span>
             <span>{era.subtitle}</span>
@@ -78,18 +83,51 @@ export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
         </header>
 
         <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
-          {era.events.map((event, index) => (
-            <li key={eventAnchorId(event)}>
+          {years.map((group, index) => (
+            <li key={group.year}>
               <YearGap
-                events={era.events}
+                events={years}
                 index={index}
                 className="mb-8 flex items-center gap-4 font-mono text-xs uppercase tracking-[0.3em] text-[#b9aa89] before:h-px before:flex-1 before:bg-[#b9aa89]/30 after:h-px after:flex-1 after:bg-[#b9aa89]/30 sm:mb-10"
               />
-              <PunchCard event={event} />
+              <div className="md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8">
+                <YearColumn group={group} className="mb-4 md:mb-0">
+                  <div className="flex items-baseline gap-3 font-mono md:block">
+                    <p className="text-lg font-bold text-[#f3e9cf] md:text-3xl">{group.year}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#b9aa89] md:mt-1">
+                      {countOf(group.events.length, 'record')}
+                    </p>
+                    <MonthSquares events={group.events} className="mt-3 hidden md:grid" />
+                  </div>
+                </YearColumn>
+                <ol className="space-y-8 sm:space-y-10">
+                  {group.events.map((event) => (
+                    <li key={eventAnchorId(event)}>
+                      <PunchCard event={event} />
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </li>
           ))}
         </ol>
       </div>
+    </div>
+  );
+}
+
+// The year's twelve months as squares, filled where the year has cards, like a row of punched holes
+function MonthSquares({ events, className }: { events: TimelineEvent[]; className?: string }) {
+  return (
+    <div className={cn('grid-cols-12 gap-0.5', className)}>
+      {countEventsByMonth(events).map((count, index) => (
+        <span
+          key={MONTHS[index]}
+          data-month-square={MONTHS[index]}
+          data-count={count}
+          className={cn('h-2 rounded-[1px]', count > 0 ? 'bg-[#c98500]' : 'bg-[#f3e9cf]/15')}
+        />
+      ))}
     </div>
   );
 }

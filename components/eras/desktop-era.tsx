@@ -1,17 +1,19 @@
-// Draws the Learning Era as beveled windows cascading across a teal desktop, the look of 1990s PCs.
+// Draws the Learning Era as beveled windows cascading across a teal desktop, the look of 1990s PCs, beside a folder for each year.
 // Each event is a window: its date, icon and title in the title bar, its description inside, its category and source below.
 'use client';
 
-import { Info } from 'lucide-react';
+import { FolderOpen, Info } from 'lucide-react';
 import { CategoryIcon } from '@/components/ui/category-icon';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { cn } from '@/lib/utils';
+import { groupEventsByYear } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import {
   CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  YearColumn,
   YearGap,
   eraEventCount,
   eraHeadingId,
@@ -47,6 +49,8 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
     );
   }
 
+  const years = groupEventsByYear(era.events);
+
   return (
     <div className="desktop-wallpaper font-desktop px-4 py-24 sm:px-6 sm:py-32">
       <div className="mx-auto max-w-4xl">
@@ -76,14 +80,36 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
         </header>
 
         <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
-          {era.events.map((event, index) => (
-            <li key={eventAnchorId(event)} className={CASCADE_OFFSETS[index % CASCADE_OFFSETS.length]}>
+          {years.map((group, index) => (
+            <li key={group.year}>
               <YearGap
-                events={era.events}
+                events={years}
                 index={index}
                 className="mb-6 text-sm font-bold text-white [text-shadow:1px_1px_0_#000]"
               />
-              <EventWindow event={event} />
+              <div className="md:grid md:grid-cols-[9rem_minmax(0,1fr)] md:gap-6">
+                <YearColumn group={group} className="mb-3 md:mb-0">
+                  <div className="flex items-center gap-3 md:block">
+                    <p className="inline-flex items-center gap-2 rounded bg-black/30 px-2.5 py-1 text-white ring-1 ring-white/15">
+                      <FolderOpen className="size-4 shrink-0 text-amber-300" />
+                      <span className="text-lg font-bold leading-none md:text-2xl">{group.year}</span>
+                    </p>
+                    <p className="font-mono text-[11px] tracking-[0.1em] text-white [text-shadow:1px_1px_0_#000] md:mt-1.5">
+                      C:\AI\{group.year} ({group.events.length})
+                    </p>
+                  </div>
+                </YearColumn>
+                <ol className="space-y-8 sm:space-y-10">
+                  {group.events.map((event) => (
+                    <li
+                      key={eventAnchorId(event)}
+                      className={CASCADE_OFFSETS[era.events.indexOf(event) % CASCADE_OFFSETS.length]}
+                    >
+                      <EventWindow event={event} />
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </li>
           ))}
         </ol>

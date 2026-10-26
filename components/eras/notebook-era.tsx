@@ -1,15 +1,18 @@
-// Draws the Deep Learning Revolution as a research notebook open on a dark desk, the tool of the 2010s neural network boom.
+// Draws the Deep Learning Revolution as a research notebook open on a dark desk, the tool of the 2010s neural network boom, with a heading for each year.
 // Each event is a code cell that records the milestone's date and title, followed by an output cell that describes it.
 'use client';
 
 import { CategoryIcon } from '@/components/ui/category-icon';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
+import { groupEventsByYear } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import {
   CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  YearColumn,
+  countOf,
   eraEventCount,
   eraHeadingId,
   eventCardAttributes,
@@ -93,9 +96,29 @@ export function NotebookEra({ era, totalEvents }: EraInterfaceProps) {
           </div>
 
           <ol className="mt-2">
-            {era.events.map((event, index) => (
-              <li key={eventAnchorId(event)}>
-                <NotebookCell event={event} cellNumber={FIRST_EVENT_CELL + index} />
+            {groupEventsByYear(era.events).map((group) => (
+              <li
+                key={group.year}
+                className="mt-4 border-t border-[#ececef] pt-2 first:mt-0 first:border-t-0 first:pt-0 md:grid md:grid-cols-[6.5rem_minmax(0,1fr)] md:gap-4"
+              >
+                <YearColumn group={group} className="mt-4 md:pt-4">
+                  <p className="flex items-baseline gap-3 font-mono md:block">
+                    <span className="block text-base font-bold text-[#1f1f1f] md:text-xl">
+                      <span className="text-[#d95926]"># </span>
+                      {group.year}
+                    </span>
+                    <span className="block text-xs text-[#5f5f5f] md:mt-1">
+                      {countOf(group.events.length, 'cell')}
+                    </span>
+                  </p>
+                </YearColumn>
+                <ol>
+                  {group.events.map((event) => (
+                    <li key={eventAnchorId(event)}>
+                      <NotebookCell event={event} cellNumber={FIRST_EVENT_CELL + era.events.indexOf(event)} />
+                    </li>
+                  ))}
+                </ol>
               </li>
             ))}
           </ol>

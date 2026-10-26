@@ -1,4 +1,4 @@
-// Draws the Generative AI Era as a chat thread, the interface the era made familiar.
+// Draws the Generative AI Era as a chat thread, the interface the era made familiar, with each year's label beside its part of the thread.
 // Each year opens with the reader's question and a one-sentence answer, its events follow as messages under month dividers, and the thread ends still typing.
 'use client';
 
@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { CategoryIcon } from '@/components/ui/category-icon';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { cn } from '@/lib/utils';
+import { groupEventsByYear, type YearGroup } from '@/lib/year-groups';
 import { yearSummary } from '@/lib/year-summaries';
 import type { TimelineEvent } from '@/types/timeline';
 import {
@@ -14,6 +15,8 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  YearColumn,
+  countOf,
   eraEventCount,
   eraHeadingId,
   eventCardAttributes,
@@ -63,6 +66,27 @@ function AssistantAvatar() {
   );
 }
 
+// The year in the column beside its thread, with its count of events and of landmarks
+function ChatYearLabel({ group }: { group: YearGroup }) {
+  const landmarks = group.events.filter((event) => event.landmark).length;
+
+  return (
+    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:block">
+      <p className="text-lg font-semibold tracking-tight text-white md:text-3xl">{group.year}</p>
+      <p className="text-[11px] uppercase tracking-[0.16em] text-[#a1a1aa] md:mt-1">
+        {countOf(group.events.length, 'event')}
+      </p>
+      {landmarks > 0 ? (
+        <p className="md:mt-2">
+          <span className="inline-block rounded-full border border-[#9085e9]/40 bg-[#9085e9]/10 px-2 py-0.5 text-[11px] text-[#b4abf5]">
+            ★ {countOf(landmarks, 'landmark')}
+          </span>
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 // The assistant's one-sentence answer to the year's question, kept in the data beside the events
 function YearAnswer({ year }: { year: number }) {
   const summary = yearSummary(year);
@@ -107,8 +131,9 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
 
   return (
     <div className="chat-backdrop px-4 py-24 text-[#ececf1] sm:px-6 sm:py-32">
-      <div className="mx-auto max-w-3xl">
-        <header>
+      <div className="mx-auto max-w-4xl">
+        {/* The introduction and the closing line sit in line with the thread, past the years' column */}
+        <header className="md:pl-40">
           <UserBubble>
             <p className={USER_BUBBLE_CLASS}>What happened to AI after 2020?</p>
           </UserBubble>
@@ -137,45 +162,54 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
           </div>
         </header>
 
-        {groupEvents(era.events, (event) => event.year).map((year) => (
-          <div key={year.key} data-year-group={year.key}>
-            {/* Each year starts a new turn of the conversation, a landmark while scrolling */}
-            <UserBubble className="mt-16">
-              <p data-year-prompt="" className={USER_BUBBLE_CLASS}>
-                What happened in <span className="font-semibold text-white">{year.key}</span>?
-              </p>
-            </UserBubble>
-            <YearAnswer year={year.key} />
+        {groupEventsByYear(era.events).map((group) => (
+          <div
+            key={group.year}
+            data-year-group={group.year}
+            className="mt-16 md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8"
+          >
+            <YearColumn group={group} className="mb-6 md:mb-0">
+              <ChatYearLabel group={group} />
+            </YearColumn>
+            <div className="min-w-0">
+              {/* Each year starts a new turn of the conversation, a landmark while scrolling */}
+              <UserBubble>
+                <p data-year-prompt="" className={USER_BUBBLE_CLASS}>
+                  What happened in <span className="font-semibold text-white">{group.year}</span>?
+                </p>
+              </UserBubble>
+              <YearAnswer year={group.year} />
 
-            {groupEvents(year.events, formatEventDate).map((month) => (
-              <div key={month.key} data-month={month.key} className="relative mt-10">
-                {/* The rule stays where the month begins. Only the date pins below the toolbar,
-                    and it lets clicks through to the messages scrolling under it. */}
-                <span aria-hidden="true" className="absolute inset-x-0 top-[0.8125rem] h-px bg-white/10" />
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none sticky top-[calc(var(--timeline-sticky-offset,0px)+0.5rem)] z-20 flex justify-center"
-                >
-                  <span
-                    data-month-divider=""
-                    className="rounded-full border border-white/10 bg-[#1b1b22] px-3 py-1 text-xs font-medium text-[#c4c4cc] shadow-[0_6px_16px_-6px_rgba(0,0,0,0.9)]"
+              {groupEvents(group.events, formatEventDate).map((month) => (
+                <div key={month.key} data-month={month.key} className="relative mt-10">
+                  {/* The rule stays where the month begins. Only the date pins below the toolbar,
+                      and it lets clicks through to the messages scrolling under it. */}
+                  <span aria-hidden="true" className="absolute inset-x-0 top-[0.8125rem] h-px bg-white/10" />
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none sticky top-[calc(var(--timeline-sticky-offset,0px)+0.5rem)] z-20 flex justify-center"
                   >
-                    {month.key}
-                  </span>
+                    <span
+                      data-month-divider=""
+                      className="rounded-full border border-white/10 bg-[#1b1b22] px-3 py-1 text-xs font-medium text-[#c4c4cc] shadow-[0_6px_16px_-6px_rgba(0,0,0,0.9)]"
+                    >
+                      {month.key}
+                    </span>
+                  </div>
+                  <ol className="mt-5 space-y-4">
+                    {month.events.map((event) => (
+                      <li key={eventAnchorId(event)}>
+                        <ChatMessage event={event} />
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-                <ol className="mt-5 space-y-4">
-                  {month.events.map((event) => (
-                    <li key={eventAnchorId(event)}>
-                      <ChatMessage event={event} />
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ))}
 
-        <p className="mt-12 flex items-center gap-3 text-sm text-[#a1a1aa]">
+        <p className="mt-12 flex items-center gap-3 text-sm text-[#a1a1aa] md:pl-40">
           <span aria-hidden="true" className="chat-typing flex gap-1">
             <span />
             <span />

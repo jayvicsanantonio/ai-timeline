@@ -1,4 +1,4 @@
-// Pieces every era interface shares: its props, the heading id, the event count, card attributes and the event title.
+// Pieces every era interface shares: its props, the heading id, the event count, card attributes, the event title and the year column.
 // The title's link stretches over its whole event card, so a click anywhere on the card opens the source.
 'use client';
 
@@ -6,6 +6,7 @@ import { useId, type ReactNode } from 'react';
 import type { Era } from '@/lib/eras';
 import { eventAnchorId, eventSource } from '@/lib/event-format';
 import { yearsSincePreviousEvent } from '@/lib/year-gaps';
+import type { YearGroup } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import { cn } from '@/lib/utils';
 
@@ -93,14 +94,20 @@ export function EventSource({ event, className }: { event: TimelineEvent; classN
   );
 }
 
+// A count and its noun, such as "1 record" or "2 records"
+export function countOf(count: number, noun: string) {
+  return `${count} ${noun}${count === 1 ? '' : 's'}`;
+}
+
 interface YearGapProps {
-  events: TimelineEvent[];
+  // Events, or years of events, in order
+  events: Pick<TimelineEvent, 'year'>[];
   index: number;
   className?: string;
 }
 
-// Says how many years passed before the event at `index` when more than one did, so an era's
-// quiet stretches show between its cards. It goes ahead of the event's card, outside it.
+// Says how many years passed before the entry at `index` when more than one did, so an era's
+// quiet stretches show between its cards. It goes ahead of the cards, outside them.
 export function YearGap({ events, index, className }: YearGapProps) {
   const years = yearsSincePreviousEvent(events, index);
   if (years === null) {
@@ -108,6 +115,29 @@ export function YearGap({ events, index, className }: YearGapProps) {
   }
 
   return <p className={className}>{years} years later</p>;
+}
+
+interface YearColumnProps {
+  group: YearGroup;
+  className?: string;
+  // The era's own drawing of the year and its details
+  children: ReactNode;
+}
+
+// A year beside its events. From the md breakpoint up it is a column whose label stays in view while
+// the year's events scroll past; on phones it is one line above them. Assistive technology reads the
+// year and its count in plain words and skips the era's drawing of them.
+export function YearColumn({ group, className, children }: YearColumnProps) {
+  return (
+    <div data-year-column={group.year} className={className}>
+      <div className="md:sticky md:top-[calc(var(--timeline-sticky-offset,0px)+1.5rem)]">
+        <p className="sr-only">
+          {group.year}, {countOf(group.events.length, 'event')}
+        </p>
+        <div aria-hidden="true">{children}</div>
+      </div>
+    </div>
+  );
 }
 
 interface CompactEraTextProps extends EraInterfaceProps {

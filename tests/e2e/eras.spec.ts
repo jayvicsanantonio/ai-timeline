@@ -195,3 +195,22 @@ test("lets clicks pass through a pinned month divider to the messages under it",
 
   expect(hitsDivider).toBe(false)
 })
+
+test("keeps a year in view beside its events while they scroll past", async ({ page }) => {
+  await page.goto("/")
+  await waitForHydration(page)
+
+  const gapBelowToolbar = await page.evaluate(async () => {
+    const toolbar = document.querySelector('[role="search"]')!.parentElement!
+    // A year with many events, so its column has room to stay pinned
+    const column = document.querySelector('[data-year-column="2023"]')!
+    const pinned = column.firstElementChild!
+    const columnTop = column.getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top: columnTop + column.clientHeight / 2, behavior: "instant" as ScrollBehavior })
+    await new Promise((resolve) => requestAnimationFrame(resolve))
+    return pinned.getBoundingClientRect().top - toolbar.getBoundingClientRect().bottom
+  })
+
+  // The year rests a rem and a half below the toolbar
+  expect(gapBelowToolbar).toBeCloseTo(24, 0)
+})

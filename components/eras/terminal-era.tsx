@@ -1,14 +1,16 @@
-// Draws the Knowledge Era as a session on a green-phosphor terminal, the screen of the expert-system years.
+// Draws the Knowledge Era as a session on a green-phosphor terminal, the screen of the expert-system years, its records grouped by year.
 // Each event is recalled at a command prompt that prints its date, with its title, category, description and source.
 'use client';
 
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
+import { groupEventsByYear } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import {
   CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  YearColumn,
   YearGap,
   eraEventCount,
   eraHeadingId,
@@ -32,6 +34,8 @@ export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
       </div>
     );
   }
+
+  const years = groupEventsByYear(era.events);
 
   return (
     <div className="bg-[#020503] px-3 py-24 sm:px-6 sm:py-32">
@@ -69,14 +73,30 @@ export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
         </header>
 
         <ol className="mt-10 border-b border-dashed border-[#1d5236]">
-          {era.events.map((event, index) => (
-            <li key={eventAnchorId(event)}>
+          {years.map((group, index) => (
+            <li key={group.year} className="border-t border-dashed border-[#1d5236]">
               <YearGap
-                events={era.events}
+                events={years}
                 index={index}
-                className="border-t border-dashed border-[#1d5236] py-3 text-xs uppercase tracking-[0.2em] text-[#38b874]"
+                className="border-b border-dashed border-[#1d5236] py-3 text-xs uppercase tracking-[0.2em] text-[#38b874]"
               />
-              <TerminalRecord event={event} />
+              <div className="md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-6">
+                <YearColumn group={group} className="mt-5 md:mt-0 md:pt-6">
+                  <div className="flex items-baseline gap-3 md:block">
+                    <p className="crt-glow text-lg font-bold text-[#9dffc4] md:text-2xl">{group.year}</p>
+                    <p className="text-[11px] tracking-[0.18em] text-[#38b874] md:mt-1">
+                      0X{group.year.toString(16).toUpperCase()} · {group.events.length} REC
+                    </p>
+                  </div>
+                </YearColumn>
+                <ol className="divide-y divide-dashed divide-[#1d5236]">
+                  {group.events.map((event) => (
+                    <li key={eventAnchorId(event)}>
+                      <TerminalRecord event={event} />
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </li>
           ))}
         </ol>
@@ -93,7 +113,7 @@ function TerminalRecord({ event }: { event: TimelineEvent }) {
   return (
     <article
       {...eventCardAttributes(event)}
-      className="reveal-on-scroll group relative scroll-mt-[var(--timeline-sticky-offset,0px)] border-t border-dashed border-[#1d5236] py-6 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[#9dffc4]"
+      className="reveal-on-scroll group relative scroll-mt-[var(--timeline-sticky-offset,0px)] py-6 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[#9dffc4]"
     >
       <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs uppercase tracking-[0.2em] text-[#38b874]">
         <span>

@@ -104,6 +104,21 @@ test.describe(`desktop layout at ${DESKTOP.width}x${DESKTOP.height}`, () => {
     await expect(rail.getByText("1997", { exact: true })).toBeVisible()
     await expect(rail.getByText("May", { exact: true })).toBeVisible()
   })
+
+  test("keeps every era's events and year columns clear of the rail", async ({ page }) => {
+    await enterTimeline(page)
+
+    const underRail = await page.evaluate((chapterNav) => {
+      const rail = [...document.querySelectorAll(chapterNav)]
+        .map((nav) => nav.getBoundingClientRect())
+        .find((box) => box.width > 0)!
+      return [...document.querySelectorAll("section[data-interface] article, [data-year-column]")]
+        .filter((element) => element.getBoundingClientRect().right > rail.left)
+        .map((element) => element.id || `year ${element.getAttribute("data-year-column")}`)
+    }, CHAPTER_NAV)
+
+    expect(underRail).toEqual([])
+  })
 })
 
 test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
@@ -197,5 +212,21 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
       const chapterList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
       expect(await chapterList.evaluate((list) => getComputedStyle(list).opacity)).toBe("1")
     })
+  })
+})
+
+test.describe(`year labels on a phone (${PHONE.width}x${PHONE.height})`, () => {
+  test.use({ viewport: PHONE })
+
+  test("shows each year as one short line above its events", async ({ page }) => {
+    await page.goto("/")
+    await waitForHydration(page)
+
+    const heights = await page
+      .locator("[data-year-column]")
+      .evaluateAll((columns) => columns.map((column) => Math.round(column.getBoundingClientRect().height)))
+
+    expect(heights.length).toBeGreaterThan(0)
+    expect(Math.max(...heights)).toBeLessThan(48)
   })
 })
