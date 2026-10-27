@@ -3,6 +3,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Tailwind scans every folder git does not ignore for class names, and the bundler hashes each of those folders on
+   every build. .claude/ holds other Claude Code sessions' worktrees, which change underneath a build, so it is skipped. */
+@source not "../.claude";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {

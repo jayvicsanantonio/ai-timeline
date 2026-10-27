@@ -71,6 +71,7 @@ The application uses React's built-in state management with no external state li
 
 - Tailwind CSS 4 for styling with `@/*` path aliases
 - Work Sans and Open Sans are self-hosted from `app/fonts/` via `next/font/local`. Don't switch to `next/font/google`: it downloads fonts during `next build`, which makes builds fail at random
+- `app/globals.css` keeps Tailwind out of `.claude/` with `@source not`. Tailwind reports every folder it scans to webpack, which hashes them on each build, and other Claude Code sessions' worktrees in `.claude/worktrees/` (one with `node_modules` symlinked to this checkout's) crashed webpack's cache when it hashed them. Keep the exclusion; a unit test and an end-to-end test check it
 - CSS-in-JS animations via Framer Motion
 - Theme support via next-themes. The page chrome is a neutral dark theme, and each era's interface brings its own palette
 - Every era's backdrop in `app/globals.css` lists `var(--era-seam)` as its first background layer, which fades its top and bottom into the page's black so one era dissolves into the next. Keep that layer first when changing a backdrop; tests check it in every era

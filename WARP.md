@@ -52,6 +52,7 @@ High-level architecture
 - UI, accessibility, and theming
   - Layout (app/layout.tsx) sets fonts, default dark theme, and injects accessibility helpers (SkipToContent). The page keeps the system cursor.
   - Styling via Tailwind CSS 4, with utility helpers (lib/utils.ts cn merger) and custom components in components/ui/.
+  - app/globals.css keeps Tailwind out of .claude/ (@source not), because webpack hashes every folder Tailwind scans and other sessions' worktrees there crashed its cache. Keep the exclusion.
   - Accessibility helpers in components/accessibility/ (skip to content).
 - Configuration and conventions
   - next.config.mjs: type and lint errors fail the build; outputFileTracingRoot is pinned to the project directory; images are unoptimized (no Next image optimizer).
