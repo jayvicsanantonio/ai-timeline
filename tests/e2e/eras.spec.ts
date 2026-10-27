@@ -287,7 +287,7 @@ test("opens the 2020s with how much faster the events come", async ({ page }) =>
 
   const paceLine = page.locator("[data-pace-line]")
   await expect(paceLine).toHaveText(
-    `The next ${pace.years} years hold ${pace.events} events, ${pace.multiple} times as many as the ${pace.yearsBefore} years before them.`,
+    `The next ${pace.years} years hold ${pace.events} events, ${pace.multiple} times the yearly pace of the ${pace.yearsBefore} years before them.`,
   )
   const order = await paceLine.evaluate((line) => {
     const notebook = document.getElementById("the-deep-learning-revolution")!

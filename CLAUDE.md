@@ -21,7 +21,7 @@ Note: This project uses pnpm for package management. `pnpm build` fails on TypeS
 
 ## Project Architecture
 
-This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 275 AI historical events from 1943 to October 2026. Its design is "Interfaces Through Time": each era is drawn in the computer interface of its day, from punch cards to a chat thread.
+This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 305 AI historical events from 1943 to October 2026. Its design is "Interfaces Through Time": each era is drawn in the computer interface of its day, from punch cards to a chat thread.
 
 ### Core Architecture Pattern
 
@@ -48,7 +48,7 @@ app/page.tsx → StoryEngine → PrologueScene
 
 Components are organized by purpose rather than type:
 
-- **`/components/storytelling/`**: Narrative flow components (story-engine, prologue-scene, epilogue-scene). Before the final era, the story engine sets a line saying how much faster its events come (`describePace` in `/lib/pace.ts`), left out while the reader filters
+- **`/components/storytelling/`**: Narrative flow components (story-engine, prologue-scene, epilogue-scene). Before the final era, the story engine sets a line saying how many times faster its events come, in events per year, than in all the years before it (`describePace` in `/lib/pace.ts`), left out while the reader filters
 - **`/components/eras/`**: The five era interfaces (punch-card-era, terminal-era, desktop-era, notebook-era, chat-era), the era-chapter section that picks one, their shared era-parts, and the era-preview miniatures on the opening tiles. Every interface renders the same accessible structure: a section named by its h2, and one article per event (attributes from `eventCardAttributes`) whose date comes before its h3, whose h3 links to the source, and which names the source site. An era that the filters empty shrinks to a short row (`CompactEraText`). The punch-card, terminal and desktop eras say how many years passed between two events when more than one did (`YearGap`, from `yearsSincePreviousEvent` in `/lib/year-gaps.ts`). Every interface groups its events by year (`groupEventsByYear` in `/lib/year-groups.ts`) beside a `YearColumn` that stays in view from the md breakpoint up and becomes a one-line label on phones. Each era draws the year in its own style, rules it off from its events with a divider (a right border from md up, a bottom border on phones), and screen readers hear the year and its count in plain words instead. Keep every era within `max-w-4xl`, so its cards stay clear of the navigation rail on a 1280px screen
 - **`/components/interactive/`**: User interaction features (timeline-insights)
 - **`/components/accessibility/`**: WCAG compliance components (skip-to-content)

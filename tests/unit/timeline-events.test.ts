@@ -2,6 +2,7 @@
 // Covers the category list, the real dataset and its ordering, and rejection of unknown categories.
 import { describe, expect, test } from "vitest"
 import timelineData from "@/data/timeline-events.json"
+import { groupEventsByEra } from "@/lib/eras"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 import { groupEventsByYear, isBusyYear } from "@/lib/year-groups"
 import { TIMELINE_CATEGORIES } from "@/types/timeline"
@@ -88,6 +89,17 @@ describe("data/timeline-events.json", () => {
         : [`"${previous.title}" (${previous.month} ${previous.year}) comes before "${event.title}" (${event.month} ${event.year})`]
     })
     expect(outOfOrder).toEqual([])
+  })
+
+  // The 2020s hold most events by far, so the earlier eras keep enough of their own to read as chapters
+  test("gives every era before the 2020s at least 20 events", () => {
+    const eras = groupEventsByEra(parseTimelineEvents(timelineData))
+
+    const thinEras = eras
+      .slice(0, -1)
+      .filter((era) => era.events.length < 20)
+      .map((era) => `${era.name} has ${era.events.length}`)
+    expect(thinEras).toEqual([])
   })
 
   test("gives every event its own link", () => {

@@ -37,7 +37,7 @@ High-level architecture
     - The punch-card, terminal and desktop eras say how many years passed between two events when more than one did (YearGap in era-parts.tsx, yearsSincePreviousEvent in lib/year-gaps.ts).
     - The chat thread answers each year's question with a one-sentence summary from data/year-summaries.json (lib/year-summaries.ts); a unit test requires one for every year with events.
     - A busy year (more than 12 events, isBusyYear in lib/year-groups.ts) keeps its landmarks and its events marked "highlight": true as full messages and lists the rest in brief, until its Show all button shows them in full. Filtering shows every match in full.
-    - Before the final era, StoryEngine sets a line saying how much faster its events come (describePace in lib/pace.ts), left out while filtering.
+    - Before the final era, StoryEngine sets a line saying how many times faster its events come, in events per year (describePace in lib/pace.ts), left out while filtering.
     - Every interface groups its events by year (lib/year-groups.ts) beside a YearColumn in era-parts.tsx that stays in view from md up and is a one-line label on phones, ruled off from its events by a divider in the era's style. Keep eras within max-w-4xl so they clear the rail at 1280px.
     - Every era's backdrop in app/globals.css starts with var(--era-seam), which fades it into the page's black at the top and bottom so eras dissolve into each other. Keep that layer first.
 - Data and types

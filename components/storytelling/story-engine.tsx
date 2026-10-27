@@ -117,7 +117,7 @@ function PaceLine({ pace }: { pace: Pace }) {
       >
         The next <span className="font-medium text-white">{pace.years} years</span> hold{' '}
         <span className="font-medium text-white">{pace.events} events</span>,{' '}
-        <span className="font-medium text-white">{pace.multiple} times</span> as many as the{' '}
+        <span className="font-medium text-white">{pace.multiple} times</span> the yearly pace of the{' '}
         {pace.yearsBefore} years before them.
       </p>
     </div>
