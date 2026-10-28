@@ -2,6 +2,7 @@
   "name": "ai-timeline",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.28.9",
   "scripts": {
     "build": "next build",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",

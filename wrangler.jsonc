@@ -14,5 +14,9 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  // Branch builds run `npx wrangler preview`, which needs this block. Previews take no settings from production, and the assets stay at the top level.
+  "previews": {},
+  // Previews get a workers.dev URL only while Preview URLs are on. Only `wrangler deploy` applies this, and leaving it out keeps the dashboard's setting, which is off.
+  "preview_urls": true
 }

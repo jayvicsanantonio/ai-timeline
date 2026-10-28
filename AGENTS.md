@@ -25,7 +25,7 @@ pnpm run deploy       # Build the Worker with OpenNext and deploy it; bare `pnpm
 - Lint a single file: `pnpm exec eslint path/to/file.tsx`
 - Both test suites need Playwright's Chromium: `pnpm exec playwright install chromium`
 
-Note: This project uses pnpm for package management. `pnpm build` fails on TypeScript or ESLint errors.
+Note: This project uses pnpm for package management, at the version `packageManager` pins in `package.json`. CI and Workers Builds both install that version, so bump it there and nowhere else; Workers Builds otherwise falls back to pnpm 9, which rejects a `pnpm-workspace.yaml` without a `packages` list. `pnpm build` fails on TypeScript or ESLint errors.
 
 ## Project Architecture
 
@@ -96,7 +96,7 @@ The application uses React's built-in state management with no external state li
 - `tsconfig.json` runs strict mode with `moduleResolution: bundler`, and maps `@/*` to the project root
 - `pnpm-workspace.yaml` keeps install scripts off for packages whose prebuilt binaries are used, and raises next's copy of postcss to a patched release. CI's pnpm 11 fails the install on any dependency whose install script is not listed there, so list a new one as `true` or `false`
 - `.github/workflows/ci.yml` runs the type check, lint, Vitest and Playwright suites on every pull request and push to main
-- Vercel and Cloudflare Workers both deploy each push to main. Vercel runs `next build`, so `pnpm build` stays plain `next build`. Workers Builds runs `npx opennextjs-cloudflare build`, which bundles that build into a Worker in `.open-next/` through OpenNext (`open-next.config.ts`), then `npx opennextjs-cloudflare deploy`; `npx wrangler deploy` hands off to the same command. `wrangler.jsonc` names the Worker `ai-timeline`, matching the dashboard. Without it, every Workers build reconfigures the project from scratch. Every page is prerendered, so the Worker needs no bindings beyond its assets, and `public/_headers` lets browsers cache `/_next/static` for a year
+- Vercel and Cloudflare Workers both deploy each push to main. Vercel runs `next build`, so `pnpm build` stays plain `next build`. Workers Builds runs `npx opennextjs-cloudflare build`, which bundles that build into a Worker in `.open-next/` through OpenNext (`open-next.config.ts`), then `npx opennextjs-cloudflare deploy`; `npx wrangler deploy` hands off to the same command. `wrangler.jsonc` names the Worker `ai-timeline`, matching the dashboard. Without it, every Workers build reconfigures the project from scratch. Its empty `previews` block lets branch builds create Worker Previews with `npx wrangler preview`, which uploads the same `.open-next/` build, so the dashboard's build command must be the OpenNext build for branch builds too. `preview_urls` gives each Preview its workers.dev URL, but only a production `wrangler deploy` applies it, so Previews have no URL until main has deployed with it. Every page is prerendered, so the Worker needs no bindings beyond its assets, and `public/_headers` lets browsers cache `/_next/static` for a year
 
 ### Development Notes
 
