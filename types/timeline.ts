@@ -24,31 +24,3 @@ export interface TimelineEvent {
   // One of the few events of a busy year that the chat thread keeps in full beside its landmarks
   highlight?: boolean
 }
-
-export interface ExtendedTimelineEvent extends TimelineEvent {
-  details?: string
-  impact?: string
-  keyFigures?: string[]
-  relatedEvents?: string[]
-}
-
-export interface TimelineSection {
-  decade: string
-  events: TimelineEvent[]
-}
-
-export interface TimelineCoreProps {
-  events: TimelineEvent[]
-  progress: any // MotionValue from scroll progress
-}
-
-export interface AnimationConfig {
-  duration: number
-  delay?: number
-  ease?: string | number[]
-}
-
-export interface ScrollProgress {
-  value: number
-  direction: "up" | "down"
-}

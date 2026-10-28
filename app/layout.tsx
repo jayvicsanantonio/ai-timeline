@@ -1,9 +1,8 @@
-// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts, global styles and theme provider.
+// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts and the global styles.
 // Wraps every page with the skip link and main landmark.
 import type React from 'react';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { ThemeProvider } from '@/components/theme-provider';
 import { SkipToContent } from '@/components/accessibility/skip-to-content';
 import './globals.css';
 
@@ -27,7 +26,6 @@ export const metadata: Metadata = {
     'The AI Timeline - Journey Through Artificial Intelligence History',
   description:
     'An immersive exploration of artificial intelligence milestones from the 1940s to the present day',
-  generator: 'v0.app',
 };
 
 export default function RootLayout({
@@ -38,19 +36,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${workSans.variable} ${openSans.variable} antialiased dark`}
-      suppressHydrationWarning
+      className={`${workSans.variable} ${openSans.variable} antialiased`}
     >
       <body className="overflow-x-clip">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          <SkipToContent />
-          <main id="main-content">{children}</main>
-        </ThemeProvider>
+        <SkipToContent />
+        <main id="main-content">{children}</main>
       </body>
     </html>
   );

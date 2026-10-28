@@ -5,9 +5,6 @@ import { fileURLToPath } from 'node:url'
 const nextConfig = {
   // Trace files from this project's own directory, even when it sits inside another checkout.
   outputFileTracingRoot: path.dirname(fileURLToPath(import.meta.url)),
-  images: {
-    unoptimized: true,
-  },
 }
 
 export default nextConfig

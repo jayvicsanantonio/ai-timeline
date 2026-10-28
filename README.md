@@ -7,23 +7,22 @@ _An interactive, cinematic exploration of AI's evolution from 1943 to October 20
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Framer Motion](https://img.shields.io/badge/Framer%20Motion-purple?style=for-the-badge&logo=framer)](https://www.framer.com/motion)
 
-##  Overview
+## Overview
 
 This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **305 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
-- ** Comprehensive Dataset**: 305 meticulously researched AI milestones with verified sources
-- ** Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread
-- ** Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–5 and /
-- ** Landmarks and Sources**: Twenty turning points stand out in every era, and each card names the site its link opens
-- ** Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread sums up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
-- ** Responsive Design**: Optimized for desktop, tablet, and mobile experiences
-- ** Accessibility First**: WCAG 2.1 compliant with focus management and reduced motion support
-- ** Modern UI**: Shadcn/ui components with Radix UI primitives
-- ** Performance Optimized**: Lazy loading, intersection observers, and error boundaries
+- **Comprehensive Dataset**: 305 meticulously researched AI milestones with verified sources
+- **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread
+- **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–5 and /
+- **Landmarks and Sources**: Twenty turning points stand out in every era, and each card names the site its link opens
+- **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread sums up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
+- **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
+- **Accessibility First**: A skip link, full keyboard access, visible focus rings and reduced motion support
+- **Performance Optimized**: Scroll-driven CSS animations instead of a JavaScript observer per card, and one scroll measurement per frame for the navigation
 
-## ️ Technical Architecture
+## Technical Architecture
 
 ### Frontend Stack
 
@@ -53,7 +52,7 @@ components/
 │   └── activity-chart.tsx       # Events-per-year chart
 ├── interactive/             # User interaction features
 │   └── timeline-insights.tsx
-└── accessibility/           # WCAG compliance
+└── accessibility/           # Accessibility helpers
     └── skip-to-content.tsx
 ```
 
@@ -62,20 +61,19 @@ components/
 - **Structured Timeline Events**: TypeScript interfaces for type safety
 - **Era-based Grouping**: Foundation, Knowledge, Learning, Deep Learning Revolution, and Generative AI eras
 - **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents
-- **Link Verification**: Automated scripts for source validation
 
-##  Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (recommended) or npm
+- Node.js 22.12 or later, which Vitest requires
+- pnpm 11, the version CI uses (`pnpm-lock.yaml` and `pnpm-workspace.yaml` are pnpm-only)
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ai-timeline.git
+git clone https://github.com/jayvicsanantonio/ai-timeline.git
 cd ai-timeline
 
 # Install dependencies
@@ -108,7 +106,7 @@ pnpm test:e2e     # Build, serve and run end-to-end tests (Playwright)
 
 Both test commands need Playwright's Chromium; install it once with `pnpm exec playwright install chromium`.
 
-##  User Experience Design
+## User Experience Design
 
 ### Interactive Features
 
@@ -122,23 +120,19 @@ Both test commands need Playwright's Chromium; install it once with `pnpm exec p
 - **Keyboard Navigation**: Full tab support and focus management
 - **Screen Reader Support**: Semantic HTML and ARIA labels
 - **Reduced Motion**: Respects user preferences for motion
-- **Color Contrast**: WCAG AA compliant color schemes
 - **Focus Indicators**: Clear visual focus states
 
 ### Performance Optimizations
 
 - **Scroll-driven CSS Animations**: Cards rise into place without a JavaScript observer per card
-- **Image Optimization**: Next.js automatic optimization
-- **Bundle Analysis**: Optimized chunk splitting
+- **Static Prerendering**: The page is rendered to static HTML at build time
 
-##  Data Quality & Verification
+## Data Quality & Verification
 
-### Automated Link Checking
+### Sources and Checks
 
-- **Verification Scripts**: Regular validation of external links
-- **Broken Link Reports**: Automated detection and reporting
-- **Source Attribution**: Proper citation for all historical events
-- **Continuous Integration**: Link validation in CI/CD pipeline
+- **Source Attribution**: Every event links to its source, and each card names the site the link opens
+- **Curated Lists**: Unit tests pin the landmark and highlight lists, and require a summary for every Generative AI year that has events
 
 ### Data Structure
 
@@ -159,12 +153,14 @@ interface TimelineEvent {
     | 'Bombshell News'
     | 'Agents';
   link: string;
+  landmark?: boolean; // One of the turning points every era sets apart
+  highlight?: boolean; // Kept in full in a busy year's chat thread
 }
 ```
 
 `app/page.tsx` loads `data/timeline-events.json` through `parseTimelineEvents` (`lib/timeline-events.ts`), which rejects unknown categories, so bad data fails `pnpm build`.
 
-##  Advanced Features
+## Advanced Features
 
 ### Animation System
 
@@ -179,7 +175,7 @@ useTimelinePosition(); // The era, event date and era progress at the reading li
 useTimelineShortcuts(); // J, K, 1–5 and / keyboard shortcuts
 ```
 
-##  Standout Engineering Practices
+## Standout Engineering Practices
 
 ### Code Quality
 
@@ -187,25 +183,16 @@ useTimelineShortcuts(); // J, K, 1–5 and / keyboard shortcuts
 - **Component Architecture**: Reusable, composable design patterns
 - **Custom Hook Pattern**: Shared logic abstraction
 
-### Performance Monitoring
-
-- **Core Web Vitals**: Optimized for LCP, FID, and CLS
-- **Bundle Analysis**: Regular dependency auditing
-- **Lighthouse Scores**: 90+ across all metrics
-- **Memory Management**: Efficient component cleanup
-
 ### Development Workflow
 
-- **Git Hooks**: Pre-commit linting and formatting
-- **Continuous Integration**: Automated testing and deployment
+- **Continuous Integration**: GitHub Actions runs the type check, lint, and the Vitest and Playwright suites in real Chromium on every pull request
 - **Type Safety**: Compile-time error prevention
 - **Documentation**: Comprehensive inline documentation
 
-##  Impact & Learning Outcomes
+## Impact & Learning Outcomes
 
 This project demonstrates:
 
-- **Full-Stack Development**: Modern React/Next.js patterns
 - **Data Visualization**: Complex timeline interactions
 - **Performance Engineering**: Large dataset optimization
 - **Accessibility Engineering**: Inclusive design implementation
@@ -213,20 +200,17 @@ This project demonstrates:
 - **Animation Programming**: Sophisticated motion design
 - **User Experience Design**: Intuitive interaction patterns
 
-##  Future Enhancements
+## Future Enhancements
 
-- **Search Functionality**: Full-text search across events
 - **Personalization**: User-customizable timeline views
 - **Export Features**: PDF/image timeline generation
 - **Interactive Annotations**: User-contributed insights
 - **API Integration**: Real-time AI news aggregation
 - **Internationalization**: Multi-language support
 
-##  Metrics & Performance
+## At a Glance
 
 - **305 Events**: Comprehensive historical coverage
-- **< 3s Load Time**: Optimized performance metrics
-- **AAA Accessibility**: Full WCAG compliance
 - **Mobile-First**: Responsive across all devices
 
 ---
