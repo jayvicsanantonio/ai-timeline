@@ -2,6 +2,7 @@
 // Filters narrow every era and the activity rail at once, and J, K, the era numbers and / move the reader around.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
+import { groupEventsByEra } from "../../lib/eras"
 import { filterEvents } from "../../lib/timeline-filter"
 import type { TimelineEvent } from "../../types/timeline"
 
@@ -78,7 +79,10 @@ test.describe("search and category filters", () => {
       }
     })
 
-    expect(layout.emptyEraHeights).toHaveLength(4)
+    const erasWithoutAgents = groupEventsByEra(events).filter(
+      (era) => !era.events.some((event) => event.category === "Agents"),
+    )
+    expect(layout.emptyEraHeights).toHaveLength(erasWithoutAgents.length)
     for (const height of layout.emptyEraHeights) {
       expect(height).toBeLessThan(200)
     }

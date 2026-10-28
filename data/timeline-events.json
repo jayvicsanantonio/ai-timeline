@@ -42,6 +42,14 @@
     "landmark": true
   },
   {
+    "year": 1950,
+    "month": "Unknown",
+    "title": "Theseus, a Maze-Solving Mechanical Mouse",
+    "description": "Claude Shannon builds Theseus, a mechanical mouse that finds its way through a maze by trial and error, while relays under the maze remember the route so it runs straight to the goal next time, an early machine that learns.",
+    "category": "Hardware Advances",
+    "link": "https://www.technologyreview.com/2018/12/19/138508/mighty-mouse/"
+  },
+  {
     "year": 1951,
     "month": "Unknown",
     "title": "First AI Programs",
@@ -132,6 +140,14 @@
     "link": "https://en.wikipedia.org/wiki/MIT_Computer_Science_and_Artificial_Intelligence_Laboratory"
   },
   {
+    "year": 1959,
+    "month": "Unknown",
+    "title": "Selfridge's Pandemonium",
+    "description": "Oliver Selfridge's Pandemonium models pattern recognition as layers of 'demons' that each detect a feature and shout their findings to the layer above, an early blueprint for the feature hierarchies of later neural networks.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Pandemonium_architecture"
+  },
+  {
     "year": 1960,
     "month": "Unknown",
     "title": "ADALINE Learns From Its Errors",
@@ -146,6 +162,14 @@
     "description": "The first industrial robot, Unimate, begins work on a General Motors assembly line.",
     "category": "Hardware Advances",
     "link": "https://en.wikipedia.org/wiki/Unimate"
+  },
+  {
+    "year": 1961,
+    "month": "Unknown",
+    "title": "SAINT Solves Calculus Problems",
+    "description": "James Slagle's SAINT, written in LISP for his MIT doctoral thesis under Marvin Minsky, solves symbolic integration problems about as well as a good college freshman.",
+    "category": "Models & Architectures",
+    "link": "https://dspace.mit.edu/handle/1721.1/11997"
   },
   {
     "year": 1963,
@@ -186,6 +210,14 @@
     "description": "A U.S. government committee finds machine translation slower, less accurate and more costly than human translation, and U.S. funding for the field all but ends for some twenty years.",
     "category": "Ethics & Policy",
     "link": "https://en.wikipedia.org/wiki/ALPAC"
+  },
+  {
+    "year": 1966,
+    "month": "Unknown",
+    "title": "Quillian Proposes Semantic Networks",
+    "description": "Ross Quillian's 'Semantic Memory' stores the meanings of words as a network of linked concepts, the idea behind semantic networks and, much later, knowledge graphs.",
+    "category": "Research Breakthroughs",
+    "link": "https://apps.dtic.mil/sti/pdfs/AD0641671.pdf"
   },
   {
     "year": 1968,
@@ -302,6 +334,14 @@
   },
   {
     "year": 1980,
+    "month": "April",
+    "title": "Symbolics and LMI Sell Lisp Machines",
+    "description": "Two companies spun out of MIT's AI Lab, Lisp Machines Inc. (1979) and Symbolics (1980), begin selling Lisp machines, workstations built for AI programming, a market that collapses in 1987.",
+    "category": "Companies & Investments",
+    "link": "https://en.wikipedia.org/wiki/Symbolics"
+  },
+  {
+    "year": 1980,
     "month": "August",
     "title": "First AAAI Conference",
     "description": "The first conference of the American Association for Artificial Intelligence (AAAI) is held at Stanford, signaling a resurgence of interest in the field.",
@@ -371,6 +411,14 @@
     "description": "Ross Quinlan describes ID3, which learns a decision tree from examples; with the CART method of Leo Breiman and colleagues (1984), it makes decision trees one of machine learning's most used tools.",
     "category": "Research Breakthroughs",
     "link": "https://doi.org/10.1007/BF00116251"
+  },
+  {
+    "year": 1986,
+    "month": "March",
+    "title": "Brooks's Subsumption Architecture",
+    "description": "Rodney Brooks builds robots from layers of simple behaviors that react directly to their sensors, with no central model of the world, turning robotics away from symbolic planning.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1109/JRA.1986.1087032"
   },
   {
     "year": 1986,
@@ -533,6 +581,14 @@
     "description": "Sony introduces AIBO, an autonomous robot dog for the home, and when sales open in June the first units sell out online in 20 minutes.",
     "category": "Public Releases",
     "link": "https://en.wikipedia.org/wiki/AIBO"
+  },
+  {
+    "year": 1999,
+    "month": "May",
+    "title": "Remote Agent Takes Command of Deep Space 1",
+    "description": "NASA's Remote Agent software takes primary command of the Deep Space 1 spacecraft, planning its activities and handling simulated faults on its own, the first time AI software controls a spacecraft.",
+    "category": "Agents",
+    "link": "https://www.jpl.nasa.gov/news/computer-program-assumes-spacecraft-command/"
   },
   {
     "year": 2001,
@@ -1071,6 +1127,14 @@
   },
   {
     "year": 2020,
+    "month": "October",
+    "title": "The Vision Transformer",
+    "description": "Google researchers show that a Transformer reading an image as a sequence of 16×16 patches matches the best convolutional networks when trained on enough data, carrying the Transformer into computer vision.",
+    "category": "Models & Architectures",
+    "link": "https://arxiv.org/abs/2010.11929"
+  },
+  {
+    "year": 2020,
     "month": "November",
     "title": "DeepMind's AlphaFold 2 Solves Protein Folding",
     "description": "DeepMind's AlphaFold 2 makes a major breakthrough in biology by accurately predicting the 3D structure of proteins, a long-standing grand challenge.",
@@ -1175,6 +1239,14 @@
     "category": "Public Releases",
     "link": "https://openai.com/index/dall-e-2/",
     "highlight": true
+  },
+  {
+    "year": 2022,
+    "month": "May",
+    "title": "FlashAttention",
+    "description": "Tri Dao and colleagues compute attention in tiles that fit in a GPU's fast on-chip memory, making Transformers several times faster and able to handle longer inputs, a technique soon adopted for training and running large models.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/2205.14135"
   },
   {
     "year": 2022,
@@ -1423,6 +1495,14 @@
   },
   {
     "year": 2023,
+    "month": "May",
+    "title": "Direct Preference Optimization",
+    "description": "Stanford researchers show that a language model can be tuned directly on pairs of answers people preferred, without a separate reward model or reinforcement learning, and DPO becomes a common way to align open models.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/2305.18290"
+  },
+  {
+    "year": 2023,
     "month": "June",
     "title": "Runway Releases Gen-2",
     "description": "AI video startup Runway releases Gen-2, a multimodal AI system that can generate videos from text prompts or images.",
@@ -1655,6 +1735,14 @@
     "description": "A finance worker in Hong Kong pays out $25 million after a video call in which fraudsters used deepfakes of the company's chief financial officer and other colleagues; the firm is later named as engineering company Arup.",
     "category": "Bombshell News",
     "link": "https://sg.news.yahoo.com/finance-worker-pays-25-million-073109391.html"
+  },
+  {
+    "year": 2024,
+    "month": "February",
+    "title": "Elon Musk Sues OpenAI",
+    "description": "Elon Musk, an OpenAI co-founder, sues the company and Sam Altman, claiming they broke a founding promise to develop AI as an open nonprofit for humanity's benefit; he drops the suit in June and refiles it in federal court in August.",
+    "category": "Ethics & Policy",
+    "link": "https://www.nbcnews.com/news/us-news/elon-musk-sues-openai-ceo-sam-altman-contract-breach-rcna141320"
   },
   {
     "year": 2024,
@@ -2046,6 +2134,14 @@
     "description": "OpenAI builds image generation into GPT-4o; a flood of pictures in the style of Studio Ghibli follows, and Sam Altman says demand is melting OpenAI's GPUs.",
     "category": "Public Releases",
     "link": "https://openai.com/index/introducing-4o-image-generation/"
+  },
+  {
+    "year": 2025,
+    "month": "March",
+    "title": "Apple Delays Its Personalized Siri",
+    "description": "Apple says the more personal Siri it promised with Apple Intelligence will take 'longer than we thought', pushing it into the next year; in January 2026 it picks Google's Gemini to power the overhaul.",
+    "category": "Bombshell News",
+    "link": "https://daringfireball.net/2025/03/apple_is_delaying_the_more_personalized_siri_apple_intelligence_features"
   },
   {
     "year": 2025,
