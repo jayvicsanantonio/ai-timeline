@@ -244,6 +244,21 @@
     clip-path: polygon(1.5rem 0, 100% 0, 100% 100%, 0 100%, 0 1.5rem);
   }
 
+  /* From 1024px a card is wide enough to stamp its category and source beside its date and title, where a real
+     card printed its fields along the top edge, so its description ends the card */
+  @media (min-width: 1024px) {
+    .punch-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "stripe stripe"
+        "heading fields"
+        "holes holes"
+        "description description";
+      column-gap: 1.5rem;
+    }
+  }
+
   /* Knowledge Era: a green-phosphor terminal with scanlines, in a dark machine room whose walls
      catch the screen's glow and its faint raster lines */
   .terminal-room {
@@ -431,6 +446,11 @@
     padding: 0.5rem 0.75rem;
   }
 
+  /* On a phone the prompts stack above their boxes, so an output follows its code cell without an Out[n]: row */
+  .notebook-prompt:has(+ .notebook-output) {
+    display: none;
+  }
+
   @media (min-width: 640px) {
     .notebook-cell {
       grid-template-columns: 5.5rem minmax(0, 1fr);
@@ -438,6 +458,10 @@
 
     .notebook-prompt {
       text-align: right;
+    }
+
+    .notebook-prompt:has(+ .notebook-output) {
+      display: block;
     }
   }
 

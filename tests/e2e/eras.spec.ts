@@ -4,6 +4,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 import yearSummaryData from "../../data/year-summaries.json"
 import { groupEventsByEra } from "../../lib/eras"
+import { eventSource } from "../../lib/event-format"
 import { encodeHollerith } from "../../lib/hollerith"
 import { describePace } from "../../lib/pace"
 import { yearsSincePreviousEvent } from "../../lib/year-gaps"
@@ -298,4 +299,166 @@ test("opens the 2020s with how much faster the events come", async ({ page }) =>
     ]
   })
   expect(order).toEqual([true, true])
+})
+
+const PHONE = { width: 390, height: 844 }
+const TABLET = { width: 900, height: 1000 }
+
+const foundationCards = groupEventsByEra(timelineData as TimelineEvent[])[0].events.map((event) => ({
+  description: event.description,
+  fields: [event.category, eventSource(event)],
+}))
+
+// Where each Foundation Era card prints its category and source: beside its title above the punched holes,
+// or after its description at the foot of the card
+async function punchCardFieldPlaces(page: Page) {
+  await page.goto("/")
+
+  return page.locator("#the-foundation-era article").evaluateAll(
+    (articles, cards) =>
+      articles.map((article, index) => {
+        const box = (text: string) =>
+          [...article.querySelectorAll("span, p")].find((element) => element.textContent === text)!.getBoundingClientRect()
+        const title = article.querySelector("h3")!.getBoundingClientRect()
+        const holes = article.querySelector("svg")!.getBoundingClientRect()
+        const description = box(cards[index].description)
+        const fields = cards[index].fields.map(box)
+        if (fields.every((field) => field.left > title.right && field.bottom <= holes.top) && description.top >= holes.bottom) {
+          return "beside its title"
+        }
+        return fields.every((field) => field.top >= description.bottom) ? "after its description" : "elsewhere"
+      }),
+    foundationCards,
+  )
+}
+
+test("stamps each punch card's category and source beside its date and title, so its description ends the card", async ({
+  page,
+}) => {
+  const places = await punchCardFieldPlaces(page)
+
+  expect(places).toEqual(foundationCards.map(() => "beside its title"))
+})
+
+test("wraps each long punch card title into lines of even length", async ({ page }) => {
+  await page.goto("/")
+
+  const lineWidths = await page.locator("#the-foundation-era h3 a").evaluateAll((links) =>
+    links.map((link) => {
+      const range = document.createRange()
+      range.selectNodeContents(link)
+      const lines = new Map<number, number>()
+      for (const box of range.getClientRects()) {
+        const line = Math.round(box.top)
+        lines.set(line, (lines.get(line) ?? 0) + box.width)
+      }
+      return [...lines.values()]
+    }),
+  )
+
+  const wrapped = lineWidths.filter((widths) => widths.length > 1)
+  expect(wrapped.length).toBeGreaterThan(0)
+  for (const widths of wrapped) {
+    expect(Math.min(...widths) / Math.max(...widths)).toBeGreaterThan(0.5)
+  }
+})
+
+// Each cell's prompts in order, and whether each takes up room on the page
+async function notebookPrompts(page: Page) {
+  await page.goto("/")
+
+  return page.locator("#the-deep-learning-revolution article").evaluateAll((cells) =>
+    cells.map((cell) =>
+      [...cell.querySelectorAll(".notebook-prompt")].map(
+        (prompt) => `${prompt.textContent} ${getComputedStyle(prompt).display === "none" ? "left out" : "shown"}`,
+      ),
+    ),
+  )
+}
+
+test("prompts each notebook code cell and its output with In [n]: and Out[n]:", async ({ page }) => {
+  const prompts = await notebookPrompts(page)
+
+  expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 2}]: shown`, `Out[${index + 2}]: shown`]))
+})
+
+test("shows each brief event's date before its title on a wide screen", async ({ page }) => {
+  await page.goto("/")
+
+  const misplaced = await page.locator("article[data-brief]").evaluateAll((articles) =>
+    articles
+      .filter((article) => {
+        const date = article.querySelector("time")!.getBoundingClientRect()
+        return date.width <= 1 || date.right > article.querySelector("h3")!.getBoundingClientRect().left
+      })
+      .map((article) => article.id),
+  )
+
+  expect(misplaced).toEqual([])
+})
+
+// Measured on the list items, which hold still while their messages' scroll reveal moves them
+test("keeps each month's divider close to its messages, 24px below the month before and 12px above its first message", async ({
+  page,
+}) => {
+  await page.goto("/")
+
+  const gaps = await page.locator("#the-generative-ai-era div[data-month]").evaluateAll((months) =>
+    months.map((month, index) => {
+      const divider = month.querySelector("[data-month-divider]")!.parentElement!.getBoundingClientRect()
+      const firstMessage = month.querySelector("li")!.getBoundingClientRect()
+      const previous = months[index - 1]
+      const sameYear = previous !== undefined && previous.parentElement === month.parentElement
+      return {
+        above: sameYear ? Math.round(divider.top - previous.getBoundingClientRect().bottom) : null,
+        below: Math.round(firstMessage.top - divider.bottom),
+      }
+    }),
+  )
+
+  expect(gaps.length).toBeGreaterThan(50)
+  expect(new Set(gaps.map((gap) => gap.below))).toEqual(new Set([12]))
+  expect(new Set(gaps.flatMap((gap) => (gap.above === null ? [] : [gap.above])))).toEqual(new Set([24]))
+})
+
+test.describe(`on a tablet (${TABLET.width}x${TABLET.height})`, () => {
+  test.use({ viewport: TABLET })
+
+  test("keeps each punch card's category and source after its description", async ({ page }) => {
+    const places = await punchCardFieldPlaces(page)
+
+    expect(places).toEqual(foundationCards.map(() => "after its description"))
+  })
+})
+
+test.describe(`on a phone (${PHONE.width}x${PHONE.height})`, () => {
+  test.use({ viewport: PHONE })
+
+  test("follows each notebook code cell with its output, keeping only the In [n]: prompt", async ({ page }) => {
+    const prompts = await notebookPrompts(page)
+
+    expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 2}]: shown`, `Out[${index + 2}]: left out`]))
+  })
+
+  test("leaves each brief event's date to its month's divider, still in the text screen readers hear", async ({ page }) => {
+    await page.goto("/")
+
+    const briefs = await page.locator("article[data-brief]").evaluateAll((articles) =>
+      articles.map((article) => {
+        const time = article.querySelector("time")!
+        const box = time.getBoundingClientRect()
+        const style = getComputedStyle(time)
+        const divider = article.closest("div[data-month]")!.querySelector("[data-month-divider]")!
+        return {
+          id: article.id,
+          sameAsDivider: time.textContent === divider.textContent,
+          drawn: box.width > 1 || box.height > 1,
+          heard: style.display !== "none" && style.visibility === "visible" && !time.closest('[aria-hidden="true"]'),
+        }
+      }),
+    )
+
+    expect(briefs.length).toBeGreaterThan(100)
+    expect(briefs.filter((brief) => !brief.sameAsDivider || brief.drawn || !brief.heard)).toEqual([])
+  })
 })

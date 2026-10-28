@@ -390,6 +390,63 @@ describe("the punch-card era", () => {
         expect(article.querySelector("svg")).toHaveAttribute("aria-hidden", "true")
       })
   })
+
+  // The category and source a card prints, which sit after its description on a narrow card
+  function cardFields(card: HTMLElement, event: TimelineEvent) {
+    return [within(card).getByText(event.category), within(card).getByText(eventSource(event))]
+  }
+
+  it("ends each card with its category and source, after its description, on a phone", () => {
+    const { section } = renderEra("punch-card")
+
+    within(section)
+      .getAllByRole("article")
+      .forEach((card, index) => {
+        const event = eventsByInterface["punch-card"][index]
+        const description = within(card).getByText(event.description).getBoundingClientRect()
+        for (const field of cardFields(card, event)) {
+          expect(field.getBoundingClientRect().top).toBeGreaterThanOrEqual(description.bottom)
+        }
+      })
+  })
+
+  describe("from 1024px wide", () => {
+    beforeEach(async () => {
+      await page.viewport(1280, 800)
+    })
+
+    afterEach(async () => {
+      await page.viewport(414, 896)
+    })
+
+    it("stamps each card's category and source beside its date and title, so its description ends the card", () => {
+      const { section } = renderEra("punch-card")
+
+      within(section)
+        .getAllByRole("article")
+        .forEach((card, index) => {
+          const event = eventsByInterface["punch-card"][index]
+          const title = within(card).getByRole("heading", { level: 3 }).getBoundingClientRect()
+          const holes = card.querySelector("svg")!.getBoundingClientRect()
+          for (const field of cardFields(card, event)) {
+            const box = field.getBoundingClientRect()
+            expect(box.left).toBeGreaterThan(title.right)
+            expect(box.bottom).toBeLessThanOrEqual(holes.top)
+          }
+          expect(within(card).getByText(event.description).getBoundingClientRect().top).toBeGreaterThanOrEqual(
+            holes.bottom,
+          )
+        })
+    })
+
+    it("wraps a long title into lines of even length", () => {
+      const { section } = renderEra("punch-card")
+
+      for (const title of within(section).getAllByRole("heading", { level: 3 })) {
+        expect(getComputedStyle(title).getPropertyValue("text-wrap-style")).toBe("balance")
+      }
+    })
+  })
 })
 
 describe("the terminal era", () => {
@@ -474,6 +531,50 @@ describe("the notebook era", () => {
     expect(drawnYear(year2012)).toHaveTextContent("# 2012")
     expect(drawnYear(year2012)).toHaveTextContent("1 cell")
   })
+
+  // The display rule rather than visibility, because a cell's scroll reveal fades it in from transparent
+  function shown(prompt: HTMLElement) {
+    return getComputedStyle(prompt).display !== "none"
+  }
+
+  it("follows each code cell with its output on a phone, keeping only the In [n]: prompt", () => {
+    const { section } = renderEra("notebook")
+
+    within(section)
+      .getAllByRole("article")
+      .forEach((cell, index) => {
+        const run = index + 2
+        expect(shown(within(cell).getByText(`In [${run}]:`))).toBe(true)
+        expect(shown(within(cell).getByText(`Out[${run}]:`))).toBe(false)
+      })
+    expect(shown(within(section).getByText("Out[1]:"))).toBe(false)
+  })
+
+  describe("on a wide screen", () => {
+    beforeEach(async () => {
+      await page.viewport(1280, 800)
+    })
+
+    afterEach(async () => {
+      await page.viewport(414, 896)
+    })
+
+    it("prompts each code cell and its output beside them, with In [n]: and Out[n]:", () => {
+      const { section } = renderEra("notebook")
+
+      within(section)
+        .getAllByRole("article")
+        .forEach((cell, index) => {
+          const run = index + 2
+          for (const prompt of [within(cell).getByText(`In [${run}]:`), within(cell).getByText(`Out[${run}]:`)]) {
+            expect(shown(prompt)).toBe(true)
+            expect(prompt.getBoundingClientRect().right).toBeLessThanOrEqual(
+              prompt.nextElementSibling!.getBoundingClientRect().left,
+            )
+          }
+        })
+    })
+  })
 })
 
 describe("the chat era", () => {
@@ -522,6 +623,20 @@ describe("the chat era", () => {
 
     expect(container.querySelector("[data-year-prompt]")).toHaveTextContent("What happened in 2027?")
     expect(container.querySelector("[data-year-summary]")).toBeNull()
+  })
+
+  // Measured on the list items, which hold still while their messages' scroll reveal moves them
+  it("keeps each month's divider close to its messages, 24px below what comes before and 12px above its first one", () => {
+    const { container } = renderEra("chat")
+
+    const months = [...container.querySelectorAll<HTMLElement>("div[data-month]")]
+    expect(months).toHaveLength(2)
+    for (const month of months) {
+      const divider = month.querySelector("[data-month-divider]")!.parentElement!.getBoundingClientRect()
+      const firstMessage = month.querySelector("li")!.getBoundingClientRect()
+      expect(getComputedStyle(month).marginTop).toBe("24px")
+      expect(firstMessage.top - divider.bottom).toBeCloseTo(12, 0)
+    }
   })
 })
 
@@ -619,6 +734,23 @@ describe("the chat era's busy years", () => {
     expect(within(section).queryByRole("button", { name: /^Show all/ })).toBeNull()
   })
 
+  it("leaves each brief event's date to its month's divider on a phone, still in the text screen readers hear", () => {
+    const { section } = renderEra("chat", busyYear)
+
+    expect(briefCards(section)).toHaveLength(12)
+    for (const card of briefCards(section)) {
+      const time = card.querySelector("time")!
+      const divider = card.closest("div[data-month]")!.querySelector("[data-month-divider]")!
+      const drawn = time.getBoundingClientRect()
+      expect(time.textContent).toBe(divider.textContent)
+      expect(drawn.width).toBeLessThanOrEqual(1)
+      expect(drawn.height).toBeLessThanOrEqual(1)
+      expect(getComputedStyle(time).display).not.toBe("none")
+      expect(getComputedStyle(time).visibility).toBe("visible")
+      expect(time.closest('[aria-hidden="true"]')).toBeNull()
+    }
+  })
+
   describe("on a wide screen", () => {
     beforeEach(async () => {
       await page.viewport(1280, 800)
@@ -634,6 +766,16 @@ describe("the chat era's busy years", () => {
       expect(briefCards(section)).toHaveLength(12)
       for (const card of briefCards(section)) {
         expect(card.getBoundingClientRect().height).toBeLessThan(48)
+      }
+    })
+
+    it("shows each brief event's date before its title", () => {
+      const { section } = renderEra("chat", busyYear)
+
+      for (const card of briefCards(section)) {
+        const date = card.querySelector("time")!.getBoundingClientRect()
+        expect(date.width).toBeGreaterThan(1)
+        expect(date.right).toBeLessThanOrEqual(within(card).getByRole("heading", { level: 3 }).getBoundingClientRect().left)
       }
     })
   })

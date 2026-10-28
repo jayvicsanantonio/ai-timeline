@@ -232,7 +232,7 @@ function ChatYear({ group, filtering }: ChatYearProps) {
         ) : null}
 
         {groupEvents(group.events, formatEventDate).map((month) => (
-          <div key={month.key} data-month={month.key} className="relative mt-10">
+          <div key={month.key} data-month={month.key} className="relative mt-6">
             {/* The rule stays where the month begins. Only the date pins below the toolbar,
                 and it lets clicks through to the messages scrolling under it. */}
             <span aria-hidden="true" className="absolute inset-x-0 top-[0.8125rem] h-px bg-white/10" />
@@ -248,7 +248,7 @@ function ChatYear({ group, filtering }: ChatYearProps) {
               </span>
             </div>
             {/* Brief events sit close together, and full messages keep their room */}
-            <ol className="mt-5">
+            <ol className="mt-3">
               {month.events.map((event) => (
                 <li key={eventAnchorId(event)} className={cn('first:mt-0', inBrief(event) ? 'mt-1' : 'mt-4')}>
                   {inBrief(event) ? <ChatBrief event={event} /> : <ChatMessage event={event} />}
@@ -263,7 +263,8 @@ function ChatYear({ group, filtering }: ChatYearProps) {
 }
 
 // An event of a busy year in brief: its date, linked title and source on one line beside a small dot.
-// On a phone the date sits above the title, and the source follows the title's last word.
+// On a phone the date is left to the month's divider above and only screen readers hear it on the row,
+// and the source follows the title's last word.
 function ChatBrief({ event }: { event: TimelineEvent }) {
   return (
     <article
@@ -275,7 +276,7 @@ function ChatBrief({ event }: { event: TimelineEvent }) {
         <span className="size-1.5 rounded-full bg-[#9085e9]/50 transition-colors group-hover:bg-[#b4abf5]" />
       </span>
       <div className="min-w-0 flex-1 rounded-xl px-3 py-2 transition-colors group-hover:bg-white/[0.05] sm:flex sm:items-baseline sm:gap-3">
-        <time dateTime={eventDateTime(event)} className="block text-xs text-[#a1a1aa] sm:w-28 sm:shrink-0">
+        <time dateTime={eventDateTime(event)} className="block text-xs text-[#a1a1aa] max-sm:sr-only sm:w-28 sm:shrink-0">
           {formatEventDate(event)}
         </time>
         <EventHeading

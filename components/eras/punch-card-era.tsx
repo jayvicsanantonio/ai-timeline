@@ -152,13 +152,13 @@ function PunchCard({ event }: { event: TimelineEvent }) {
       <div className="punch-card bg-[#f3e9cf] px-5 pb-5 pt-5 text-[#2b2418] shadow-[0_24px_50px_-28px_rgba(0,0,0,0.95)] sm:px-8 sm:pb-6 sm:pt-6">
         {/* Colored stripes marked special cards in a deck */}
         {event.landmark ? (
-          <p className="-mx-5 -mt-5 mb-4 flex h-7 items-center justify-end gap-2 bg-[#a63a28] px-5 font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-[#fbefd5] sm:-mx-8 sm:-mt-6 sm:px-8">
+          <p className="-mx-5 -mt-5 mb-4 flex h-7 items-center justify-end gap-2 bg-[#a63a28] px-5 font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-[#fbefd5] [grid-area:stripe] sm:-mx-8 sm:-mt-6 sm:px-8">
             <span aria-hidden="true">★</span>
             <span>{LANDMARK_LABEL}</span>
           </p>
         ) : null}
 
-        <div className="pl-4 font-mono uppercase sm:pl-3">
+        <div className="pl-4 font-mono uppercase [grid-area:heading] sm:pl-3">
           <time
             dateTime={eventDateTime(event)}
             className="block text-lg font-bold tracking-[0.12em] text-[#1f1a12] sm:text-xl"
@@ -167,18 +167,19 @@ function PunchCard({ event }: { event: TimelineEvent }) {
           </time>
           <EventHeading
             event={event}
-            className="mt-1 text-sm font-semibold tracking-[0.06em] text-[#3b3324] sm:text-base"
+            className="mt-1 text-sm font-semibold tracking-[0.06em] text-[#3b3324] sm:text-base lg:text-balance"
             linkClassName="decoration-2 underline-offset-4 group-hover:underline"
           />
         </div>
 
-        <PunchedTitle title={event.title} className="mt-3" />
+        <PunchedTitle title={event.title} className="mt-3 [grid-area:holes]" />
 
-        <p className="mt-4 font-mono text-[13px] leading-6 text-[#3b3324] sm:text-sm sm:leading-6">
+        <p className="mt-4 font-mono text-[13px] leading-6 text-[#3b3324] [grid-area:description] sm:text-sm sm:leading-6">
           {event.description}
         </p>
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.16em]">
+        {/* From 1024px these sit beside the date and title, stacked against the card's right edge */}
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.16em] [grid-area:fields] lg:mt-1 lg:flex-col lg:items-end lg:justify-start lg:gap-2.5">
           <span className="inline-flex items-center gap-1.5 border-[1.5px] border-[#9b3a26] px-2 py-1 text-[#8a3121]">
             <CategoryIcon category={event.category} className="size-3.5 shrink-0" />
             <span>{event.category}</span>
