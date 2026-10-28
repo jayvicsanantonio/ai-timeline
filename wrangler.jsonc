@@ -1,0 +1,18 @@
+{
+  // Cloudflare Workers configuration, read by Workers Builds and the deploy, preview and upload scripts.
+  // The Worker runs the OpenNext build of the app: .open-next/worker.js renders pages and .open-next/assets holds the static files.
+  // Every page is prerendered, so OpenNext's optional bindings for revalidation (WORKER_SELF_REFERENCE) and next/image (IMAGES) are left out.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ai-timeline",
+  "main": ".open-next/worker.js",
+  // nodejs_compat, which OpenNext needs, is on by default from 2026-08-04, and workerd rejects a flag its date already enables.
+  "compatibility_date": "2026-10-23",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

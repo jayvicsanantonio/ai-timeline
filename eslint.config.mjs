@@ -13,6 +13,8 @@ const eslintConfig = [
     // .claude/ holds nested git worktrees, which have their own checkouts to lint.
     ignores: [
       ".next/",
+      ".open-next/",
+      ".wrangler/",
       "node_modules/",
       "playwright-report/",
       "test-results/",
