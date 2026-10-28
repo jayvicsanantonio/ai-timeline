@@ -25,7 +25,7 @@ Note: This project uses pnpm for package management. `pnpm build` fails on TypeS
 
 ## Project Architecture
 
-This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 344 AI historical events from 1943 to October 2026. Its design is "Interfaces Through Time": each era is drawn in the computer interface of its day, from punch cards to a chat thread.
+This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 344 AI historical events from 1943 to October 2026. Its design is "Interfaces Through Time": each era is drawn in the computer interface of its day, from punch cards to an agent's task log.
 
 ### Core Architecture Pattern
 
@@ -33,7 +33,7 @@ The application follows a story-driven architecture centered around a "StoryEngi
 
 ```
 app/page.tsx → StoryEngine → PrologueScene
-                           → TimelineControls + EraChapter × 5 (one interface per era)
+                           → TimelineControls + EraChapter × 6 (one interface per era)
                            → TimelineNavigation (rail on wide screens, bar on phones)
                            → TimelineInsights + EpilogueScene
 ```
@@ -41,10 +41,10 @@ app/page.tsx → StoryEngine → PrologueScene
 ### Key Data Structures
 
 - **Timeline Events**: Central data stored in `/data/timeline-events.json` with TypeScript interfaces in `/types/timeline.ts`, loaded through `parseTimelineEvents` in `/lib/timeline-events.ts`, which throws on unknown categories, so bad data fails the build
-- **Era-based Organization**: `ERA_DEFINITIONS` in `/lib/eras.ts` groups events into Foundation (1940-1970), Knowledge (1970-1990), Learning (1990-2010), Deep Learning Revolution (2010-2020), and Generative AI (2020-2030) eras. Each era names its interface (`punch-card`, `terminal`, `desktop`, `notebook`, `chat`) and an accent color; the five colors were validated together as a categorical palette on the dark chrome
+- **Era-based Organization**: `ERA_DEFINITIONS` in `/lib/eras.ts` groups events into Foundation (1940-1970), Knowledge (1970-1990), Learning (1990-2010), Deep Learning Revolution (2010-2020), Generative AI (2020-2025) and Agentic (2025-2030) eras. Each era names its interface (`punch-card`, `terminal`, `desktop`, `notebook`, `chat`, `agent`) and an accent color; the six colors were validated together as a categorical palette on the dark chrome. An era of whole decades is subtitled by its decades and any other by its years
 - **Landmarks**: About 20 turning points carry `"landmark": true` in the data, and each era interface sets them apart in its own style. Keep the list curated; a unit test pins it
-- **Highlights**: A busy year, one with more than 12 events (`isBusyYear` in `/lib/year-groups.ts`), lists its events in brief in the chat thread, one line each, apart from its landmarks and the events marked `"highlight": true`, until its "Show all" button shows the whole year in full. A search or filter shows every match in full. Keep about five full-size events per busy year, landmarks included; a unit test pins the approved list
-- **Year Summaries**: `/data/year-summaries.json` holds the one-sentence answer the chat thread gives to each year's "What happened in {year}?", read through `yearSummary` in `/lib/year-summaries.ts`. A unit test requires one for every year of the Generative AI Era that has events, so adding events in a new year means writing its summary
+- **Highlights**: A busy year, one with more than 12 events (`isBusyYear` in `/lib/year-groups.ts`), lists its events in brief in the chat thread or the agent's task log, one line each, apart from its landmarks and the events marked `"highlight": true`, until its "Show all" button shows the whole year in full. A search or filter shows every match in full. Keep about five full-size events per busy year, landmarks included; a unit test pins the approved list
+- **Year Summaries**: `/data/year-summaries.json` holds the one-sentence answer the chat thread gives to each year's "What happened in {year}?", and the report the agent gives on each year it researches, read through `yearSummary` in `/lib/year-summaries.ts`. A unit test requires one for every year of the Generative AI and Agentic Eras that has events, so adding events in a new year means writing its summary
 - **Category System**: Events categorized as Models & Architectures, Research Breakthroughs, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents (`TIMELINE_CATEGORIES` in `/types/timeline.ts`, the single list that `TimelineCategory` derives from). Each has its own icon in `components/ui/category-icon.tsx`, always shown beside the category's name. A new category goes in `TIMELINE_CATEGORIES` and needs an icon; `tsc` errors until the icon map covers it
 - **Filtering and activity**: `/lib/timeline-filter.ts` narrows events by picked categories and search words, and `/lib/timeline-activity.ts` counts events per year for the activity charts
 
@@ -53,7 +53,7 @@ app/page.tsx → StoryEngine → PrologueScene
 Components are organized by purpose rather than type:
 
 - **`/components/storytelling/`**: Narrative flow components (story-engine, prologue-scene, epilogue-scene). Before the final era, the story engine sets a line saying how many times faster its events come, in events per year, than in all the years before it (`describePace` in `/lib/pace.ts`), left out while the reader filters
-- **`/components/eras/`**: The five era interfaces (punch-card-era, terminal-era, desktop-era, notebook-era, chat-era), the era-chapter section that picks one, their shared era-parts, and the era-preview miniatures on the opening tiles. Every interface renders the same accessible structure: a section named by its h2, and one article per event (attributes from `eventCardAttributes`) whose date comes before its h3, whose h3 links to the source (`EventHeading` in era-parts), and which names the source site. An era that the filters empty shrinks to a short row (`CompactEraText`). The punch-card, terminal and desktop eras say how many years passed between two events when more than one did (`YearGap`, from `yearsSincePreviousEvent` in `/lib/year-gaps.ts`). Every interface groups its events by year (`groupEventsByYear` in `/lib/year-groups.ts`) beside a `YearColumn` that stays in view from the md breakpoint up and becomes a one-line label on phones. Each era draws the year in its own style, rules it off from its events with a divider (a right border from md up, a bottom border on phones), and screen readers hear the year and its count in plain words instead. Keep every era within `max-w-4xl`, so its cards stay clear of the navigation rail on a 1280px screen
+- **`/components/eras/`**: The six era interfaces (punch-card-era, terminal-era, desktop-era, notebook-era, chat-era, agent-era), the era-chapter section that picks one, their shared era-parts, and the era-preview miniatures on the opening tiles. Every interface renders the same accessible structure: a section named by its h2, and one article per event (attributes from `eventCardAttributes`) whose date comes before its h3, whose h3 links to the source (`EventHeading` in era-parts), and which names the source site. An era that the filters empty shrinks to a short row (`CompactEraText`). The punch-card, terminal and desktop eras say how many years passed between two events when more than one did (`YearGap`, from `yearsSincePreviousEvent` in `/lib/year-gaps.ts`). Every interface groups its events by year (`groupEventsByYear` in `/lib/year-groups.ts`) beside a `YearColumn` that stays in view from the md breakpoint up and becomes a one-line label on phones. Each era draws the year in its own style, rules it off from its events with a divider (a right border from md up, a bottom border on phones), and screen readers hear the year and its count in plain words instead. Keep every era within `max-w-4xl`, so its cards stay clear of the navigation rail on a 1280px screen
 - **`/components/interactive/`**: User interaction features (timeline-insights)
 - **`/components/accessibility/`**: WCAG compliance components (skip-to-content)
 - **`/components/timeline/`**: Timeline-specific UI (timeline-controls, timeline-navigation, activity-chart)
@@ -63,7 +63,7 @@ Components are organized by purpose rather than type:
 
 Most motion is CSS in the `@layer components` block of `app/globals.css`, always inside `prefers-reduced-motion: no-preference`: event cards rise in with a scroll-driven animation (`animation-timeline: view()`), and the eras' carets, progress bar and typing dots run as keyframes. Framer Motion animates the phone chapter list. Hooks that move the reader around:
 - `useTimelinePosition()` - Measures, once per animation frame while scrolling, the era, event year and month at the reading line (`READING_LINE` in `/lib/timeline-scroll.ts`) and how far through the era the reader has come
-- `useTimelineShortcuts()` - J and K step between events, 1 to 5 jump to an era, and / focuses search
+- `useTimelineShortcuts()` - J and K step between events, 1 to 6 jump to an era, and / focuses search
 
 Derive styles from MotionValues with `useTransform` or `useMotionTemplate`. Interpolating a MotionValue into a plain template string silently produces an invalid style.
 

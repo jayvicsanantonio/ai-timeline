@@ -1,4 +1,4 @@
-// Orchestrates the page: the prologue, the five era chapters with their toolbar and navigation, the insights
+// Orchestrates the page: the prologue, the six era chapters with their toolbar and navigation, the insights
 // and the epilogue. Holds the search and category filters, so every part of the timeline shows the same events.
 'use client';
 

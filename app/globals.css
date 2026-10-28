@@ -1,4 +1,4 @@
-/* Global styles: Tailwind, the theme tokens for the page chrome and base elements, and the five era interfaces.
+/* Global styles: Tailwind, the theme tokens for the page chrome and base elements, and the six era interfaces.
    Every animation here runs only when the reader allows motion. */
 @import "tailwindcss";
 
@@ -82,7 +82,7 @@
   }
 }
 
-/* The five era interfaces. Each era draws its events in the computer interface of its day. */
+/* The six era interfaces. Each era draws its events in the computer interface of its day. */
 @layer components {
   /* Every era's backdrop starts and ends in the page's black, so one era dissolves into the next.
      A short row, such as an era the filters have emptied, fades over less of its height. */
@@ -424,6 +424,36 @@
     30% {
       opacity: 1;
       transform: translateY(-0.2rem);
+    }
+  }
+
+  /* Agentic Era: an agent's task log on graphite, under a faint glow of the era's magenta that returns
+     on the right all the way down the long log */
+  .agent-backdrop {
+    background-color: #0d0b0f;
+    background-image:
+      var(--era-seam),
+      radial-gradient(56rem 28rem at 85% 0%, rgb(207 79 154 / 0.14), transparent 70%),
+      radial-gradient(40rem 24rem at 10% 4%, rgb(144 133 233 / 0.07), transparent 70%),
+      radial-gradient(44rem 30rem at 100% 50%, rgb(207 79 154 / 0.06), transparent 70%);
+    background-size: auto, auto, auto, 100% 120rem;
+    background-position: 0 0, 0 0, 0 0, 0 30rem;
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat-y;
+  }
+
+  .agent-spinner {
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .agent-spinner {
+      animation: agent-spin 2.4s linear infinite;
+    }
+  }
+
+  @keyframes agent-spin {
+    to {
+      transform: rotate(360deg);
     }
   }
 }

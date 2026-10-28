@@ -1,8 +1,8 @@
-// Defines the five eras of AI history and the computer interface each one is drawn in.
+// Defines the six eras of AI history and the computer interface each one is drawn in.
 // Groups timeline events into those eras by year, keeping every era even when none of its events are shown.
 import type { TimelineEvent } from '@/types/timeline';
 
-export type EraInterface = 'punch-card' | 'terminal' | 'desktop' | 'notebook' | 'chat';
+export type EraInterface = 'punch-card' | 'terminal' | 'desktop' | 'notebook' | 'chat' | 'agent';
 
 export interface EraDefinition {
   id: string;
@@ -13,7 +13,7 @@ export interface EraDefinition {
   description: string;
   interface: EraInterface;
   interfaceName: string;
-  // Marks the era in charts and swatches. The five were validated together as a
+  // Marks the era in charts and swatches. The six were validated together as a
   // categorical palette on the dark chrome, so neighboring eras stay distinct.
   color: string;
 }
@@ -75,22 +75,39 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     id: 'the-generative-ai-era',
     name: 'The Generative AI Era',
     label: 'Generative AI Era',
-    range: [2020, 2030],
+    range: [2020, 2025],
     description:
-      'The current era where AI systems can create original content, engage in natural conversations, and demonstrate capabilities that approach human-level performance in many domains.',
+      'The era in which AI systems learned to create original text, images and video and to hold natural conversations, putting AI in the hands of hundreds of millions of people.',
     interface: 'chat',
     interfaceName: 'Chat thread',
     color: '#9085e9',
   },
+  {
+    id: 'the-agentic-era',
+    name: 'The Agentic Era',
+    label: 'Agentic Era',
+    range: [2025, 2030],
+    description:
+      'The current era, in which AI systems reason before they answer and work on their own as agents, writing code, doing research and operating computers on our behalf.',
+    interface: 'agent',
+    interfaceName: 'Agent task log',
+    color: '#cf4f9a',
+  },
 ];
 
+// An era of whole decades is named by its decades, and one that starts or ends mid-decade by its years
 function formatSubtitle(range: EraDefinition['range'], isCurrentEra: boolean) {
-  const firstDecade = `${range[0]}s`;
+  const [start, end] = range;
+  if (start % 10 !== 0 || end % 10 !== 0) {
+    return `${start} – ${isCurrentEra ? 'Present' : end - 1}`;
+  }
+
+  const firstDecade = `${start}s`;
   if (isCurrentEra) {
     return `${firstDecade} – Present`;
   }
 
-  const lastDecade = `${range[1] - 10}s`;
+  const lastDecade = `${end - 10}s`;
   return firstDecade === lastDecade ? firstDecade : `${firstDecade} – ${lastDecade}`;
 }
 

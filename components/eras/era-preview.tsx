@@ -1,4 +1,4 @@
-// Miniature pictures of the five era interfaces, shown on the tiles that open the page.
+// Miniature pictures of the six era interfaces, shown on the tiles that open the page.
 // They are decoration only: every tile names its era and interface in text beside the picture.
 'use client';
 
@@ -19,6 +19,7 @@ export function EraPreview({ eraInterface, className }: EraPreviewProps) {
       {eraInterface === 'desktop' ? <DesktopPreview /> : null}
       {eraInterface === 'notebook' ? <NotebookPreview /> : null}
       {eraInterface === 'chat' ? <ChatPreview /> : null}
+      {eraInterface === 'agent' ? <AgentPreview /> : null}
     </div>
   );
 }
@@ -109,6 +110,25 @@ function ChatPreview() {
           <span className="block h-1.5 w-4/5 rounded-full bg-white/20" />
         </div>
       </div>
+    </div>
+  );
+}
+
+function AgentPreview() {
+  return (
+    <div className="agent-backdrop flex h-full flex-col justify-center gap-1 px-3 font-mono text-[10px] leading-4 text-[#c9c5cf]">
+      <p>
+        <span className="text-[#e77fb8]">❯</span> <span className="text-white">Research 2026</span>
+      </p>
+      <p>
+        <span className="text-[#5fd39b]">✓</span> <span className="text-[#8f8a98] line-through">Plan the steps</span>
+      </p>
+      <p>
+        <span className="text-[#5fd39b]">✓</span> Read 12 sources
+      </p>
+      <p>
+        <span className="agent-spinner text-[#e77fb8]">✻</span> Working…
+      </p>
     </div>
   );
 }

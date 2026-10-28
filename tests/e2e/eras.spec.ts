@@ -1,4 +1,4 @@
-// End-to-end tests for the five era interfaces on the real page in Chromium.
+// End-to-end tests for the six era interfaces on the real page in Chromium.
 // Each era is drawn in its own interface, and each interface answers the pointer the way its original did.
 import { expect, test, type Locator, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
@@ -11,7 +11,15 @@ import { yearsSincePreviousEvent } from "../../lib/year-gaps"
 import { groupEventsByYear, isBusyYear } from "../../lib/year-groups"
 import type { TimelineEvent } from "../../types/timeline"
 
-const INTERFACES = ["punch-card", "terminal", "desktop", "notebook", "chat"]
+const INTERFACES = ["punch-card", "terminal", "desktop", "notebook", "chat", "agent"]
+
+const erasOfData = groupEventsByEra(timelineData as TimelineEvent[])
+
+// The years an era holds events in, in order
+function yearsOf(eraInterface: string) {
+  const era = erasOfData.find((candidate) => candidate.interface === eraInterface)!
+  return [...new Set(era.events.map((event) => event.year))]
+}
 
 // React marks hydrated DOM nodes with a fiber key; checks that depend on client
 // effects wait for it so they cannot pass against the server-rendered HTML alone.
@@ -113,12 +121,17 @@ test("marks each stretch of more than a year between events, ahead of the event 
 
 test("opens each year of the chat thread with the reader's question", async ({ page }) => {
   await page.goto("/")
-  const years = [...new Set(timelineData.filter((event) => event.year >= 2020).map((event) => event.year))]
 
-  await expect(page.locator("[data-year-prompt]")).toHaveText(years.map((year) => `What happened in ${year}?`))
+  await expect(page.locator("[data-year-prompt]")).toHaveText(yearsOf("chat").map((year) => `What happened in ${year}?`))
 })
 
-test("answers each year's question in the chat thread with its summary from the data", async ({ page }) => {
+test("starts each year of the agent's log with its task", async ({ page }) => {
+  await page.goto("/")
+
+  await expect(page.locator("[data-year-task]")).toHaveText(yearsOf("agent").map((year) => `Research ${year}`))
+})
+
+test("sums up each year of the chat thread and the agent's log with its summary from the data", async ({ page }) => {
   await page.goto("/")
 
   await expect(page.locator("[data-year-summary]")).toHaveText(yearSummaryData.map(({ summary }) => summary))
@@ -225,7 +238,7 @@ test("dissolves each era into the next through the page's black", async ({ page 
     .locator("section[data-interface]")
     .evaluateAll((sections) => sections.map((section) => getComputedStyle(section.firstElementChild!).backgroundImage))
 
-  expect(backdrops).toHaveLength(5)
+  expect(backdrops).toHaveLength(INTERFACES.length)
   for (const backdrop of backdrops) {
     expect(backdrop).toMatch(/^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\), /)
   }
@@ -241,7 +254,7 @@ test("keeps only each busy year's landmarks and highlights in full, and lists th
   for (const group of busyYears) {
     const fullSize = group.events.filter((event) => event.landmark || event.highlight).map((event) => event.title)
     const shown = await page
-      .locator(`#the-generative-ai-era article[data-year="${group.year}"]:not([data-brief])`)
+      .locator(`article[data-year="${group.year}"]:not([data-brief])`)
       .evaluateAll((cards) => cards.map((card) => card.querySelector("a[data-event-link]")!.textContent))
     expect(shown, String(group.year)).toEqual(fullSize)
     await expect(page.locator(`article[data-year="${group.year}"][data-brief]`)).toHaveCount(
@@ -268,8 +281,11 @@ test("shows a busy year in full from its Show all button", async ({ page }) => {
 test("lists the busy years in brief in under half the length of showing them in full", async ({ page }) => {
   await page.goto("/")
   await waitForHydration(page)
-  const chat = page.locator("#the-generative-ai-era")
-  const inBrief = await chat.evaluate((section) => section.getBoundingClientRect().height)
+  // The busy years run through the chat thread and the agent's log
+  const busyEras = page.locator("#the-generative-ai-era, #the-agentic-era")
+  const height = () =>
+    busyEras.evaluateAll((sections) => sections.reduce((sum, section) => sum + section.getBoundingClientRect().height, 0))
+  const inBrief = await height()
 
   for (const group of busyYears) {
     const button = page.getByRole("button", { name: `Show all ${group.events.length} in full` })
@@ -278,13 +294,13 @@ test("lists the busy years in brief in under half the length of showing them in 
       await expect(button).toHaveAttribute("aria-pressed", "true", { timeout: 1000 })
     }).toPass({ timeout: 15_000 })
   }
-  const inFull = await chat.evaluate((section) => section.getBoundingClientRect().height)
+  const inFull = await height()
 
   expect(inBrief).toBeLessThan(inFull / 2)
 })
 
-test("opens the 2020s with how much faster the events come", async ({ page }) => {
-  const pace = describePace(timelineData as TimelineEvent[], 2020)!
+test("opens the Agentic Era with how much faster the events come", async ({ page }) => {
+  const pace = describePace(timelineData as TimelineEvent[], 2025)!
   await page.goto("/")
 
   const paceLine = page.locator("[data-pace-line]")
@@ -292,11 +308,11 @@ test("opens the 2020s with how much faster the events come", async ({ page }) =>
     `The next ${pace.years} years hold ${pace.events} events, ${pace.multiple} times the yearly pace of the ${pace.yearsBefore} years before them.`,
   )
   const order = await paceLine.evaluate((line) => {
-    const notebook = document.getElementById("the-deep-learning-revolution")!
     const chat = document.getElementById("the-generative-ai-era")!
+    const agent = document.getElementById("the-agentic-era")!
     return [
-      Boolean(notebook.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
-      Boolean(line.compareDocumentPosition(chat) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(chat.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(line.compareDocumentPosition(agent) & Node.DOCUMENT_POSITION_FOLLOWING),
     ]
   })
   expect(order).toEqual([true, true])
@@ -417,7 +433,7 @@ test("keeps each month's divider close to its messages, 24px below the month bef
     }),
   )
 
-  expect(gaps.length).toBeGreaterThan(50)
+  expect(gaps.length).toBeGreaterThan(40)
   expect(new Set(gaps.map((gap) => gap.below))).toEqual(new Set([12]))
   expect(new Set(gaps.flatMap((gap) => (gap.above === null ? [] : [gap.above])))).toEqual(new Set([24]))
 })
@@ -444,7 +460,7 @@ test.describe(`on a phone (${PHONE.width}x${PHONE.height})`, () => {
   test("leaves each brief event's date to its month's divider, still in the text screen readers hear", async ({ page }) => {
     await page.goto("/")
 
-    const briefs = await page.locator("article[data-brief]").evaluateAll((articles) =>
+    const briefs = await page.locator("#the-generative-ai-era article[data-brief]").evaluateAll((articles) =>
       articles.map((article) => {
         const time = article.querySelector("time")!
         const box = time.getBoundingClientRect()
@@ -459,7 +475,23 @@ test.describe(`on a phone (${PHONE.width}x${PHONE.height})`, () => {
       }),
     )
 
-    expect(briefs.length).toBeGreaterThan(100)
+    expect(briefs.length).toBeGreaterThan(50)
     expect(briefs.filter((brief) => !brief.sameAsDivider || brief.drawn || !brief.heard)).toEqual([])
+  })
+
+  test("shows each collapsed step's date ahead of its title in the agent's log", async ({ page }) => {
+    await page.goto("/")
+
+    const misplaced = await page.locator("#the-agentic-era article[data-brief]").evaluateAll((articles) =>
+      articles
+        .filter((article) => {
+          const date = article.querySelector("time")!.getBoundingClientRect()
+          return date.width <= 1 || date.top > article.querySelector("h3")!.getBoundingClientRect().top
+        })
+        .map((article) => article.id),
+    )
+
+    expect(await page.locator("#the-agentic-era article[data-brief]").count()).toBeGreaterThan(50)
+    expect(misplaced).toEqual([])
   })
 })

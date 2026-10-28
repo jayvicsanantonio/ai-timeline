@@ -1,13 +1,13 @@
 // Draws the Generative AI Era as a chat thread, the interface the era made familiar, with each year's label beside its part of the thread.
-// Each year opens with a question and an answer, then its messages under month dividers, a busy year's lesser events in brief. The thread ends still typing.
+// Each year opens with a question and an answer, then its messages under month dividers, a busy year's lesser events in brief. The thread ends handing the work to an agent.
 'use client';
 
 import { ChevronsUpDown, Sparkles } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { CategoryIcon } from '@/components/ui/category-icon';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { cn } from '@/lib/utils';
-import { groupEventsByYear, isBusyYear, type YearGroup } from '@/lib/year-groups';
+import { groupEventsByYear, type YearGroup } from '@/lib/year-groups';
 import { yearSummary } from '@/lib/year-summaries';
 import type { TimelineEvent } from '@/types/timeline';
 import {
@@ -20,6 +20,7 @@ import {
   eraEventCount,
   eraHeadingId,
   eventCardAttributes,
+  useBriefListing,
   type EraInterfaceProps,
 } from './era-parts';
 
@@ -174,7 +175,7 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
             <span />
             <span />
           </span>
-          The story is still being written
+          Handing the work to an agent
         </p>
       </div>
     </div>
@@ -189,10 +190,7 @@ interface ChatYearProps {
 // One year of the thread. A busy year lists its events in brief, apart from its landmarks and highlights,
 // and its Show all button turns every brief event into a full message and back.
 function ChatYear({ group, filtering }: ChatYearProps) {
-  const [showAll, setShowAll] = useState(false);
-  const offersShowAll = !filtering && isBusyYear(group.events);
-  const inBrief = (event: TimelineEvent) =>
-    offersShowAll && !showAll && !event.landmark && !event.highlight;
+  const { offersShowAll, showAll, toggleShowAll, inBrief } = useBriefListing(group, filtering);
 
   return (
     <div data-year-group={group.year} className="mt-16 md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8">
@@ -217,7 +215,7 @@ function ChatYear({ group, filtering }: ChatYearProps) {
             <button
               type="button"
               aria-pressed={showAll}
-              onClick={() => setShowAll((shown) => !shown)}
+              onClick={toggleShowAll}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b4abf5]',
                 showAll

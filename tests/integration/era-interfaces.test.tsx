@@ -1,4 +1,4 @@
-// Integration tests for the five era interfaces rendered by EraChapter in real Chromium.
+// Integration tests for the six era interfaces rendered by EraChapter in real Chromium.
 // Every interface must give its events the same accessible structure, plus the details that make it its own.
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
@@ -50,6 +50,11 @@ const eventsByInterface: Record<EraInterface, TimelineEvent[]> = {
     makeEvent(2023, "March", "OpenAI Releases GPT-4", "Public Releases"),
     makeEvent(2023, "March", "Italy Temporarily Bans ChatGPT", "Ethics & Policy", true),
     makeEvent(2024, "May", "OpenAI Releases GPT-4o", "Public Releases"),
+  ],
+  agent: [
+    makeEvent(2025, "February", "Anthropic Releases Claude Code in Research Preview", "AI Tools"),
+    makeEvent(2025, "July", "AI Reaches Gold-Medal Level at the Math Olympiad", "Research Breakthroughs", true),
+    makeEvent(2026, "September", "Meta Launches Muse, a Personal AI Agent", "Agents"),
   ],
 }
 
@@ -618,11 +623,10 @@ describe("the chat era", () => {
     expect(drawnYear(year2024)).not.toHaveTextContent("landmark")
   })
 
-  it("goes straight to a year's messages when the year has no summary yet", () => {
-    const { container } = renderEra("chat", [makeEvent(2027, "January", "A Later Release", "Public Releases")])
+  it("ends the thread handing the work to an agent", () => {
+    const { section } = renderEra("chat")
 
-    expect(container.querySelector("[data-year-prompt]")).toHaveTextContent("What happened in 2027?")
-    expect(container.querySelector("[data-year-summary]")).toBeNull()
+    expect(section.textContent).toMatch(/Handing the work to an agent$/)
   })
 
   // Measured on the list items, which hold still while their messages' scroll reveal moves them
@@ -640,15 +644,89 @@ describe("the chat era", () => {
   })
 })
 
-// A busy year has more than one event a month. Its landmarks and highlights stay full chat messages,
-// and the rest are listed one line each until the reader asks to see them all in full.
-describe("the chat era's busy years", () => {
-  const MONTHS_IN_ORDER = ["January", "February", "March", "April", "May", "June", "July"]
-  // Fourteen events, two a month, with a landmark first and a highlight fourth
-  const busyYear: TimelineEvent[] = Array.from({ length: 14 }, (_, index) => ({
-    ...makeEvent(2024, MONTHS_IN_ORDER[Math.floor(index / 2)], `Release ${index + 1}`, "Public Releases", index === 0),
+describe("the agent era", () => {
+  it("opens with a plan of one step per year, checking off every year but the one still running", () => {
+    const { container } = renderEra("agent")
+
+    const steps = [...container.querySelectorAll<HTMLElement>("[data-plan-step]")]
+    expect(steps.map((step) => [step.textContent, step.dataset.status])).toEqual([
+      ["Research 2025", "done"],
+      ["Research 2026", "running"],
+    ])
+    expect(steps[0].closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it("starts each year with its task before that year's first step", () => {
+    const { container } = renderEra("agent")
+
+    const tasks = [...container.querySelectorAll("[data-year-task]")]
+    expect(tasks.map((task) => task.textContent)).toEqual(["Research 2025", "Research 2026"])
+    const firstOf2026 = container.querySelector('article[data-year="2026"]')!
+    expect(tasks[1].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(tasks[0].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it("reports each year's summary after its task, ahead of its first step", () => {
+    const { container } = renderEra("agent")
+
+    const reports = [...container.querySelectorAll("[data-year-summary]")]
+    expect(reports.map((report) => report.textContent)).toEqual([yearSummary(2025), yearSummary(2026)])
+    const task2026 = container.querySelectorAll("[data-year-task]")[1]
+    const firstOf2026 = container.querySelector('article[data-year="2026"]')!
+    expect(task2026.compareDocumentPosition(reports[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(reports[1].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(reports[1].closest('[aria-hidden="true"]')).toBeNull()
+  })
+
+  it("counts each year's events and landmarks beside them", () => {
+    const { section } = renderEra("agent")
+
+    const [year2025, year2026] = yearColumns(section)
+    expect(drawnYear(year2025)).toHaveTextContent("2 events")
+    expect(drawnYear(year2025)).toHaveTextContent("★ 1 landmark")
+    expect(drawnYear(year2026)).toHaveTextContent("1 event")
+    expect(drawnYear(year2026)).not.toHaveTextContent("landmark")
+  })
+
+  it("goes straight to a year's steps when the year has no summary yet", () => {
+    const { container } = renderEra("agent", [makeEvent(2027, "January", "A Later Release", "Public Releases")])
+
+    expect(container.querySelector("[data-year-task]")).toHaveTextContent("Research 2027")
+    expect(container.querySelector("[data-year-summary]")).toBeNull()
+  })
+
+  it("ends the log still working on the story", () => {
+    const { section } = renderEra("agent")
+
+    expect(section.textContent).toMatch(/The story is still being written$/)
+    expect(section.querySelector("[data-agent-spinner]")!.closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+})
+
+const MONTHS_IN_ORDER = ["January", "February", "March", "April", "May", "June", "July"]
+
+// Fourteen events in a year, two a month, with a landmark first and a highlight fourth
+function busyYearIn(year: number): TimelineEvent[] {
+  return Array.from({ length: 14 }, (_, index) => ({
+    ...makeEvent(year, MONTHS_IN_ORDER[Math.floor(index / 2)], `Release ${index + 1}`, "Public Releases", index === 0),
     ...(index === 3 ? { highlight: true } : {}),
   }))
+}
+
+function briefCardsIn(section: HTMLElement) {
+  return within(section)
+    .getAllByRole("article")
+    .filter((card) => card.hasAttribute("data-brief"))
+}
+
+// A busy year has more than one event a month. Its landmarks and highlights stay in full, and the rest
+// are listed one line each, as brief chat messages or collapsed steps of the agent's log, until the
+// reader asks to see them all in full.
+describe.each([
+  ["chat", 2024],
+  ["agent", 2025],
+] as const)("the %s era's busy years", (eraInterface, year) => {
+  const busyYear = busyYearIn(year)
   const fullSizeTitles = ["Release 1", "Release 4"]
 
   function cards(section: HTMLElement) {
@@ -656,7 +734,7 @@ describe("the chat era's busy years", () => {
   }
 
   function briefCards(section: HTMLElement) {
-    return cards(section).filter((card) => card.hasAttribute("data-brief"))
+    return briefCardsIn(section)
   }
 
   function showAllButton(section: HTMLElement) {
@@ -664,7 +742,7 @@ describe("the chat era's busy years", () => {
   }
 
   it("keeps the landmarks and highlights in full and lists every other event in brief", () => {
-    const { section } = renderEra("chat", busyYear)
+    const { section } = renderEra(eraInterface, busyYear)
 
     expect(cards(section)).toHaveLength(14)
     const full = cards(section).filter((card) => !card.hasAttribute("data-brief"))
@@ -676,7 +754,7 @@ describe("the chat era's busy years", () => {
   })
 
   it("gives each brief event its date, its linked title and its source, but not its description", () => {
-    const { section } = renderEra("chat", busyYear)
+    const { section } = renderEra(eraInterface, busyYear)
 
     expect(briefCards(section)).toHaveLength(12)
     for (const card of briefCards(section)) {
@@ -692,7 +770,7 @@ describe("the chat era's busy years", () => {
   })
 
   it("shows the whole year in full from its Show all button, and lists it in brief again on a second press", async () => {
-    const { section } = renderEra("chat", busyYear)
+    const { section } = renderEra(eraInterface, busyYear)
     const button = showAllButton(section)
     expect(button).toHaveAttribute("aria-pressed", "false")
 
@@ -710,45 +788,28 @@ describe("the chat era's busy years", () => {
     expect(briefCards(section)).toHaveLength(12)
   })
 
-  it("offers the Show all button right after the year's question, before its first event", () => {
-    const { section } = renderEra("chat", busyYear)
+  it("offers the Show all button right after the year's summary, before its first event", () => {
+    const { section } = renderEra(eraInterface, busyYear)
 
-    const prompt = section.querySelector("[data-year-prompt]")!
+    const summary = section.querySelector("[data-year-summary]")!
     const button = showAllButton(section)
     const firstCard = cards(section)[0]
-    expect(prompt.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(summary.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(button.compareDocumentPosition(firstCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it("shows every match in full while the reader filters, without a Show all button", () => {
-    const { section } = renderEra("chat", busyYear, 40)
+    const { section } = renderEra(eraInterface, busyYear, 40)
 
     expect(briefCards(section)).toEqual([])
     expect(within(section).queryByRole("button", { name: /^Show all/ })).toBeNull()
   })
 
   it("keeps a year with a dozen events or fewer in full, without a Show all button", () => {
-    const { section } = renderEra("chat", busyYear.slice(0, 12))
+    const { section } = renderEra(eraInterface, busyYear.slice(0, 12))
 
     expect(briefCards(section)).toEqual([])
     expect(within(section).queryByRole("button", { name: /^Show all/ })).toBeNull()
-  })
-
-  it("leaves each brief event's date to its month's divider on a phone, still in the text screen readers hear", () => {
-    const { section } = renderEra("chat", busyYear)
-
-    expect(briefCards(section)).toHaveLength(12)
-    for (const card of briefCards(section)) {
-      const time = card.querySelector("time")!
-      const divider = card.closest("div[data-month]")!.querySelector("[data-month-divider]")!
-      const drawn = time.getBoundingClientRect()
-      expect(time.textContent).toBe(divider.textContent)
-      expect(drawn.width).toBeLessThanOrEqual(1)
-      expect(drawn.height).toBeLessThanOrEqual(1)
-      expect(getComputedStyle(time).display).not.toBe("none")
-      expect(getComputedStyle(time).visibility).toBe("visible")
-      expect(time.closest('[aria-hidden="true"]')).toBeNull()
-    }
   })
 
   describe("on a wide screen", () => {
@@ -761,7 +822,7 @@ describe("the chat era's busy years", () => {
     })
 
     it("fits each brief event on one short line", () => {
-      const { section } = renderEra("chat", busyYear)
+      const { section } = renderEra(eraInterface, busyYear)
 
       expect(briefCards(section)).toHaveLength(12)
       for (const card of briefCards(section)) {
@@ -770,7 +831,7 @@ describe("the chat era's busy years", () => {
     })
 
     it("shows each brief event's date before its title", () => {
-      const { section } = renderEra("chat", busyYear)
+      const { section } = renderEra(eraInterface, busyYear)
 
       for (const card of briefCards(section)) {
         const date = card.querySelector("time")!.getBoundingClientRect()
@@ -778,5 +839,38 @@ describe("the chat era's busy years", () => {
         expect(date.right).toBeLessThanOrEqual(within(card).getByRole("heading", { level: 3 }).getBoundingClientRect().left)
       }
     })
+  })
+})
+
+describe("the chat era's busy years on a phone", () => {
+  it("leaves each brief event's date to its month's divider, still in the text screen readers hear", () => {
+    const { section } = renderEra("chat", busyYearIn(2024))
+
+    expect(briefCardsIn(section)).toHaveLength(12)
+    for (const card of briefCardsIn(section)) {
+      const time = card.querySelector("time")!
+      const divider = card.closest("div[data-month]")!.querySelector("[data-month-divider]")!
+      const drawn = time.getBoundingClientRect()
+      expect(time.textContent).toBe(divider.textContent)
+      expect(drawn.width).toBeLessThanOrEqual(1)
+      expect(drawn.height).toBeLessThanOrEqual(1)
+      expect(getComputedStyle(time).display).not.toBe("none")
+      expect(getComputedStyle(time).visibility).toBe("visible")
+      expect(time.closest('[aria-hidden="true"]')).toBeNull()
+    }
+  })
+})
+
+describe("the agent era's busy years on a phone", () => {
+  it("shows each collapsed step's date ahead of its title", () => {
+    const { section } = renderEra("agent", busyYearIn(2025))
+
+    expect(briefCardsIn(section)).toHaveLength(12)
+    for (const card of briefCardsIn(section)) {
+      const date = card.querySelector("time")!.getBoundingClientRect()
+      const heading = within(card).getByRole("heading", { level: 3 }).getBoundingClientRect()
+      expect(date.width).toBeGreaterThan(1)
+      expect(date.top).toBeLessThanOrEqual(heading.top)
+    }
   })
 })

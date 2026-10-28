@@ -1,8 +1,8 @@
 // Integration tests for PrologueScene, the opening of the page, rendered with the real timeline data.
-// Covers the page title, the events-per-year chart with its summary and table, and the five era tiles.
+// Covers the page title, the events-per-year chart with its era axis, summary and table, and the six era tiles.
 import { render, screen, within } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
-import { userEvent } from "vitest/browser"
+import { afterEach, describe, expect, it } from "vitest"
+import { page, userEvent } from "vitest/browser"
 import { PrologueScene } from "@/components/storytelling/prologue-scene"
 import timelineData from "@/data/timeline-events.json"
 import { groupEventsByEra } from "@/lib/eras"
@@ -53,7 +53,7 @@ describe("PrologueScene", () => {
 
     const latest = eras.at(-1)!
     expect(screen.getByRole("figure")).toHaveTextContent(
-      `${latest.events.length} of the ${events.length} events happened in the 2020s`,
+      `${latest.events.length} of the ${events.length} events happened since ${latest.range[0]}`,
     )
   })
 
@@ -84,5 +84,31 @@ describe("PrologueScene", () => {
       "href",
       `#${eras[0].id}`,
     )
+  })
+})
+
+// The axis under the chart names each era at its first year, and the short eras of the 2020s leave little room
+describe.each([
+  [375, 812],
+  [768, 1024],
+  [1024, 768],
+  [1280, 800],
+])("the era axis at %ipx wide", (width, height) => {
+  afterEach(async () => {
+    await page.viewport(414, 896)
+  })
+
+  it("keeps the years and era names under the chart from running into each other", async () => {
+    await page.viewport(width, height)
+    const { container } = renderPrologue()
+
+    const labels = [...container.querySelectorAll<HTMLElement>("[data-era-axis] span")]
+      .filter((label) => label.textContent && label.getBoundingClientRect().width > 0)
+      .map((label) => ({ text: label.textContent, box: label.getBoundingClientRect() }))
+      .sort((a, b) => a.box.left - b.box.left)
+    expect(labels.map((label) => label.text)).toContain("2026")
+    labels.slice(1).forEach((label, index) => {
+      expect(label.box.left, `${labels[index].text} / ${label.text}`).toBeGreaterThanOrEqual(labels[index].box.right)
+    })
   })
 })

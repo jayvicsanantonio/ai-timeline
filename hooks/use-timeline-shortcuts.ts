@@ -1,4 +1,4 @@
-// Adds the timeline's keyboard shortcuts: J and K step between events, 1 to 5 jump to an era and / focuses search.
+// Adds the timeline's keyboard shortcuts: J and K step between events, 1 to 6 jump to an era and / focuses search.
 // The keys are left alone while the reader types in a field or holds a modifier key.
 'use client';
 

@@ -18,13 +18,14 @@ function makeEvent(year: number, title = `Event in ${year}`): TimelineEvent {
 }
 
 describe("ERA_DEFINITIONS", () => {
-  it("lists the five eras in order, each drawn in the computer interface of its day", () => {
+  it("lists the six eras in order, each drawn in the computer interface of its day", () => {
     expect(ERA_DEFINITIONS.map((era) => [era.name, era.interface, era.interfaceName])).toEqual([
       ["The Foundation Era", "punch-card", "Punch cards"],
       ["The Knowledge Era", "terminal", "Green-screen terminal"],
       ["The Learning Era", "desktop", "Desktop windows"],
       ["The Deep Learning Revolution", "notebook", "Research notebook"],
       ["The Generative AI Era", "chat", "Chat thread"],
+      ["The Agentic Era", "agent", "Agent task log"],
     ])
   })
 
@@ -47,7 +48,9 @@ describe("getEraForYear", () => {
     expect(getEraForYear(1969)?.name).toBe("The Foundation Era")
     expect(getEraForYear(1970)?.name).toBe("The Knowledge Era")
     expect(getEraForYear(2019)?.name).toBe("The Deep Learning Revolution")
-    expect(getEraForYear(2026)?.name).toBe("The Generative AI Era")
+    expect(getEraForYear(2024)?.name).toBe("The Generative AI Era")
+    expect(getEraForYear(2025)?.name).toBe("The Agentic Era")
+    expect(getEraForYear(2026)?.name).toBe("The Agentic Era")
   })
 
   it("returns undefined for a year outside every era", () => {
@@ -58,7 +61,7 @@ describe("getEraForYear", () => {
 
 describe("groupEventsByEra", () => {
   it("puts each event in the era whose years contain it, keeping the events' order", () => {
-    const events = [1969, 1970, 1989, 1990, 2009, 2010, 2019, 2020, 2026].map((year) => makeEvent(year))
+    const events = [1969, 1970, 1989, 1990, 2009, 2010, 2019, 2020, 2024, 2025, 2026].map((year) => makeEvent(year))
 
     const eras = groupEventsByEra(events)
 
@@ -67,18 +70,19 @@ describe("groupEventsByEra", () => {
       [1970, 1989],
       [1990, 2009],
       [2010, 2019],
-      [2020, 2026],
+      [2020, 2024],
+      [2025, 2026],
     ])
   })
 
   it("keeps every era, even one with no events", () => {
     const eras = groupEventsByEra([makeEvent(2024)])
 
-    expect(eras).toHaveLength(5)
-    expect(eras.map((era) => era.events.length)).toEqual([0, 0, 0, 0, 1])
+    expect(eras).toHaveLength(6)
+    expect(eras.map((era) => era.events.length)).toEqual([0, 0, 0, 0, 1, 0])
   })
 
-  it("numbers the chapters and gives each era a section id, short label and decade subtitle", () => {
+  it("numbers the chapters and gives each era a section id, short label and subtitle of its decades or years", () => {
     const eras = groupEventsByEra([])
 
     expect(eras.map((era) => [era.id, era.label, era.chapter, era.number, era.subtitle])).toEqual([
@@ -86,7 +90,8 @@ describe("groupEventsByEra", () => {
       ["the-knowledge-era", "Knowledge Era", "Chapter 2", "02", "1970s – 1980s"],
       ["the-learning-era", "Learning Era", "Chapter 3", "03", "1990s – 2000s"],
       ["the-deep-learning-revolution", "Deep Learning Revolution", "Chapter 4", "04", "2010s"],
-      ["the-generative-ai-era", "Generative AI Era", "Chapter 5", "05", "2020s – Present"],
+      ["the-generative-ai-era", "Generative AI Era", "Chapter 5", "05", "2020 – 2024"],
+      ["the-agentic-era", "Agentic Era", "Chapter 6", "06", "2025 – Present"],
     ])
   })
 
