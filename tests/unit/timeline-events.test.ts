@@ -111,6 +111,43 @@ describe("data/timeline-events.json", () => {
     expect(sharedLinks).toEqual([])
   })
 
+  test("gives every event its own title", () => {
+    const titles = timelineData.map((event) => event.title.toLowerCase())
+    expect(titles.filter((title, index) => titles.indexOf(title) !== index)).toEqual([])
+  })
+
+  // The same story added twice under a new title and link, like a second "Hebb" or "SNARC" card, passes the
+  // tests above. Before 2020 an era holds a few events a year, so two events at most a year apart whose
+  // titles alone share a name are one story told twice, unless approved here. From 2020 on, sequels such as
+  // DALL-E 2 or Sora 2 share names with their first versions all the time, so the check stops there.
+  test("tells no story twice before 2020", () => {
+    const earlyEvents = timelineData.filter((event) => event.year < 2020)
+    const words = (title: string) =>
+      new Set(
+        (title.toLowerCase().match(/[a-z0-9][a-z0-9.-]*[a-z0-9]/g) ?? []).filter(
+          (word) => word.length >= 4 && word !== "breakthrough",
+        ),
+      )
+    const titleCounts = new Map<string, number>()
+    for (const event of timelineData) {
+      for (const word of words(event.title)) {
+        titleCounts.set(word, (titleCounts.get(word) ?? 0) + 1)
+      }
+    }
+
+    const sameStory = earlyEvents.flatMap((event, index) =>
+      earlyEvents
+        .slice(index + 1)
+        .filter(
+          (other) =>
+            Math.abs(other.year - event.year) <= 1 &&
+            [...words(event.title)].some((word) => words(other.title).has(word) && titleCounts.get(word) === 2),
+        )
+        .map((other) => `${event.title} / ${other.title}`),
+    )
+    expect(sameStory).toEqual(["AlphaGo Defeats Lee Sedol / AlphaGo Zero"])
+  })
+
   test("marks the approved turning points as landmarks, and nothing else", () => {
     const landmarks = timelineData.filter((event) => "landmark" in event)
 
@@ -126,6 +163,8 @@ describe("data/timeline-events.json", () => {
       "ImageNet Breakthrough",
       "AlphaGo Defeats Lee Sedol",
       "Attention Is All You Need",
+      "Reinforcement Learning From Human Feedback",
+      "Scaling Laws for Language Models",
       "OpenAI Releases GPT-3",
       "DeepMind's AlphaFold 2 Solves Protein Folding",
       "ChatGPT Takes the World by Storm",
@@ -143,6 +182,10 @@ describe("data/timeline-events.json", () => {
     const highlights = timelineData.filter((event) => "highlight" in event)
 
     expect(highlights.map((event) => event.title)).toEqual([
+      "OpenAI's InstructGPT Learns to Follow Instructions",
+      "OpenAI Releases DALL-E 2",
+      "Stable Diffusion Public Release",
+      "U.S. Restricts AI Chip Exports to China",
       "Anthropic Releases Claude",
       "Meta Releases Llama 2",
       "President Biden's Executive Order on AI",
@@ -152,11 +195,11 @@ describe("data/timeline-events.json", () => {
       "Anthropic Releases Claude Code in Research Preview",
       "OpenAI Releases GPT-5",
       "Google Releases Gemini 3",
+      "Anthropic Launches Project Glasswing with Claude Mythos Preview",
       "Google Unveils Gemini 3.5 at I/O",
       "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
       "Anthropic Releases Claude Opus 5",
       "OpenAI Releases GPT-6 Astra",
-      "OpenAI Claims a Navier–Stokes Proof",
     ])
     expect(highlights.every((event) => (event as { highlight?: unknown }).highlight === true)).toBe(true)
     expect(highlights.filter((event) => "landmark" in event)).toEqual([])
@@ -174,6 +217,7 @@ describe("data/timeline-events.json", () => {
     })
 
     expect(fullSizeByBusyYear).toEqual([
+      [2022, 5],
       [2023, 5],
       [2024, 5],
       [2025, 5],

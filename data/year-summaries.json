@@ -1,7 +1,7 @@
 [
   {
     "year": 2020,
-    "summary": "GPT-3 showed what a much bigger language model could do, and AlphaFold 2 solved protein folding."
+    "summary": "Scaling laws predicted that bigger language models would keep getting better, GPT-3 proved it, and AlphaFold 2 solved protein folding."
   },
   {
     "year": 2021,
@@ -9,7 +9,7 @@
   },
   {
     "year": 2022,
-    "summary": "Midjourney and Stable Diffusion opened image generation to the public, and ChatGPT put AI chat in everyone's hands."
+    "summary": "InstructGPT learned to follow instructions, Stable Diffusion opened image generation to all, and ChatGPT put AI chat in everyone's hands."
   },
   {
     "year": 2023,

@@ -236,7 +236,7 @@ const busyYears = groupEventsByYear(timelineData as TimelineEvent[]).filter((gro
 test("keeps only each busy year's landmarks and highlights in full, and lists the rest in brief", async ({ page }) => {
   await page.goto("/")
 
-  expect(busyYears.map((group) => group.year)).toEqual([2023, 2024, 2025, 2026])
+  expect(busyYears.map((group) => group.year)).toEqual([2022, 2023, 2024, 2025, 2026])
   await expect(page.locator("article")).toHaveCount(timelineData.length)
   for (const group of busyYears) {
     const fullSize = group.events.filter((event) => event.landmark || event.highlight).map((event) => event.title)
@@ -254,7 +254,7 @@ test("shows a busy year in full from its Show all button", async ({ page }) => {
   await page.goto("/")
   await waitForHydration(page)
 
-  const button = page.getByRole("button", { name: "Show all 64 in full" })
+  const button = page.getByRole("button", { name: "Show all 46 in full" })
   await expect(async () => {
     await button.click()
     await expect(button).toHaveAttribute("aria-pressed", "true", { timeout: 1000 })
