@@ -131,6 +131,36 @@ test("starts each year of the agent's log with its task", async ({ page }) => {
   await expect(page.locator("[data-year-task]")).toHaveText(yearsOf("agent").map((year) => `Research ${year}`))
 })
 
+test("notes for each year of the agent's log how many pages it read and from how many sites", async ({ page }) => {
+  await page.goto("/")
+
+  const agentEra = erasOfData.find((candidate) => candidate.interface === "agent")!
+  const notes = groupEventsByYear(agentEra.events).map(
+    ({ events }) => `Read ${events.length} pages from ${new Set(events.map(eventSource)).size} sites`,
+  )
+  await expect(page.locator("[data-year-activity]")).toHaveText(notes)
+})
+
+test("draws each full step of the agent's log as a call that fetches its source", async ({ page }) => {
+  await page.goto("/")
+
+  const steps = page.locator("#the-agentic-era article:not([data-brief])")
+  const calls = await steps.evaluateAll((articles) =>
+    articles.map((article) => article.querySelector("[data-tool-call]")?.textContent ?? ""),
+  )
+  const sources = await steps.evaluateAll((articles) =>
+    articles.map((article) => new URL(article.querySelector("a")!.href).hostname.replace(/^www\./, "")),
+  )
+
+  // A busy year shows only its landmarks and highlights in full, and any other year all of its events
+  const agentEra = erasOfData.find((candidate) => candidate.interface === "agent")!
+  const fullSteps = groupEventsByYear(agentEra.events).flatMap(({ events }) =>
+    isBusyYear(events) ? events.filter((event) => event.landmark || event.highlight) : events,
+  )
+  expect(calls).toHaveLength(fullSteps.length)
+  expect(calls).toEqual(sources.map((source) => `Fetch(${source})`))
+})
+
 test("sums up each year of the chat thread and the agent's log with its summary from the data", async ({ page }) => {
   await page.goto("/")
 

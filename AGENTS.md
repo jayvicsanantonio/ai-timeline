@@ -65,7 +65,7 @@ Components are organized by purpose rather than type:
 
 ### Animation System
 
-Most motion is CSS in the `@layer components` block of `app/globals.css`, always inside `prefers-reduced-motion: no-preference`: event cards rise in with a scroll-driven animation (`animation-timeline: view()`), and the eras' carets, progress bar and typing dots run as keyframes. Framer Motion animates the phone chapter list. Hooks that move the reader around:
+Most motion is CSS in the `@layer components` block of `app/globals.css`, always inside `prefers-reduced-motion: no-preference`: event cards rise in with a scroll-driven animation (`animation-timeline: view()`), and the eras' carets, progress bar, typing dots and the agent's shimmering status run as keyframes. Framer Motion animates the phone chapter list. Hooks that move the reader around:
 - `useTimelinePosition()` - Measures, once per animation frame while scrolling, the era, event year and month at the reading line (`READING_LINE` in `/lib/timeline-scroll.ts`) and how far through the era the reader has come
 - `useTimelineShortcuts()` - J and K step between events, 1 to 6 jump to an era, and / focuses search
 

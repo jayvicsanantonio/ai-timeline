@@ -695,11 +695,75 @@ describe("the agent era", () => {
     expect(container.querySelector("[data-year-summary]")).toBeNull()
   })
 
+  it("notes how many pages it read for each year and from how many sites, after the year's task", () => {
+    const { container } = renderEra("agent", [
+      { ...makeEvent(2025, "March", "First Step", "AI Tools"), link: "https://www.openai.com/first" },
+      { ...makeEvent(2025, "April", "Second Step", "AI Tools"), link: "https://openai.com/second" },
+      { ...makeEvent(2025, "May", "Third Step", "Agents"), link: "https://arxiv.org/third" },
+      makeEvent(2026, "January", "Fourth Step", "Agents"),
+    ])
+
+    const notes = [...container.querySelectorAll("[data-year-activity]")]
+    expect(notes.map((note) => note.textContent)).toEqual(["Read 3 pages from 2 sites", "Read 1 page from 1 site"])
+    const task2026 = container.querySelectorAll("[data-year-task]")[1]
+    const firstOf2026 = container.querySelector('article[data-year="2026"]')!
+    expect(task2026.compareDocumentPosition(notes[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(notes[1].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(notes[0].closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it("draws each step in full as a call that fetches its source, ahead of the step's date", () => {
+    const { section } = renderEra("agent")
+
+    for (const article of within(section).getAllByRole("article")) {
+      const call = article.querySelector("[data-tool-call]")!
+      expect(call).toHaveTextContent("Fetch(example.com)")
+      expect(call.compareDocumentPosition(article.querySelector("time")!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    }
+  })
+
+  it("boxes each landmark as a checkpoint, with its label set into the top edge of the box", () => {
+    const { section } = renderEra("agent")
+
+    const landmark = section.querySelector<HTMLElement>("article[data-landmark]")!
+    const box = landmark.getBoundingClientRect()
+    const label = within(landmark).getByText("Landmark").getBoundingClientRect()
+    expect(label.top).toBeLessThan(box.top)
+    expect(label.bottom).toBeGreaterThan(box.top)
+  })
+
+  // Measured on the list items' nodes, which hold still while their steps' scroll reveal moves them
+  it("strings each year's steps on one trace line, with a node on the line beside every step", () => {
+    const { section } = renderEra("agent", busyYearIn(2025))
+
+    const traces = [...section.querySelectorAll<HTMLElement>("[data-trace]")]
+    expect(traces).toHaveLength(1)
+    for (const trace of traces) {
+      const line = trace.getBoundingClientRect().left + parseFloat(getComputedStyle(trace).borderLeftWidth) / 2
+      const nodes = [...trace.querySelectorAll("[data-trace-node]")]
+      expect(nodes).toHaveLength(trace.querySelectorAll("article").length)
+      for (const node of nodes) {
+        const drawn = node.getBoundingClientRect()
+        expect(drawn.width).toBeGreaterThan(1)
+        expect((drawn.left + drawn.right) / 2).toBeCloseTo(line, 0)
+        expect(node.closest('[aria-hidden="true"]')).not.toBeNull()
+      }
+    }
+  })
+
   it("ends the log still working on the story", () => {
     const { section } = renderEra("agent")
 
     expect(section.textContent).toMatch(/The story is still being written$/)
     expect(section.querySelector("[data-agent-spinner]")!.closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it("shimmers its closing status while motion is allowed, as agents do while they work", () => {
+    const { section } = renderEra("agent")
+
+    const status = section.querySelector("[data-agent-status]")!
+    expect(status).toHaveTextContent("The story is still being written")
+    expect(getComputedStyle(status).animationName).toBe("agent-shimmer")
   })
 })
 

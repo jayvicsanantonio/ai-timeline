@@ -41,4 +41,13 @@ describe("era layouts in the global stylesheet", () => {
     expect(styleOf(outputPrompt)?.display).toBe("none")
     expect(styleOf(outputPrompt, "(min-width: 640px)")?.display).toBe("block")
   })
+
+  it("shimmers the agent's status only while motion is allowed, and leaves it plain text otherwise", () => {
+    const shimmer = styleOf(".agent-shimmer", "(prefers-reduced-motion: no-preference)")
+
+    expect(styleOf(".agent-shimmer")).toBeUndefined()
+    expect(shimmer?.animationName).toBe("agent-shimmer")
+    expect(shimmer?.backgroundClip).toBe("text")
+    expect(shimmer?.color).toBe("transparent")
+  })
 })

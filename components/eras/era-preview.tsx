@@ -116,18 +116,23 @@ function ChatPreview() {
 
 function AgentPreview() {
   return (
-    <div className="agent-backdrop flex h-full flex-col justify-center gap-1 px-3 font-mono text-[10px] leading-4 text-[#c9c5cf]">
-      <p>
-        <span className="text-[#e77fb8]">❯</span> <span className="text-white">Research 2026</span>
+    <div className="agent-backdrop flex h-full flex-col justify-center gap-1 px-3 font-mono text-[10px] leading-4 text-[#a39fab]">
+      <p className="flex items-center gap-1.5">
+        <span className="size-2 rounded-[2px] border border-[#e77fb8] bg-[#cf4f9a]/20" />
+        <span className="font-semibold text-white">Research 2026</span>
+      </p>
+      <p className="flex items-center gap-1.5">
+        <span className="size-1.5 rounded-full bg-[#e77fb8]" />
+        <span>
+          <span className="font-semibold text-white">Fetch</span>(openai.com)
+        </span>
+      </p>
+      <p className="flex items-start gap-1.5 pl-[3px]">
+        <span className="mt-0.5 h-1.5 w-1.5 rounded-bl-[2px] border-b border-l border-white/30" />
+        <span className="text-[#c9c5cf]">Read 12 pages</span>
       </p>
       <p>
-        <span className="text-[#5fd39b]">✓</span> <span className="text-[#8f8a98] line-through">Plan the steps</span>
-      </p>
-      <p>
-        <span className="text-[#5fd39b]">✓</span> Read 12 sources
-      </p>
-      <p>
-        <span className="agent-spinner text-[#e77fb8]">✻</span> Working…
+        <span className="agent-spinner text-[#e77fb8]">✻</span> <span className="agent-shimmer">Working…</span>
       </p>
     </div>
   );
