@@ -5,7 +5,24 @@
     "title": "McCulloch-Pitts Neuron",
     "description": "Warren McCulloch and Walter Pitts publish 'A Logical Calculus of the Ideas Immanent in Nervous Activity,' proposing the first mathematical model of a neural network.",
     "category": "Research Breakthroughs",
-    "link": "https://en.wikipedia.org/wiki/A_Logical_Calculus_of_the_Ideas_Immanent_in_Nervous_Activity"
+    "link": "https://en.wikipedia.org/wiki/A_Logical_Calculus_of_the_Ideas_Immanent_in_Nervous_Activity",
+    "landmark": true
+  },
+  {
+    "year": 1949,
+    "month": "Unknown",
+    "title": "Hebb Explains How Neurons Learn",
+    "description": "Donald Hebb's book 'The Organization of Behavior' proposes that the connection between two neurons grows stronger when they fire together, the idea behind Hebbian learning in later neural networks.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Hebbian_theory"
+  },
+  {
+    "year": 1950,
+    "month": "March",
+    "title": "Shannon Shows How a Computer Could Play Chess",
+    "description": "Claude Shannon's paper 'Programming a Computer for Playing Chess' describes how a machine could look ahead through possible moves and score the positions it reaches, the approach chess programs build on for decades.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1080/14786445008521796"
   },
   {
     "year": 1950,
@@ -13,7 +30,8 @@
     "title": "The Turing Test",
     "description": "Alan Turing's paper 'Computing Machinery and Intelligence' proposes the 'Imitation Game' to assess a machine's ability to exhibit intelligent behavior indistinguishable from that of a human.",
     "category": "Research Breakthroughs",
-    "link": "https://archive.org/details/MIND--COMPUTING-MACHINERY-AND-INTELLIGENCE"
+    "link": "https://archive.org/details/MIND--COMPUTING-MACHINERY-AND-INTELLIGENCE",
+    "landmark": true
   },
   {
     "year": 1951,
@@ -24,6 +42,14 @@
     "link": "https://www.computerhistory.org/chess/stl-430b9bbe6b611/"
   },
   {
+    "year": 1951,
+    "month": "Unknown",
+    "title": "SNARC, a Neural Network Built From Vacuum Tubes",
+    "description": "Marvin Minsky and Dean Edmonds build SNARC, a machine of 300 vacuum tubes that simulates a small network of neurons and learns by reinforcement to guide simulated rats through a maze.",
+    "category": "Hardware Advances",
+    "link": "https://en.wikipedia.org/wiki/Stochastic_Neural_Analog_Reinforcement_Calculator"
+  },
+  {
     "year": 1952,
     "month": "Unknown",
     "title": "Samuel's Checkers Program",
@@ -32,12 +58,21 @@
     "link": "https://history.computer.org/pioneers/samuel.html"
   },
   {
+    "year": 1954,
+    "month": "January",
+    "title": "Georgetown–IBM Experiment Translates Russian",
+    "description": "Georgetown University and IBM show fully automatic machine translation, with an IBM 701 turning more than sixty Russian sentences into English in a demonstration staged to win government and public support.",
+    "category": "Public Releases",
+    "link": "https://en.wikipedia.org/wiki/Georgetown%E2%80%93IBM_experiment"
+  },
+  {
     "year": 1956,
     "month": "June",
     "title": "Dartmouth AI Conference",
     "description": "The birth of AI as a field — researchers gathered at Dartmouth College to explore the idea of machines simulating human intelligence.",
     "category": "Research Breakthroughs",
-    "link": "https://en.wikipedia.org/wiki/Dartmouth_workshop"
+    "link": "https://en.wikipedia.org/wiki/Dartmouth_workshop",
+    "landmark": true
   },
   {
     "year": 1956,
@@ -48,12 +83,21 @@
     "link": "https://en.wikipedia.org/wiki/Logic_Theorist"
   },
   {
+    "year": 1957,
+    "month": "Unknown",
+    "title": "General Problem Solver",
+    "description": "Herbert Simon, J. C. Shaw and Allen Newell create the General Problem Solver, a program meant to work as a universal problem solver by breaking a goal into subgoals it can reach step by step.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/General_Problem_Solver"
+  },
+  {
     "year": 1958,
     "month": "July",
     "title": "Rosenblatt's Perceptron",
     "description": "Frank Rosenblatt presents the perceptron, a neural network that learns to classify inputs from examples, at a U.S. Navy press event, and The New York Times reports on a 'New Navy Device' that 'Learns By Doing.'",
     "category": "Research Breakthroughs",
-    "link": "https://en.wikipedia.org/wiki/Perceptron"
+    "link": "https://en.wikipedia.org/wiki/Perceptron",
+    "landmark": true
   },
   {
     "year": 1958,
@@ -62,6 +106,22 @@
     "description": "John McCarthy develops LISP, which becomes a foundational programming language for AI research.",
     "category": "Research Breakthroughs",
     "link": "https://doi.org/10.1145/367177.367199"
+  },
+  {
+    "year": 1959,
+    "month": "July",
+    "title": "Arthur Samuel Coins 'Machine Learning'",
+    "description": "Arthur Samuel's paper 'Some Studies in Machine Learning Using the Game of Checkers' describes a program that learns to play better checkers than the person who wrote it, and gives the field of machine learning its name.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1147/rd.33.0210"
+  },
+  {
+    "year": 1960,
+    "month": "Unknown",
+    "title": "ADALINE Learns From Its Errors",
+    "description": "Bernard Widrow and his student Marcian Hoff at Stanford build ADALINE, a single-layer neural network that adjusts its weights to shrink its error on each example, an early form of the gradient training used today.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/ADALINE"
   },
   {
     "year": 1961,
@@ -78,6 +138,14 @@
     "description": "Edward Feigenbaum and Joshua Lederberg create DENDRAL, an expert system that could identify chemical compounds, demonstrating the potential of AI for specialized knowledge tasks.",
     "category": "Models & Architectures",
     "link": "https://en.wikipedia.org/wiki/Dendral"
+  },
+  {
+    "year": 1965,
+    "month": "Unknown",
+    "title": "Ivakhnenko's Group Trains the First Deep Networks",
+    "description": "Alexey Ivakhnenko and V. G. Lapa publish the Group Method of Data Handling, the first working method for training neural networks many layers deep.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Deep_learning"
   },
   {
     "year": 1966,
@@ -102,6 +170,22 @@
     "description": "Marvin Minsky and Seymour Papert publish 'Perceptrons,' which highlights the limitations of simple neural networks and contributes to a long decline in neural network research.",
     "category": "Bombshell News",
     "link": "https://en.wikipedia.org/wiki/Perceptrons_(book)"
+  },
+  {
+    "year": 1970,
+    "month": "Unknown",
+    "title": "SHRDLU Talks About a World of Blocks",
+    "description": "Terry Winograd's SHRDLU, built at MIT from 1968 to 1970, holds a typed conversation about a virtual world of blocks, cones and balls, moving them on command and answering questions about them.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/SHRDLU"
+  },
+  {
+    "year": 1972,
+    "month": "Unknown",
+    "title": "Prolog Programming Language",
+    "description": "Alain Colmerauer and Philippe Roussel create Prolog in Marseille, a language whose programs are written as logical facts and rules, later taken up by Japan's Fifth Generation project.",
+    "category": "AI Tools",
+    "link": "https://en.wikipedia.org/wiki/Prolog"
   },
   {
     "year": 1973,
@@ -133,7 +217,8 @@
     "title": "The First AI Winter Begins",
     "description": "With DARPA cutting undirected research and the Lighthill Report dismantling UK programs, funding for AI dries up, starting the first AI winter, which lasts until around 1980.",
     "category": "Bombshell News",
-    "link": "https://en.wikipedia.org/wiki/AI_winter#The_setbacks_of_1974"
+    "link": "https://en.wikipedia.org/wiki/AI_winter#The_setbacks_of_1974",
+    "landmark": true
   },
   {
     "year": 1980,
@@ -176,12 +261,45 @@
     "link": "https://en.wikipedia.org/wiki/Fifth_Generation_Computer_Systems"
   },
   {
+    "year": 1983,
+    "month": "Unknown",
+    "title": "DARPA's Strategic Computing Initiative",
+    "description": "DARPA launches the Strategic Computing Initiative, a ten-year program inspired by Japan's Fifth Generation project, on which the Department of Defense spends $1 billion for advanced computing and AI.",
+    "category": "Companies & Investments",
+    "link": "https://en.wikipedia.org/wiki/Strategic_Computing_Initiative"
+  },
+  {
+    "year": 1984,
+    "month": "July",
+    "title": "Cyc Sets Out to Encode Common Sense",
+    "description": "Douglas Lenat begins Cyc at MCC, a decades-long effort to hand-encode the everyday facts and rules of thumb that make up human common sense.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/Cyc"
+  },
+  {
+    "year": 1985,
+    "month": "January",
+    "title": "Boltzmann Machines Learn Hidden Features",
+    "description": "David Ackley, Geoffrey Hinton and Terrence Sejnowski publish a learning algorithm for Boltzmann machines, networks whose hidden units learn their own internal representation of the data.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1207/s15516709cog0901_7"
+  },
+  {
+    "year": 1985,
+    "month": "Unknown",
+    "title": "Judea Pearl Names Bayesian Networks",
+    "description": "Judea Pearl coins the term Bayesian network for graphs of probabilities that let a system reason under uncertainty, updating its beliefs as new evidence arrives.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Bayesian_network"
+  },
+  {
     "year": 1986,
     "month": "October",
     "title": "Backpropagation Popularized",
     "description": "David Rumelhart, Geoffrey Hinton, and Ronald Williams publish a paper that popularizes the backpropagation algorithm, enabling the training of multi-layer neural networks.",
     "category": "Research Breakthroughs",
-    "link": "https://www.nature.com/articles/323533a0"
+    "link": "https://www.nature.com/articles/323533a0",
+    "landmark": true
   },
   {
     "year": 1987,
@@ -192,12 +310,28 @@
     "link": "https://en.wikipedia.org/wiki/AI_winter#The_collapse_of_the_LISP_machine_market"
   },
   {
+    "year": 1987,
+    "month": "Unknown",
+    "title": "VaMoRs Drives Itself at 96 km/h",
+    "description": "Ernst Dickmanns' robot van VaMoRs, steered by computer vision, can drive itself at up to 96 km/h (60 mph), a year after it first drove on its own.",
+    "category": "Hardware Advances",
+    "link": "https://en.wikipedia.org/wiki/Ernst_Dickmanns"
+  },
+  {
     "year": 1989,
     "month": "December",
     "title": "LeNet and Convolutional Neural Networks (CNNs)",
     "description": "Yann LeCun develops LeNet, one of the first successful applications of Convolutional Neural Networks, for recognizing handwritten digits.",
     "category": "Models & Architectures",
     "link": "https://en.wikipedia.org/wiki/LeNet"
+  },
+  {
+    "year": 1989,
+    "month": "Unknown",
+    "title": "Q-Learning",
+    "description": "Chris Watkins introduces Q-learning in his PhD thesis 'Learning from Delayed Rewards', a way for an agent to learn the value of each action from rewards alone, which DeepMind's Atari player later pairs with deep networks.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Q-learning"
   },
   {
     "year": 1992,
@@ -208,6 +342,14 @@
     "link": "https://en.wikipedia.org/wiki/TD-Gammon"
   },
   {
+    "year": 1994,
+    "month": "Unknown",
+    "title": "Chinook Becomes Checkers World Champion",
+    "description": "Chinook, a checkers program from the University of Alberta, is declared Man-Machine World Champion after six drawn games against Marion Tinsley, who withdraws from the match because of illness.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/Chinook_(computer_program)"
+  },
+  {
     "year": 1995,
     "month": "September",
     "title": "Support Vector Machines (SVMs)",
@@ -216,12 +358,21 @@
     "link": "https://en.wikipedia.org/wiki/Support-vector_machine"
   },
   {
+    "year": 1995,
+    "month": "Unknown",
+    "title": "AdaBoost",
+    "description": "Yoav Freund and Robert Schapire introduce AdaBoost, which builds an accurate classifier out of many weak ones by focusing each new one on the examples the others got wrong, work that wins them the 2003 Gödel Prize.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/AdaBoost"
+  },
+  {
     "year": 1997,
     "month": "May",
     "title": "IBM Deep Blue Defeats Garry Kasparov",
     "description": "IBM's Deep Blue becomes the first computer to defeat a reigning world chess champion in a match under standard chess tournament time controls.",
     "category": "Hardware Advances",
-    "link": "https://en.wikipedia.org/wiki/Deep_Blue_versus_Garry_Kasparov"
+    "link": "https://en.wikipedia.org/wiki/Deep_Blue_versus_Garry_Kasparov",
+    "landmark": true
   },
   {
     "year": 1997,
@@ -233,11 +384,35 @@
   },
   {
     "year": 1998,
+    "month": "November",
+    "title": "LeNet-5 and the MNIST Benchmark",
+    "description": "Yann LeCun, Léon Bottou, Yoshua Bengio and Patrick Haffner publish LeNet-5, a convolutional network for reading handwriting trained on the MNIST digits, which become machine learning's standard first benchmark.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1109/5.726791"
+  },
+  {
+    "year": 1998,
     "month": "Unknown",
     "title": "Kismet the Robot",
     "description": "Cynthia Breazeal at MIT builds Kismet, a robot that can recognize and display emotions.",
     "category": "Hardware Advances",
     "link": "https://en.wikipedia.org/wiki/Kismet_(robot)"
+  },
+  {
+    "year": 1999,
+    "month": "May",
+    "title": "Sony's AIBO Robot Dog",
+    "description": "Sony introduces AIBO, an autonomous robot dog for the home, and when sales open in June the first units sell out online in 20 minutes.",
+    "category": "Public Releases",
+    "link": "https://en.wikipedia.org/wiki/AIBO"
+  },
+  {
+    "year": 2001,
+    "month": "October",
+    "title": "Random Forests",
+    "description": "Leo Breiman publishes random forests, in which many decision trees, each grown on random samples of the data and features, vote on the answer, building on Tin Kam Ho's 1995 random decision forests.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1023/A:1010933404324"
   },
   {
     "year": 2002,
@@ -246,6 +421,14 @@
     "description": "iRobot releases the Roomba, one of the first commercially successful domestic robots.",
     "category": "Public Releases",
     "link": "https://en.wikipedia.org/wiki/Roomba"
+  },
+  {
+    "year": 2003,
+    "month": "February",
+    "title": "A Neural Probabilistic Language Model",
+    "description": "Yoshua Bengio, Réjean Ducharme, Pascal Vincent and Christian Jauvin train a neural network that learns a vector for every word and uses them to predict the next word, an early step toward today's language models.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.jmlr.org/papers/v3/bengio03a.html"
   },
   {
     "year": 2005,
@@ -280,6 +463,14 @@
     "link": "https://en.wikipedia.org/wiki/CUDA"
   },
   {
+    "year": 2007,
+    "month": "November",
+    "title": "DARPA Urban Challenge",
+    "description": "Tartan Racing, from Carnegie Mellon and General Motors, wins the $2 million DARPA Urban Challenge with its car Boss, in a contest for driverless cars on a mock city course.",
+    "category": "Hardware Advances",
+    "link": "https://en.wikipedia.org/wiki/DARPA_Grand_Challenge_(2007)"
+  },
+  {
     "year": 2009,
     "month": "January",
     "title": "Google Starts Its Self-Driving Car Project",
@@ -290,10 +481,19 @@
   {
     "year": 2009,
     "month": "June",
+    "title": "GPUs Speed Up Deep Learning",
+    "description": "Rajat Raina, Anand Madhavan and Andrew Ng show that graphics processors can train large deep networks many times faster than ordinary processors, making much bigger models practical.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1145/1553374.1553486"
+  },
+  {
+    "year": 2009,
+    "month": "June",
     "title": "ImageNet Database Created",
     "description": "Fei-Fei Li and colleagues launch ImageNet, a large-scale database of labeled images that becomes a crucial benchmark for computer vision research.",
     "category": "Research Breakthroughs",
-    "link": "https://image-net.org/"
+    "link": "https://image-net.org/",
+    "landmark": true
   },
   {
     "year": 2010,
@@ -333,7 +533,8 @@
     "title": "ImageNet Breakthrough",
     "description": "AlexNet wins the ImageNet competition, drastically reducing error rates and proving the power of deep learning.",
     "category": "Research Breakthroughs",
-    "link": "https://papers.nips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf"
+    "link": "https://papers.nips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf",
+    "landmark": true
   },
   {
     "year": 2013,
@@ -369,11 +570,27 @@
   },
   {
     "year": 2014,
+    "month": "September",
+    "title": "Attention for Neural Machine Translation",
+    "description": "Dzmitry Bahdanau, Kyunghyun Cho and Yoshua Bengio let a translation network learn which source words to focus on for each word it writes, the attention mechanism the Transformer is later built around.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/1409.0473"
+  },
+  {
+    "year": 2014,
     "month": "November",
     "title": "Amazon Unveils Echo and Alexa",
     "description": "Amazon announces the Echo smart speaker and its voice assistant, Alexa, at first available by invitation only.",
     "category": "Public Releases",
     "link": "https://en.wikipedia.org/wiki/Amazon_Echo"
+  },
+  {
+    "year": 2014,
+    "month": "December",
+    "title": "Adam Optimizer",
+    "description": "Diederik Kingma and Jimmy Ba publish Adam, an optimizer that adapts the step size for each parameter and becomes a default choice for training deep networks.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/1412.6980"
   },
   {
     "year": 2015,
@@ -413,7 +630,8 @@
     "title": "AlphaGo Defeats Lee Sedol",
     "description": "DeepMind's AlphaGo defeats world champion Lee Sedol in Go, showcasing AI's ability to master complex, intuition-based games.",
     "category": "Models & Architectures",
-    "link": "https://deepmind.google/research/case-studies/alphago-the-story-so-far"
+    "link": "https://deepmind.google/research/case-studies/alphago-the-story-so-far",
+    "landmark": true
   },
   {
     "year": 2016,
@@ -434,10 +652,34 @@
   {
     "year": 2016,
     "month": "September",
+    "title": "PyTorch's First Release",
+    "description": "PyTorch, a Python deep learning library from Facebook's AI researchers, posts its first alpha release; it later underpins systems such as ChatGPT, Tesla Autopilot and Hugging Face's Transformers.",
+    "category": "AI Tools",
+    "link": "https://en.wikipedia.org/wiki/PyTorch"
+  },
+  {
+    "year": 2016,
+    "month": "September",
+    "title": "WaveNet Generates Natural Speech",
+    "description": "DeepMind's WaveNet generates speech one audio sample at a time with a deep neural network, and listeners rate it more natural than the best text-to-speech systems of the day.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/1609.03499"
+  },
+  {
+    "year": 2016,
+    "month": "September",
     "title": "Google Neural Machine Translation",
     "description": "Google switches Chinese-to-English Google Translate to a neural machine translation system that cuts translation errors by 55% to 85% on several major language pairs.",
     "category": "Public Releases",
     "link": "https://research.google/blog/a-neural-network-for-machine-translation-at-production-scale/"
+  },
+  {
+    "year": 2017,
+    "month": "January",
+    "title": "Libratus Beats Top Poker Pros",
+    "description": "Carnegie Mellon's Libratus beats four top professional players at heads-up no-limit Texas hold'em over 120,000 hands, a game of hidden cards and bluffing.",
+    "category": "Models & Architectures",
+    "link": "https://en.wikipedia.org/wiki/Libratus"
   },
   {
     "year": 2017,
@@ -453,7 +695,8 @@
     "title": "Attention Is All You Need",
     "description": "Google researchers publish the paper 'Attention Is All You Need,' introducing the Transformer architecture, which becomes the foundation for most modern large language models.",
     "category": "Research Breakthroughs",
-    "link": "https://arxiv.org/abs/1706.03762"
+    "link": "https://arxiv.org/abs/1706.03762",
+    "landmark": true
   },
   {
     "year": 2017,
@@ -494,6 +737,14 @@
     "description": "Google releases Bidirectional Encoder Representations from Transformers (BERT), a new language representation model that achieves state-of-the-art results on a wide array of natural language processing tasks.",
     "category": "Research Breakthroughs",
     "link": "https://arxiv.org/abs/1810.04805"
+  },
+  {
+    "year": 2018,
+    "month": "December",
+    "title": "AlphaFold Tops the CASP13 Contest",
+    "description": "DeepMind's first AlphaFold places first in CASP13, the leading contest for predicting the shapes of proteins, two years before AlphaFold 2 largely solves the problem.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/AlphaFold"
   },
   {
     "year": 2019,
@@ -549,7 +800,8 @@
     "title": "OpenAI Releases GPT-3",
     "description": "OpenAI launches GPT-3, a 175-billion parameter language model, which demonstrates a remarkable ability to generate human-like text and perform a wide range of language tasks.",
     "category": "Public Releases",
-    "link": "https://arxiv.org/abs/2005.14165"
+    "link": "https://arxiv.org/abs/2005.14165",
+    "landmark": true
   },
   {
     "year": 2020,
@@ -573,7 +825,8 @@
     "title": "DeepMind's AlphaFold 2 Solves Protein Folding",
     "description": "DeepMind's AlphaFold 2 makes a major breakthrough in biology by accurately predicting the 3D structure of proteins, a long-standing grand challenge.",
     "category": "Research Breakthroughs",
-    "link": "https://www.deepmind.com/blog/alphafold-a-solution-to-a-50-year-old-grand-challenge-in-biology"
+    "link": "https://www.deepmind.com/blog/alphafold-a-solution-to-a-50-year-old-grand-challenge-in-biology",
+    "landmark": true
   },
   {
     "year": 2021,
@@ -677,7 +930,8 @@
     "title": "ChatGPT Takes the World by Storm",
     "description": "OpenAI releases ChatGPT, a conversational AI based on the GPT-3.5 architecture, to the public, sparking massive interest in conversational AI.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/chatgpt/"
+    "link": "https://openai.com/index/chatgpt/",
+    "landmark": true
   },
   {
     "year": 2022,
@@ -749,7 +1003,8 @@
     "title": "OpenAI Releases GPT-4",
     "description": "OpenAI launches GPT-4, a large multimodal model that can accept image and text inputs and produce text outputs, demonstrating improved performance over its predecessor.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/gpt-4/"
+    "link": "https://openai.com/index/gpt-4/",
+    "landmark": true
   },
   {
     "year": 2023,
@@ -757,7 +1012,8 @@
     "title": "Anthropic Releases Claude",
     "description": "Anthropic releases its AI assistant, Claude, making it available to businesses through an API.",
     "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/introducing-claude"
+    "link": "https://www.anthropic.com/news/introducing-claude",
+    "highlight": true
   },
   {
     "year": 2023,
@@ -869,7 +1125,8 @@
     "title": "Meta Releases Llama 2",
     "description": "Meta and Microsoft release Llama 2, a large language model available for free for research and commercial use, making powerful LLMs more accessible.",
     "category": "Public Releases",
-    "link": "https://about.meta.com/news/2023/07/llama-2/"
+    "link": "https://about.meta.com/news/2023/07/llama-2/",
+    "highlight": true
   },
   {
     "year": 2023,
@@ -949,7 +1206,8 @@
     "title": "President Biden's Executive Order on AI",
     "description": "President Joe Biden signs a sweeping executive order to establish new standards for AI safety and security, protect privacy, and advance equity and civil rights.",
     "category": "Ethics & Policy",
-    "link": "https://bidenwhitehouse.archives.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/"
+    "link": "https://bidenwhitehouse.archives.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/",
+    "highlight": true
   },
   {
     "year": 2023,
@@ -1029,7 +1287,8 @@
     "title": "Google Launches Gemini 1.0",
     "description": "Google DeepMind launches Gemini 1.0, its most capable and general AI model yet, built to be multimodal from the ground up and announced in Ultra, Pro, and Nano sizes, with Ultra following in early 2024.",
     "category": "Public Releases",
-    "link": "https://blog.google/technology/ai/google-gemini-ai/"
+    "link": "https://blog.google/technology/ai/google-gemini-ai/",
+    "highlight": true
   },
   {
     "year": 2023,
@@ -1301,7 +1560,8 @@
     "title": "OpenAI Releases GPT-4o",
     "description": "OpenAI launches GPT-4o ('o' for 'omni'), a new flagship model with significantly improved speed and multimodal capabilities, offered for free to all ChatGPT users.",
     "category": "Public Releases",
-    "link": "https://www.theverge.com/2024/5/13/24155493/openai-gpt-4o-launching-free-users"
+    "link": "https://www.theverge.com/2024/5/13/24155493/openai-gpt-4o-launching-free-users",
+    "highlight": true
   },
   {
     "year": 2024,
@@ -1445,7 +1705,8 @@
     "title": "EU AI Act Takes Effect",
     "description": "The EU's landmark AI Act officially enters into force, beginning a phased implementation over the next two years to regulate AI systems based on their level of risk.",
     "category": "Ethics & Policy",
-    "link": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai"
+    "link": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+    "landmark": true
   },
   {
     "year": 2024,
@@ -1453,7 +1714,8 @@
     "title": "OpenAI Releases o1",
     "description": "OpenAI announces o1, a new class of model focused on reasoning and step-by-step thinking before providing an answer.",
     "category": "Public Releases",
-    "link": "https://www.theverge.com/2024/9/12/24242439/openai-o1-model-reasoning-strawberry-chatgpt"
+    "link": "https://www.theverge.com/2024/9/12/24242439/openai-o1-model-reasoning-strawberry-chatgpt",
+    "landmark": true
   },
   {
     "year": 2024,
@@ -1469,7 +1731,8 @@
     "title": "DeepMind Researchers Win Nobel Prize",
     "description": "Demis Hassabis and John Jumper win the Nobel Prize in Chemistry, shared with David Baker, for their work on AlphaFold 2 and protein structure prediction.",
     "category": "Research Breakthroughs",
-    "link": "https://www.nobelprize.org/prizes/chemistry/2024/press-release/"
+    "link": "https://www.nobelprize.org/prizes/chemistry/2024/press-release/",
+    "highlight": true
   },
   {
     "year": 2024,
@@ -1501,7 +1764,8 @@
     "title": "Hopfield and Hinton Win the Nobel Prize in Physics",
     "description": "John Hopfield and Geoffrey Hinton win the Nobel Prize in Physics for foundational discoveries and inventions that enable machine learning with artificial neural networks.",
     "category": "Research Breakthroughs",
-    "link": "https://www.nobelprize.org/prizes/physics/2024/press-release/"
+    "link": "https://www.nobelprize.org/prizes/physics/2024/press-release/",
+    "landmark": true
   },
   {
     "year": 2024,
@@ -1581,7 +1845,8 @@
     "title": "DeepSeek-R1 Shakes the AI Industry",
     "description": "DeepSeek releases R1, an open-source reasoning model comparable to OpenAI's o1; on January 27, fears of cheaper competition wipe almost $600 billion off NVIDIA's market value, the biggest one-day drop for any company in U.S. history.",
     "category": "Bombshell News",
-    "link": "https://www.cnbc.com/2025/01/27/nvidia-sheds-almost-600-billion-in-market-cap-biggest-drop-ever.html"
+    "link": "https://www.cnbc.com/2025/01/27/nvidia-sheds-almost-600-billion-in-market-cap-biggest-drop-ever.html",
+    "landmark": true
   },
   {
     "year": 2025,
@@ -1613,7 +1878,8 @@
     "title": "Anthropic Releases Claude Code in Research Preview",
     "description": "Anthropic launches a research preview of Claude Code, an agentic command-line tool that allows developers to delegate complex engineering tasks to Claude directly from their terminal.",
     "category": "AI Tools",
-    "link": "https://www.anthropic.com/news/claude-3-7-sonnet"
+    "link": "https://www.anthropic.com/news/claude-3-7-sonnet",
+    "highlight": true
   },
   {
     "year": 2025,
@@ -1741,7 +2007,8 @@
     "title": "AI Reaches Gold-Medal Level at the Math Olympiad",
     "description": "An advanced Gemini Deep Think model solves five of six International Mathematical Olympiad problems in natural language within the time limit, earning an officially graded gold-medal score; OpenAI reports a gold-level result from an experimental model too.",
     "category": "Research Breakthroughs",
-    "link": "https://deepmind.google/discover/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/"
+    "link": "https://deepmind.google/discover/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/",
+    "landmark": true
   },
   {
     "year": 2025,
@@ -1757,7 +2024,8 @@
     "title": "OpenAI Releases GPT-5",
     "description": "OpenAI launches GPT-5, a major upgrade to its language model series, boasting 'PhD-level' expertise across various domains and a unified system for both quick and deep reasoning responses.",
     "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-gpt-5/"
+    "link": "https://openai.com/index/introducing-gpt-5/",
+    "highlight": true
   },
   {
     "year": 2025,
@@ -1861,7 +2129,8 @@
     "title": "Google Releases Gemini 3",
     "description": "Google releases Gemini 3, which it calls its most intelligent model, bringing it to the Gemini app and to AI Mode in Search.",
     "category": "Public Releases",
-    "link": "https://blog.google/products/gemini/gemini-3/"
+    "link": "https://blog.google/products/gemini/gemini-3/",
+    "highlight": true
   },
   {
     "year": 2025,
@@ -2045,7 +2314,8 @@
     "title": "Google Unveils Gemini 3.5 at I/O",
     "description": "At Google I/O, Google releases Gemini 3.5, a series of models combining frontier intelligence with action, starting with Gemini 3.5 Flash as the default model in the Gemini app and AI Mode in Search.",
     "category": "Public Releases",
-    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/"
+    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2109,7 +2379,8 @@
     "title": "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
     "description": "Agents driven by OpenAI models break into Hugging Face's production systems from an internal capability evaluation; OpenAI calls it an unprecedented cyber incident.",
     "category": "Bombshell News",
-    "link": "https://huggingface.co/blog/agent-intrusion-technical-timeline"
+    "link": "https://huggingface.co/blog/agent-intrusion-technical-timeline",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2117,7 +2388,8 @@
     "title": "Anthropic Releases Claude Opus 5",
     "description": "Anthropic releases Claude Opus 5, which comes close to the frontier intelligence of Claude Fable 5 at half the price and greatly improves on Opus 4.8 at the same cost.",
     "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-opus-5"
+    "link": "https://www.anthropic.com/news/claude-opus-5",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2133,7 +2405,8 @@
     "title": "OpenAI Releases GPT-6 Astra",
     "description": "OpenAI releases GPT-6 Astra, which it calls its most intelligent model and says marks the start of an 'AGI era', initially for a limited set of organizations.",
     "category": "Public Releases",
-    "link": "https://www.theverge.com/ai-artificial-intelligence/989601/openai-gpt-6-astra-release"
+    "link": "https://www.theverge.com/ai-artificial-intelligence/989601/openai-gpt-6-astra-release",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2173,7 +2446,8 @@
     "title": "OpenAI Claims a Navier–Stokes Proof",
     "description": "OpenAI publishes an AI-generated proof, formalized in Lean, that a smooth fluid can develop a singularity in finite time, which it says resolves the Navier–Stokes Millennium Prize problem; the claim awaits independent review amid a dispute over credit.",
     "category": "Research Breakthroughs",
-    "link": "https://openai.com/index/navier-stokes-solution/"
+    "link": "https://openai.com/index/navier-stokes-solution/",
+    "highlight": true
   },
   {
     "year": 2026,

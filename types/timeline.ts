@@ -19,6 +19,10 @@ export interface TimelineEvent {
   description: string
   category: TimelineCategory
   link: string
+  // One of the handful of turning points that every era interface sets apart
+  landmark?: boolean
+  // One of the few events of a busy year that the chat thread keeps in full beside its landmarks
+  highlight?: boolean
 }
 
 export interface ExtendedTimelineEvent extends TimelineEvent {

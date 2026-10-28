@@ -9,12 +9,15 @@ _An interactive, cinematic exploration of AI's evolution from 1943 to October 20
 
 ##  Overview
 
-This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **275 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
+This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **305 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
-- ** Comprehensive Dataset**: 275 meticulously researched AI milestones with verified sources
-- ** Cinematic Experience**: Framer Motion-powered animations and transitions
+- ** Comprehensive Dataset**: 305 meticulously researched AI milestones with verified sources
+- ** Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread
+- ** Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–5 and /
+- ** Landmarks and Sources**: Twenty turning points stand out in every era, and each card names the site its link opens
+- ** Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread sums up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
 - ** Responsive Design**: Optimized for desktop, tablet, and mobile experiences
 - ** Accessibility First**: WCAG 2.1 compliant with focus management and reduced motion support
 - ** Modern UI**: Shadcn/ui components with Radix UI primitives
@@ -33,17 +36,24 @@ This project presents the complete history of artificial intelligence through an
 
 ```
 components/
-├── storytelling/          # Narrative-driven components
-│   ├── story-engine.tsx   # Main orchestrator
-│   ├── prologue-scene.tsx # Opening sequence
-│   └── epilogue-scene.tsx # Closing sequence
-├── interactive/           # User interaction features
+├── storytelling/            # Narrative-driven components
+│   ├── story-engine.tsx     # Main orchestrator, holds the search and category filters
+│   ├── prologue-scene.tsx   # Opening: title, events-per-year chart and era tiles
+│   └── epilogue-scene.tsx   # Closing sequence
+├── eras/                    # One interface per era
+│   ├── era-chapter.tsx      # The era's section, drawn in its interface
+│   ├── punch-card-era.tsx   # Foundation Era: 80-column punch cards
+│   ├── terminal-era.tsx     # Knowledge Era: green-phosphor terminal
+│   ├── desktop-era.tsx      # Learning Era: beveled desktop windows
+│   ├── notebook-era.tsx     # Deep Learning Revolution: research notebook cells
+│   └── chat-era.tsx         # Generative AI Era: chat thread
+├── timeline/                # Timeline-wide UI
+│   ├── timeline-controls.tsx    # Search box and category filters
+│   ├── timeline-navigation.tsx  # Chapter rail and phone bar
+│   └── activity-chart.tsx       # Events-per-year chart
+├── interactive/             # User interaction features
 │   └── timeline-insights.tsx
-├── animations/            # Reusable animation components
-│   ├── reveal-animation.tsx
-│   ├── parallax-container.tsx
-│   └── text-reveal.tsx
-└── accessibility/         # WCAG compliance
+└── accessibility/           # WCAG compliance
     └── skip-to-content.tsx
 ```
 
@@ -102,7 +112,9 @@ Both test commands need Playwright's Chromium; install it once with `pnpm exec p
 
 ### Interactive Features
 
-- **Timeline Navigation**: Smooth scrolling with progress indicators
+- **Timeline Navigation**: A rail with the current year, an events-per-year chart and a button per era; a compact bar on phones
+- **Search and Category Filters**: Narrow every era at once, with a live count of the events shown
+- **Keyboard Shortcuts**: J and K step between events, 1 to 5 jump to an era, / focuses search
 - **Responsive Timeline**: Adapts layout for different screen sizes
 
 ### Accessibility Features
@@ -115,7 +127,7 @@ Both test commands need Playwright's Chromium; install it once with `pnpm exec p
 
 ### Performance Optimizations
 
-- **Intersection Observer**: Efficient scroll-based animations
+- **Scroll-driven CSS Animations**: Cards rise into place without a JavaScript observer per card
 - **Image Optimization**: Next.js automatic optimization
 - **Bundle Analysis**: Optimized chunk splitting
 
@@ -156,15 +168,15 @@ interface TimelineEvent {
 
 ### Animation System
 
-- **Scroll-triggered Animations**: Elements animate as they enter viewport
-- **Parallax Effects**: Depth-based scrolling animations
-- **Stagger Animations**: Sequential element reveals
+- **Scroll-driven Reveals**: Event cards rise into place as they scroll into view
+- **Era Details**: A blinking terminal caret, a filling progress bar and chat typing dots
+- **Reduced Motion**: Every animation is off when the reader prefers reduced motion
 
 ### Custom Hooks
 
 ```typescript
-useScrollAnimation(); // Scroll-based animation triggers
-useIntersectionAnimation(); // Viewport detection with reveal variants
+useTimelinePosition(); // The era, event date and era progress at the reading line
+useTimelineShortcuts(); // J, K, 1–5 and / keyboard shortcuts
 ```
 
 ##  Standout Engineering Practices
@@ -212,7 +224,7 @@ This project demonstrates:
 
 ##  Metrics & Performance
 
-- **275 Events**: Comprehensive historical coverage
+- **305 Events**: Comprehensive historical coverage
 - **< 3s Load Time**: Optimized performance metrics
 - **AAA Accessibility**: Full WCAG compliance
 - **Mobile-First**: Responsive across all devices

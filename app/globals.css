@@ -1,5 +1,11 @@
+/* Global styles: Tailwind, the theme tokens for the page chrome and base elements, and the five era interfaces.
+   Every animation here runs only when the reader allows motion. */
 @import "tailwindcss";
 @import "tw-animate-css";
+
+/* Tailwind scans every folder git does not ignore for class names, and the bundler hashes each of those folders on
+   every build. .claude/ holds other Claude Code sessions' worktrees, which change underneath a build, so it is skipped. */
+@source not "../.claude";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -39,26 +45,27 @@
   --sidebar-ring: rgba(0, 0, 0, 0.1);
 }
 
+/* The page chrome is a neutral near-black, so each era's own interface carries the color */
 .dark {
-  --background: #0a0f0a;
-  --foreground: #e2e8f0;
-  --card: #1a2e1a;
-  --card-foreground: #e2e8f0;
-  --popover: #1a2e1a;
-  --popover-foreground: #e2e8f0;
-  --primary: #10b981;
-  --primary-foreground: #ffffff;
-  --secondary: #374151;
-  --secondary-foreground: #e2e8f0;
-  --muted: #1e3a1e;
-  --muted-foreground: #9ca3af;
-  --accent: #059669;
-  --accent-foreground: #ffffff;
+  --background: #0a0a0b;
+  --foreground: #ededed;
+  --card: #141416;
+  --card-foreground: #ededed;
+  --popover: #141416;
+  --popover-foreground: #ededed;
+  --primary: #f4f4f5;
+  --primary-foreground: #0a0a0b;
+  --secondary: #27272a;
+  --secondary-foreground: #ededed;
+  --muted: #18181b;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #ededed;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #2d4a2d;
-  --input: #1e3a1e;
-  --ring: rgba(16, 185, 129, 0.3);
+  --border: #27272a;
+  --input: #18181b;
+  --ring: rgba(255, 255, 255, 0.3);
   --chart-1: #10b981;
   --chart-2: #059669;
   --chart-3: #f59e0b;
@@ -123,20 +130,20 @@
 
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden; /* Prevent horizontal scrollbar by hiding overflow-x */
-  }
-
-  /* Hide the system cursor only where FuturisticCursor draws its replacement */
-  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    body {
-      cursor: none;
-    }
+    overflow-x: clip; /* Prevent horizontal scrollbar by clipping overflow-x. Unlike hidden, clip keeps body from becoming a scroll container, so position: sticky still works */
   }
 
   html {
     position: relative; /* framer-motion's useScroll measures scroll targets against a positioned scroll container */
     scroll-behavior: smooth;
-    overflow-x: hidden; /* Prevent horizontal scrollbar at root level */
+    overflow-x: clip; /* Prevent horizontal scrollbar at root level */
+  }
+
+  /* Jumps land at once for readers who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   ::-webkit-scrollbar {
@@ -156,154 +163,354 @@
     @apply bg-primary/60;
   }
 
+  /* Selected text keeps its own color, so it stays readable on every era's background */
   ::selection {
-    @apply bg-primary/20 text-primary-foreground;
+    background-color: rgb(144 133 233 / 0.45);
   }
 }
 
-@layer utilities {
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
+/* The five era interfaces. Each era draws its events in the computer interface of its day. */
+@layer components {
+  /* Every era's backdrop starts and ends in the page's black, so one era dissolves into the next.
+     A short row, such as an era the filters have emptied, fades over less of its height. */
+  :root {
+    --era-seam: linear-gradient(
+      #0a0a0b,
+      transparent min(8rem, 25%),
+      transparent max(calc(100% - 8rem), 75%),
+      #0a0a0b
+    );
+  }
+
+  /* The opening's title, introduction and chart rise into place once, on load */
+  @media (prefers-reduced-motion: no-preference) {
+    .prologue-rise {
+      animation: prologue-rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
     }
   }
 
-  @keyframes pulse-glow {
-    0%,
-    100% {
-      box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.6), 0 0 40px rgba(16, 185, 129, 0.3);
-    }
-  }
-
-  @keyframes scan-line {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%); /* Changed from 100vw to 100% to prevent overflow beyond container */
-    }
-  }
-
-  @keyframes neural-pulse {
-    0%,
-    100% {
-      opacity: 0.3;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.8;
-      transform: scale(1.05);
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-
-  @keyframes matrix-rain {
-    0% {
-      transform: translateY(-100vh);
+  @keyframes prologue-rise {
+    from {
       opacity: 0;
+      transform: translateY(1.25rem);
     }
-    10% {
-      opacity: 1;
+  }
+
+  /* Event cards rise into place as they scroll in. Readers who prefer reduced motion, and
+     browsers without scroll-driven animations, see every card in place from the start. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .reveal-on-scroll {
+        animation: reveal-on-scroll linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 70%;
+      }
     }
-    90% {
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(100vh);
+  }
+
+  @keyframes reveal-on-scroll {
+    from {
       opacity: 0;
+      transform: translateY(1.5rem);
     }
-  }
-
-  @keyframes hologram-flicker {
-    0%,
-    100% {
+    to {
       opacity: 1;
-    }
-    50% {
-      opacity: 0.8;
-    }
-    75% {
-      opacity: 0.9;
+      transform: none;
     }
   }
 
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
+  /* Foundation Era: punch cards under a teletype printout on green-bar paper, laid out on
+     engineering graph paper in the pool of a desk lamp */
+  .punch-card-room {
+    background-color: #0f1318;
+    background-image:
+      var(--era-seam),
+      radial-gradient(64rem 36rem at 50% 0%, rgb(201 133 0 / 0.14), transparent 70%),
+      repeating-linear-gradient(to right, rgb(243 233 207 / 0.06) 0 1px, transparent 1px 6rem),
+      repeating-linear-gradient(to bottom, rgb(243 233 207 / 0.06) 0 1px, transparent 1px 6rem),
+      repeating-linear-gradient(to right, rgb(243 233 207 / 0.025) 0 1px, transparent 1px 1.5rem),
+      repeating-linear-gradient(to bottom, rgb(243 233 207 / 0.025) 0 1px, transparent 1px 1.5rem);
   }
 
-  .animate-pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
+  .teletype-paper {
+    background:
+      radial-gradient(circle, #101318 0 0.3rem, transparent 0.33rem) left 0.4rem top 0.45rem / 1.2rem 1.5rem repeat-y,
+      radial-gradient(circle, #101318 0 0.3rem, transparent 0.33rem) right 0.4rem top 0.45rem / 1.2rem 1.5rem repeat-y,
+      repeating-linear-gradient(to bottom, #f6f1e3 0 1.5rem, #e3ecd6 1.5rem 3rem);
   }
 
-  .animate-scan-line {
-    animation: scan-line 2s linear infinite;
+  /* The cut top-left corner that told an operator a card was the right way round */
+  .punch-card {
+    clip-path: polygon(1.5rem 0, 100% 0, 100% 100%, 0 100%, 0 1.5rem);
   }
 
-  .animate-neural-pulse {
-    animation: neural-pulse 4s ease-in-out infinite;
+  /* From 1024px a card is wide enough to stamp its category and source beside its date and title, where a real
+     card printed its fields along the top edge, so its description ends the card */
+  @media (min-width: 1024px) {
+    .punch-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "stripe stripe"
+        "heading fields"
+        "holes holes"
+        "description description";
+      column-gap: 1.5rem;
+    }
   }
 
-  .animate-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.2), transparent);
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
+  /* Knowledge Era: a green-phosphor terminal with scanlines, in a dark machine room whose walls
+     catch the screen's glow and its faint raster lines */
+  .terminal-room {
+    background-color: #020503;
+    background-image:
+      var(--era-seam),
+      radial-gradient(72rem 40rem at 50% 20rem, rgb(25 158 112 / 0.13), transparent 70%),
+      repeating-linear-gradient(to bottom, rgb(92 240 154 / 0.03) 0 1px, transparent 1px 4px);
   }
 
-  .animate-matrix-rain {
-    animation: matrix-rain 8s linear infinite;
+  .crt-screen {
+    box-shadow:
+      inset 0 0 90px rgb(0 0 0 / 0.85),
+      0 0 0 10px #0b1a12,
+      0 0 0 11px #1d3a29,
+      0 40px 120px -40px rgb(25 158 112 / 0.45),
+      0 0 10rem 1rem rgb(25 158 112 / 0.12);
   }
 
-  .animate-hologram-flicker {
-    animation: hologram-flicker 0.15s infinite linear alternate;
-  }
-
-  .bg-gradient-radial {
-    background: radial-gradient(circle, var(--tw-gradient-stops));
-  }
-
-  .bg-gradient-conic {
-    background: conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops));
-  }
-
-  .glass-morphism {
-    backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .neural-grid {
-    background-image: linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  .cyber-border {
+  .crt-scanlines {
     position: relative;
   }
 
-  .cyber-border::before {
+  .crt-scanlines::after {
     content: "";
     position: absolute;
     inset: 0;
-    padding: 1px;
-    background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.5), transparent);
     border-radius: inherit;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: exclude;
+    pointer-events: none;
+    background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.2) 0 1px, transparent 1px 3px);
+  }
+
+  .crt-glow {
+    text-shadow: 0 0 8px rgb(92 240 154 / 0.5);
+  }
+
+  .terminal-caret {
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .terminal-caret {
+      animation: caret-blink 1.1s steps(1, end) infinite;
+    }
+  }
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* Learning Era: beveled windows on a teal desktop, dithered the way 256-color screens drew it
+     and darkening toward the monitor's edges */
+  .desktop-wallpaper {
+    background-color: #008080;
+    background-image:
+      var(--era-seam),
+      radial-gradient(ellipse 75% 120% at 50% 50%, transparent 45%, rgb(0 0 0 / 0.24)),
+      repeating-conic-gradient(rgb(0 0 0 / 0.07) 0 25%, transparent 0 50%);
+    background-size: auto, auto, 4px 4px;
+  }
+
+  .font-desktop {
+    font-family: Tahoma, Verdana, "Segoe UI", system-ui, sans-serif;
+  }
+
+  .desktop-window,
+  .desktop-raised {
+    border: 1px solid;
+    border-color: #dfdfdf #000000 #000000 #dfdfdf;
+    box-shadow:
+      inset 1px 1px #ffffff,
+      inset -1px -1px #808080;
+  }
+
+  .desktop-window {
+    background-color: #c0c0c0;
+    padding: 3px;
+    box-shadow:
+      inset 1px 1px #ffffff,
+      inset -1px -1px #808080,
+      8px 10px 0 rgb(0 0 0 / 0.22);
+  }
+
+  .desktop-sunken {
+    border: 1px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px #404040;
+  }
+
+  .desktop-title-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.2rem 0.2rem 0.45rem;
+    color: #ffffff;
+    background: linear-gradient(90deg, #000080, #1084d0);
+  }
+
+  .desktop-window:hover > .desktop-title-bar,
+  .desktop-window:focus-within > .desktop-title-bar {
+    background: linear-gradient(90deg, #0a1fa8, #2fa4f0);
+  }
+
+  /* Landmark windows wear a rose title bar, one of the color schemes the desktops of the day offered */
+  .desktop-window[data-landmark] > .desktop-title-bar {
+    background: linear-gradient(90deg, #6e1238, #9a2f62);
+  }
+
+  .desktop-window[data-landmark]:hover > .desktop-title-bar,
+  .desktop-window[data-landmark]:focus-within > .desktop-title-bar {
+    background: linear-gradient(90deg, #851746, #b23b74);
+  }
+
+  .desktop-progress {
+    background: repeating-linear-gradient(90deg, #000080 0 0.7rem, transparent 0.7rem 0.85rem);
+  }
+
+  /* The progress bar fills as the dialog scrolls into view */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .desktop-progress {
+        animation: desktop-progress linear both;
+        animation-timeline: view();
+        animation-range: entry 40% cover 55%;
+      }
+    }
+  }
+
+  @keyframes desktop-progress {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  /* Deep Learning Revolution: a notebook open on a dark lab bench, its cells marked with In and Out
+     prompts. The bench, lit by the screen above and warmed by the GPUs below, keeps the white page
+     from flashing between the dark eras around it. */
+  .notebook-desk {
+    background-color: #141416;
+    background-image:
+      var(--era-seam),
+      radial-gradient(70rem 36rem at 50% 0%, rgb(255 255 255 / 0.07), transparent 70%),
+      radial-gradient(72rem 32rem at 50% calc(100% - 6rem), rgb(217 89 38 / 0.16), transparent 70%),
+      radial-gradient(circle, rgb(255 255 255 / 0.06) 1px, transparent 1.5px);
+    background-size: auto, auto, auto, 1.25rem 1.25rem;
+  }
+
+  /* The left border marks the selected cell, as in the notebooks of the day */
+  .notebook-cell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0.75rem;
+    row-gap: 0.25rem;
+    border-left: 4px solid transparent;
+    padding-left: 0.5rem;
+  }
+
+  .notebook-prompt {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    padding-top: 0.5rem;
+    white-space: nowrap;
+  }
+
+  .notebook-code {
+    min-width: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.25rem;
+    background-color: #f7f7f7;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .notebook-output {
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* On a phone the prompts stack above their boxes, so an output follows its code cell without an Out[n]: row */
+  .notebook-prompt:has(+ .notebook-output) {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .notebook-cell {
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+    }
+
+    .notebook-prompt {
+      text-align: right;
+    }
+
+    .notebook-prompt:has(+ .notebook-output) {
+      display: block;
+    }
+  }
+
+  /* Generative AI Era: a chat thread under a soft aurora, its glows returning from either side all
+     the way down the long thread */
+  .chat-backdrop {
+    background-color: #0c0c10;
+    background-image:
+      var(--era-seam),
+      radial-gradient(60rem 30rem at 15% 0%, rgb(144 133 233 / 0.18), transparent 70%),
+      radial-gradient(50rem 26rem at 90% 8%, rgb(57 135 229 / 0.12), transparent 70%),
+      radial-gradient(44rem 30rem at 0% 50%, rgb(144 133 233 / 0.08), transparent 70%),
+      radial-gradient(44rem 30rem at 100% 50%, rgb(57 135 229 / 0.07), transparent 70%);
+    background-size: auto, auto, auto, 100% 140rem, 100% 140rem;
+    background-position: 0 0, 0 0, 0 0, 0 40rem, 0 110rem;
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat-y, repeat-y;
+  }
+
+  .chat-typing span {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 9999px;
+    background-color: #a1a1aa;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .chat-typing span {
+      animation: typing-dot 1.2s ease-in-out infinite;
+    }
+
+    .chat-typing span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .chat-typing span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+  }
+
+  @keyframes typing-dot {
+    0%,
+    60%,
+    100% {
+      opacity: 0.35;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-0.2rem);
+    }
   }
 }

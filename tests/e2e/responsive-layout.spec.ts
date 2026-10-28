@@ -1,5 +1,5 @@
-// End-to-end layout tests for the timeline at phone, tablet and desktop widths.
-// Checks that the timeline line and node dots stay clear of the cards and that the phone chapter nav stays compact.
+// End-to-end layout tests at phone, tablet and desktop widths: nothing runs off the side of the screen, the toolbar
+// sticks while reading, and the chapter nav fits each width as a rail on wide screens and a compact bar on phones.
 import { expect, test, type Page } from "@playwright/test"
 
 const PHONE = { width: 375, height: 812 }
@@ -21,114 +21,55 @@ async function waitForHydration(page: Page) {
   })
 }
 
-// Scrolls through the whole page so every card plays its entrance animation and comes to rest.
-// "instant" overrides the page's smooth scrolling; TypeScript 5.0's DOM types predate it, though Chromium supports it.
-async function playEveryEntranceAnimation(page: Page) {
-  await page.evaluate(async () => {
-    for (let y = 0; y < document.body.scrollHeight; y += window.innerHeight / 2) {
-      window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior })
-      await new Promise((resolve) => setTimeout(resolve, 50))
-    }
-  })
-}
-
-// Lists every card that its node dot or the timeline line runs across.
-function findCardsUnderTheLine(page: Page) {
-  return page.evaluate(() => {
-    const overlapsX = (a: DOMRect, b: DOMRect) => a.left < b.right && b.left < a.right
-    const overlapsY = (a: DOMRect, b: DOMRect) => a.top < b.bottom && b.top < a.bottom
-
-    return [...document.querySelectorAll("article")].flatMap((article) => {
-      const title = article.querySelector("h3")!.textContent
-      const card = article.querySelector(".group")!.getBoundingClientRect()
-      const node = article.querySelector('[data-testid="timeline-node"]')!.getBoundingClientRect()
-      const line = article
-        .closest("section")!
-        .querySelector('[data-testid="timeline-line"]')!
-        .getBoundingClientRect()
-      const problems: string[] = []
-
-      if (overlapsX(node, card) && overlapsY(node, card)) {
-        problems.push(`node dot covers "${title}"`)
-      }
-      // The line runs the full height of the list, so any horizontal overlap crosses the card.
-      if (overlapsX(line, card)) {
-        problems.push(`line crosses "${title}"`)
-      }
-      return problems
-    })
-  })
-}
-
-// Summarizes where the line, node dots and cards sit, for comparison with the alternating desktop layout.
-function describeTimelineLayout(page: Page) {
-  return page.evaluate(() => {
-    const centerOf = (rect: DOMRect) => Math.round(rect.left + rect.width / 2)
-    const lineCenters = new Set<number>()
-    const nodeCenters = new Set<number>()
-    const cardWidths = new Set<number>()
-    const cardSides: string[] = []
-
-    document.querySelectorAll('[data-testid="timeline-line"]').forEach((line) => {
-      lineCenters.add(centerOf(line.getBoundingClientRect()))
-
-      line
-        .closest("section")!
-        .querySelectorAll("article")
-        .forEach((article, index) => {
-          const card = article.querySelector(".group")!.getBoundingClientRect()
-          const node = article.querySelector('[data-testid="timeline-node"]')!.getBoundingClientRect()
-          const side = card.right <= node.left ? "left" : card.left >= node.right ? "right" : "overlapping"
-          const expectedSide = index % 2 === 0 ? "left" : "right"
-
-          nodeCenters.add(centerOf(node))
-          cardWidths.add(Math.round(card.width))
-          if (side !== expectedSide) {
-            cardSides.push(`${article.querySelector("h3")!.textContent} is ${side}, expected ${expectedSide}`)
-          }
-        })
-    })
-
-    return {
-      pageCenter: Math.round(document.documentElement.clientWidth / 2),
-      lineCenters: [...lineCenters],
-      nodeCenters: [...nodeCenters],
-      cardWidths: [...cardWidths],
-      cardSides,
-    }
-  })
+// The chapter nav stays out of the way over the opening, so tests that use it start in the first era.
+async function enterTimeline(page: Page) {
+  await page.goto("/")
+  await waitForHydration(page)
+  await page.locator("#the-foundation-era").evaluate((section) =>
+    section.scrollIntoView({ behavior: "instant" as ScrollBehavior }),
+  )
+  await expect(page.locator(CHAPTER_NAV).filter({ visible: true })).toHaveCount(1)
 }
 
 for (const [device, viewport] of Object.entries({ phone: PHONE, tablet: TABLET, desktop: DESKTOP })) {
   test.describe(`timeline on a ${device} (${viewport.width}x${viewport.height})`, () => {
     test.use({ viewport })
 
-    test("keeps the line and node dots clear of every card", async ({ page }) => {
-      test.setTimeout(120_000)
+    test("keeps the page and every event card within the screen's width", async ({ page }) => {
       await page.goto("/")
       await waitForHydration(page)
-      await playEveryEntranceAnimation(page)
 
-      await expect.poll(() => findCardsUnderTheLine(page)).toEqual([])
+      const layout = await page.evaluate(() => ({
+        pageWidth: document.documentElement.scrollWidth,
+        cardsOffScreen: [...document.querySelectorAll("article")]
+          .filter((card) => {
+            const box = card.getBoundingClientRect()
+            return box.left < 0 || box.right > document.documentElement.clientWidth
+          })
+          .map((card) => card.id),
+      }))
+
+      expect(layout.pageWidth).toBeLessThanOrEqual(viewport.width)
+      expect(layout.cardsOffScreen).toEqual([])
     })
 
-    test("keeps every node dot on the line, even before its card enters", async ({ page }) => {
+    test("keeps the search toolbar pinned to the top while reading any era", async ({ page }) => {
       await page.goto("/")
       await waitForHydration(page)
 
-      const offsets = await page.evaluate(() => {
-        const centerOf = (element: Element) => {
-          const rect = element.getBoundingClientRect()
-          return Math.round(rect.left + rect.width / 2)
+      const toolbarTops = await page.evaluate(async () => {
+        const toolbar = document.querySelector('[role="search"]')!.parentElement!
+        const tops: number[] = []
+        for (const section of document.querySelectorAll("section[data-interface]")) {
+          const middle = section.getBoundingClientRect().top + window.scrollY + section.clientHeight / 2
+          window.scrollTo({ top: middle, behavior: "instant" as ScrollBehavior })
+          await new Promise((resolve) => requestAnimationFrame(resolve))
+          tops.push(Math.round(toolbar.getBoundingClientRect().top))
         }
-
-        return [...document.querySelectorAll("article")].map((article) => {
-          const line = article.closest("section")!.querySelector('[data-testid="timeline-line"]')!
-          return centerOf(article.querySelector('[data-testid="timeline-node"]')!) - centerOf(line)
-        })
+        return tops
       })
 
-      expect(new Set(offsets)).toEqual(new Set([0]))
+      expect(toolbarTops).toEqual([0, 0, 0, 0, 0])
     })
   })
 }
@@ -136,32 +77,47 @@ for (const [device, viewport] of Object.entries({ phone: PHONE, tablet: TABLET, 
 test.describe(`desktop layout at ${DESKTOP.width}x${DESKTOP.height}`, () => {
   test.use({ viewport: DESKTOP })
 
-  test("alternates cards on both sides of a centered line", async ({ page }) => {
-    test.setTimeout(120_000)
+  test("keeps the chapter nav out of the way over the opening", async ({ page }) => {
     await page.goto("/")
     await waitForHydration(page)
-    await playEveryEntranceAnimation(page)
 
-    await expect
-      .poll(async () => {
-        const layout = await describeTimelineLayout(page)
-        return {
-          lineCenters: layout.lineCenters.map((center) => center - layout.pageCenter),
-          nodeCenters: layout.nodeCenters.map((center) => center - layout.pageCenter),
-          cardWidths: layout.cardWidths,
-          cardSides: layout.cardSides,
-        }
-      })
-      .toEqual({ lineCenters: [0], nodeCenters: [0], cardWidths: [464], cardSides: [] })
+    await expect(page.locator(CHAPTER_NAV).filter({ visible: true })).toHaveCount(0)
   })
 
-  test("shows the side chapter nav instead of the phone bar", async ({ page }) => {
-    await page.goto("/")
+  test("shows the side rail in the timeline instead of the phone bar", async ({ page }) => {
+    await enterTimeline(page)
 
-    const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
-    await expect(nav).toHaveCount(1)
-    await expect(nav.getByRole("button", { name: "Chapter 1: Foundation Era" })).toBeVisible()
+    const rail = page.locator(CHAPTER_NAV).filter({ visible: true })
+    await expect(rail.getByRole("button", { name: "Chapter 1: Foundation Era" })).toBeVisible()
     await expect(page.getByRole("button", { name: /current era/i })).toBeHidden()
+  })
+
+  test("marks the era being read on the rail and reads out the month and year", async ({ page }) => {
+    await enterTimeline(page)
+
+    await page
+      .getByRole("heading", { level: 3, name: "IBM Deep Blue Defeats Garry Kasparov" })
+      .evaluate((heading) => heading.closest("article")!.scrollIntoView({ block: "center", behavior: "instant" as ScrollBehavior }))
+
+    const rail = page.locator(CHAPTER_NAV).filter({ visible: true })
+    await expect(rail.getByRole("button", { name: "Chapter 3: Learning Era" })).toHaveAttribute("aria-current", "location")
+    await expect(rail.getByText("1997", { exact: true })).toBeVisible()
+    await expect(rail.getByText("May", { exact: true })).toBeVisible()
+  })
+
+  test("keeps every era's events and year columns clear of the rail", async ({ page }) => {
+    await enterTimeline(page)
+
+    const underRail = await page.evaluate((chapterNav) => {
+      const rail = [...document.querySelectorAll(chapterNav)]
+        .map((nav) => nav.getBoundingClientRect())
+        .find((box) => box.width > 0)!
+      return [...document.querySelectorAll("section[data-interface] article, [data-year-column]")]
+        .filter((element) => element.getBoundingClientRect().right > rail.left)
+        .map((element) => element.id || `year ${element.getAttribute("data-year-column")}`)
+    }, CHAPTER_NAV)
+
+    expect(underRail).toEqual([])
   })
 })
 
@@ -169,10 +125,9 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
   test.use({ viewport: PHONE })
 
   test("collapses to a single bar that names the current era", async ({ page }) => {
-    await page.goto("/")
+    await enterTimeline(page)
 
     const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
-    await expect(nav).toHaveCount(1)
     expect((await nav.boundingBox())!.height).toBeLessThanOrEqual(MAX_PHONE_NAV_HEIGHT)
 
     const toggle = nav.getByRole("button", { name: /current era/i })
@@ -182,8 +137,7 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
   })
 
   test("opens the chapter list from the bar and closes it on a second tap", async ({ page }) => {
-    await page.goto("/")
-    await waitForHydration(page)
+    await enterTimeline(page)
 
     const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
     const toggle = nav.getByRole("button", { name: /current era/i })
@@ -199,8 +153,7 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
   })
 
   test("jumps to a chapter picked from the list and closes the list", async ({ page }) => {
-    await page.goto("/")
-    await waitForHydration(page)
+    await enterTimeline(page)
 
     const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
     const toggle = nav.getByRole("button", { name: /current era/i })
@@ -218,12 +171,24 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
     expect((await nav.boundingBox())!.height).toBeLessThanOrEqual(MAX_PHONE_NAV_HEIGHT)
   })
 
+  test("keeps the search toolbar to a single row until the reader filters", async ({ page }) => {
+    await page.goto("/")
+    await waitForHydration(page)
+
+    const toolbar = page.getByRole("search")
+    const idleHeight = (await toolbar.boundingBox())!.height
+
+    await page.getByRole("searchbox", { name: "Search events" }).fill("robot")
+
+    await expect(page.getByRole("button", { name: "Clear filters" })).toBeVisible()
+    expect(idleHeight).toBeLessThan(70)
+  })
+
   test.describe(`in a short landscape viewport (${PHONE_LANDSCAPE.width}x${PHONE_LANDSCAPE.height})`, () => {
     test.use({ viewport: PHONE_LANDSCAPE })
 
     test("keeps the open chapter list on screen", async ({ page }) => {
-      await page.goto("/")
-      await waitForHydration(page)
+      await enterTimeline(page)
 
       const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
       const toggle = nav.getByRole("button", { name: /current era/i })
@@ -239,8 +204,7 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
     test.use({ reducedMotion: "reduce" })
 
     test("shows the chapter list at once without fading it in", async ({ page }) => {
-      await page.goto("/")
-      await waitForHydration(page)
+      await enterTimeline(page)
 
       const toggle = page.getByRole("button", { name: /current era/i })
       await toggle.click()
@@ -248,5 +212,21 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
       const chapterList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
       expect(await chapterList.evaluate((list) => getComputedStyle(list).opacity)).toBe("1")
     })
+  })
+})
+
+test.describe(`year labels on a phone (${PHONE.width}x${PHONE.height})`, () => {
+  test.use({ viewport: PHONE })
+
+  test("shows each year as one short line above its events", async ({ page }) => {
+    await page.goto("/")
+    await waitForHydration(page)
+
+    const heights = await page
+      .locator("[data-year-column]")
+      .evaluateAll((columns) => columns.map((column) => Math.round(column.getBoundingClientRect().height)))
+
+    expect(heights.length).toBeGreaterThan(0)
+    expect(Math.max(...heights)).toBeLessThan(48)
   })
 })

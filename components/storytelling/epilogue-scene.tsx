@@ -1,212 +1,71 @@
-"use client"
+// The close of the page: an empty frame for the interface of the next era, a last word, and a way back to the start.
+// Every era so far brought a new way to talk to machines, so the next chapter is left open.
+'use client';
 
-import { motion, useInView, useReducedMotion, useScroll, useTransform, useSpring } from "framer-motion"
-import { useRef, useMemo } from "react"
-import { SectionHeader } from "@/components/ui/section-header"
-import { AnimatedBackground } from "@/components/ui/animated-background"
-import { TextReveal } from "@/components/animations/text-reveal"
+import { ArrowUp } from 'lucide-react';
+import { ERA_DEFINITIONS } from '@/lib/eras';
 
-export function EpilogueScene() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const reduceMotion = useReducedMotion()
-  const inView = useInView(containerRef, { amount: 0.15 })
-  const shouldAnimateAmbient = inView && !reduceMotion
+interface EpilogueSceneProps {
+  firstEraId: string;
+  firstYear: number;
+}
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  })
-
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
-  const opacity = useTransform(smoothProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 1])
-  const scale = useTransform(smoothProgress, [0, 0.2], [0.8, 1])
-  const backgroundY = useTransform(smoothProgress, [0, 1], [0, -200])
-
-  // Memoize particle data to prevent hydration mismatches
-  const particles = useMemo(() => 
-    Array.from({ length: 150 }).map((_, i) => ({
-      size: 1 + ((i * 0.019) % 3), // Deterministic size based on index
-      duration: 3 + ((i * 0.027) % 4),
-      delay: (i * 0.02) % 3,
-      left: (i * 0.67) % 100,
-      top: (i * 1.33) % 100,
-    })), []
-  )
-
+export function EpilogueScene({ firstEraId, firstYear }: EpilogueSceneProps) {
   return (
-    <motion.section
-      ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-slate-900/20 to-background"
-      style={{ opacity, scale }}
+    <section
+      aria-labelledby="epilogue-title"
+      className="bg-[#0a0a0b] px-4 pb-32 pt-24 text-center text-white sm:px-6 sm:pt-32"
     >
-      <motion.div style={{ y: backgroundY }}>
-        <AnimatedBackground variant="neural" className="opacity-30" />
-      </motion.div>
-
-      {shouldAnimateAmbient ? (
-        <>
-          <div className="absolute inset-0">
-            {particles.map((particle, i) => (
-              <motion.div
-                key={i}
-                className="absolute bg-white rounded-full"
-                style={{
-                  left: `${particle.left}%`,
-                  top: `${particle.top}%`,
-                  width: `${particle.size}px`,
-                  height: `${particle.size}px`,
-                }}
-                animate={{
-                  opacity: [0, 0.8, 0.3, 0],
-                  scale: [0, 1, 1.2, 0],
-                  y: [0, -50 - i * 0.5],
-                }}
-                transition={{
-                  duration: particle.duration,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: particle.delay,
-                  ease: "easeInOut",
-                }}
+      <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-md rounded-3xl border border-dashed border-white/20 px-8 py-10">
+          {/* The five eras so far in their colors, running up to the open slot for the next one */}
+          <div data-era-trail="" aria-hidden="true" className="mb-8 flex items-center gap-1.5">
+            {ERA_DEFINITIONS.map((era) => (
+              <span
+                key={era.id}
+                data-era-color=""
+                className="h-1 flex-1 rounded-full"
+                style={{ backgroundColor: era.color }}
               />
             ))}
+            <span data-next-era="" className="ml-1 flex-[1.5] border-t-2 border-dashed border-white/30" />
           </div>
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">Chapter 6</p>
+          <p className="mt-3 text-lg text-zinc-200">Interface not yet invented</p>
+          <p aria-hidden="true" className="mt-4 font-mono text-sm text-zinc-500">
+            &gt; <span className="terminal-caret">█</span>
+          </p>
+        </div>
 
-          <div className="absolute inset-0 pointer-events-none">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <motion.div
-                key={`connection-${i}`}
-                className="absolute w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent"
-                style={{
-                  left: `${10 + i * 4}%`,
-                  height: "60vh",
-                  top: "20%",
-                }}
-                animate={{
-                  opacity: [0, 0.3, 0.1, 0],
-                  scaleY: [0, 1, 0.8, 0],
-                  y: [100, -100],
-                }}
-                transition={{
-                  duration: 8 + i * 0.3,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: i * 0.2,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
-          </div>
-        </>
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
-      )}
+        <h2 id="epilogue-title" className="mt-20 text-4xl font-semibold tracking-tight sm:text-6xl">
+          The Story Continues
+        </h2>
+        <div className="mx-auto mt-8 max-w-2xl space-y-5 text-lg leading-8 text-zinc-300">
+          <p>
+            From punch cards to chat threads, every era of artificial intelligence arrived with a new way for
+            people and machines to talk to each other.
+          </p>
+          <p>
+            Each milestone represents not just technological progress, but humanity&apos;s relentless pursuit
+            of understanding and augmenting intelligence itself. What happens next depends on us.
+          </p>
+        </div>
+        <p className="mt-10 text-2xl font-light text-white sm:text-3xl">
+          The next chapter of this story is ours to write.
+        </p>
 
-      <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          viewport={{ once: true }}
+        <a
+          href={`#${firstEraId}`}
+          className="mt-14 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
         >
-          <SectionHeader
-            title="The Story Continues"
-            subtitle="The story of AI is still being written. What happens next… depends on us."
-            centered
-            className="mb-16"
-          />
+          Back to {firstYear}
+          <ArrowUp aria-hidden="true" className="size-4" />
+        </a>
 
-          <motion.div
-            className="space-y-12"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <div className="space-y-8">
-              <TextReveal
-                text="From the visionary dreams of the 1950s to the transformative breakthroughs of today, artificial intelligence has evolved from science fiction to science fact."
-                className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto"
-                staggerDelay={0.03}
-              />
-
-              <TextReveal
-                text="Each milestone represents not just technological progress, but humanity's relentless pursuit of understanding and augmenting intelligence itself."
-                className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto"
-                staggerDelay={0.03}
-                delay={2}
-              />
-
-              <TextReveal
-                text="As we stand at the threshold of an AI-powered future, we carry the responsibility of shaping this technology for the benefit of all humanity."
-                className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto"
-                staggerDelay={0.03}
-                delay={4}
-              />
-            </div>
-
-            <motion.div
-              className="pt-8"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 6 }}
-              viewport={{ once: true }}
-            >
-              <p className="text-2xl md:text-3xl font-light text-primary leading-relaxed">
-                The next chapter of this story is ours to write.
-              </p>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="mt-20 flex flex-col items-center space-y-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 7 }}
-            viewport={{ once: true }}
-          >
-            <motion.div
-              className="flex items-center space-x-3"
-              animate={shouldAnimateAmbient ? { opacity: [0.5, 1, 0.5] } : undefined}
-              transition={{
-                duration: 3,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              }}
-            >
-              <motion.div
-                animate={shouldAnimateAmbient ? { rotate: 360 } : undefined}
-                transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full"
-              />
-              <span className="text-sm text-muted-foreground">The future is being written...</span>
-            </motion.div>
-
-            <motion.div
-              className="text-xs text-muted-foreground/60"
-              animate={shouldAnimateAmbient ? { opacity: [0.3, 0.7, 0.3] } : undefined}
-              transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
-            >
-              Built with passion for the future of artificial intelligence
-            </motion.div>
-          </motion.div>
-        </motion.div>
+        <p className="mt-20 text-xs text-zinc-500">
+          Built with passion for the future of artificial intelligence
+        </p>
       </div>
-
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: useTransform(
-            smoothProgress,
-            [0, 0.25, 0.5, 0.75, 1],
-            [
-              "radial-gradient(circle at 20% 80%, rgba(5, 150, 105, 0.1) 0%, transparent 50%)",
-              "radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 60%)",
-              "radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.2) 0%, transparent 70%)",
-              "radial-gradient(circle at 30% 70%, rgba(16, 185, 129, 0.1) 0%, transparent 60%)",
-              "radial-gradient(circle at 70% 30%, rgba(5, 150, 105, 0.05) 0%, transparent 80%)",
-            ],
-          ),
-        }}
-      />
-    </motion.section>
-  )
+    </section>
+  );
 }

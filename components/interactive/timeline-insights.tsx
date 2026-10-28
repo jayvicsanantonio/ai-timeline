@@ -1,59 +1,56 @@
-// Timeline Insights section: four cards with stats computed from the timeline events.
-// Hovering a card highlights it.
+// Timeline Insights section: four stat tiles with numbers computed from the timeline events.
+// Each tile leads with its number, then names what the number says about AI's history.
 "use client"
 
-import { motion } from "framer-motion"
-import { useState } from "react"
 import { Lightbulb, TrendingUp, Users, Zap } from "lucide-react"
-import { CinematicCard } from "@/components/ui/cinematic-card"
-import { RevealAnimation } from "@/components/animations/reveal-animation"
-import { StaggerAnimation } from "@/components/animations/stagger-animation"
-import type { TimelineEvent } from "@/types/timeline"
+import { groupEventsByEra } from "@/lib/eras"
+import { countEventsByCategory } from "@/lib/timeline-filter"
+import { TIMELINE_CATEGORIES, type TimelineEvent } from "@/types/timeline"
 
 interface TimelineInsightsProps {
   events: TimelineEvent[]
 }
 
-function countEvents(events: TimelineEvent[], matches: (event: TimelineEvent) => boolean) {
-  return events.filter(matches).length
+function countLabel(count: number) {
+  return `${count} ${count === 1 ? "event" : "events"}`
 }
 
-// The year with the most events. On a tie, the year that comes first in events wins.
-function findBusiestYear(events: TimelineEvent[]) {
-  const countsByYear = new Map<number, number>()
-  for (const event of events) {
-    countsByYear.set(event.year, (countsByYear.get(event.year) ?? 0) + 1)
-  }
-
-  let busiest = { year: 0, count: 0 }
-  for (const [year, count] of countsByYear) {
-    if (count > busiest.count) busiest = { year, count }
-  }
-  return busiest
+// How many times more events the latest era has than the one before it, to one decimal place.
+// A dash stands in when the era before has no events to compare against.
+function formatMultiple(latest: number, previous: number) {
+  return previous > 0 ? `${Math.round((latest / previous) * 10) / 10}×` : "—"
 }
 
-// Every stat is computed from the events, so the cards stay true to the timeline data.
+// The category with the most events. On a tie, the category listed first in TIMELINE_CATEGORIES wins.
+function findMostCommonCategory(counts: ReturnType<typeof countEventsByCategory>) {
+  return TIMELINE_CATEGORIES.reduce((best, category) => (counts[category] > counts[best] ? category : best))
+}
+
+// Every stat is computed from the events, so the tiles stay true to the timeline data. None of them
+// repeats the opening chart, which already shows the busiest year and the climb since 2020.
 function getInsights(events: TimelineEvent[]) {
-  const recentShare = countEvents(events, (event) => event.year >= 2010) / events.length
-  const busiestYear = findBusiestYear(events)
+  const eras = groupEventsByEra(events)
+  const latest = eras[eras.length - 1]
+  const previous = eras[eras.length - 2]
+  const counts = countEventsByCategory(events)
+  const mostCommon = findMostCommonCategory(counts)
 
   return [
     {
-      id: "acceleration",
+      id: "era-over-era",
       icon: TrendingUp,
-      title: "Accelerating Progress",
-      description:
-        "AI development has exponentially accelerated, with more breakthroughs in the last decade than the previous 50 years.",
-      stat: `${Math.round(recentShare * 100)}%`,
-      statLabel: `of the ${events.length} events happened in 2010 or later`,
+      title: "Era Over Era",
+      description: "How the newest era of AI compares, by number of milestones, with the era that made it possible.",
+      stat: formatMultiple(latest.events.length, previous.events.length),
+      statLabel: `${countLabel(latest.events.length)} in the ${latest.label}, against ${previous.events.length} in the ${previous.label}`,
     },
     {
-      id: "busiest-year",
+      id: "most-common",
       icon: Lightbulb,
-      title: "Busiest Year",
-      description: "Each breakthrough builds upon previous discoveries, creating cascading waves of innovation.",
-      stat: String(busiestYear.year),
-      statLabel: `${busiestYear.count} events, more than any other year`,
+      title: "Most Common Milestone",
+      description: `More of the timeline is ${mostCommon} than any other kind of milestone.`,
+      stat: String(counts[mostCommon]),
+      statLabel: `${mostCommon} events`,
     },
     {
       id: "industry",
@@ -61,7 +58,7 @@ function getInsights(events: TimelineEvent[]) {
       title: "Industry Momentum",
       description:
         "Modern AI advances are built on international collaboration between researchers, institutions, and companies.",
-      stat: String(countEvents(events, (event) => event.category === "Companies & Investments")),
+      stat: String(counts["Companies & Investments"]),
       statLabel: "Companies & Investments events",
     },
     {
@@ -69,81 +66,46 @@ function getInsights(events: TimelineEvent[]) {
       icon: Zap,
       title: "Societal Impact",
       description: "AI is transforming every aspect of society, from healthcare to education to creative industries.",
-      stat: String(countEvents(events, (event) => event.category === "Ethics & Policy")),
+      stat: String(counts["Ethics & Policy"]),
       statLabel: "Ethics & Policy events",
     },
   ]
 }
 
 export function TimelineInsights({ events }: TimelineInsightsProps) {
-  const [activeInsight, setActiveInsight] = useState<string | null>(null)
   const insights = getInsights(events)
 
   return (
-    <section className="py-16 bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <RevealAnimation direction="up" className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-4">
-            Timeline Insights
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover the patterns and trends that emerge from decades of AI development
-          </p>
-        </RevealAnimation>
+    <section aria-labelledby="insights-title" className="bg-[#0a0a0b] px-4 py-24 text-white sm:px-6 sm:py-32">
+      <div className="mx-auto max-w-6xl">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">By the numbers</p>
+        <h2 id="insights-title" className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+          Timeline Insights
+        </h2>
+        <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-400">
+          Discover the patterns and trends that emerge from decades of AI development
+        </p>
 
-        <StaggerAnimation className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Each tile's five rows share the row's tracks, so titles and descriptions line up across a row
+            however long the label above them runs */}
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {insights.map((insight) => {
             const Icon = insight.icon
-            const isActive = activeInsight === insight.id
 
             return (
-              <motion.div
+              <div
                 key={insight.id}
-                onHoverStart={() => setActiveInsight(insight.id)}
-                onHoverEnd={() => setActiveInsight(null)}
-                whileHover={{ y: -5 }}
-                className="h-[32rem] flex" // increased height to h-[32rem] (512px) to accommodate all content
+                className="row-span-5 grid grid-rows-subgrid gap-y-0 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25 hover:bg-white/[0.05]"
               >
-                <CinematicCard
-                  className={`w-full transition-all duration-300 ${
-                    isActive ? "ring-2 ring-primary/50 shadow-lg shadow-primary/20" : ""
-                  }`}
-                  glowEffect={isActive}
-                >
-                  <div className="flex flex-col h-full text-center p-6">
-                    <div className="h-80 flex flex-col">
-                      {/* Icon section - fixed height */}
-                      <div className="flex-shrink-0 mb-4">
-                        <motion.div
-                          className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mx-auto"
-                          animate={{ scale: isActive ? 1.1 : 1 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <Icon className="w-6 h-6" />
-                        </motion.div>
-                      </div>
-
-                      {/* Title section - fixed height */}
-                      <div className="flex-shrink-0 mb-4">
-                        <h3 className="font-bold text-foreground text-lg leading-tight">{insight.title}</h3>
-                      </div>
-
-                      {/* Description section - flexible height within fixed container */}
-                      <div className="flex-1 flex items-start justify-center">
-                        <p className="text-sm text-muted-foreground leading-relaxed">{insight.description}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex-shrink-0 pt-4 border-t border-border/50">
-                      <div className="text-2xl font-bold text-primary">{insight.stat}</div>
-                      <div className="text-xs text-muted-foreground mt-1 leading-tight">{insight.statLabel}</div>
-                    </div>
-                  </div>
-                </CinematicCard>
-              </motion.div>
+                <Icon aria-hidden="true" className="size-5 text-zinc-400" />
+                <div className="mt-8 text-5xl font-semibold tracking-tight text-white">{insight.stat}</div>
+                <div className="mt-2 text-sm leading-6 text-zinc-400">{insight.statLabel}</div>
+                <h3 className="mt-8 text-base font-semibold text-white">{insight.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">{insight.description}</p>
+              </div>
             )
           })}
-        </StaggerAnimation>
+        </div>
       </div>
     </section>
   )

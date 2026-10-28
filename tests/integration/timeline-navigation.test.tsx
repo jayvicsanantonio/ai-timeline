@@ -1,90 +1,227 @@
-// Integration tests for the phone chapter nav in TimelineNavigation: a bar that names the current era and
-// opens a chapter list that follows it in keyboard order and closes again on a second tap or a pick.
+// Integration tests for TimelineNavigation in real Chromium: the wide-screen rail with its chapter buttons,
+// year readout and activity chart, and the phone bar that names the current era and opens a chapter list.
 import { render, screen, within } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
-import { userEvent } from "vitest/browser"
+import { afterEach, beforeEach, describe, expect, it } from "vitest"
+import { page, userEvent } from "vitest/browser"
 import { TimelineNavigation } from "@/components/timeline/timeline-navigation"
+import { groupEventsByEra } from "@/lib/eras"
+import { eventAnchorId } from "@/lib/event-format"
+import { countEventsByYear } from "@/lib/timeline-activity"
+import type { TimelineEvent } from "@/types/timeline"
 
-const sections = [
-  { id: "the-foundation-era", label: "Foundation Era", subtitle: "1940s - 1960s", chapter: "Chapter 1" },
-  { id: "the-knowledge-era", label: "Knowledge Era", subtitle: "1970s - 1980s", chapter: "Chapter 2" },
-  { id: "the-learning-era", label: "Learning Era", subtitle: "1990s - 2000s", chapter: "Chapter 3" },
+function makeEvent(year: number, title: string, month = "Unknown"): TimelineEvent {
+  return {
+    year,
+    month,
+    title,
+    description: `What happened with ${title}.`,
+    category: "Research Breakthroughs",
+    link: `https://example.com/${encodeURIComponent(title)}`,
+  }
+}
+
+const events = [
+  makeEvent(1956, "Dartmouth AI Conference"),
+  makeEvent(1958, "Rosenblatt's Perceptron"),
+  makeEvent(1980, "XCON Brings Expert Systems to Business"),
+  makeEvent(1997, "IBM Deep Blue Defeats Garry Kasparov", "May"),
+  makeEvent(2012, "ImageNet Breakthrough"),
+  makeEvent(2023, "OpenAI Releases GPT-4"),
 ]
+const eras = groupEventsByEra(events)
+const activity = countEventsByYear(events)
 
-function renderNavigation() {
+function renderNavigation({ spacerBefore = false } = {}) {
   render(
     <>
-      <TimelineNavigation sections={sections} />
-      {sections.map((section) => (
-        <section key={section.id} id={section.id} style={{ height: "200vh" }} />
+      <TimelineNavigation eras={eras} activity={activity} />
+      {spacerBefore ? <div style={{ height: "150vh" }} /> : null}
+      {eras.map((era) => (
+        <section key={era.id} id={era.id} style={{ minHeight: "160vh" }}>
+          <h2 tabIndex={-1}>{era.name}</h2>
+          {era.events.map((event) => (
+            <article
+              key={event.title}
+              id={eventAnchorId(event)}
+              data-year={event.year}
+              data-month={event.month}
+              style={{ height: "50vh" }}
+            >
+              <h3>
+                <a href={event.link} data-event-link="">
+                  {event.title}
+                </a>
+              </h3>
+            </article>
+          ))}
+        </section>
       ))}
     </>,
   )
-
-  const toggle = screen.getByRole("button", { name: /current era/i })
-  return { toggle, phoneNav: toggle.closest("nav")! }
 }
 
-function chapterListOf(toggle: HTMLElement) {
-  return document.getElementById(toggle.getAttribute("aria-controls") ?? "")
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })
 }
+
+afterEach(scrollToTop)
+
+describe("TimelineNavigation on a wide screen", () => {
+  beforeEach(async () => {
+    await page.viewport(1280, 800)
+  })
+
+  afterEach(async () => {
+    await page.viewport(414, 896)
+  })
+
+  function rail() {
+    return screen.getByRole("navigation", { name: "Timeline chapter navigation" })
+  }
+
+  it("shows a button for every chapter and marks the current one", () => {
+    renderNavigation()
+
+    const buttons = within(rail()).getAllByRole("button", { name: /^Chapter \d/ })
+    expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual([
+      "Chapter 1: Foundation Era",
+      "Chapter 2: Knowledge Era",
+      "Chapter 3: Learning Era",
+      "Chapter 4: Deep Learning Revolution",
+      "Chapter 5: Generative AI Era",
+    ])
+    expect(buttons[0]).toHaveAttribute("aria-current", "location")
+  })
+
+  it("jumps to a chapter and moves focus to its title", async () => {
+    renderNavigation()
+
+    await userEvent.click(within(rail()).getByRole("button", { name: "Chapter 3: Learning Era" }))
+
+    const title = screen.getByRole("heading", { level: 2, name: "The Learning Era" })
+    expect(title).toHaveFocus()
+    await expect.poll(() => Math.abs(title.getBoundingClientRect().top)).toBeLessThan(50)
+    await expect
+      .poll(() => within(rail()).getByRole("button", { name: "Chapter 3: Learning Era" }).getAttribute("aria-current"))
+      .toBe("location")
+  })
+
+  it("reads out the month and year of the event at the reading line", async () => {
+    renderNavigation()
+
+    document.getElementById(eventAnchorId(events[3]))!.scrollIntoView({ block: "start", behavior: "instant" as ScrollBehavior })
+
+    await expect.poll(() => within(rail()).queryByText("1997")).not.toBeNull()
+    expect(within(rail()).getByText("May")).toBeVisible()
+  })
+
+  it("shows how far through the current era the reader has come", async () => {
+    renderNavigation()
+    const progress = () => parseFloat(rail().querySelector<HTMLElement>("[data-era-progress]")!.style.width)
+
+    const learningEra = document.getElementById(eras[2].id)!
+    window.scrollTo({
+      top: window.scrollY + learningEra.getBoundingClientRect().top + learningEra.offsetHeight / 2 - window.innerHeight / 2,
+      behavior: "instant" as ScrollBehavior,
+    })
+
+    await expect.poll(progress).toBeGreaterThan(35)
+    expect(progress()).toBeLessThan(65)
+  })
+
+  it("jumps to the first event of a year picked on the activity chart", async () => {
+    renderNavigation()
+
+    await userEvent.click(rail().querySelector<HTMLElement>('[data-year-bar][data-year="1980"]')!)
+
+    const link = screen.getByRole("link", { name: events[2].title })
+    expect(link).toHaveFocus()
+    await expect
+      .poll(() => {
+        const box = link.getBoundingClientRect()
+        return box.top >= 0 && box.bottom <= window.innerHeight
+      })
+      .toBe(true)
+  })
+})
 
 describe("TimelineNavigation on a phone", () => {
-  it("collapses to a bar that names the current era and its position", () => {
-    const { toggle, phoneNav } = renderNavigation()
+  function toggle() {
+    return screen.getByRole("button", { name: /current era/i })
+  }
 
-    expect(toggle).toHaveAttribute("aria-expanded", "false")
-    expect(toggle).toHaveTextContent("Foundation Era")
-    expect(toggle).toHaveTextContent("01 / 03")
-    expect(within(phoneNav).getAllByRole("button")).toEqual([toggle])
+  function chapterListOf(button: HTMLElement) {
+    return document.getElementById(button.getAttribute("aria-controls") ?? "")
+  }
+
+  it("collapses to a bar that names the current era and its position", () => {
+    renderNavigation()
+
+    const phoneNav = toggle().closest("nav")!
+    expect(toggle()).toHaveAttribute("aria-expanded", "false")
+    expect(toggle()).toHaveTextContent("Foundation Era")
+    expect(toggle()).toHaveTextContent("01 / 05")
+    expect(within(phoneNav).getAllByRole("button")).toEqual([toggle()])
   })
 
   it("opens the chapter list on a tap and closes it on a second tap", async () => {
-    const { toggle } = renderNavigation()
+    renderNavigation()
 
-    await userEvent.click(toggle)
-    expect(toggle).toHaveAttribute("aria-expanded", "true")
-    const chapterList = chapterListOf(toggle)!
+    await userEvent.click(toggle())
+    expect(toggle()).toHaveAttribute("aria-expanded", "true")
+    const chapterList = chapterListOf(toggle())!
     const chapters = within(chapterList).getAllByRole("button")
-    expect(chapters).toHaveLength(sections.length)
+    expect(chapters).toHaveLength(eras.length)
     expect(chapters[0]).toHaveAttribute("aria-current", "location")
 
-    await userEvent.click(toggle)
-    expect(toggle).toHaveAttribute("aria-expanded", "false")
+    await userEvent.click(toggle())
+    expect(toggle()).toHaveAttribute("aria-expanded", "false")
     expect(chapterList).not.toBeInTheDocument()
   })
 
   it("jumps to the picked chapter and closes the list", async () => {
-    const { toggle } = renderNavigation()
+    renderNavigation()
 
-    await userEvent.click(toggle)
-    await userEvent.click(within(chapterListOf(toggle)!).getByRole("button", { name: /Learning Era/ }))
+    await userEvent.click(toggle())
+    await userEvent.click(within(chapterListOf(toggle())!).getByRole("button", { name: /Learning Era/ }))
 
-    expect(toggle).toHaveAttribute("aria-expanded", "false")
-    expect(chapterListOf(toggle)).toBeNull()
-    await expect.poll(() => toggle.textContent).toContain("Learning Era")
-    await expect.poll(() => toggle.textContent).toContain("03 / 03")
+    expect(toggle()).toHaveAttribute("aria-expanded", "false")
+    expect(chapterListOf(toggle())).toBeNull()
+    await expect.poll(() => toggle().textContent).toContain("Learning Era")
+    await expect.poll(() => toggle().textContent).toContain("03 / 05")
   })
 
   it("lets the Tab key move from the bar into the opened chapter list", async () => {
-    const { toggle } = renderNavigation()
+    renderNavigation()
 
-    toggle.focus()
+    toggle().focus()
     await userEvent.keyboard("{Enter}")
     await userEvent.tab()
 
-    expect(within(chapterListOf(toggle)!).getAllByRole("button")[0]).toHaveFocus()
+    expect(within(chapterListOf(toggle())!).getAllByRole("button")[0]).toHaveFocus()
   })
 
   it("returns focus to the bar when a chapter picked from the keyboard closes the list", async () => {
-    const { toggle } = renderNavigation()
+    renderNavigation()
 
-    toggle.focus()
+    toggle().focus()
     await userEvent.keyboard("{Enter}")
-    within(chapterListOf(toggle)!).getByRole("button", { name: /Learning Era/ }).focus()
+    within(chapterListOf(toggle())!).getByRole("button", { name: /Learning Era/ }).focus()
     await userEvent.keyboard("{Enter}")
 
-    expect(chapterListOf(toggle)).toBeNull()
-    expect(toggle).toHaveFocus()
+    expect(chapterListOf(toggle())).toBeNull()
+    expect(toggle()).toHaveFocus()
+  })
+
+  it("stays out of the way until the reader reaches the timeline", async () => {
+    renderNavigation({ spacerBefore: true })
+
+    // A hidden element has no accessible name, so the bar is found by its expanded state instead
+    const bar = document.querySelector<HTMLElement>("nav button[aria-expanded]")!
+    await expect.poll(() => bar).not.toBeVisible()
+
+    document.getElementById(eras[0].id)!.scrollIntoView({ block: "start", behavior: "instant" as ScrollBehavior })
+
+    await expect.poll(() => bar).toBeVisible()
   })
 })
