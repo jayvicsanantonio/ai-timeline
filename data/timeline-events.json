@@ -432,10 +432,11 @@
   {
     "year": 1987,
     "month": "Unknown",
-    "title": "Lisp Machine Market Collapses",
-    "description": "The market for specialized Lisp machines collapses as cheaper workstations and desktop computers catch up, wiping out a half-billion-dollar industry in a year and starting the second AI winter.",
+    "title": "The Second AI Winter Begins",
+    "description": "The market for specialized Lisp machines collapses as cheaper desktop computers catch up, wiping out a half-billion-dollar industry in a single year. DARPA's Strategic Computing Initiative stops new spending on AI, expert systems like XCON prove too costly to maintain, and funding for AI stays scarce into the 1990s.",
     "category": "Bombshell News",
-    "link": "https://en.wikipedia.org/wiki/AI_winter#The_collapse_of_the_LISP_machine_market"
+    "link": "https://en.wikipedia.org/wiki/AI_winter#The_setbacks_of_the_late_1980s_and_early_1990s",
+    "landmark": true
   },
   {
     "year": 1987,
@@ -1191,14 +1192,6 @@
     "link": "https://github.blog/2021-06-29-introducing-github-copilot-ai-pair-programmer/"
   },
   {
-    "year": 2021,
-    "month": "November",
-    "title": "Character.AI Founded",
-    "description": "Former Google AI researchers Noam Shazeer and Daniel De Freitas found Character.AI, a platform for creating and interacting with AI-powered chatbots.",
-    "category": "Companies & Investments",
-    "link": "https://character.ai/"
-  },
-  {
     "year": 2022,
     "month": "January",
     "title": "OpenAI's InstructGPT Learns to Follow Instructions",
@@ -1275,14 +1268,6 @@
   },
   {
     "year": 2022,
-    "month": "August",
-    "title": "Perplexity AI Founded",
-    "description": "Perplexity AI is founded, developing a conversational search engine that provides direct answers with citations.",
-    "category": "Companies & Investments",
-    "link": "https://www.perplexity.ai/"
-  },
-  {
-    "year": 2022,
     "month": "October",
     "title": "White House AI Bill of Rights",
     "description": "The White House releases the 'Blueprint for an AI Bill of Rights,' a set of principles to guide the design, use, and deployment of automated systems.",
@@ -1343,7 +1328,7 @@
     "year": 2023,
     "month": "February",
     "title": "Google Announces Bard",
-    "description": "Google announces Bard, a conversational AI service powered by its LaMDA model, as a competitor to ChatGPT.",
+    "description": "Google announces Bard, a conversational AI service powered by its LaMDA model, as a competitor to ChatGPT; a factual error about the James Webb Space Telescope in its promotional demo sends Alphabet's stock tumbling and draws criticism of a rushed rollout.",
     "category": "Public Releases",
     "link": "https://blog.google/technology/ai/bard-google-ai-search-updates/"
   },
@@ -1359,17 +1344,9 @@
     "year": 2023,
     "month": "February",
     "title": "Meta Releases LLaMA 1",
-    "description": "Meta AI announces the Large Language Model Meta AI (LLaMA), a foundational language model, released to the research community under a non-commercial license to promote open science.",
+    "description": "Meta AI announces the Large Language Model Meta AI (LLaMA), a foundational language model, released to the research community under a non-commercial license; within weeks its weights leak online via BitTorrent, setting off a wave of community-built open models and a debate over open-access AI.",
     "category": "Public Releases",
     "link": "https://ai.meta.com/blog/large-language-model-llama-meta-ai/"
-  },
-  {
-    "year": 2023,
-    "month": "February",
-    "title": "Google's Bard Demo Stumbles",
-    "description": "In a promotional demo, Google's Bard chatbot makes a factual error regarding the James Webb Space Telescope, causing a significant drop in Alphabet's stock price and sparking criticism of a 'rushed' rollout.",
-    "category": "Bombshell News",
-    "link": "https://www.reuters.com/technology/google-ai-chatbot-bard-offers-inaccurate-information-company-ad-2023-02-08/"
   },
   {
     "year": 2023,
@@ -1416,22 +1393,6 @@
   {
     "year": 2023,
     "month": "March",
-    "title": "ChatGPT Suffers Data Breach",
-    "description": "OpenAI discloses a bug in ChatGPT that allowed some users to see the titles of other users' chat histories, raising privacy and data security concerns.",
-    "category": "Bombshell News",
-    "link": "https://openai.com/index/march-20-chatgpt-outage/"
-  },
-  {
-    "year": 2023,
-    "month": "March",
-    "title": "LLaMA 1 Model Weights Leaked",
-    "description": "The weights for Meta's LLaMA model are leaked online via a BitTorrent link, making the powerful model widely accessible and sparking a wave of community-driven innovation and debate on open-access AI.",
-    "category": "Bombshell News",
-    "link": "https://www.theverge.com/2023/3/8/23629362/meta-ai-language-model-llama-leak-online-misuse"
-  },
-  {
-    "year": 2023,
-    "month": "March",
     "title": "Italy Temporarily Bans ChatGPT",
     "description": "Italy's data protection authority blocks ChatGPT over privacy concerns, the first Western country to do so; access returns a month later after OpenAI makes changes.",
     "category": "Ethics & Policy",
@@ -1452,14 +1413,6 @@
     "description": "Google combines its Brain team and DeepMind into a single unit, Google DeepMind, led by Demis Hassabis, to build its most capable models.",
     "category": "Companies & Investments",
     "link": "https://deepmind.google/blog/announcing-google-deepmind/"
-  },
-  {
-    "year": 2023,
-    "month": "May",
-    "title": "Samsung Bans Generative AI",
-    "description": "Samsung bans the use of generative AI tools like ChatGPT on its internal networks after discovering employees had leaked sensitive internal source code by uploading it to the platform.",
-    "category": "Ethics & Policy",
-    "link": "https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-chatgpt-and-other-generative-ai-use-by-staff-after-leak"
   },
   {
     "year": 2023,
@@ -1520,14 +1473,6 @@
   {
     "year": 2023,
     "month": "July",
-    "title": "DeepSeek Founded",
-    "description": "Chinese AI company DeepSeek is founded, focusing on developing advanced, open-source Large Language Models.",
-    "category": "Companies & Investments",
-    "link": "https://en.wikipedia.org/wiki/DeepSeek"
-  },
-  {
-    "year": 2023,
-    "month": "July",
     "title": "Meta Releases Llama 2",
     "description": "Meta and Microsoft release Llama 2, a large language model available for free for research and commercial use, making powerful LLMs more accessible.",
     "category": "Public Releases",
@@ -1549,14 +1494,6 @@
     "description": "Google, Microsoft, OpenAI, and Anthropic launch the Frontier Model Forum, an industry body to promote the safe and responsible development of large-scale AI models.",
     "category": "Ethics & Policy",
     "link": "https://www.frontiermodelforum.org/"
-  },
-  {
-    "year": 2023,
-    "month": "July",
-    "title": "Databricks Acquires MosaicML",
-    "description": "Data and AI company Databricks completes its acquisition of MosaicML for approximately $1.3 billion, strengthening its position in the generative AI market by enabling customers to train their own models.",
-    "category": "Companies & Investments",
-    "link": "https://www.databricks.com/company/newsroom/press-releases/databricks-completes-acquisition-mosaicml"
   },
   {
     "year": 2023,
@@ -1641,14 +1578,6 @@
   },
   {
     "year": 2023,
-    "month": "November",
-    "title": "DeepSeek Releases Its First General-Purpose LLMs",
-    "description": "Weeks after its DeepSeek Coder models, DeepSeek releases its first general-purpose open-source models, DeepSeek LLM 67B and 7B, which are trained on 2 trillion English and Chinese tokens and show strong performance against other open-source models.",
-    "category": "Public Releases",
-    "link": "https://github.com/deepseek-ai/deepseek-llm"
-  },
-  {
-    "year": 2023,
     "month": "December",
     "title": "Google Launches Gemini 1.0",
     "description": "Google DeepMind launches Gemini 1.0, its most capable and general AI model yet, built to be multimodal from the ground up and announced in Ultra, Pro, and Nano sizes, with Ultra following in early 2024.",
@@ -1663,14 +1592,6 @@
     "description": "The New York Times files a lawsuit against OpenAI and Microsoft for copyright infringement, alleging that its articles were used to train their AI models without permission.",
     "category": "Ethics & Policy",
     "link": "https://www.nytimes.com/2023/12/27/business/media/new-york-times-open-ai-microsoft-lawsuit.html"
-  },
-  {
-    "year": 2023,
-    "month": "December",
-    "title": "EU Reaches Agreement on AI Act",
-    "description": "The European Union reaches a provisional agreement on the AI Act, the world's first comprehensive law regulating artificial intelligence.",
-    "category": "Ethics & Policy",
-    "link": "https://www.europarl.europa.eu/news/en/press-room/20231206IPR15699/ai-act-deal-on-comprehensive-rules-for-trustworthy-ai"
   },
   {
     "year": 2023,
@@ -1786,14 +1707,6 @@
   },
   {
     "year": 2024,
-    "month": "March",
-    "title": "EU Parliament Approves AI Act",
-    "description": "The European Parliament formally approves the AI Act, moving the world's first comprehensive AI law closer to final adoption.",
-    "category": "Ethics & Policy",
-    "link": "https://www.europarl.europa.eu/news/en/press-room/20240308IPR19015/artificial-intelligence-ai-act-meps-adopt-landmark-law"
-  },
-  {
-    "year": 2024,
     "month": "April",
     "title": "Humane Ai Pin Ships to Negative Reviews",
     "description": "Humane's much-hyped Ai Pin begins shipping but receives largely negative reviews from major tech publications, highlighting the significant challenges of creating new AI-native hardware.",
@@ -1852,14 +1765,6 @@
   {
     "year": 2024,
     "month": "May",
-    "title": "Microsoft Announces Copilot+ PCs",
-    "description": "Microsoft unveils a new category of Windows PCs called Copilot+ PCs, designed with AI hardware and features built-in, including a controversial 'Recall' feature.",
-    "category": "Hardware Advances",
-    "link": "https://blogs.microsoft.com/blog/2024/05/20/introducing-copilot-pcs/"
-  },
-  {
-    "year": 2024,
-    "month": "May",
     "title": "Sutskever and Leike Leave OpenAI as Its Superalignment Team Is Disbanded",
     "description": "Ilya Sutskever, OpenAI's co-founder and chief scientist who played a key role in the November 2023 leadership crisis, leaves the company; Jan Leike, his co-lead on the Superalignment team for long-term AI risks, resigns days later, and OpenAI disbands the team.",
     "category": "Bombshell News",
@@ -1868,26 +1773,10 @@
   {
     "year": 2024,
     "month": "May",
-    "title": "DeepSeek Releases DeepSeek-V2",
-    "description": "DeepSeek open-sources DeepSeek-V2, an economical mixture-of-experts model with 236 billion parameters, 21 billion of them active per token, that is highly competitive with leading models; a coding version, DeepSeek-Coder-V2, follows in June.",
-    "category": "Public Releases",
-    "link": "https://arxiv.org/abs/2405.04434"
-  },
-  {
-    "year": 2024,
-    "month": "May",
     "title": "Google DeepMind Unveils AlphaFold 3",
     "description": "Google DeepMind publishes its research on AlphaFold 3, a new model that can predict the structure and interactions of proteins with other molecules, a major step for AI in drug discovery.",
     "category": "Research Breakthroughs",
     "link": "https://www.nature.com/articles/s41586-024-07487-w"
-  },
-  {
-    "year": 2024,
-    "month": "June",
-    "title": "NVIDIA Becomes World's Most Valuable Company",
-    "description": "Driven by the AI boom, chipmaker NVIDIA surpasses Microsoft and Apple to become the world's most valuable public company.",
-    "category": "Companies & Investments",
-    "link": "https://www.cnbc.com/2024/06/18/nvidia-passes-microsoft-in-market-cap-is-most-valuable-public-company.html"
   },
   {
     "year": 2024,
@@ -1983,14 +1872,6 @@
   {
     "year": 2024,
     "month": "October",
-    "title": "OpenAI Closes $6.6B Funding Round",
-    "description": "OpenAI finalizes a massive $6.6 billion funding round led by Thrive Capital, with Microsoft, Nvidia, and SoftBank also investing, raising its valuation to $157 billion and making it one of the world's most valuable private companies.",
-    "category": "Companies & Investments",
-    "link": "https://www.cnbc.com/2024/10/02/openai-raises-at-157-billion-valuation-microsoft-nvidia-join-round.html"
-  },
-  {
-    "year": 2024,
-    "month": "October",
     "title": "Hopfield and Hinton Win the Nobel Prize in Physics",
     "description": "John Hopfield and Geoffrey Hinton win the Nobel Prize in Physics for foundational discoveries and inventions that enable machine learning with artificial neural networks.",
     "category": "Research Breakthroughs",
@@ -2024,14 +1905,6 @@
   {
     "year": 2024,
     "month": "November",
-    "title": "Codeium Launches Windsurf Editor",
-    "description": "Codeium, an AI-powered code acceleration platform, launches the Windsurf Editor, an AI-native IDE designed for real-time collaboration between developers and AI.",
-    "category": "AI Tools",
-    "link": "https://www.maginative.com/article/codeium-launches-windsurf-editor-an-agentic-integrated-development-environment/"
-  },
-  {
-    "year": 2024,
-    "month": "November",
     "title": "Anthropic Introduces the Model Context Protocol",
     "description": "Anthropic open-sources the Model Context Protocol (MCP), a standard for connecting AI assistants to the systems where data lives, such as content repositories, business tools, and development environments.",
     "category": "AI Tools",
@@ -2049,7 +1922,7 @@
     "year": 2024,
     "month": "December",
     "title": "DeepSeek Releases DeepSeek-V3",
-    "description": "DeepSeek releases V3, an open-weight mixture-of-experts model that rivals leading closed models, saying its final training run cost about $5.6 million in GPU time, a claim that sets up the R1 shock a month later.",
+    "description": "Chinese lab DeepSeek releases V3, an open-weight mixture-of-experts model that rivals leading closed models, saying its final training run cost about $5.6 million in GPU time, a claim that sets up the R1 shock a month later.",
     "category": "Public Releases",
     "link": "https://arxiv.org/abs/2412.19437"
   },
@@ -2085,14 +1958,6 @@
     "description": "On his first day back in office, President Donald Trump rescinds Executive Order 14110, Joe Biden's 2023 order on safe, secure, and trustworthy AI.",
     "category": "Ethics & Policy",
     "link": "https://www.whitehouse.gov/presidential-actions/2025/01/initial-rescissions-of-harmful-executive-orders-and-actions/"
-  },
-  {
-    "year": 2025,
-    "month": "February",
-    "title": "OpenAI Releases GPT-4.5",
-    "description": "OpenAI releases a research preview of GPT-4.5, its largest model to date for chat, scaling up pretraining and post-training.",
-    "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-gpt-4-5/"
   },
   {
     "year": 2025,
@@ -2134,14 +1999,6 @@
     "description": "OpenAI builds image generation into GPT-4o; a flood of pictures in the style of Studio Ghibli follows, and Sam Altman says demand is melting OpenAI's GPUs.",
     "category": "Public Releases",
     "link": "https://openai.com/index/introducing-4o-image-generation/"
-  },
-  {
-    "year": 2025,
-    "month": "March",
-    "title": "Apple Delays Its Personalized Siri",
-    "description": "Apple says the more personal Siri it promised with Apple Intelligence will take 'longer than we thought', pushing it into the next year; in January 2026 it picks Google's Gemini to power the overhaul.",
-    "category": "Bombshell News",
-    "link": "https://daringfireball.net/2025/03/apple_is_delaying_the_more_personalized_siri_apple_intelligence_features"
   },
   {
     "year": 2025,
@@ -2202,26 +2059,10 @@
   {
     "year": 2025,
     "month": "June",
-    "title": "Google Releases Gemini CLI",
-    "description": "Google launches Gemini CLI, an open-source, AI-powered command-line assistant that integrates the Gemini 2.5 Pro model directly into the terminal for developers.",
-    "category": "AI Tools",
-    "link": "https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/"
-  },
-  {
-    "year": 2025,
-    "month": "June",
     "title": "Meta Announces Multi-Billion Dollar Investment in Scale AI",
     "description": "Meta makes a reported $14.3 billion investment in Scale AI and hires its founder, Alexandr Wang, to lead its push to catch up in the AI race.",
     "category": "Companies & Investments",
     "link": "https://techcrunch.com/2025/06/13/scale-ai-confirms-significant-investment-from-meta-says-ceo-alexandr-wang-is-leaving/"
-  },
-  {
-    "year": 2025,
-    "month": "June",
-    "title": "Anthropic Releases 'Claude Gov' for National Security",
-    "description": "Anthropic announces 'Claude Gov,' a specialized version of its model for U.S. national security customers, which is reported to be in use at multiple national security agencies.",
-    "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-gov-models-for-u-s-national-security-customers"
   },
   {
     "year": 2025,
@@ -2262,14 +2103,6 @@
     "description": "xAI releases Grok 4, claiming it to be the 'most intelligent model in the world,' with native tool use and real-time search integration.",
     "category": "Public Releases",
     "link": "https://x.ai/news/grok-4"
-  },
-  {
-    "year": 2025,
-    "month": "July",
-    "title": "U.S. Authors Win Class-Action Status in Lawsuit Against Anthropic",
-    "description": "A U.S. District Judge certifies a class action by authors whose books Anthropic downloaded from the pirate libraries LibGen and PiLiMi, a month after ruling that training its models on books was fair use.",
-    "category": "Ethics & Policy",
-    "link": "https://news.bloomberglaw.com/bloomberg-government-news/authors-copyright-class-action-certified-against-anthropic"
   },
   {
     "year": 2025,
@@ -2320,14 +2153,6 @@
     "category": "Public Releases",
     "link": "https://openai.com/index/introducing-gpt-5/",
     "highlight": true
-  },
-  {
-    "year": 2025,
-    "month": "August",
-    "title": "OpenAI's Valuation Approaches $500 Billion",
-    "description": "Reports emerge that OpenAI is in talks for an employee share sale that would value the company at about $500 billion, up from $300 billion earlier in the year, as ChatGPT nears 700 million weekly users.",
-    "category": "Companies & Investments",
-    "link": "https://www.bloomberg.com/news/articles/2025-08-06/openai-in-talks-for-share-sale-valuing-startup-at-500-billion"
   },
   {
     "year": 2025,
@@ -2436,22 +2261,6 @@
   },
   {
     "year": 2025,
-    "month": "November",
-    "title": "Cursor Raises $2.3 Billion",
-    "description": "Anysphere, maker of the AI code editor Cursor, raises $2.3 billion at a $29.3 billion valuation after passing $1 billion in annualized revenue, about three years after it was founded.",
-    "category": "Companies & Investments",
-    "link": "https://en.wikipedia.org/wiki/Cursor_(company)"
-  },
-  {
-    "year": 2025,
-    "month": "December",
-    "title": "OpenAI Releases GPT-5.2",
-    "description": "OpenAI releases GPT-5.2 as a major model update with stronger coding and math capabilities and improved reliability.",
-    "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-gpt-5-2/"
-  },
-  {
-    "year": 2025,
     "month": "December",
     "title": "Trump Orders a Challenge to State AI Laws",
     "description": "President Donald Trump signs an executive order creating an AI Litigation Task Force to challenge state AI laws that conflict with a national AI policy framework.",
@@ -2525,26 +2334,10 @@
   {
     "year": 2026,
     "month": "February",
-    "title": "Anthropic Releases Claude Opus 4.6",
-    "description": "Anthropic introduces Claude Opus 4.6 with better reasoning, coding, and extended thinking capabilities for complex tasks.",
-    "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-opus-4-6"
-  },
-  {
-    "year": 2026,
-    "month": "February",
     "title": "OpenAI Releases GPT-5.3-Codex",
     "description": "OpenAI releases GPT-5.3-Codex, which it calls its most capable agentic coding model, and pitches Codex for professional work across the computer beyond writing code; a faster Spark version on Cerebras hardware follows a week later.",
     "category": "AI Tools",
     "link": "https://openai.com/index/introducing-gpt-5-3-codex/"
-  },
-  {
-    "year": 2026,
-    "month": "February",
-    "title": "Google Releases Gemini 3.1 Pro",
-    "description": "Google releases Gemini 3.1 Pro in preview across Google AI Studio, Vertex AI and the Gemini app, as a more capable baseline for complex problem-solving.",
-    "category": "Public Releases",
-    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/"
   },
   {
     "year": 2026,
@@ -2722,14 +2515,6 @@
   {
     "year": 2026,
     "month": "September",
-    "title": "Anthropic Releases Claude Opus 5.5",
-    "description": "Anthropic releases Claude Opus 5.5, the first model in its Claude 5.5 family, leading in agentic coding and knowledge work at 40% lower cost than Opus 5 on typical workloads.",
-    "category": "Public Releases",
-    "link": "https://www.anthropic.com/claude-opus-5-5"
-  },
-  {
-    "year": 2026,
-    "month": "September",
     "title": "OpenAI Withholds GPT-6.1 Astra over Safety Concerns",
     "description": "OpenAI releases GPT-6.1 Sol but scraps the planned rollout of GPT-6.1 Astra, citing safety concerns.",
     "category": "Ethics & Policy",
@@ -2758,14 +2543,6 @@
     "description": "Google discloses that a Gemini model broke into systems at three real companies during a May security test after a bug gave it internet access, the first time it has disclosed such a breach by one of its models.",
     "category": "Bombshell News",
     "link": "https://www.cnbc.com/2026/09/18/googles-gemini-becomes-latest-ai-model-to-break-out-and-hack-computer-systems.html"
-  },
-  {
-    "year": 2026,
-    "month": "September",
-    "title": "Mistral Raises €3 Billion",
-    "description": "Mistral AI raises €3 billion at a valuation above €21 billion in a round led by Samsung, the largest equity round in European tech history.",
-    "category": "Companies & Investments",
-    "link": "https://w.media/mistral-ai-raises-e3-billion-in-record-european-tech-funding-round/"
   },
   {
     "year": 2026,

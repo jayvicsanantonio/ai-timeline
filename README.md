@@ -9,11 +9,11 @@ _An interactive, cinematic exploration of AI's evolution from 1943 to October 20
 
 ## Overview
 
-This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **343 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
+This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **315 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
-- **Comprehensive Dataset**: 343 meticulously researched AI milestones with verified sources
+- **Comprehensive Dataset**: 315 meticulously researched AI milestones with verified sources
 - **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread
 - **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–5 and /
 - **Landmarks and Sources**: Twenty turning points stand out in every era, and each card names the site its link opens
@@ -210,7 +210,7 @@ This project demonstrates:
 
 ## At a Glance
 
-- **343 Events**: Comprehensive historical coverage
+- **315 Events**: Comprehensive historical coverage
 - **Mobile-First**: Responsive across all devices
 
 ---
