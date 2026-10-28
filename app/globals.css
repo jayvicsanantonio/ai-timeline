@@ -1,123 +1,36 @@
 /* Global styles: Tailwind, the theme tokens for the page chrome and base elements, and the five era interfaces.
    Every animation here runs only when the reader allows motion. */
 @import "tailwindcss";
-@import "tw-animate-css";
 
 /* Tailwind scans every folder git does not ignore for class names, and the bundler hashes each of those folders on
    every build. .claude/ holds other Claude Code sessions' worktrees, which change underneath a build, so it is skipped. */
 @source not "../.claude";
 
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --background: #ffffff;
-  --foreground: #374151;
-  --card: #f1f5f9;
-  --card-foreground: #475569;
-  --popover: #ffffff;
-  --popover-foreground: #374151;
-  --primary: #059669;
-  --primary-foreground: #ffffff;
-  --secondary: #10b981;
-  --secondary-foreground: #ffffff;
-  --muted: #f1f5f9;
-  --muted-foreground: #374151;
-  --accent: #10b981;
-  --accent-foreground: #ffffff;
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-  --border: #e5e7eb;
-  --input: #ffffff;
-  --ring: rgba(0, 0, 0, 0.1);
-  --chart-1: #059669;
-  --chart-2: #10b981;
-  --chart-3: #d97706;
-  --chart-4: #dc2626;
-  --chart-5: #374151;
-  --radius: 0.75rem;
-  --sidebar: #f1f5f9;
-  --sidebar-foreground: #374151;
-  --sidebar-primary: #059669;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #10b981;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: rgba(0, 0, 0, 0.1);
-}
-
 /* The page chrome is a neutral near-black, so each era's own interface carries the color */
-.dark {
+:root {
+  color-scheme: dark;
   --background: #0a0a0b;
   --foreground: #ededed;
-  --card: #141416;
-  --card-foreground: #ededed;
-  --popover: #141416;
-  --popover-foreground: #ededed;
   --primary: #f4f4f5;
   --primary-foreground: #0a0a0b;
-  --secondary: #27272a;
-  --secondary-foreground: #ededed;
   --muted: #18181b;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272a;
-  --accent-foreground: #ededed;
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
   --border: #27272a;
-  --input: #18181b;
   --ring: rgba(255, 255, 255, 0.3);
-  --chart-1: #10b981;
-  --chart-2: #059669;
-  --chart-3: #f59e0b;
-  --chart-4: #ef4444;
-  --chart-5: #6b7280;
-  --sidebar: #1a2e1a;
-  --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #10b981;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #059669;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #2d4a2d;
-  --sidebar-ring: rgba(16, 185, 129, 0.3);
+  --radius: 0.75rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
-  --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
   --font-sans: var(--font-work-sans);
   --font-serif: var(--font-open-sans);
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
