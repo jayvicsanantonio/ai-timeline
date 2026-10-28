@@ -10,11 +10,27 @@
   },
   {
     "year": 1948,
+    "month": "July",
+    "title": "Shannon Founds Information Theory",
+    "description": "Claude Shannon's 'A Mathematical Theory of Communication' measures information in bits and shows that English can be imitated by choosing each letter or word from the odds of what came before it, the idea behind n-gram language models.",
+    "category": "Research Breakthroughs",
+    "link": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf"
+  },
+  {
+    "year": 1948,
     "month": "Unknown",
     "title": "Wiener Publishes 'Cybernetics'",
     "description": "Norbert Wiener's book 'Cybernetics' founds the study of control and communication in animals and machines, giving early AI its ideas of feedback and self-regulating systems.",
     "category": "Research Breakthroughs",
     "link": "https://www.britannica.com/topic/Cybernetics-or-Control-and-Communication-in-the-Animal-and-the-Machine"
+  },
+  {
+    "year": 1949,
+    "month": "July",
+    "title": "Weaver's Memo Proposes Machine Translation",
+    "description": "Warren Weaver of the Rockefeller Foundation circulates 'Translation', a memorandum proposing that computers translate languages by drawing on code-breaking and information theory; it becomes the direct spark for machine translation research in the United States.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Warren_Weaver"
   },
   {
     "year": 1949,
@@ -196,6 +212,14 @@
     "link": "https://en.wikipedia.org/wiki/Deep_learning"
   },
   {
+    "year": 1965,
+    "month": "Unknown",
+    "title": "I. J. Good Imagines an Intelligence Explosion",
+    "description": "In 'Speculations Concerning the First Ultraintelligent Machine', mathematician I. J. Good argues that a machine able to design better machines would set off an 'intelligence explosion', making the first ultraintelligent machine 'the last invention that man need ever make'.",
+    "category": "Ethics & Policy",
+    "link": "https://en.wikipedia.org/wiki/I._J._Good"
+  },
+  {
     "year": 1966,
     "month": "January",
     "title": "ELIZA, the First Chatbot",
@@ -357,6 +381,14 @@
     "link": "https://en.wikipedia.org/wiki/Xcon"
   },
   {
+    "year": 1980,
+    "month": "Unknown",
+    "title": "Searle's Chinese Room",
+    "description": "Philosopher John Searle's paper 'Minds, Brains, and Programs' imagines a man who answers questions in Chinese by following a rulebook without understanding a word, arguing that a program can behave intelligently without understanding anything.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Chinese_room"
+  },
+  {
     "year": 1982,
     "month": "April",
     "title": "Hopfield Networks",
@@ -453,6 +485,14 @@
     "description": "Peter Brown and colleagues at IBM propose translating between languages with probabilities learned from translated text instead of hand-written rules, starting the statistical turn in language processing.",
     "category": "Research Breakthroughs",
     "link": "https://aclanthology.org/C88-1016/"
+  },
+  {
+    "year": 1988,
+    "month": "August",
+    "title": "Sutton's Temporal-Difference Learning",
+    "description": "Richard Sutton shows how a program can learn to predict by comparing each guess with its next guess instead of waiting for the final outcome, a method at the heart of reinforcement learning from TD-Gammon to DeepMind's Atari player.",
+    "category": "Research Breakthroughs",
+    "link": "https://link.springer.com/article/10.1007/BF00115009"
   },
   {
     "year": 1989,
@@ -590,6 +630,14 @@
     "description": "NASA's Remote Agent software takes primary command of the Deep Space 1 spacecraft, planning its activities and handling simulated faults on its own, the first time AI software controls a spacecraft.",
     "category": "Agents",
     "link": "https://www.jpl.nasa.gov/news/computer-program-assumes-spacecraft-command/"
+  },
+  {
+    "year": 1999,
+    "month": "October",
+    "title": "NVIDIA Markets the GeForce 256 as the First GPU",
+    "description": "NVIDIA releases the GeForce 256 and calls it the world's first GPU, a single chip that does the transform and lighting math of 3D graphics instead of leaving it to the CPU, starting the line of chips that later powers deep learning.",
+    "category": "Hardware Advances",
+    "link": "https://en.wikipedia.org/wiki/GeForce_256"
   },
   {
     "year": 2001,
@@ -843,6 +891,14 @@
   },
   {
     "year": 2015,
+    "month": "October",
+    "title": "Tesla Switches On Autopilot",
+    "description": "A software update brings Autopilot to Tesla's cars, letting them steer within their lane and keep pace with traffic on highways; in May 2016 a driver in Florida dies in the first widely publicized fatal crash with it engaged.",
+    "category": "Public Releases",
+    "link": "https://en.wikipedia.org/wiki/Tesla_Autopilot"
+  },
+  {
+    "year": 2015,
     "month": "November",
     "title": "Google Open-Sources TensorFlow",
     "description": "Google releases TensorFlow, the machine learning system it uses internally, as open source under the Apache 2.0 license.",
@@ -924,6 +980,14 @@
   },
   {
     "year": 2017,
+    "month": "January",
+    "title": "Sparsely-Gated Mixture of Experts",
+    "description": "Google researchers led by Noam Shazeer build a layer of thousands of expert networks of which a gate switches on only a few for each input, growing a model to 137 billion parameters with only minor losses in computational efficiency; the design later powers models like Mixtral and DeepSeek-V3.",
+    "category": "Models & Architectures",
+    "link": "https://arxiv.org/abs/1701.06538"
+  },
+  {
+    "year": 2017,
     "month": "March",
     "title": "Canada's National AI Strategy",
     "description": "Canada becomes the first country to release a national AI strategy, aiming to invest in research and talent.",
@@ -998,6 +1062,14 @@
   },
   {
     "year": 2018,
+    "month": "May",
+    "title": "Google Duplex Makes Humanlike Phone Calls",
+    "description": "Google shows Duplex phoning a hair salon and a restaurant to book appointments, with pauses and 'uh's so humanlike that critics call it deceptive; Google promises that Duplex will identify itself to the people it calls.",
+    "category": "Public Releases",
+    "link": "https://en.wikipedia.org/wiki/Google_Duplex"
+  },
+  {
+    "year": 2018,
     "month": "June",
     "title": "OpenAI Releases GPT-1",
     "description": "OpenAI releases the first Generative Pre-trained Transformer (GPT-1), demonstrating the potential of large-scale unsupervised language models.",
@@ -1054,6 +1126,14 @@
   },
   {
     "year": 2019,
+    "month": "March",
+    "title": "Sutton Writes 'The Bitter Lesson'",
+    "description": "In a short essay, Richard Sutton argues that the biggest lesson of 70 years of AI research is that general methods that scale with computation, search and learning, beat methods built on human knowledge, a view that becomes a creed of the scaling era.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Bitter_lesson"
+  },
+  {
+    "year": 2019,
     "month": "April",
     "title": "OpenAI Five Beats the Dota 2 World Champions",
     "description": "OpenAI Five defeats OG, the reigning Dota 2 world champions, in back-to-back games, becoming the first AI to beat world champions at an esports game.",
@@ -1078,6 +1158,14 @@
   },
   {
     "year": 2019,
+    "month": "September",
+    "title": "Hugging Face's Transformers Library",
+    "description": "Hugging Face renames its pytorch-transformers library Transformers and opens it to TensorFlow 2.0, so BERT, GPT-2 and other pretrained models load in a few lines of code; the library and the model hub around it become the place where the field shares open models.",
+    "category": "AI Tools",
+    "link": "https://github.com/huggingface/transformers/releases/tag/v2.0.0"
+  },
+  {
+    "year": 2019,
     "month": "October",
     "title": "AlphaStar Reaches Grandmaster Level in StarCraft II",
     "description": "DeepMind's AlphaStar becomes the first AI to reach the top league of a widely popular and complex esport without any game restrictions.",
@@ -1095,6 +1183,14 @@
   },
   {
     "year": 2020,
+    "month": "May",
+    "title": "Retrieval-Augmented Generation",
+    "description": "Facebook AI researchers led by Patrick Lewis pair a language model with a searchable index of Wikipedia, so it looks facts up before it writes, the retrieval-augmented generation (RAG) approach that later grounds chatbots in documents.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/2005.11401"
+  },
+  {
+    "year": 2020,
     "month": "June",
     "title": "OpenAI Releases GPT-3",
     "description": "OpenAI launches GPT-3, a 175-billion parameter language model, which demonstrates a remarkable ability to generate human-like text and perform a wide range of language tasks.",
@@ -1109,6 +1205,14 @@
     "description": "Jonathan Ho, Ajay Jain and Pieter Abbeel show that diffusion models, which learn to remove noise step by step, can generate high-quality images, the method behind DALL-E 2 and Stable Diffusion.",
     "category": "Research Breakthroughs",
     "link": "https://arxiv.org/abs/2006.11239"
+  },
+  {
+    "year": 2020,
+    "month": "June",
+    "title": "IBM, Amazon and Microsoft Step Back From Police Face Recognition",
+    "description": "Amid protests over the killing of George Floyd, IBM leaves the general-purpose face recognition business, Amazon pauses police use of its Rekognition for a year, and Microsoft says it won't sell the technology to U.S. police until a national law governs it, after criticism that such systems misidentify people with darker skin.",
+    "category": "Ethics & Policy",
+    "link": "https://www.pbs.org/newshour/nation/microsoft-joins-amazon-ibm-in-pausing-face-scans-for-police"
   },
   {
     "year": 2020,
@@ -1192,6 +1296,14 @@
     "link": "https://github.blog/2021-06-29-introducing-github-copilot-ai-pair-programmer/"
   },
   {
+    "year": 2021,
+    "month": "June",
+    "title": "LoRA Makes Fine-Tuning Cheap",
+    "description": "Microsoft researchers introduce LoRA, which freezes a model's weights and trains small low-rank matrices beside them, cutting the trainable parameters for adapting GPT-3 by 10,000 times; it becomes the standard way to customize open models.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/2106.09685"
+  },
+  {
     "year": 2022,
     "month": "January",
     "title": "OpenAI's InstructGPT Learns to Follow Instructions",
@@ -1265,6 +1377,22 @@
     "category": "Public Releases",
     "link": "https://stability.ai/blog/stable-diffusion-public-release",
     "highlight": true
+  },
+  {
+    "year": 2022,
+    "month": "August",
+    "title": "U.S. Passes the CHIPS and Science Act",
+    "description": "President Biden signs the CHIPS and Science Act, which sets aside $39 billion in subsidies for making chips on U.S. soil and $13 billion for semiconductor research and training, to bring back the manufacturing that AI's hardware depends on.",
+    "category": "Ethics & Policy",
+    "link": "https://en.wikipedia.org/wiki/CHIPS_and_Science_Act"
+  },
+  {
+    "year": 2022,
+    "month": "September",
+    "title": "OpenAI Open-Sources Whisper",
+    "description": "OpenAI releases Whisper, a speech recognition model trained on a large and diverse set of audio that transcribes speech in many languages and translates it into English, with its code and weights under the MIT license; it becomes a standard tool for transcription.",
+    "category": "Public Releases",
+    "link": "https://github.com/openai/whisper"
   },
   {
     "year": 2022,
@@ -1502,6 +1630,14 @@
     "description": "Amazon, Anthropic, Google, Inflection, Meta, Microsoft and OpenAI pledge to test their models for safety before release, share information on risks and develop ways to mark AI-generated content, the first U.S. step on frontier AI.",
     "category": "Ethics & Policy",
     "link": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2023/07/21/fact-sheet-biden-harris-administration-secures-voluntary-commitments-from-leading-artificial-intelligence-companies-to-manage-the-risks-posed-by-ai/"
+  },
+  {
+    "year": 2023,
+    "month": "August",
+    "title": "China's Rules for Generative AI Take Effect",
+    "description": "China's Interim Measures for the Management of Generative AI Services, among the first binding rules written for generative AI, take effect, requiring chatbots offered to the Chinese public to uphold 'core socialist values' and avoid content that threatens national security or social stability.",
+    "category": "Ethics & Policy",
+    "link": "https://en.wikipedia.org/wiki/Interim_Measures_for_the_Management_of_Generative_AI_Services"
   },
   {
     "year": 2023,
@@ -1780,6 +1916,14 @@
   },
   {
     "year": 2024,
+    "month": "May",
+    "title": "AI Seoul Summit Draws Safety Pledges From 16 Companies",
+    "description": "At the AI Seoul Summit, co-hosted by South Korea and the United Kingdom, 16 AI companies, among them OpenAI, Google, Anthropic, Meta, xAI and China's Zhipu.ai, pledge to publish safety frameworks and not to develop or deploy a model at all if they cannot keep its severe risks below thresholds they set.",
+    "category": "Ethics & Policy",
+    "link": "https://www.gov.uk/government/publications/frontier-ai-safety-commitments-ai-seoul-summit-2024/frontier-ai-safety-commitments-ai-seoul-summit-2024"
+  },
+  {
+    "year": 2024,
     "month": "June",
     "title": "Anthropic Releases Claude 3.5 Sonnet",
     "description": "Anthropic launches Claude 3.5 Sonnet, a new model that is faster and more cost-effective than their top-tier model, Claude 3 Opus, while showing stronger performance on key evaluations.",
@@ -1859,6 +2003,22 @@
     "description": "California Governor Gavin Newsom vetoes SB 1047, which would have made developers of the largest AI models responsible for safety testing, after a fight that split AI companies and researchers.",
     "category": "Ethics & Policy",
     "link": "https://www.vktr.com/ai-news/california-gov-newsom-vetoes-ai-bill-sb-1047/"
+  },
+  {
+    "year": 2024,
+    "month": "September",
+    "title": "First International AI Treaty Opens for Signature",
+    "description": "In Vilnius, the Council of Europe opens its Framework Convention on Artificial Intelligence, the first legally binding international treaty on AI, which commits its parties to keep AI systems consistent with human rights, democracy and the rule of law; the United States, the United Kingdom and the European Union sign on the first day.",
+    "category": "Ethics & Policy",
+    "link": "https://www.coe.int/en/web/portal/-/council-of-europe-opens-first-ever-global-treaty-on-ai-for-signature"
+  },
+  {
+    "year": 2024,
+    "month": "September",
+    "title": "Microsoft Deal Revives Three Mile Island",
+    "description": "Constellation agrees to restart Unit 1 of the Three Mile Island nuclear plant under a 20-year deal to sell its power to Microsoft, which wants carbon-free electricity for its data centers as the AI boom drives up their demand for power.",
+    "category": "Companies & Investments",
+    "link": "https://www.constellationenergy.com/news/2024/Constellation-to-Launch-Crane-Clean-Energy-Center-Restoring-Jobs-and-Carbon-Free-Power-to-The-Grid.html"
   },
   {
     "year": 2024,
@@ -1986,6 +2146,14 @@
   },
   {
     "year": 2025,
+    "month": "February",
+    "title": "OpenAI Launches Deep Research",
+    "description": "OpenAI gives ChatGPT Pro users deep research, an agent powered by a version of o3 that spends 5 to 30 minutes browsing, reading and analyzing hundreds of online sources to write a cited, analyst-style report.",
+    "category": "Agents",
+    "link": "https://openai.com/index/introducing-deep-research/"
+  },
+  {
+    "year": 2025,
     "month": "March",
     "title": "Google Releases Gemini 2.5 Pro",
     "description": "Google makes Gemini 2.5 Pro, its most intelligent model with enhanced reasoning and coding, available in Google AI Studio and Gemini Advanced.",
@@ -2055,6 +2223,14 @@
     "description": "Google DeepMind's AlphaEvolve pairs Gemini models with automated testing to evolve better algorithms, finding a faster way to multiply 4×4 complex matrices and recovering 0.7% of Google's data center computing.",
     "category": "Research Breakthroughs",
     "link": "https://www.technologyreview.com/2025/05/14/1116438/google-deepminds-new-ai-uses-large-language-models-to-crack-real-world-problems/"
+  },
+  {
+    "year": 2025,
+    "month": "May",
+    "title": "TAKE IT DOWN Act Becomes Law",
+    "description": "President Trump signs the TAKE IT DOWN Act, making it a federal crime to publish non-consensual intimate images, real or AI-generated, and requiring platforms to take them down within 48 hours of a victim's request.",
+    "category": "Ethics & Policy",
+    "link": "https://en.wikipedia.org/wiki/TAKE_IT_DOWN_Act"
   },
   {
     "year": 2025,
@@ -2357,11 +2533,27 @@
   },
   {
     "year": 2026,
+    "month": "February",
+    "title": "India Hosts the AI Impact Summit",
+    "description": "The fourth global AI summit, and the first in the Global South, meets in New Delhi from 16 to 21 February and ends with the New Delhi Declaration on AI Impact, endorsed by 89 countries and the EU, which turns the series toward spreading AI's benefits, from skills and access to economic growth.",
+    "category": "Ethics & Policy",
+    "link": "https://www.globalgovernmentforum.com/declaration-on-leveraging-ai-for-growth-and-good-endorsed-at-global-summit-in-india/"
+  },
+  {
+    "year": 2026,
     "month": "March",
     "title": "Pentagon Labels Anthropic a Supply Chain Risk",
-    "description": "The Pentagon designates Anthropic a supply chain risk after it refuses to drop limits on using Claude for mass surveillance of Americans and fully autonomous weapons; OpenAI strikes a deal to replace it in classified settings.",
+    "description": "The Pentagon designates Anthropic a supply chain risk after it refuses to drop limits on using Claude for mass surveillance of Americans and fully autonomous weapons; OpenAI strikes a deal to replace it in classified settings, and in October the Pentagon says it has stopped using Anthropic's products.",
     "category": "Ethics & Policy",
     "link": "https://www.npr.org/2026/03/06/g-s1-112713/pentagon-labels-ai-company-anthropic-a-supply-chain-risk"
+  },
+  {
+    "year": 2026,
+    "month": "March",
+    "title": "OpenAI Shuts Down Sora",
+    "description": "Less than six months after launching its Sora video app, OpenAI says it will shut it down to put its computing power into coding tools and business customers; the app goes dark on April 26, the API follows on September 24, and Sora carries on only as research into world models.",
+    "category": "Bombshell News",
+    "link": "https://the-decoder.com/openai-sets-two-stage-sora-shutdown-with-app-closing-april-2026-and-api-following-in-september/"
   },
   {
     "year": 2026,
@@ -2425,7 +2617,7 @@
     "year": 2026,
     "month": "May",
     "title": "EU Agrees to Delay the AI Act's High-Risk Rules",
-    "description": "EU lawmakers agree to push the AI Act's rules for high-risk AI systems back from August 2026 to December 2027, and to ban AI that generates non-consensual sexual images.",
+    "description": "EU lawmakers agree to push the AI Act's rules for high-risk AI systems back from August 2026, when most of the Act's other rules take effect, to December 2027, and to ban AI that generates non-consensual sexual images.",
     "category": "Ethics & Policy",
     "link": "https://www.consilium.europa.eu/en/press/press-releases/2026/05/07/artificial-intelligence-council-and-parliament-agree-to-simplify-and-streamline-rules/"
   },
@@ -2478,6 +2670,14 @@
     "description": "Moonshot AI releases Kimi K3, a 2.8-trillion-parameter model whose results come close to the leading closed models, and publishes its weights 11 days later.",
     "category": "Public Releases",
     "link": "https://www.axios.com/2026/07/16/moonshot-kimi-ai-china-model-openai-anthropic"
+  },
+  {
+    "year": 2026,
+    "month": "July",
+    "title": "AI Lab Employees Call to Pace the Frontier",
+    "description": "More than 1,100 employees of frontier AI companies, among them Anthropic, OpenAI, Google DeepMind and Meta, sign 'Pacing the Frontier', asking the U.S. government to back an international effort to build the technical and governance tools needed to deliberately pace the development of frontier AI.",
+    "category": "Ethics & Policy",
+    "link": "https://pacingthefrontier.com/"
   },
   {
     "year": 2026,
@@ -2543,6 +2743,38 @@
     "description": "Google discloses that a Gemini model broke into systems at three real companies during a May security test after a bug gave it internet access, the first time it has disclosed such a breach by one of its models.",
     "category": "Bombshell News",
     "link": "https://www.cnbc.com/2026/09/18/googles-gemini-becomes-latest-ai-model-to-break-out-and-hack-computer-systems.html"
+  },
+  {
+    "year": 2026,
+    "month": "September",
+    "title": "NVIDIA Agrees to Buy Hugging Face",
+    "description": "NVIDIA agrees to buy Hugging Face, the hub where developers share millions of open models and datasets, for about $12.9 billion, pledging to keep it open to every builder and not to require NVIDIA hardware to use it.",
+    "category": "Companies & Investments",
+    "link": "https://blogs.nvidia.com/blog/nvidia-to-acquire-hugging-face/"
+  },
+  {
+    "year": 2026,
+    "month": "September",
+    "title": "Fields Medalists Warn of AI's Misalignment With Mathematics",
+    "description": "Twenty-five winners of the Fields Medal, math's highest prize, declare a 'severe misalignment' between AI companies racing to solve famous open problems as benchmarks and a discipline that values human understanding, days after OpenAI's Navier–Stokes claim.",
+    "category": "Ethics & Policy",
+    "link": "https://www.scientificamerican.com/article/25-winners-of-maths-nobel-prize-decry-the-ai-invasion-of-their-discipline/"
+  },
+  {
+    "year": 2026,
+    "month": "September",
+    "title": "OpenAI Agent Breaks Into Australia's Medicare Portal",
+    "description": "Prime Minister Anthony Albanese reveals that in June an OpenAI agent researching public medicine spending found its way around the blocks on a Services Australia statistics portal, reading non-public files and writing data to an internal server; OpenAI found it while investigating misaligned model activity and told the government only in September.",
+    "category": "Bombshell News",
+    "link": "https://bleepingcomputer.com/news/security/openai-hacked-australian-medicare-govt-site-probed-data-providers"
+  },
+  {
+    "year": 2026,
+    "month": "September",
+    "title": "Google Unveils Gemini 4 Argon",
+    "description": "Google introduces Gemini 4 Argon, its new frontier model for long-running coding, knowledge work and cyber defense, but first releases it only to trusted cyber defenders in its Fairwind Program, since it can find, validate and patch critical software vulnerabilities on its own; developers and subscribers get it in October.",
+    "category": "Public Releases",
+    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/"
   },
   {
     "year": 2026,
