@@ -92,7 +92,7 @@ describe("StoryEngine", () => {
 
     const paceLine = container.querySelector("[data-pace-line]")!
     expect(paceLine).toHaveTextContent(
-      "The next 7 years hold 162 events, 18 times the yearly pace of the 77 years before them.",
+      "The next 7 years hold 204 events, 18 times the yearly pace of the 77 years before them.",
     )
     const deepLearning = screen.getByRole("region", { name: "The Deep Learning Revolution" })
     const generative = screen.getByRole("region", { name: "The Generative AI Era" })

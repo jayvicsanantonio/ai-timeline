@@ -126,6 +126,8 @@ describe("data/timeline-events.json", () => {
       "ImageNet Breakthrough",
       "AlphaGo Defeats Lee Sedol",
       "Attention Is All You Need",
+      "Reinforcement Learning From Human Feedback",
+      "Scaling Laws for Language Models",
       "OpenAI Releases GPT-3",
       "DeepMind's AlphaFold 2 Solves Protein Folding",
       "ChatGPT Takes the World by Storm",
@@ -143,6 +145,10 @@ describe("data/timeline-events.json", () => {
     const highlights = timelineData.filter((event) => "highlight" in event)
 
     expect(highlights.map((event) => event.title)).toEqual([
+      "OpenAI's InstructGPT Learns to Follow Instructions",
+      "OpenAI Releases DALL-E 2",
+      "Stable Diffusion Public Release",
+      "U.S. Restricts AI Chip Exports to China",
       "Anthropic Releases Claude",
       "Meta Releases Llama 2",
       "President Biden's Executive Order on AI",
@@ -174,6 +180,7 @@ describe("data/timeline-events.json", () => {
     })
 
     expect(fullSizeByBusyYear).toEqual([
+      [2022, 5],
       [2023, 5],
       [2024, 5],
       [2025, 5],
