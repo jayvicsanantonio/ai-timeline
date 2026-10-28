@@ -15,6 +15,10 @@ pnpm lint             # Run ESLint checks
 pnpm type-check       # Run tsc --noEmit
 pnpm test             # Vitest: unit (tests/unit) and integration (tests/integration) tests in headless Chromium
 pnpm test:e2e         # Playwright end-to-end tests (tests/e2e) against `next build && next start` on E2E_PORT (default 3100)
+
+# Cloudflare Workers
+pnpm preview          # Build the Worker with OpenNext and serve it locally in workerd
+pnpm run deploy       # Build the Worker with OpenNext and deploy it; bare `pnpm deploy` is pnpm's own command
 ```
 
 - Run a single test file: `pnpm exec vitest run tests/unit/timeline-events.test.ts` or `pnpm exec playwright test tests/e2e/timeline.spec.ts`
@@ -90,8 +94,9 @@ The application uses React's built-in state management with no external state li
 - `next.config.mjs` pins `outputFileTracingRoot` to the project directory, so file tracing works even when the checkout sits inside another one
 - `eslint.config.mjs` is a flat config that extends `next` through `FlatCompat`, and ignores `.claude/` so nested worktrees are not linted
 - `tsconfig.json` runs strict mode with `moduleResolution: bundler`, and maps `@/*` to the project root
-- `pnpm-workspace.yaml` keeps install scripts off for packages whose prebuilt binaries are used, and raises next's copy of postcss to a patched release
+- `pnpm-workspace.yaml` keeps install scripts off for packages whose prebuilt binaries are used, and raises next's copy of postcss to a patched release. CI's pnpm 11 fails the install on any dependency whose install script is not listed there, so list a new one as `true` or `false`
 - `.github/workflows/ci.yml` runs the type check, lint, Vitest and Playwright suites on every pull request and push to main
+- Vercel and Cloudflare Workers both deploy each push to main. Vercel runs `next build`, so `pnpm build` stays plain `next build`. Workers Builds runs `npx opennextjs-cloudflare build`, which bundles that build into a Worker in `.open-next/` through OpenNext (`open-next.config.ts`), then `npx opennextjs-cloudflare deploy`; `npx wrangler deploy` hands off to the same command. `wrangler.jsonc` names the Worker `ai-timeline`, matching the dashboard. Without it, every Workers build reconfigures the project from scratch. Every page is prerendered, so the Worker needs no bindings beyond its assets, and `public/_headers` lets browsers cache `/_next/static` for a year
 
 ### Development Notes
 
