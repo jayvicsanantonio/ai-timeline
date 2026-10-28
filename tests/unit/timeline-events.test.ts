@@ -111,6 +111,43 @@ describe("data/timeline-events.json", () => {
     expect(sharedLinks).toEqual([])
   })
 
+  test("gives every event its own title", () => {
+    const titles = timelineData.map((event) => event.title.toLowerCase())
+    expect(titles.filter((title, index) => titles.indexOf(title) !== index)).toEqual([])
+  })
+
+  // The same story added twice under a new title and link, like a second "Hebb" or "SNARC" card, passes the
+  // tests above. Before 2020 an era holds a few events a year, so two events at most a year apart whose
+  // titles alone share a name are one story told twice, unless approved here. From 2020 on, sequels such as
+  // DALL-E 2 or Sora 2 share names with their first versions all the time, so the check stops there.
+  test("tells no story twice before 2020", () => {
+    const earlyEvents = timelineData.filter((event) => event.year < 2020)
+    const words = (title: string) =>
+      new Set(
+        (title.toLowerCase().match(/[a-z0-9][a-z0-9.-]*[a-z0-9]/g) ?? []).filter(
+          (word) => word.length >= 4 && word !== "breakthrough",
+        ),
+      )
+    const titleCounts = new Map<string, number>()
+    for (const event of timelineData) {
+      for (const word of words(event.title)) {
+        titleCounts.set(word, (titleCounts.get(word) ?? 0) + 1)
+      }
+    }
+
+    const sameStory = earlyEvents.flatMap((event, index) =>
+      earlyEvents
+        .slice(index + 1)
+        .filter(
+          (other) =>
+            Math.abs(other.year - event.year) <= 1 &&
+            [...words(event.title)].some((word) => words(other.title).has(word) && titleCounts.get(word) === 2),
+        )
+        .map((other) => `${event.title} / ${other.title}`),
+    )
+    expect(sameStory).toEqual(["AlphaGo Defeats Lee Sedol / AlphaGo Zero"])
+  })
+
   test("marks the approved turning points as landmarks, and nothing else", () => {
     const landmarks = timelineData.filter((event) => "landmark" in event)
 
