@@ -152,11 +152,11 @@ describe("data/timeline-events.json", () => {
       "Anthropic Releases Claude Code in Research Preview",
       "OpenAI Releases GPT-5",
       "Google Releases Gemini 3",
+      "Anthropic Launches Project Glasswing with Claude Mythos Preview",
       "Google Unveils Gemini 3.5 at I/O",
       "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
       "Anthropic Releases Claude Opus 5",
       "OpenAI Releases GPT-6 Astra",
-      "OpenAI Claims a Navier–Stokes Proof",
     ])
     expect(highlights.every((event) => (event as { highlight?: unknown }).highlight === true)).toBe(true)
     expect(highlights.filter((event) => "landmark" in event)).toEqual([])

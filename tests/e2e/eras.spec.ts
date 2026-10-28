@@ -254,7 +254,7 @@ test("shows a busy year in full from its Show all button", async ({ page }) => {
   await page.goto("/")
   await waitForHydration(page)
 
-  const button = page.getByRole("button", { name: "Show all 64 in full" })
+  const button = page.getByRole("button", { name: "Show all 40 in full" })
   await expect(async () => {
     await button.click()
     await expect(button).toHaveAttribute("aria-pressed", "true", { timeout: 1000 })
