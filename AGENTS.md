@@ -25,7 +25,7 @@ pnpm run deploy       # Build the Worker with OpenNext and deploy it; bare `pnpm
 - Lint a single file: `pnpm exec eslint path/to/file.tsx`
 - Both test suites need Playwright's Chromium: `pnpm exec playwright install chromium`
 
-Note: This project uses pnpm for package management. `pnpm build` fails on TypeScript or ESLint errors.
+Note: This project uses pnpm for package management, at the version `packageManager` pins in `package.json`. CI and Workers Builds both install that version, so bump it there and nowhere else; Workers Builds otherwise falls back to pnpm 9, which rejects a `pnpm-workspace.yaml` without a `packages` list. `pnpm build` fails on TypeScript or ESLint errors.
 
 ## Project Architecture
 
