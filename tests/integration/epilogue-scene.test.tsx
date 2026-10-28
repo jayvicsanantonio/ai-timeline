@@ -21,11 +21,11 @@ describe("EpilogueScene", () => {
   it("leaves an empty frame for the interface of the next era", () => {
     render(<EpilogueScene firstEraId="the-foundation-era" firstYear={1943} />)
 
-    expect(screen.getByText("Chapter 6")).toBeInTheDocument()
+    expect(screen.getByText("Chapter 7")).toBeInTheDocument()
     expect(screen.getByText("Interface not yet invented")).toBeInTheDocument()
   })
 
-  it("traces the five eras' colors in order up to the open slot for the next one", () => {
+  it("traces every era's color in order up to the open slot for the next one", () => {
     const { container } = render(<EpilogueScene firstEraId="the-foundation-era" firstYear={1943} />)
 
     const trail = container.querySelector("[data-era-trail]")!

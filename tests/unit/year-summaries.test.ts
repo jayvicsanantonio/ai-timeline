@@ -1,5 +1,5 @@
-// Unit tests for the one-sentence answers the chat thread gives to "What happened in {year}?".
-// They live in the data beside the events, and every year of the Generative AI Era with events needs one.
+// Unit tests for the one-sentence summaries of each year, which the chat thread gives to "What happened in {year}?"
+// and the agent reports for each year it researches. Every year of those two eras with events needs one.
 import { describe, expect, it } from "vitest"
 import timelineData from "@/data/timeline-events.json"
 import yearSummaryData from "@/data/year-summaries.json"
@@ -7,12 +7,18 @@ import { groupEventsByEra } from "@/lib/eras"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 import { yearSummary } from "@/lib/year-summaries"
 
-const chatEra = groupEventsByEra(parseTimelineEvents(timelineData)).find((era) => era.interface === "chat")!
-const chatYears = [...new Set(chatEra.events.map((event) => event.year))]
+const summarizedYears = [
+  ...new Set(
+    groupEventsByEra(parseTimelineEvents(timelineData))
+      .filter((era) => era.interface === "chat" || era.interface === "agent")
+      .flatMap((era) => era.events.map((event) => event.year)),
+  ),
+]
 
 describe("the year summaries data", () => {
-  it("answers every year of the chat thread, and only those, once each and in order", () => {
-    expect(yearSummaryData.map(({ year }) => year)).toEqual(chatYears)
+  it("sums up every year of the chat thread and the agent's task log, and only those, once each and in order", () => {
+    expect(summarizedYears).toEqual([2020, 2021, 2022, 2023, 2024, 2025, 2026])
+    expect(yearSummaryData.map(({ year }) => year)).toEqual(summarizedYears)
   })
 
   it("answers each year in one short sentence", () => {

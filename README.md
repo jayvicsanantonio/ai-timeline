@@ -9,15 +9,15 @@ _An interactive, cinematic exploration of AI's evolution from 1943 to October 20
 
 ## Overview
 
-This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **343 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
+This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **344 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
-- **Comprehensive Dataset**: 343 meticulously researched AI milestones with verified sources
-- **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook and a chat thread
+- **Comprehensive Dataset**: 344 meticulously researched AI milestones with verified sources
+- **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook, a chat thread and an agent's task log
 - **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–5 and /
 - **Landmarks and Sources**: Twenty turning points stand out in every era, and each card names the site its link opens
-- **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread sums up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
+- **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread and the agent's task log sum up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
 - **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
 - **Accessibility First**: A skip link, full keyboard access, visible focus rings and reduced motion support
 - **Performance Optimized**: Scroll-driven CSS animations instead of a JavaScript observer per card, and one scroll measurement per frame for the navigation
@@ -45,7 +45,8 @@ components/
 │   ├── terminal-era.tsx     # Knowledge Era: green-phosphor terminal
 │   ├── desktop-era.tsx      # Learning Era: beveled desktop windows
 │   ├── notebook-era.tsx     # Deep Learning Revolution: research notebook cells
-│   └── chat-era.tsx         # Generative AI Era: chat thread
+│   ├── chat-era.tsx         # Generative AI Era: chat thread
+│   └── agent-era.tsx        # Agentic Era: an agent's task log
 ├── timeline/                # Timeline-wide UI
 │   ├── timeline-controls.tsx    # Search box and category filters
 │   ├── timeline-navigation.tsx  # Chapter rail and phone bar
@@ -59,7 +60,7 @@ components/
 ### Data Management
 
 - **Structured Timeline Events**: TypeScript interfaces for type safety
-- **Era-based Grouping**: Foundation, Knowledge, Learning, Deep Learning Revolution, and Generative AI eras
+- **Era-based Grouping**: Foundation, Knowledge, Learning, Deep Learning Revolution, Generative AI and Agentic eras
 - **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents
 
 ## Getting Started
@@ -112,7 +113,7 @@ Both test commands need Playwright's Chromium; install it once with `pnpm exec p
 
 - **Timeline Navigation**: A rail with the current year, an events-per-year chart and a button per era; a compact bar on phones
 - **Search and Category Filters**: Narrow every era at once, with a live count of the events shown
-- **Keyboard Shortcuts**: J and K step between events, 1 to 5 jump to an era, / focuses search
+- **Keyboard Shortcuts**: J and K step between events, 1 to 6 jump to an era, / focuses search
 - **Responsive Timeline**: Adapts layout for different screen sizes
 
 ### Accessibility Features
@@ -132,7 +133,7 @@ Both test commands need Playwright's Chromium; install it once with `pnpm exec p
 ### Sources and Checks
 
 - **Source Attribution**: Every event links to its source, and each card names the site the link opens
-- **Curated Lists**: Unit tests pin the landmark and highlight lists, and require a summary for every Generative AI year that has events
+- **Curated Lists**: Unit tests pin the landmark and highlight lists, and require a summary for every Generative AI and Agentic year that has events
 
 ### Data Structure
 
@@ -154,7 +155,7 @@ interface TimelineEvent {
     | 'Agents';
   link: string;
   landmark?: boolean; // One of the turning points every era sets apart
-  highlight?: boolean; // Kept in full in a busy year's chat thread
+  highlight?: boolean; // Kept in full in a busy year of the chat thread or the agent's log
 }
 ```
 
@@ -165,7 +166,7 @@ interface TimelineEvent {
 ### Animation System
 
 - **Scroll-driven Reveals**: Event cards rise into place as they scroll into view
-- **Era Details**: A blinking terminal caret, a filling progress bar and chat typing dots
+- **Era Details**: A blinking terminal caret, a filling progress bar, chat typing dots and the agent's spinner
 - **Reduced Motion**: Every animation is off when the reader prefers reduced motion
 
 ### Custom Hooks
@@ -210,7 +211,7 @@ This project demonstrates:
 
 ## At a Glance
 
-- **343 Events**: Comprehensive historical coverage
+- **344 Events**: Comprehensive historical coverage
 - **Mobile-First**: Responsive across all devices
 
 ---

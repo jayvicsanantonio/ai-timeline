@@ -17,15 +17,15 @@ function makeEvent(year: number, category: TimelineCategory): TimelineEvent {
   }
 }
 
-// 9 events: 2 in the Learning Era, 1 in the Deep Learning Revolution and 6 in the Generative AI Era;
-// 4 Research Breakthroughs, 3 Companies & Investments and 2 Ethics & Policy.
+// 9 events: 2 in the Learning Era, 2 in the Deep Learning Revolution, 3 in the Generative AI Era and 2 in the
+// Agentic Era; 4 Research Breakthroughs, 3 Companies & Investments and 2 Ethics & Policy.
 const events = [
   makeEvent(1998, "Research Breakthroughs"),
   makeEvent(2005, "Research Breakthroughs"),
+  makeEvent(2012, "Ethics & Policy"),
   makeEvent(2015, "Companies & Investments"),
   makeEvent(2020, "Ethics & Policy"),
-  makeEvent(2024, "Companies & Investments"),
-  makeEvent(2024, "Ethics & Policy"),
+  makeEvent(2022, "Companies & Investments"),
   makeEvent(2024, "Research Breakthroughs"),
   makeEvent(2025, "Research Breakthroughs"),
   makeEvent(2026, "Companies & Investments"),
@@ -43,24 +43,34 @@ describe("TimelineInsights", () => {
     expect(titles).toEqual(["Era Over Era", "Most Common Milestone", "Industry Momentum", "Societal Impact"])
   })
 
-  it("compares the latest era's events with the era before it", () => {
+  // Eras differ in length, so the tile compares how many events each holds a year
+  it("compares the latest era's events a year with the era before it", () => {
     render(<TimelineInsights events={events} />)
 
-    expect(labelFor("6×")).toHaveTextContent("6 events in the Generative AI Era, against 1 in the Deep Learning Revolution")
+    expect(labelFor("1.7×")).toHaveTextContent("1 event a year in the Agentic Era, against 0.6 in the Generative AI Era")
   })
 
-  it("rounds the era multiple to one decimal place", () => {
-    const deepLearning = [2012, 2015, 2018].map((year) => makeEvent(year, "Research Breakthroughs"))
-    const generative = [2020, 2021, 2022, 2023, 2024, 2025, 2026].map((year) => makeEvent(year, "Public Releases"))
-    render(<TimelineInsights events={[...deepLearning, ...generative]} />)
+  it("rounds the era multiple and the yearly rates to one decimal place", () => {
+    const generative = [2020, 2022, 2024].map((year) => makeEvent(year, "Research Breakthroughs"))
+    const agentic = [2025, 2025, 2026, 2026, 2026, 2026, 2026].map((year) => makeEvent(year, "Agents"))
+    render(<TimelineInsights events={[...generative, ...agentic]} />)
 
-    expect(labelFor("2.3×")).toHaveTextContent("7 events in the Generative AI Era, against 3 in the Deep Learning Revolution")
+    expect(labelFor("5.8×")).toHaveTextContent("3.5 events a year in the Agentic Era, against 0.6 in the Generative AI Era")
+  })
+
+  // The latest era is still under way, so the years it has not reached yet would dilute its rate
+  it("counts the latest era's years only up to its latest event", () => {
+    const generative = [2020, 2021, 2022, 2023, 2024].map((year) => makeEvent(year, "Public Releases"))
+    const agentic = [2025, 2025].map((year) => makeEvent(year, "Agents"))
+    render(<TimelineInsights events={[...generative, ...agentic]} />)
+
+    expect(labelFor("2×")).toHaveTextContent("2 events a year in the Agentic Era, against 1 in the Generative AI Era")
   })
 
   it("shows a dash instead of a multiple when the era before the latest has no events", () => {
-    render(<TimelineInsights events={[makeEvent(2024, "Agents")]} />)
+    render(<TimelineInsights events={[makeEvent(2025, "Agents")]} />)
 
-    expect(labelFor("—")).toHaveTextContent("1 event in the Generative AI Era, against 0 in the Deep Learning Revolution")
+    expect(labelFor("—")).toHaveTextContent("1 event a year in the Agentic Era, against 0 in the Generative AI Era")
   })
 
   it("names the most common kind of milestone", () => {

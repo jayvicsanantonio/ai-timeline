@@ -9,6 +9,7 @@ const ERA_TITLES = [
   "The Learning Era",
   "The Deep Learning Revolution",
   "The Generative AI Era",
+  "The Agentic Era",
 ]
 
 const EVENT_LINKS = 'h3 a[target="_blank"]'

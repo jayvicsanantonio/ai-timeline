@@ -3,7 +3,7 @@
 "use client"
 
 import { Lightbulb, TrendingUp, Users, Zap } from "lucide-react"
-import { groupEventsByEra } from "@/lib/eras"
+import { groupEventsByEra, type Era } from "@/lib/eras"
 import { countEventsByCategory } from "@/lib/timeline-filter"
 import { TIMELINE_CATEGORIES, type TimelineEvent } from "@/types/timeline"
 
@@ -11,14 +11,25 @@ interface TimelineInsightsProps {
   events: TimelineEvent[]
 }
 
-function countLabel(count: number) {
-  return `${count} ${count === 1 ? "event" : "events"}`
+function oneDecimal(value: number) {
+  return Math.round(value * 10) / 10
 }
 
-// How many times more events the latest era has than the one before it, to one decimal place.
+// Events a year across an era's years. The latest era is still under way, so its years run only up to its
+// latest event, and the years it has not reached yet do not dilute its rate.
+function eventsPerYear(era: Era, isLatest: boolean) {
+  const lastYear = isLatest && era.events.length > 0 ? Math.max(...era.events.map((event) => event.year)) + 1 : era.range[1]
+  return era.events.length / (lastYear - era.range[0])
+}
+
+// How many times more events a year the latest era has than the one before it, to one decimal place.
 // A dash stands in when the era before has no events to compare against.
 function formatMultiple(latest: number, previous: number) {
-  return previous > 0 ? `${Math.round((latest / previous) * 10) / 10}×` : "—"
+  return previous > 0 ? `${oneDecimal(latest / previous)}×` : "—"
+}
+
+function rateLabel(rate: number) {
+  return `${oneDecimal(rate)} ${rate === 1 ? "event" : "events"} a year`
 }
 
 // The category with the most events. On a tie, the category listed first in TIMELINE_CATEGORIES wins.
@@ -32,6 +43,8 @@ function getInsights(events: TimelineEvent[]) {
   const eras = groupEventsByEra(events)
   const latest = eras[eras.length - 1]
   const previous = eras[eras.length - 2]
+  const latestRate = eventsPerYear(latest, true)
+  const previousRate = eventsPerYear(previous, false)
   const counts = countEventsByCategory(events)
   const mostCommon = findMostCommonCategory(counts)
 
@@ -40,9 +53,9 @@ function getInsights(events: TimelineEvent[]) {
       id: "era-over-era",
       icon: TrendingUp,
       title: "Era Over Era",
-      description: "How the newest era of AI compares, by number of milestones, with the era that made it possible.",
-      stat: formatMultiple(latest.events.length, previous.events.length),
-      statLabel: `${countLabel(latest.events.length)} in the ${latest.label}, against ${previous.events.length} in the ${previous.label}`,
+      description: "How the newest era of AI compares, in milestones a year, with the era that made it possible.",
+      stat: formatMultiple(latestRate, previousRate),
+      statLabel: `${rateLabel(latestRate)} in the ${latest.label}, against ${oneDecimal(previousRate)} in the ${previous.label}`,
     },
     {
       id: "most-common",

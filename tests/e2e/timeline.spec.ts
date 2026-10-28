@@ -109,16 +109,18 @@ test("jumps to a year's first event from its bar in the opening chart, as the ch
   }).toPass({ timeout: 15_000 })
 })
 
-test("compares the Generative AI Era with the decade before it in Timeline Insights, from the real events", async ({ page }) => {
-  const latest = timelineData.filter((event) => event.year >= 2020).length
-  const previous = timelineData.filter((event) => event.year >= 2010 && event.year < 2020).length
+test("compares the Agentic Era's events a year with the Generative AI Era's in Timeline Insights, from the real events", async ({ page }) => {
+  const latest = timelineData.filter((event) => event.year >= 2025)
+  const latestRate = latest.length / (Math.max(...latest.map((event) => event.year)) - 2025 + 1)
+  const previousRate = timelineData.filter((event) => event.year >= 2020 && event.year < 2025).length / 5
+  const oneDecimal = (value: number) => Math.round(value * 10) / 10
 
   await page.goto("/")
 
   const statLabel = page.getByText(
-    `${latest} events in the Generative AI Era, against ${previous} in the Deep Learning Revolution`,
+    `${oneDecimal(latestRate)} events a year in the Agentic Era, against ${oneDecimal(previousRate)} in the Generative AI Era`,
     { exact: true },
   )
   await statLabel.scrollIntoViewIfNeeded()
-  await expect(statLabel.locator("xpath=preceding-sibling::div[1]")).toHaveText(`${Math.round((latest / previous) * 10) / 10}×`)
+  await expect(statLabel.locator("xpath=preceding-sibling::div[1]")).toHaveText(`${oneDecimal(latestRate / previousRate)}×`)
 })

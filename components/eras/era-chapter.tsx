@@ -4,6 +4,7 @@
 
 import type { ComponentType } from 'react';
 import type { Era, EraInterface } from '@/lib/eras';
+import { AgentEra } from './agent-era';
 import { ChatEra } from './chat-era';
 import { DesktopEra } from './desktop-era';
 import { eraHeadingId, type EraInterfaceProps } from './era-parts';
@@ -17,6 +18,7 @@ const ERA_INTERFACE_COMPONENTS: Record<EraInterface, ComponentType<EraInterfaceP
   desktop: DesktopEra,
   notebook: NotebookEra,
   chat: ChatEra,
+  agent: AgentEra,
 };
 
 interface EraChapterProps {

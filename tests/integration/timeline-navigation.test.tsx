@@ -89,6 +89,7 @@ describe("TimelineNavigation on a wide screen", () => {
       "Chapter 3: Learning Era",
       "Chapter 4: Deep Learning Revolution",
       "Chapter 5: Generative AI Era",
+      "Chapter 6: Agentic Era",
     ])
     expect(buttons[0]).toHaveAttribute("aria-current", "location")
   })
@@ -160,7 +161,7 @@ describe("TimelineNavigation on a phone", () => {
     const phoneNav = toggle().closest("nav")!
     expect(toggle()).toHaveAttribute("aria-expanded", "false")
     expect(toggle()).toHaveTextContent("Foundation Era")
-    expect(toggle()).toHaveTextContent("01 / 05")
+    expect(toggle()).toHaveTextContent("01 / 06")
     expect(within(phoneNav).getAllByRole("button")).toEqual([toggle()])
   })
 
@@ -188,7 +189,7 @@ describe("TimelineNavigation on a phone", () => {
     expect(toggle()).toHaveAttribute("aria-expanded", "false")
     expect(chapterListOf(toggle())).toBeNull()
     await expect.poll(() => toggle().textContent).toContain("Learning Era")
-    await expect.poll(() => toggle().textContent).toContain("03 / 05")
+    await expect.poll(() => toggle().textContent).toContain("03 / 06")
   })
 
   it("lets the Tab key move from the bar into the opened chapter list", async () => {

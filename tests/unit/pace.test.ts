@@ -39,12 +39,12 @@ describe("describePace", () => {
     expect(describePace(eventsIn(2010, 2011), 2020)).toBeNull()
   })
 
-  it("finds 209 events in the 7 years from 2020, 17 times the yearly pace of the 77 years before", () => {
+  it("finds 199 events in the 7 years from 2020, 15 times the yearly pace of the 77 years before", () => {
     expect(describePace(parseTimelineEvents(timelineData), 2020)).toEqual({
       years: 7,
-      events: 209,
+      events: 199,
       yearsBefore: 77,
-      multiple: 17,
+      multiple: 15,
     })
   })
 })

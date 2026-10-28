@@ -1,12 +1,13 @@
-// Pieces every era interface shares: its props, the heading id, the event count, card attributes, the event title and the year column.
+// Pieces every era interface shares: its props, the heading id, the event count, card attributes, the event title, the year column
+// and a busy year's brief listing.
 // The title's link stretches over its whole event card, so a click anywhere on the card opens the source.
 'use client';
 
-import { useId, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import type { Era } from '@/lib/eras';
 import { eventAnchorId, eventSource } from '@/lib/event-format';
 import { yearsSincePreviousEvent } from '@/lib/year-gaps';
-import type { YearGroup } from '@/lib/year-groups';
+import { isBusyYear, type YearGroup } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import { cn } from '@/lib/utils';
 
@@ -138,6 +139,20 @@ export function YearColumn({ group, className, children }: YearColumnProps) {
       </div>
     </div>
   );
+}
+
+// A busy year lists its events in brief, apart from its landmarks and highlights, and its Show all button
+// turns every brief event into a full one and back. While the reader filters, every match shows in full.
+export function useBriefListing(group: YearGroup, filtering: boolean) {
+  const [showAll, setShowAll] = useState(false);
+  const offersShowAll = !filtering && isBusyYear(group.events);
+
+  return {
+    offersShowAll,
+    showAll,
+    toggleShowAll: () => setShowAll((shown) => !shown),
+    inBrief: (event: TimelineEvent) => offersShowAll && !showAll && !event.landmark && !event.highlight,
+  };
 }
 
 interface CompactEraTextProps extends EraInterfaceProps {

@@ -63,8 +63,8 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
           <figcaption className="mt-6 flex flex-col gap-3 text-sm leading-6 text-zinc-400 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
             {latestEra ? (
               <p>
-                Events per year. {latestEra.events.length} of the {totalEvents} events happened in the{' '}
-                {latestEra.range[0]}s.{' '}
+                Events per year. {latestEra.events.length} of the {totalEvents} events happened since{' '}
+                {latestEra.range[0]}.{' '}
                 {/* The bars answer only the pointer, so assistive technology skips this with the chart */}
                 <span aria-hidden="true">Click a bar to jump to that year.</span>
               </p>
@@ -75,7 +75,7 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
 
         <ol
           aria-label="Eras"
-          className="prologue-rise -mx-4 mt-16 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 [animation-delay:320ms] [scrollbar-width:none] sm:mx-0 sm:scroll-px-0 sm:px-0 lg:grid lg:grid-cols-5 lg:overflow-visible"
+          className="prologue-rise -mx-4 mt-16 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 [animation-delay:320ms] [scrollbar-width:none] sm:mx-0 sm:scroll-px-0 sm:px-0 lg:grid lg:grid-cols-6 lg:overflow-visible"
         >
           {eras.map((era) => (
             <li key={era.id} className="w-[15.5rem] shrink-0 snap-start lg:w-auto">
@@ -156,18 +156,22 @@ function EraAxis({ eras, activity }: { eras: Era[]; activity: YearActivity[] }) 
   const lastYear = activity[activity.length - 1].year;
 
   return (
-    <div aria-hidden="true" className="mt-2 flex gap-[2px]">
+    <div aria-hidden="true" data-era-axis="" className="mt-2 flex gap-[2px]">
       {eras.map((era, index) => {
         const start = Math.max(era.range[0], firstYear);
         const end = Math.min(era.range[1] - 1, lastYear);
         const isLast = index === eras.length - 1;
+        // An era of only a few years has room for its first year on a wide screen, and never for its name
+        const isShort = end - start + 1 < 8;
 
         return (
           <div key={era.id} className="min-w-0" style={{ flexGrow: end - start + 1, flexBasis: 0 }}>
             <div className="h-0.5 rounded-full" style={{ backgroundColor: era.color }} />
             <div className={cn('mt-2 flex items-baseline gap-1.5 text-xs', isLast && 'justify-end')}>
-              <span className="font-mono tabular-nums text-zinc-500">{isLast ? lastYear : start}</span>
-              <span className="hidden truncate text-zinc-300 md:inline">{isLast ? '' : era.label}</span>
+              <span className={cn('font-mono tabular-nums text-zinc-500', isShort && !isLast && 'hidden lg:inline')}>
+                {isLast ? lastYear : start}
+              </span>
+              <span className="hidden truncate text-zinc-300 md:inline">{isLast || isShort ? '' : era.label}</span>
             </div>
           </div>
         );

@@ -1,5 +1,5 @@
 // Integration tests for StoryEngine with the real timeline data in Chromium.
-// Covers the five era interfaces in order, searching and filtering across every era, and the keyboard shortcuts.
+// Covers the six era interfaces in order, searching and filtering across every era, and the keyboard shortcuts.
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 import { userEvent } from "vitest/browser"
@@ -27,7 +27,7 @@ describe("StoryEngine", () => {
     const interfaces = ERA_DEFINITIONS.map(
       (era) => screen.getByRole("region", { name: era.name }).dataset.interface,
     )
-    expect(interfaces).toEqual(["punch-card", "terminal", "desktop", "notebook", "chat"])
+    expect(interfaces).toEqual(["punch-card", "terminal", "desktop", "notebook", "chat", "agent"])
     expect(eventCards()).toHaveLength(events.length)
   })
 
@@ -92,12 +92,12 @@ describe("StoryEngine", () => {
 
     const paceLine = container.querySelector("[data-pace-line]")!
     expect(paceLine).toHaveTextContent(
-      "The next 7 years hold 209 events, 17 times the yearly pace of the 77 years before them.",
+      "The next 2 years hold 87 events, 14 times the yearly pace of the 82 years before them.",
     )
-    const deepLearning = screen.getByRole("region", { name: "The Deep Learning Revolution" })
     const generative = screen.getByRole("region", { name: "The Generative AI Era" })
-    expect(deepLearning.compareDocumentPosition(paceLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(paceLine.compareDocumentPosition(generative) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const agentic = screen.getByRole("region", { name: "The Agentic Era" })
+    expect(generative.compareDocumentPosition(paceLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(paceLine.compareDocumentPosition(agentic) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it("leaves the pace line out while the reader filters", async () => {

@@ -69,7 +69,7 @@ for (const [device, viewport] of Object.entries({ phone: PHONE, tablet: TABLET, 
         return tops
       })
 
-      expect(toolbarTops).toEqual([0, 0, 0, 0, 0])
+      expect(toolbarTops).toEqual([0, 0, 0, 0, 0, 0])
     })
   })
 }
@@ -133,7 +133,7 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
     const toggle = nav.getByRole("button", { name: /current era/i })
     await expect(toggle).toHaveAttribute("aria-expanded", "false")
     await expect(toggle).toContainText("Foundation Era")
-    await expect(toggle).toContainText("01 / 05")
+    await expect(toggle).toContainText("01 / 06")
   })
 
   test("opens the chapter list from the bar and closes it on a second tap", async ({ page }) => {
@@ -145,7 +145,7 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
     await toggle.click()
     await expect(toggle).toHaveAttribute("aria-expanded", "true")
     const chapterList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
-    await expect(chapterList.getByRole("button")).toHaveCount(5)
+    await expect(chapterList.getByRole("button")).toHaveCount(6)
 
     await toggle.click()
     await expect(toggle).toHaveAttribute("aria-expanded", "false")
@@ -167,7 +167,7 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
     await expect.poll(learningEraTop).toBeLessThan(150)
     expect(await learningEraTop()).toBeGreaterThanOrEqual(0)
     await expect(toggle).toContainText("Learning Era")
-    await expect(toggle).toContainText("03 / 05")
+    await expect(toggle).toContainText("03 / 06")
     expect((await nav.boundingBox())!.height).toBeLessThanOrEqual(MAX_PHONE_NAV_HEIGHT)
   })
 

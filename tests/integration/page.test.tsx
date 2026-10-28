@@ -11,6 +11,7 @@ const ERA_TITLES = [
   "The Learning Era",
   "The Deep Learning Revolution",
   "The Generative AI Era",
+  "The Agentic Era",
 ]
 
 describe("AITimelinePage", () => {

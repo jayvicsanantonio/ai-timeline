@@ -158,6 +158,7 @@ describe("data/timeline-events.json", () => {
       "Rosenblatt's Perceptron",
       "The First AI Winter Begins",
       "Backpropagation Popularized",
+      "The Second AI Winter Begins",
       "IBM Deep Blue Defeats Garry Kasparov",
       "ImageNet Database Created",
       "ImageNet Breakthrough",
