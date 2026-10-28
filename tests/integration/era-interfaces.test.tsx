@@ -227,7 +227,8 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
 
   // One era's backdrop meets the next in the page's black, so moving between eras dissolves instead of cutting
   it("fades its backdrop into the page's black at the top and bottom, with or without matches", () => {
-    const seam = /^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\), /
+    // The seam comes first, whether other layers follow it or it is the only one
+    const seam = /^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\)(, |$)/
 
     const full = renderEra(eraInterface)
     expect(getComputedStyle(full.section.firstElementChild!).backgroundImage).toMatch(seam)
@@ -629,9 +630,88 @@ describe("the chat era", () => {
     expect(section.textContent).toMatch(/Handing the work to an agent$/)
   })
 
+  it("opens the thread under the assistant's model picker, a picture rather than a control", () => {
+    const { section } = renderEra("chat")
+
+    const picker = section.querySelector("[data-model-picker]")!
+    const heading = within(section).getByRole("heading", { level: 2 })
+    expect(picker.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(picker.closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it("answers each year's question in one reply that holds the year's summary and every one of its events", () => {
+    const { container } = renderEra("chat")
+
+    const replies = [...container.querySelectorAll<HTMLElement>("[data-year-reply]")]
+    const prompts = [...container.querySelectorAll("[data-year-prompt]")]
+    expect(replies.map((reply) => reply.dataset.yearReply)).toEqual(["2023", "2024"])
+    replies.forEach((reply, index) => {
+      expect(reply.querySelector("[data-year-summary]")).toHaveTextContent(yearSummary(Number(reply.dataset.yearReply))!)
+      expect(reply.querySelectorAll("article")).toHaveLength(
+        container.querySelectorAll(`article[data-year="${reply.dataset.yearReply}"]`).length,
+      )
+      expect(reply.contains(prompts[index])).toBe(false)
+      expect(prompts[index].compareDocumentPosition(reply) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    })
+  })
+
+  it("writes each event into the reply as a point of its own, boxing only the landmarks", () => {
+    const { section } = renderEra("chat")
+
+    for (const article of within(section).getAllByRole("article")) {
+      const style = getComputedStyle(article)
+      if (article.hasAttribute("data-landmark")) {
+        expect(parseFloat(style.borderTopWidth)).toBeGreaterThan(0)
+      } else {
+        expect(parseFloat(style.borderTopWidth)).toBe(0)
+        expect(style.backgroundColor).toBe("rgba(0, 0, 0, 0)")
+      }
+    }
+  })
+
+  it("follows each year's reply with icons to copy, rate and regenerate it, which are pictures rather than controls", () => {
+    const { container, section } = renderEra("chat")
+
+    const rows = [...container.querySelectorAll("[data-reply-actions]")]
+    expect(rows).toHaveLength(2)
+    const lastOf2023 = [...container.querySelectorAll('article[data-year="2023"]')].at(-1)!
+    const firstOf2024 = container.querySelector('article[data-year="2024"]')!
+    expect(lastOf2023.compareDocumentPosition(rows[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(rows[0].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    for (const row of rows) {
+      expect(row.closest('[aria-hidden="true"]')).not.toBeNull()
+      expect(row.querySelectorAll("svg")).toHaveLength(4)
+    }
+    expect(within(section).queryAllByRole("button")).toEqual([])
+  })
+
+  it("ends at the message box, typing the task it hands the next era, under the reminder that AI can make mistakes", () => {
+    const { era, section } = renderEra("chat")
+
+    const composer = section.querySelector("[data-composer]")!
+    expect(composer.querySelector("[data-composer-message]")).toHaveTextContent(
+      `Take it from here: research AI from ${era.range[1]} on, and keep going on your own.`,
+    )
+    expect(composer).toHaveTextContent("AI can make mistakes. Check important info.")
+    expect(composer.closest('[aria-hidden="true"]')).not.toBeNull()
+    const lastArticle = within(section).getAllByRole("article").at(-1)!
+    expect(lastArticle.compareDocumentPosition(composer) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it("writes the whole conversation in sans-serif, with no monospace anywhere", () => {
+    const { section } = renderEra("chat", busyYearIn(2024))
+
+    const monospaced = [...section.querySelectorAll("*")].filter((element) =>
+      getComputedStyle(element).fontFamily.includes("monospace"),
+    )
+    expect(monospaced).toEqual([])
+  })
+
   // Measured on the list items, which hold still while their messages' scroll reveal moves them
   it("keeps each month's divider close to its messages, 24px below what comes before and 12px above its first one", () => {
     const { container } = renderEra("chat")
+    // The dividers pin while scrolled past, so they are measured where they rest, with the page at its top
+    window.scrollTo(0, 0)
 
     const months = [...container.querySelectorAll<HTMLElement>("div[data-month]")]
     expect(months).toHaveLength(2)
@@ -695,11 +775,172 @@ describe("the agent era", () => {
     expect(container.querySelector("[data-year-summary]")).toBeNull()
   })
 
+  it("notes how many pages it read for each year and from how many sites, after the year's task", () => {
+    const { container } = renderEra("agent", [
+      { ...makeEvent(2025, "March", "First Step", "AI Tools"), link: "https://www.openai.com/first" },
+      { ...makeEvent(2025, "April", "Second Step", "AI Tools"), link: "https://openai.com/second" },
+      { ...makeEvent(2025, "May", "Third Step", "Agents"), link: "https://arxiv.org/third" },
+      makeEvent(2026, "January", "Fourth Step", "Agents"),
+    ])
+
+    const notes = [...container.querySelectorAll("[data-year-activity]")]
+    expect(notes.map((note) => note.textContent)).toEqual(["Read 3 pages from 2 sites", "Read 1 page from 1 site"])
+    const task2026 = container.querySelectorAll("[data-year-task]")[1]
+    const firstOf2026 = container.querySelector('article[data-year="2026"]')!
+    expect(task2026.compareDocumentPosition(notes[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(notes[1].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(notes[0].closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it("draws each step in full as a call that fetches its source, ahead of the step's date", () => {
+    const { section } = renderEra("agent")
+
+    for (const article of within(section).getAllByRole("article")) {
+      const call = article.querySelector("[data-tool-call]")!
+      expect(call).toHaveTextContent("Fetch(example.com)")
+      expect(call.compareDocumentPosition(article.querySelector("time")!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    }
+  })
+
+  it("boxes each landmark as a checkpoint, with its label set into the top edge of the box", () => {
+    const { section } = renderEra("agent")
+
+    const landmark = section.querySelector<HTMLElement>("article[data-landmark]")!
+    const box = landmark.getBoundingClientRect()
+    const label = within(landmark).getByText("Landmark").getBoundingClientRect()
+    expect(label.top).toBeLessThan(box.top)
+    expect(label.bottom).toBeGreaterThan(box.top)
+  })
+
+  // Measured on the list items' nodes, which hold still while their steps' scroll reveal moves them
+  it("strings each year's steps on one trace line, with a node on the line beside every full step and every batch", () => {
+    const { section } = renderEra("agent", busyYearIn(2025))
+
+    const traces = [...section.querySelectorAll<HTMLElement>("[data-trace]")]
+    expect(traces).toHaveLength(1)
+    for (const trace of traces) {
+      const line = trace.getBoundingClientRect().left + parseFloat(getComputedStyle(trace).borderLeftWidth) / 2
+      const nodes = [...trace.querySelectorAll("[data-trace-node]")]
+      expect(nodes).toHaveLength(
+        trace.querySelectorAll("article:not([data-brief])").length + trace.querySelectorAll("[data-batch]").length,
+      )
+      for (const node of nodes) {
+        const drawn = node.getBoundingClientRect()
+        expect(drawn.width).toBeGreaterThan(1)
+        expect((drawn.left + drawn.right) / 2).toBeCloseTo(line, 0)
+        expect(node.closest('[aria-hidden="true"]')).not.toBeNull()
+      }
+    }
+  })
+
+  it("frames the log in a console, under its title bar and over its status bar", () => {
+    const { section } = renderEra("agent")
+
+    const frame = section.querySelector("[data-console]")!
+    const titleBar = frame.querySelector("[data-console-title]")!
+    const statusBar = frame.querySelector("[data-console-status]")!
+    expect(frame).toContainElement(within(section).getByRole("heading", { level: 2 }))
+    for (const article of within(section).getAllByRole("article")) {
+      expect(titleBar.compareDocumentPosition(article) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(article.compareDocumentPosition(statusBar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    }
+    expect(titleBar.closest('[aria-hidden="true"]')).not.toBeNull()
+    expect(statusBar).toContainElement(section.querySelector<HTMLElement>("[data-agent-status]"))
+    expect(statusBar).toHaveTextContent("3 steps")
+  })
+
+  it("writes the whole console in monospace", () => {
+    const { section } = renderEra("agent", busyYearIn(2025))
+
+    const proportional = [...section.querySelectorAll("*")].filter(
+      (element) =>
+        element.children.length === 0 &&
+        element.textContent!.trim() !== "" &&
+        !getComputedStyle(element).fontFamily.includes("monospace"),
+    )
+    expect(proportional).toEqual([])
+  })
+
+  it("keeps the console and every step square-cornered, as a terminal draws its boxes", () => {
+    const { section } = renderEra("agent")
+
+    const boxes = [section.querySelector("[data-console]")!, ...within(section).getAllByRole("article")]
+    for (const box of boxes) {
+      expect(parseFloat(getComputedStyle(box).borderTopLeftRadius)).toBeLessThanOrEqual(2)
+    }
+  })
+
+  it("fills a twelve-month progress bar beside each year, to its latest month while the year is still running", () => {
+    const { section } = renderEra("agent")
+
+    const [done, running] = yearColumns(section).map((column) => column.querySelector<HTMLElement>("[data-year-progress]")!)
+    expect(done).toHaveTextContent("12/12 mo")
+    expect(done.querySelectorAll("[data-month-cell]")).toHaveLength(12)
+    expect(done.querySelectorAll("[data-month-cell][data-filled]")).toHaveLength(12)
+    expect(running).toHaveTextContent("9/12 mo")
+    expect(running.querySelectorAll("[data-month-cell][data-filled]")).toHaveLength(9)
+  })
+
+  it("gathers each run of collapsed steps under one task that fetches them in parallel", () => {
+    const { section } = renderEra("agent", busyYearIn(2025))
+
+    const batches = [...section.querySelectorAll("[data-batch]")]
+    expect(batches.map((batch) => batch.textContent)).toEqual(["2 fetches in parallel", "10 fetches in parallel"])
+    const firstOfEachRun = ["Release 2", "Release 5"].map((title) => within(section).getByRole("link", { name: title }))
+    batches.forEach((batch, index) => {
+      expect(batch.compareDocumentPosition(firstOfEachRun[index]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(batch.closest('[aria-hidden="true"]')).not.toBeNull()
+    })
+    expect(within(section).getByRole("link", { name: "Release 4" }).compareDocumentPosition(batches[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it("calls a run of one collapsed step a single fetch, not a parallel one", () => {
+    // The third release stays in full too, leaving the second alone between full steps
+    const events = busyYearIn(2025).map((event, index) => (index === 2 ? { ...event, highlight: true } : event))
+    const { section } = renderEra("agent", events)
+
+    const batches = [...section.querySelectorAll("[data-batch]")]
+    expect(batches.map((batch) => batch.textContent)).toEqual(["1 fetch", "10 fetches in parallel"])
+  })
+
+  it("asks at each landmark whether to mark a turning point, with yes chosen", () => {
+    const { section } = renderEra("agent")
+
+    const prompts = [...section.querySelectorAll("[data-checkpoint-prompt]")]
+    expect(prompts).toHaveLength(1)
+    expect(prompts[0].closest("article")).toHaveAttribute("data-landmark")
+    expect(prompts[0]).toHaveTextContent("Mark as a turning point?")
+    expect(prompts[0].querySelector("[data-chosen]")).toHaveTextContent("Yes")
+    expect(prompts[0].closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it("closes each finished year by writing up its events, and leaves the running year open", () => {
+    const { container } = renderEra("agent")
+
+    const writes = [...container.querySelectorAll("[data-year-write]")]
+    expect(writes).toHaveLength(1)
+    expect(writes[0]).toHaveTextContent("Write(ai-2025.md)")
+    expect(writes[0]).toHaveTextContent("+2 events · 1 landmark")
+    const lastOf2025 = [...container.querySelectorAll('article[data-year="2025"]')].at(-1)!
+    const firstOf2026 = container.querySelector('article[data-year="2026"]')!
+    expect(lastOf2025.compareDocumentPosition(writes[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(writes[0].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(writes[0].closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
   it("ends the log still working on the story", () => {
     const { section } = renderEra("agent")
 
     expect(section.textContent).toMatch(/The story is still being written$/)
     expect(section.querySelector("[data-agent-spinner]")!.closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it("shimmers its closing status while motion is allowed, as agents do while they work", () => {
+    const { section } = renderEra("agent")
+
+    const status = section.querySelector("[data-agent-status]")!
+    expect(status).toHaveTextContent("The story is still being written")
+    expect(getComputedStyle(status).animationName).toBe("agent-shimmer")
   })
 })
 

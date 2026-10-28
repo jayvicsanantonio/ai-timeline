@@ -104,11 +104,20 @@ function ChatPreview() {
       <div className="ml-auto h-4 w-1/2 rounded-full bg-[#2a2a33]" />
       <div className="flex gap-2">
         <span className="size-4 shrink-0 rounded-full bg-[#9085e9]" />
-        <div className="flex-1 space-y-1.5 rounded-xl rounded-tl-sm border border-white/[0.08] bg-[#16161c] p-2">
-          <span className="block h-1.5 w-1/2 rounded-full bg-white/70" />
-          <span className="block h-1.5 w-full rounded-full bg-white/20" />
-          <span className="block h-1.5 w-4/5 rounded-full bg-white/20" />
+        <div className="flex-1 space-y-1.5 pt-0.5">
+          <span className="block h-1.5 w-full rounded-full bg-white/60" />
+          <span className="flex items-center gap-1.5">
+            <span className="size-1 shrink-0 rounded-full bg-white/50" />
+            <span className="block h-1.5 w-4/5 rounded-full bg-white/20" />
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="size-1 shrink-0 rounded-full bg-white/50" />
+            <span className="block h-1.5 w-3/5 rounded-full bg-white/20" />
+          </span>
         </div>
+      </div>
+      <div className="flex h-5 items-center justify-end rounded-full border border-white/10 bg-[#1d1c27] px-1">
+        <span className="size-3 rounded-full bg-[#ececf1]" />
       </div>
     </div>
   );
@@ -116,19 +125,24 @@ function ChatPreview() {
 
 function AgentPreview() {
   return (
-    <div className="agent-backdrop flex h-full flex-col justify-center gap-1 px-3 font-mono text-[10px] leading-4 text-[#c9c5cf]">
-      <p>
-        <span className="text-[#e77fb8]">❯</span> <span className="text-white">Research 2026</span>
-      </p>
-      <p>
-        <span className="text-[#5fd39b]">✓</span> <span className="text-[#8f8a98] line-through">Plan the steps</span>
-      </p>
-      <p>
-        <span className="text-[#5fd39b]">✓</span> Read 12 sources
-      </p>
-      <p>
-        <span className="agent-spinner text-[#e77fb8]">✻</span> Working…
-      </p>
+    <div className="agent-backdrop flex h-full flex-col p-2 font-mono text-[10px] leading-4 text-[#8b8b96]">
+      <div className="flex flex-1 flex-col border border-[#2a2a30] bg-[#0b0b0e]">
+        <p className="border-b border-[#2a2a30] px-1.5">
+          <span className="text-[#e77fb8]">◆</span> agent
+        </p>
+        <div className="flex flex-1 flex-col justify-center gap-0.5 px-1.5">
+          <p>
+            <span className="text-[#e77fb8]">●</span> <span className="font-bold text-[#f2f2f5]">Fetch</span>(openai.com)
+          </p>
+          <p>
+            <span className="text-[#5cc8d8]">●</span> <span className="font-bold text-[#f2f2f5]">Task</span>(12 in parallel)
+          </p>
+          <p className="text-[#e8c14a]">⚑ checkpoint</p>
+        </div>
+        <p className="border-t border-[#2a2a30] px-1.5">
+          <span className="agent-spinner text-[#e77fb8]">✻</span> <span className="agent-shimmer">Working…</span>
+        </p>
+      </div>
     </div>
   );
 }
