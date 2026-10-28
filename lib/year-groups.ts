@@ -1,5 +1,5 @@
 // Groups an era's events by year, in order, so each year's events can sit beside a column that names the year.
-// Also counts a year's events by month, and tells a busy year, which has more than one event a month, from the rest.
+// Also counts a year's events by month, finds its latest month, and tells a busy year, which has more than one event a month, from the rest.
 import { MONTHS } from '@/lib/event-format';
 import type { TimelineEvent } from '@/types/timeline';
 
@@ -32,4 +32,9 @@ export function groupEventsByYear(events: TimelineEvent[]): YearGroup[] {
 // How many of the events fall in each month, January first. An event whose month is unknown counts in none.
 export function countEventsByMonth(events: Pick<TimelineEvent, 'month'>[]) {
   return MONTHS.map((month) => events.filter((event) => event.month === month).length);
+}
+
+// The number of the latest month any of the events fall in, January as 1, or 0 when no event's month is known
+export function latestMonth(events: Pick<TimelineEvent, 'month'>[]) {
+  return countEventsByMonth(events).reduce((latest, count, index) => (count > 0 ? index + 1 : latest), 0);
 }

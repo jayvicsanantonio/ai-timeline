@@ -8,7 +8,7 @@ import { eventSource } from "../../lib/event-format"
 import { encodeHollerith } from "../../lib/hollerith"
 import { describePace } from "../../lib/pace"
 import { yearsSincePreviousEvent } from "../../lib/year-gaps"
-import { groupEventsByYear, isBusyYear } from "../../lib/year-groups"
+import { groupEventsByYear, isBusyYear, latestMonth } from "../../lib/year-groups"
 import type { TimelineEvent } from "../../types/timeline"
 
 const INTERFACES = ["punch-card", "terminal", "desktop", "notebook", "chat", "agent"]
@@ -161,6 +161,34 @@ test("draws each full step of the agent's log as a call that fetches its source"
   expect(calls).toEqual(sources.map((source) => `Fetch(${source})`))
 })
 
+test("writes the Generative AI Era in sans-serif and the Agentic Era in monospace", async ({ page }) => {
+  await page.goto("/")
+
+  const monospaced = (eraId: string) =>
+    page
+      .locator(`#${eraId} h2, #${eraId} h3, #${eraId} [data-year-summary]`)
+      .evaluateAll((elements) => [...new Set(elements.map((element) => getComputedStyle(element).fontFamily.includes("monospace")))])
+  expect(await monospaced("the-generative-ai-era")).toEqual([false])
+  expect(await monospaced("the-agentic-era")).toEqual([true])
+})
+
+test("fills each year's progress bar in the agent's console, to its latest month while the year is still running", async ({ page }) => {
+  await page.goto("/")
+
+  const agentYears = groupEventsByYear(erasOfData.find((candidate) => candidate.interface === "agent")!.events)
+  const expected = agentYears.map(({ events }, index) =>
+    index === agentYears.length - 1 ? `${latestMonth(events)}/12 mo` : "12/12 mo",
+  )
+  await expect(page.locator("#the-agentic-era [data-year-progress] [data-progress-label]")).toHaveText(expected)
+})
+
+test("ends the chat thread by typing into its message box the task the agent's console opens with", async ({ page }) => {
+  await page.goto("/")
+
+  const typed = await page.locator("#the-generative-ai-era [data-composer-message]").textContent()
+  await expect(page.locator("#the-agentic-era [data-instruction]")).toHaveText(typed!)
+})
+
 test("sums up each year of the chat thread and the agent's log with its summary from the data", async ({ page }) => {
   await page.goto("/")
 
@@ -269,8 +297,9 @@ test("dissolves each era into the next through the page's black", async ({ page 
     .evaluateAll((sections) => sections.map((section) => getComputedStyle(section.firstElementChild!).backgroundImage))
 
   expect(backdrops).toHaveLength(INTERFACES.length)
+  // The seam comes first, whether other layers follow it or it is the only one
   for (const backdrop of backdrops) {
-    expect(backdrop).toMatch(/^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\), /)
+    expect(backdrop).toMatch(/^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\)(, |$)/)
   }
 })
 

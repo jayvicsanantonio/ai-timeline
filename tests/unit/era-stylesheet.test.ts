@@ -42,6 +42,11 @@ describe("era layouts in the global stylesheet", () => {
     expect(styleOf(outputPrompt, "(min-width: 640px)")?.display).toBe("block")
   })
 
+  it("lights the chat thread with an aurora, and sets the agent's console on a flat backdrop with no glow", () => {
+    expect(styleOf(".chat-backdrop")?.backgroundImage).toMatch(/^var\(--era-seam\),\s+radial-gradient/)
+    expect(styleOf(".agent-backdrop")?.backgroundImage).toBe("var(--era-seam)")
+  })
+
   it("shimmers the agent's status only while motion is allowed, and leaves it plain text otherwise", () => {
     const shimmer = styleOf(".agent-shimmer", "(prefers-reduced-motion: no-preference)")
 

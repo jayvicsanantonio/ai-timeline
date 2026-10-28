@@ -427,18 +427,11 @@
     }
   }
 
-  /* Agentic Era: an agent's task log on graphite, under a faint glow of the era's magenta that returns
-     on the right all the way down the long log */
+  /* Agentic Era: an agent's console on flat black, with no glow behind it, set apart from the chat
+     thread's aurora above it */
   .agent-backdrop {
-    background-color: #0d0b0f;
-    background-image:
-      var(--era-seam),
-      radial-gradient(56rem 28rem at 85% 0%, rgb(207 79 154 / 0.14), transparent 70%),
-      radial-gradient(40rem 24rem at 10% 4%, rgb(144 133 233 / 0.07), transparent 70%),
-      radial-gradient(44rem 30rem at 100% 50%, rgb(207 79 154 / 0.06), transparent 70%);
-    background-size: auto, auto, auto, 100% 120rem;
-    background-position: 0 0, 0 0, 0 0, 0 30rem;
-    background-repeat: no-repeat, no-repeat, no-repeat, repeat-y;
+    background-color: #060608;
+    background-image: var(--era-seam);
   }
 
   .agent-spinner {
