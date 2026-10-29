@@ -29,7 +29,7 @@ Note: This project uses pnpm for package management, at the version `packageMana
 
 ## Project Architecture
 
-This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 344 AI historical events from 1943 to October 2026. Its design is "Interfaces Through Time": each era is drawn in the computer interface of its day, from punch cards to an agent's task log.
+This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 318 AI historical events from 1943 to October 2026. Its design is "Interfaces Through Time": each era is drawn in the computer interface of its day, from punch cards to an agent's task log.
 
 ### Core Architecture Pattern
 
