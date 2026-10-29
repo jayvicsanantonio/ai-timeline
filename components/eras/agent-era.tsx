@@ -14,6 +14,7 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  TurningPoints,
   YearColumn,
   countOf,
   eraEventCount,
@@ -308,6 +309,16 @@ export function AgentEra({ era, totalEvents }: EraInterfaceProps) {
               <span aria-hidden="true">·</span> {era.interfaceName}
             </p>
             <AgentPlan groups={groups} />
+            {/* The checkpoints the agent will stop at, each a link ahead to its step */}
+            <TurningPoints
+              era={era}
+              className="mt-6 text-sm"
+              labelClassName="flex items-center gap-3 text-[#e8c14a]"
+              marker={<Flag className="size-3" />}
+              listClassName="mt-1.5 space-y-1.5 border-l border-[#e8c14a]/40 pl-4 ml-[3px]"
+              linkClassName="text-[#f2f2f5] hover:text-[#e8c14a] focus-visible:text-[#e8c14a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f08cc4]"
+              yearClassName="mr-3 text-[#e8c14a]"
+            />
           </header>
 
           {groups.map((group, index) => (

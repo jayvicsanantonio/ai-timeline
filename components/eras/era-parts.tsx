@@ -1,5 +1,5 @@
-// Pieces every era interface shares: its props, the heading id, the event count, card attributes, the event title, the year column
-// and a busy year's brief listing.
+// Pieces every era interface shares: its props, the heading id, the event count, card attributes, the event title, the era's
+// turning points, the year column and a busy year's brief listing.
 // The title's link stretches over its whole event card, so a click anywhere on the card opens the source.
 'use client';
 
@@ -20,6 +20,8 @@ export interface EraInterfaceProps {
 export const NO_MATCHING_EVENTS = 'No events in this era match your search and filters.';
 
 export const LANDMARK_LABEL = 'Landmark';
+
+export const TURNING_POINTS_LABEL = 'Turning points in this chapter';
 
 export function eraHeadingId(era: Pick<Era, 'id'>) {
   return `${era.id}-title`;
@@ -92,6 +94,53 @@ export function EventSource({ event, className }: { event: TimelineEvent; classN
       <span className="truncate">{eventSource(event)}</span>
       <span aria-hidden="true">↗</span>
     </span>
+  );
+}
+
+interface TurningPointsProps {
+  era: Pick<Era, 'events'>;
+  className?: string;
+  labelClassName?: string;
+  listClassName?: string;
+  linkClassName?: string;
+  yearClassName?: string;
+  // The era's own mark ahead of the label, hidden from assistive technology
+  marker?: ReactNode;
+}
+
+// The era's landmarks, listed at its opening so its turning points show at a glance, each linking to its card.
+// While the reader filters, it lists only the landmarks that match, and nothing when none do.
+export function TurningPoints({
+  era,
+  className,
+  labelClassName,
+  listClassName,
+  linkClassName,
+  yearClassName,
+  marker,
+}: TurningPointsProps) {
+  const labelId = useId();
+  const landmarks = era.events.filter((event) => event.landmark);
+  if (landmarks.length === 0) {
+    return null;
+  }
+
+  return (
+    <div data-turning-points="" className={className}>
+      <p id={labelId} className={labelClassName}>
+        {marker ? <span aria-hidden="true">{marker}</span> : null}
+        {TURNING_POINTS_LABEL}
+      </p>
+      <ol aria-labelledby={labelId} className={listClassName}>
+        {landmarks.map((event) => (
+          <li key={eventAnchorId(event)}>
+            <a href={`#${eventAnchorId(event)}`} data-turning-point="" className={linkClassName}>
+              <span className={yearClassName}>{event.year}</span> {event.title}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
