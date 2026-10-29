@@ -327,7 +327,9 @@ test("shows a busy year in full from its Show all button", async ({ page }) => {
   await waitForHydration(page)
 
   const year2024 = busyYears.find((group) => group.year === 2024)!
-  const button = page.getByRole("button", { name: `Show all ${year2024.events.length} in full` })
+  const button = page
+    .locator('[data-year-group="2024"]')
+    .getByRole("button", { name: `Show all ${year2024.events.length} in full` })
   await expect(async () => {
     await button.click()
     await expect(button).toHaveAttribute("aria-pressed", "true", { timeout: 1000 })
@@ -347,7 +349,10 @@ test("lists the busy years in brief in under half the length of showing them in 
   const inBrief = await height()
 
   for (const group of busyYears) {
-    const button = page.getByRole("button", { name: `Show all ${group.events.length} in full` })
+    // Two busy years can hold as many events, so each button is found within its own year
+    const button = page
+      .locator(`[data-year-group="${group.year}"]`)
+      .getByRole("button", { name: `Show all ${group.events.length} in full` })
     await expect(async () => {
       await button.click()
       await expect(button).toHaveAttribute("aria-pressed", "true", { timeout: 1000 })

@@ -156,10 +156,13 @@ describe("data/timeline-events.json", () => {
       "The Turing Test",
       "Dartmouth AI Conference",
       "Rosenblatt's Perceptron",
+      "ELIZA, the First Chatbot",
       "The First AI Winter Begins",
+      "XCON Brings Expert Systems to Business",
       "Backpropagation Popularized",
       "The Second AI Winter Begins",
       "IBM Deep Blue Defeats Garry Kasparov",
+      "Deep Belief Networks",
       "ImageNet Database Created",
       "ImageNet Breakthrough",
       "AlphaGo Defeats Lee Sedol",
@@ -172,9 +175,9 @@ describe("data/timeline-events.json", () => {
       "OpenAI Releases GPT-4",
       "EU AI Act Takes Effect",
       "OpenAI Releases o1",
-      "Hopfield and Hinton Win the Nobel Prize in Physics",
       "DeepSeek-R1 Shakes the AI Industry",
       "AI Reaches Gold-Medal Level at the Math Olympiad",
+      "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
     ])
     expect(landmarks.every((event) => (event as { landmark?: unknown }).landmark === true)).toBe(true)
   })
@@ -193,14 +196,14 @@ describe("data/timeline-events.json", () => {
       "Google Launches Gemini 1.0",
       "OpenAI Releases GPT-4o",
       "DeepMind Researchers Win Nobel Prize",
+      "Hopfield and Hinton Win the Nobel Prize in Physics",
       "Anthropic Releases Claude Code in Research Preview",
       "OpenAI Releases GPT-5",
       "Google Releases Gemini 3",
       "Anthropic Launches Project Glasswing with Claude Mythos Preview",
-      "Google Unveils Gemini 3.5 at I/O",
-      "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
       "Anthropic Releases Claude Opus 5",
       "OpenAI Releases GPT-6 Astra",
+      "Google Unveils Gemini 4 Argon",
     ])
     expect(highlights.every((event) => (event as { highlight?: unknown }).highlight === true)).toBe(true)
     expect(highlights.filter((event) => "landmark" in event)).toEqual([])

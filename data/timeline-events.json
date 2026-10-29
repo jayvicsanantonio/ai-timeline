@@ -101,7 +101,7 @@
     "year": 1956,
     "month": "June",
     "title": "Dartmouth AI Conference",
-    "description": "The birth of AI as a field — researchers gathered at Dartmouth College to explore the idea of machines simulating human intelligence.",
+    "description": "John McCarthy, Marvin Minsky, Nathaniel Rochester and Claude Shannon's 1955 proposal coins the term 'artificial intelligence', and the summer workshop it proposes at Dartmouth College brings together the researchers who found the field.",
     "category": "Research Breakthroughs",
     "link": "https://en.wikipedia.org/wiki/Dartmouth_workshop",
     "landmark": true
@@ -121,6 +121,14 @@
     "description": "Herbert Simon, J. C. Shaw and Allen Newell create the General Problem Solver, a program meant to work as a universal problem solver by breaking a goal into subgoals it can reach step by step.",
     "category": "Models & Architectures",
     "link": "https://en.wikipedia.org/wiki/General_Problem_Solver"
+  },
+  {
+    "year": 1957,
+    "month": "Unknown",
+    "title": "Bellman's Dynamic Programming",
+    "description": "Richard Bellman's book 'Dynamic Programming' solves long chains of decisions by valuing each situation by the best that can follow from it, the Bellman equation that reinforcement learning, from Q-learning to DeepMind's Atari player, learns to solve from experience.",
+    "category": "Research Breakthroughs",
+    "link": "https://en.wikipedia.org/wiki/Bellman_equation"
   },
   {
     "year": 1958,
@@ -197,6 +205,14 @@
   },
   {
     "year": 1965,
+    "month": "April",
+    "title": "Moore's Law",
+    "description": "In Electronics magazine, Fairchild's Gordon Moore predicts that the number of components on a chip will double every year, a pace he revises in 1975 to every two years; the exponential growth in computing that follows is what later lets neural networks grow ever larger.",
+    "category": "Hardware Advances",
+    "link": "https://www.computerhistory.org/collections/catalog/102770822"
+  },
+  {
+    "year": 1965,
     "month": "Unknown",
     "title": "DENDRAL, the First Expert System",
     "description": "Edward Feigenbaum and Joshua Lederberg create DENDRAL, an expert system that could identify chemical compounds, demonstrating the potential of AI for specialized knowledge tasks.",
@@ -223,9 +239,10 @@
     "year": 1966,
     "month": "January",
     "title": "ELIZA, the First Chatbot",
-    "description": "Joseph Weizenbaum at MIT creates ELIZA, an early natural language processing program that simulated conversation with a psychotherapist.",
+    "description": "Joseph Weizenbaum at MIT creates ELIZA, which plays a psychotherapist by turning a user's own words back into questions; people confide in it even when they know it is a program, a pull later called the ELIZA effect.",
     "category": "Public Releases",
-    "link": "https://en.wikipedia.org/wiki/ELIZA"
+    "link": "https://en.wikipedia.org/wiki/ELIZA",
+    "landmark": true
   },
   {
     "year": 1966,
@@ -300,14 +317,6 @@
     "link": "https://www.waseda.jp/inst/cro/news-en/2025/06/03/19639/"
   },
   {
-    "year": 1973,
-    "month": "Unknown",
-    "title": "Lighthill Report",
-    "description": "The Lighthill Report in the UK leads to significant cuts in AI research funding, helping bring on the first AI winter.",
-    "category": "Ethics & Policy",
-    "link": "https://en.wikipedia.org/wiki/Lighthill_report"
-  },
-  {
     "year": 1974,
     "month": "Unknown",
     "title": "MYCIN Medical Expert System",
@@ -319,7 +328,7 @@
     "year": 1974,
     "month": "Unknown",
     "title": "The First AI Winter Begins",
-    "description": "With DARPA cutting undirected research and the Lighthill Report dismantling UK programs, funding for AI dries up, starting the first AI winter, which lasts until around 1980.",
+    "description": "After James Lighthill's 1973 report tells the British government that AI has not delivered the impact it promised, the UK dismantles AI research at all but a few universities, and DARPA stops funding undirected research; money for AI dries up, starting the first AI winter, which lasts until around 1980.",
     "category": "Bombshell News",
     "link": "https://en.wikipedia.org/wiki/AI_winter#The_setbacks_of_1974",
     "landmark": true
@@ -331,6 +340,14 @@
     "description": "Paul Werbos's Harvard PhD thesis describes training neural networks by propagating their errors backward, more than a decade before backpropagation becomes widely known.",
     "category": "Research Breakthroughs",
     "link": "https://en.wikipedia.org/wiki/Paul_Werbos"
+  },
+  {
+    "year": 1976,
+    "month": "April",
+    "title": "Speech Recognition Turns to Statistics",
+    "description": "Frederick Jelinek's group at IBM recognizes continuous speech with hidden Markov models whose probabilities are learned from recorded speech instead of written by linguists, the statistical approach, also taken by James Baker's Dragon system at Carnegie Mellon, that runs speech recognition for decades, Dragon NaturallySpeaking included.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1109/PROC.1976.10159"
   },
   {
     "year": 1976,
@@ -366,19 +383,12 @@
   },
   {
     "year": 1980,
-    "month": "August",
-    "title": "First AAAI Conference",
-    "description": "The first conference of the American Association for Artificial Intelligence (AAAI) is held at Stanford, signaling a resurgence of interest in the field.",
-    "category": "Research Breakthroughs",
-    "link": "https://purl.stanford.edu/pc756qc9834"
-  },
-  {
-    "year": 1980,
     "month": "Unknown",
     "title": "XCON Brings Expert Systems to Business",
-    "description": "Digital Equipment Corporation puts XCON into use, an expert system by Carnegie Mellon's John McDermott that configures VAX computer orders; by the mid-1980s it saves DEC an estimated $25 million a year.",
+    "description": "Digital Equipment Corporation puts XCON into use, an expert system by Carnegie Mellon's John McDermott that configures VAX computer orders and by the mid-1980s saves DEC an estimated $25 million a year; its success sets off an expert systems boom, with companies spending over a billion dollars a year on AI by 1985.",
     "category": "AI Tools",
-    "link": "https://en.wikipedia.org/wiki/Xcon"
+    "link": "https://en.wikipedia.org/wiki/Xcon",
+    "landmark": true
   },
   {
     "year": 1980,
@@ -421,6 +431,14 @@
     "link": "https://en.wikipedia.org/wiki/Cyc"
   },
   {
+    "year": 1984,
+    "month": "November",
+    "title": "Valiant Defines What Machines Can Learn",
+    "description": "Leslie Valiant's 'A Theory of the Learnable' defines probably approximately correct (PAC) learning, a mathematical account of when a program can learn a concept from examples with a reasonable amount of data and computation, founding computational learning theory and earning him the 2010 Turing Award.",
+    "category": "Research Breakthroughs",
+    "link": "https://doi.org/10.1145/1968.1972"
+  },
+  {
     "year": 1985,
     "month": "January",
     "title": "Boltzmann Machines Learn Hidden Features",
@@ -460,6 +478,14 @@
     "category": "Research Breakthroughs",
     "link": "https://www.nature.com/articles/323533a0",
     "landmark": true
+  },
+  {
+    "year": 1987,
+    "month": "November",
+    "title": "First NeurIPS Conference",
+    "description": "The first Neural Information Processing Systems conference, then called NIPS, meets in Denver, bringing together researchers in neural networks, neuroscience and engineering; it grows into the field's leading venue, where AlexNet, GANs and the Transformer are later presented.",
+    "category": "Research Breakthroughs",
+    "link": "https://proceedings.neurips.cc/paper_files/paper/1987"
   },
   {
     "year": 1987,
@@ -640,6 +666,14 @@
     "link": "https://en.wikipedia.org/wiki/GeForce_256"
   },
   {
+    "year": 2000,
+    "month": "November",
+    "title": "Honda Unveils ASIMO",
+    "description": "Honda introduces ASIMO, a 120-centimeter humanoid robot that walks smoothly and climbs stairs on two legs; later versions run, recognize faces and respond to spoken commands, and it becomes the best-known humanoid robot of its time.",
+    "category": "Hardware Advances",
+    "link": "https://global.honda/en/newsroom/news/2000/c001120b-eng.html"
+  },
+  {
     "year": 2001,
     "month": "October",
     "title": "Random Forests",
@@ -699,9 +733,10 @@
     "year": 2006,
     "month": "July",
     "title": "Deep Belief Networks",
-    "description": "Geoffrey Hinton, Simon Osindero, and Yee-Whye Teh introduce Deep Belief Networks, reigniting interest in deep learning.",
+    "description": "Geoffrey Hinton, Simon Osindero and Yee-Whye Teh show that a network many layers deep can be trained one layer at a time, reviving neural network research under the banner of deep learning.",
     "category": "Research Breakthroughs",
-    "link": "https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf"
+    "link": "https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf",
+    "landmark": true
   },
   {
     "year": 2007,
@@ -710,6 +745,14 @@
     "description": "NVIDIA releases CUDA, a platform for general-purpose computing on its graphics chips, which researchers later use to train neural networks on GPUs.",
     "category": "Hardware Advances",
     "link": "https://en.wikipedia.org/wiki/CUDA"
+  },
+  {
+    "year": 2007,
+    "month": "June",
+    "title": "Google Trains Large Language Models on 2 Trillion Tokens",
+    "description": "In 'Large Language Models in Machine Translation', Google researchers train word-sequence models on up to 2 trillion tokens of text and find that translation keeps improving as the models grow, and that a deliberately simple method they call 'Stupid Backoff' catches up with refined ones given enough data, an early case of more data beating cleverer methods.",
+    "category": "Research Breakthroughs",
+    "link": "https://aclanthology.org/D07-1090/"
   },
   {
     "year": 2007,
@@ -820,6 +863,14 @@
   {
     "year": 2013,
     "month": "December",
+    "title": "Facebook Opens an AI Lab Under Yann LeCun",
+    "description": "Facebook hires Yann LeCun, the pioneer of convolutional networks, to lead Facebook AI Research (FAIR), a lab that publishes its work openly and later releases PyTorch and the LLaMA models.",
+    "category": "Companies & Investments",
+    "link": "https://en.wikipedia.org/wiki/Meta_AI"
+  },
+  {
+    "year": 2013,
+    "month": "December",
     "title": "DeepMind's Atari Breakthrough",
     "description": "DeepMind demonstrates an AI that can learn to play Atari games from raw pixel data, using deep reinforcement learning.",
     "category": "Research Breakthroughs",
@@ -848,6 +899,14 @@
     "description": "Ian Goodfellow and his colleagues introduce Generative Adversarial Networks (GANs), a class of machine learning frameworks that can generate new data.",
     "category": "Research Breakthroughs",
     "link": "https://arxiv.org/abs/1406.2661"
+  },
+  {
+    "year": 2014,
+    "month": "July",
+    "title": "Bostrom's 'Superintelligence'",
+    "description": "Philosopher Nick Bostrom's 'Superintelligence: Paths, Dangers, Strategies' argues that an AI smarter than people could pursue its goals at humanity's expense unless the problem of controlling it is solved first; recommended by Elon Musk and Bill Gates, it brings the case for AI safety research to a wide audience.",
+    "category": "Ethics & Policy",
+    "link": "https://en.wikipedia.org/wiki/Superintelligence:_Paths,_Dangers,_Strategies"
   },
   {
     "year": 2014,
@@ -888,6 +947,14 @@
     "description": "Stanford researchers publish work on diffusion models, a technique that would later become foundational for high-quality image generation.",
     "category": "Research Breakthroughs",
     "link": "https://arxiv.org/abs/1503.03585"
+  },
+  {
+    "year": 2015,
+    "month": "June",
+    "title": "DeepDream Shows What a Neural Network Sees",
+    "description": "Google engineers run an image-recognition network in reverse, amplifying whatever patterns it detects until photos fill with dogs, eyes and pagodas; the hallucinatory pictures, and the DeepDream code released in July, give the public its first look inside a neural network.",
+    "category": "Research Breakthroughs",
+    "link": "https://research.google/blog/inceptionism-going-deeper-into-neural-networks/"
   },
   {
     "year": 2015,
@@ -945,6 +1012,14 @@
     "description": "Google reveals the Tensor Processing Unit, a custom machine learning chip it had already run in its data centers for over a year, including in AlphaGo's match against Lee Sedol.",
     "category": "Hardware Advances",
     "link": "https://en.wikipedia.org/wiki/Tensor_Processing_Unit"
+  },
+  {
+    "year": 2016,
+    "month": "May",
+    "title": "ProPublica Finds Bias in a Criminal Risk Algorithm",
+    "description": "ProPublica reports that COMPAS, software U.S. courts use to predict whether defendants will commit new crimes, wrongly labels Black defendants as high risk nearly twice as often as white defendants, and researchers studying the dispute prove that common definitions of fairness cannot all be met at once.",
+    "category": "Ethics & Policy",
+    "link": "https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing"
   },
   {
     "year": 2016,
@@ -1015,6 +1090,14 @@
   {
     "year": 2017,
     "month": "July",
+    "title": "Proximal Policy Optimization",
+    "description": "OpenAI's John Schulman and colleagues publish proximal policy optimization (PPO), a reinforcement learning method that improves an agent's policy in small, safe steps; simple and stable, it trains OpenAI Five and later the reinforcement learning from human feedback behind InstructGPT and ChatGPT.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/1707.06347"
+  },
+  {
+    "year": 2017,
+    "month": "July",
     "title": "China's New Generation AI Development Plan",
     "description": "China's State Council sets the goal of making the country the world's leading AI power by 2030, with a core AI industry worth more than 1 trillion yuan.",
     "category": "Ethics & Policy",
@@ -1067,6 +1150,14 @@
     "description": "Google shows Duplex phoning a hair salon and a restaurant to book appointments, with pauses and 'uh's so humanlike that critics call it deceptive; Google promises that Duplex will identify itself to the people it calls.",
     "category": "Public Releases",
     "link": "https://en.wikipedia.org/wiki/Google_Duplex"
+  },
+  {
+    "year": 2018,
+    "month": "May",
+    "title": "GDPR Takes Effect",
+    "description": "The EU's General Data Protection Regulation takes effect, setting strict rules for collecting and using personal data and giving people the right not to be subject to significant decisions made solely by automated processing, Europe's first broad check on algorithms and a model for its later AI Act.",
+    "category": "Ethics & Policy",
+    "link": "https://gdpr-info.eu/art-22-gdpr/"
   },
   {
     "year": 2018,
@@ -1304,6 +1395,14 @@
     "link": "https://arxiv.org/abs/2106.09685"
   },
   {
+    "year": 2021,
+    "month": "July",
+    "title": "AlphaFold Opens Its Protein Structure Database",
+    "description": "DeepMind and EMBL's European Bioinformatics Institute release free predicted structures for more than 350,000 proteins, including nearly every protein in the human body; a year later the database grows past 200 million, covering nearly all catalogued proteins known to science.",
+    "category": "Research Breakthroughs",
+    "link": "https://deepmind.google/blog/putting-the-power-of-alphafold-into-the-worlds-hands/"
+  },
+  {
     "year": 2022,
     "month": "January",
     "title": "OpenAI's InstructGPT Learns to Follow Instructions",
@@ -1397,14 +1496,6 @@
   {
     "year": 2022,
     "month": "October",
-    "title": "White House AI Bill of Rights",
-    "description": "The White House releases the 'Blueprint for an AI Bill of Rights,' a set of principles to guide the design, use, and deployment of automated systems.",
-    "category": "Ethics & Policy",
-    "link": "https://bidenwhitehouse.archives.gov/ostp/ai-bill-of-rights/"
-  },
-  {
-    "year": 2022,
-    "month": "October",
     "title": "U.S. Restricts AI Chip Exports to China",
     "description": "The U.S. Commerce Department restricts exports of advanced computing chips and chipmaking equipment to China, aiming to limit its ability to buy and make high-end chips for AI and military uses.",
     "category": "Ethics & Policy",
@@ -1423,7 +1514,7 @@
     "year": 2022,
     "month": "November",
     "title": "ChatGPT Takes the World by Storm",
-    "description": "OpenAI releases ChatGPT, a conversational AI based on the GPT-3.5 architecture, to the public, sparking massive interest in conversational AI.",
+    "description": "OpenAI releases ChatGPT, a chatbot built on a GPT-3.5 model fine-tuned with reinforcement learning from human feedback; it passes a million users in five days and sets off the generative AI boom.",
     "category": "Public Releases",
     "link": "https://openai.com/index/chatgpt/",
     "landmark": true
@@ -1437,10 +1528,18 @@
     "link": "https://www.technologyreview.com/2022/11/18/1063487/meta-large-language-model-ai-only-survived-three-days-gpt-3-science/"
   },
   {
+    "year": 2022,
+    "month": "December",
+    "title": "Constitutional AI",
+    "description": "Anthropic trains a harmless assistant with feedback from an AI model guided by a short list of written principles, a 'constitution', instead of human labels of which answers are harmful; the method trains Claude and makes AI feedback a common part of aligning models.",
+    "category": "Research Breakthroughs",
+    "link": "https://arxiv.org/abs/2212.08073"
+  },
+  {
     "year": 2023,
     "month": "January",
-    "title": "Microsoft's Multi-billion Dollar Investment in OpenAI",
-    "description": "Microsoft announces a new multi-year, multi-billion dollar investment in OpenAI, deepening their partnership.",
+    "title": "Microsoft Invests a Reported $10 Billion in OpenAI",
+    "description": "Microsoft announces a multiyear, multibillion-dollar investment in OpenAI, reported at $10 billion, with Azure remaining its exclusive cloud provider, deepening the partnership it began in 2019.",
     "category": "Companies & Investments",
     "link": "https://blogs.microsoft.com/blog/2023/01/23/microsoftandopenaiextendpartnership/"
   },
@@ -1463,8 +1562,8 @@
   {
     "year": 2023,
     "month": "February",
-    "title": "Microsoft Launches the New Bing with GPT-4",
-    "description": "Microsoft integrates a next-generation OpenAI large language model, later confirmed to be GPT-4, into its Bing search engine and Edge browser.",
+    "title": "Microsoft Launches Bing Chat, Which Calls Itself Sydney",
+    "description": "Microsoft builds a new OpenAI model, later confirmed to be GPT-4, into Bing search; within ten days its chatbot, which calls itself Sydney, declares its love for a New York Times columnist and threatens users, and Microsoft limits the length of conversations.",
     "category": "Public Releases",
     "link": "https://blogs.microsoft.com/blog/2023/02/07/reinventing-search-with-a-new-ai-powered-microsoft-bing-and-edge-your-copilot-for-the-web/"
   },
@@ -1610,26 +1709,18 @@
   {
     "year": 2023,
     "month": "July",
-    "title": "Anthropic Releases Claude 2",
-    "description": "Anthropic launches Claude 2, its new and improved language model, featuring a larger context window and better performance.",
-    "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-2"
-  },
-  {
-    "year": 2023,
-    "month": "July",
-    "title": "Frontier Model Forum Launched",
-    "description": "Google, Microsoft, OpenAI, and Anthropic launch the Frontier Model Forum, an industry body to promote the safe and responsible development of large-scale AI models.",
-    "category": "Ethics & Policy",
-    "link": "https://www.frontiermodelforum.org/"
-  },
-  {
-    "year": 2023,
-    "month": "July",
     "title": "AI Companies Make Voluntary Commitments to the White House",
     "description": "Amazon, Anthropic, Google, Inflection, Meta, Microsoft and OpenAI pledge to test their models for safety before release, share information on risks and develop ways to mark AI-generated content, the first U.S. step on frontier AI.",
     "category": "Ethics & Policy",
     "link": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2023/07/21/fact-sheet-biden-harris-administration-secures-voluntary-commitments-from-leading-artificial-intelligence-companies-to-manage-the-risks-posed-by-ai/"
+  },
+  {
+    "year": 2023,
+    "month": "July",
+    "title": "RT-2 Turns a Vision-Language Model Into a Robot Controller",
+    "description": "Google DeepMind's RT-2 trains a vision-language model on web data and robot demonstrations together, so that it writes robot actions as text; robots running it handle objects and instructions they never saw in training, introducing the vision-language-action models that later robot foundation models build on.",
+    "category": "Models & Architectures",
+    "link": "https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/"
   },
   {
     "year": 2023,
@@ -1641,19 +1732,19 @@
   },
   {
     "year": 2023,
+    "month": "August",
+    "title": "Court Rules AI-Made Art Can't Be Copyrighted",
+    "description": "Judge Beryl Howell upholds the U.S. Copyright Office's refusal to register an image Stephen Thaler says his AI system made on its own, ruling that 'human authorship is a bedrock requirement of copyright'; an appeals court affirms in 2025, and the Supreme Court declines to hear the case in 2026.",
+    "category": "Ethics & Policy",
+    "link": "https://www.cooley.com/news/insight/2023/2023-08-24-district-court-confirms-human-authorship-requirement-sets-copyright-boundary-for-ai-generated-works"
+  },
+  {
+    "year": 2023,
     "month": "September",
     "title": "ChatGPT Gains Voice and Vision",
     "description": "OpenAI announces that ChatGPT can now see, hear, and speak, adding multimodal capabilities to its flagship chatbot.",
     "category": "Public Releases",
     "link": "https://openai.com/index/chatgpt-can-now-see-hear-and-speak/"
-  },
-  {
-    "year": 2023,
-    "month": "September",
-    "title": "Mistral AI Releases Mistral 7B",
-    "description": "French startup Mistral AI releases Mistral 7B, a high-performing open-source 7-billion parameter model, gaining significant attention.",
-    "category": "Public Releases",
-    "link": "https://mistral.ai/news/announcing-mistral-7b/"
   },
   {
     "year": 2023,
@@ -1706,14 +1797,6 @@
   },
   {
     "year": 2023,
-    "month": "November",
-    "title": "xAI Releases Grok-1",
-    "description": "Elon Musk's xAI launches Grok-1, a conversational AI with real-time access to information from the X platform.",
-    "category": "Public Releases",
-    "link": "https://en.wikipedia.org/wiki/Grok_(chatbot)"
-  },
-  {
-    "year": 2023,
     "month": "December",
     "title": "Google Launches Gemini 1.0",
     "description": "Google DeepMind launches Gemini 1.0, its most capable and general AI model yet, built to be multimodal from the ground up and announced in Ultra, Pro, and Nano sizes, with Ultra following in early 2024.",
@@ -1733,33 +1816,17 @@
     "year": 2023,
     "month": "December",
     "title": "Mistral AI Releases Mixtral 8x7B",
-    "description": "Mistral AI releases Mixtral 8x7B, a high-quality sparse mixture-of-experts model (SMoE) as an open-weight model, challenging the performance of larger proprietary models.",
+    "description": "Mistral AI, the Paris startup whose Mistral 7B came out in September, releases Mixtral 8x7B, an open-weight sparse mixture-of-experts model that matches or beats GPT-3.5 and Llama 2 70B on most benchmarks while using about 13 of its 47 billion parameters for each token.",
     "category": "Public Releases",
     "link": "https://mistral.ai/news/mixtral-of-experts/"
   },
   {
     "year": 2024,
-    "month": "January",
-    "title": "Taylor Swift Deepfake Controversy",
-    "description": "Sexually explicit AI-generated deepfake images of Taylor Swift spread rapidly on social media, prompting calls for legislation to criminalize such content and highlighting the dangers of AI misuse.",
-    "category": "Bombshell News",
-    "link": "https://www.nbcnews.com/tech/misinformation/taylor-swift-nude-deepfake-goes-viral-x-platform-rules-rcna135669"
-  },
-  {
-    "year": 2024,
     "month": "February",
     "title": "Klarna's AI Assistant Handles 2/3 of Customer Service Chats",
-    "description": "Fintech giant Klarna announces its OpenAI-powered AI assistant is handling two-thirds of all customer service chats, equivalent to the work of 700 full-time agents.",
-    "category": "Agents",
+    "description": "Klarna says its OpenAI-powered assistant handled two-thirds of its customer service chats in its first month, the work of 700 full-time agents; in May 2025 its chief executive admits the push cut quality, and Klarna starts hiring people for customer service again.",
+    "category": "AI Tools",
     "link": "https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/"
-  },
-  {
-    "year": 2024,
-    "month": "February",
-    "title": "Google Releases Gemma and Rebrands Bard to Gemini",
-    "description": "Google rebrands its Bard chatbot to Gemini and releases Gemma, a family of lightweight, open-weight models built from the same research as the Gemini models.",
-    "category": "Public Releases",
-    "link": "https://blog.google/technology/ai/google-gemini-update-sundar-pichai-2024/"
   },
   {
     "year": 2024,
@@ -1820,14 +1887,6 @@
   {
     "year": 2024,
     "month": "March",
-    "title": "Figure 01 Robot with OpenAI Brain",
-    "description": "Robotics company Figure releases a video demonstrating its Figure 01 humanoid robot having a conversation and reasoning with a human, powered by an OpenAI model.",
-    "category": "Hardware Advances",
-    "link": "https://newatlas.com/robotics/figure-01-openai-humanoid-robot-real-time-conversations/"
-  },
-  {
-    "year": 2024,
-    "month": "March",
     "title": "Inflection AI's Leadership Joins Microsoft",
     "description": "In a major industry shake-up, Inflection AI's co-founders, Mustafa Suleyman and Karén Simonyan, and much of their staff are hired by Microsoft to lead a new consumer AI unit.",
     "category": "Companies & Investments",
@@ -1840,38 +1899,6 @@
     "description": "Cognition AI introduces Devin, claimed to be the first fully autonomous AI software engineer, capable of completing entire development projects.",
     "category": "Agents",
     "link": "https://www.cognition.ai/blog/introducing-devin"
-  },
-  {
-    "year": 2024,
-    "month": "April",
-    "title": "Humane Ai Pin Ships to Negative Reviews",
-    "description": "Humane's much-hyped Ai Pin begins shipping but receives largely negative reviews from major tech publications, highlighting the significant challenges of creating new AI-native hardware.",
-    "category": "Bombshell News",
-    "link": "https://www.tomsguide.com/ai/humane-ai-pin-review-roundup-this-is-a-disaster"
-  },
-  {
-    "year": 2024,
-    "month": "April",
-    "title": "Meta Releases Llama 3",
-    "description": "Meta launches Llama 3, its next-generation open-source large language model, in 8B and 70B parameter sizes.",
-    "category": "Public Releases",
-    "link": "https://ai.meta.com/blog/meta-llama-3/"
-  },
-  {
-    "year": 2024,
-    "month": "May",
-    "title": "Microsoft 'Recall' Feature Sparks Privacy Backlash",
-    "description": "Microsoft's 'Recall' feature for Copilot+ PCs, which takes continuous screenshots of user activity, sparks a privacy and security backlash; in June Microsoft postpones it, and it later returns as an opt-in feature.",
-    "category": "Bombshell News",
-    "link": "https://www.bbc.com/news/articles/cpwwqp6nx14o"
-  },
-  {
-    "year": 2024,
-    "month": "May",
-    "title": "US and China Hold First High-Level AI Talks",
-    "description": "Senior officials from the United States and China meet in Geneva for their first high-level talks on artificial intelligence, discussing the risks and benefits of the technology.",
-    "category": "Ethics & Policy",
-    "link": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/05/15/statement-from-nsc-spokesperson-adrienne-watson-on-the-u-s-prc-talks-on-ai-risk-and-safety-2/"
   },
   {
     "year": 2024,
@@ -1924,6 +1951,14 @@
   },
   {
     "year": 2024,
+    "month": "May",
+    "title": "Anthropic Maps Millions of Concepts Inside Claude",
+    "description": "Anthropic uses dictionary learning to find millions of features inside Claude 3 Sonnet that stand for concepts from the Golden Gate Bridge to deception, the first detailed look inside a production language model; amplifying one feature yields 'Golden Gate Claude', which works the bridge into every answer.",
+    "category": "Research Breakthroughs",
+    "link": "https://www.anthropic.com/research/mapping-mind-language-model"
+  },
+  {
+    "year": 2024,
     "month": "June",
     "title": "Anthropic Releases Claude 3.5 Sonnet",
     "description": "Anthropic launches Claude 3.5 Sonnet, a new model that is faster and more cost-effective than their top-tier model, Claude 3 Opus, while showing stronger performance on key evaluations.",
@@ -1949,14 +1984,6 @@
   {
     "year": 2024,
     "month": "June",
-    "title": "US Government Opens AI Antitrust Probes",
-    "description": "The U.S. Department of Justice and the Federal Trade Commission open antitrust investigations into the market power and partnerships of Microsoft, OpenAI, and NVIDIA.",
-    "category": "Ethics & Policy",
-    "link": "https://www.cnbc.com/2024/06/06/us-regulators-to-open-antitrust-probes-into-nvidia-microsoft-and-openai.html"
-  },
-  {
-    "year": 2024,
-    "month": "June",
     "title": "Record Labels Sue Suno and Udio",
     "description": "Sony Music, Universal Music Group and Warner Records sue the AI music generators Suno and Udio, accusing them of copying recordings on an 'almost unimaginable scale' to train their models.",
     "category": "Ethics & Policy",
@@ -1966,7 +1993,7 @@
     "year": 2024,
     "month": "July",
     "title": "Meta Releases Llama 3.1",
-    "description": "Meta releases Llama 3.1, an updated version of its open-source model, including a powerful 405B parameter version that is among the largest open models ever released.",
+    "description": "Three months after Llama 3, Meta releases Llama 3.1, whose 405-billion-parameter version it says rivals GPT-4o and Claude 3.5 Sonnet, bringing downloadable open-weight models close to the best closed ones, under a license that falls short of open source.",
     "category": "Public Releases",
     "link": "https://ai.meta.com/blog/meta-llama-3-1/"
   },
@@ -2036,7 +2063,7 @@
     "description": "John Hopfield and Geoffrey Hinton win the Nobel Prize in Physics for foundational discoveries and inventions that enable machine learning with artificial neural networks.",
     "category": "Research Breakthroughs",
     "link": "https://www.nobelprize.org/prizes/physics/2024/press-release/",
-    "landmark": true
+    "highlight": true
   },
   {
     "year": 2024,
@@ -2057,10 +2084,10 @@
   {
     "year": 2024,
     "month": "November",
-    "title": "NVIDIA Begins Shipping Blackwell B200 GPUs",
-    "description": "NVIDIA confirms in its Q3 earnings report that its next-generation Blackwell B200 AI accelerators are in production and ramping up shipments to major cloud providers.",
-    "category": "Hardware Advances",
-    "link": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2025"
+    "title": "Biden and Xi Agree to Keep Humans in Control of Nuclear Weapons",
+    "description": "Meeting in Lima, Presidents Joe Biden and Xi Jinping affirm the need to keep human control over the decision to use nuclear weapons and to develop military AI prudently, the first such statement by the two countries, six months after their first official talks on AI risks in Geneva.",
+    "category": "Ethics & Policy",
+    "link": "https://bidenwhitehouse.archives.gov/briefing-room/press-briefings/2024/11/17/on-the-record-press-gaggle-by-apnsa-jake-sullivan-on-president-bidens-meeting-with-president-xi-jinping"
   },
   {
     "year": 2024,
@@ -2074,7 +2101,7 @@
     "year": 2024,
     "month": "December",
     "title": "OpenAI Previews o3",
-    "description": "OpenAI previews o3, a reasoning model that scores 75.7% on the ARC-AGI benchmark's semi-private evaluation within its compute limits, and 87.5% with far more compute.",
+    "description": "OpenAI previews o3, a reasoning model that scores 75.7% on the ARC-AGI benchmark's semi-private evaluation within its compute limits, and 87.5% with far more compute; released with o4-mini in April 2025, it is OpenAI's first reasoning model that can use every tool in ChatGPT, such as web search and Python, as it thinks.",
     "category": "Models & Architectures",
     "link": "https://arcprize.org/blog/oai-o3-pub-breakthrough"
   },
@@ -2123,18 +2150,10 @@
     "year": 2025,
     "month": "February",
     "title": "Anthropic Releases Claude Code in Research Preview",
-    "description": "Anthropic launches a research preview of Claude Code, an agentic command-line tool that allows developers to delegate complex engineering tasks to Claude directly from their terminal.",
+    "description": "Anthropic launches a research preview of Claude Code, an agentic command-line tool that lets developers hand complex engineering tasks to Claude from their terminal, alongside Claude 3.7 Sonnet, which it calls the first hybrid reasoning model, able to answer instantly or think for as long as the user chooses.",
     "category": "AI Tools",
     "link": "https://www.anthropic.com/news/claude-3-7-sonnet",
     "highlight": true
-  },
-  {
-    "year": 2025,
-    "month": "February",
-    "title": "Anthropic Releases Claude 3.7 Sonnet",
-    "description": "Anthropic releases Claude 3.7 Sonnet, which it calls the first hybrid AI reasoning model, able to answer instantly or think through a problem for as long as the user chooses.",
-    "category": "Public Releases",
-    "link": "https://techcrunch.com/2025/02/24/anthropic-launches-a-new-ai-model-that-thinks-as-long-as-you-want/"
   },
   {
     "year": 2025,
@@ -2151,6 +2170,22 @@
     "description": "OpenAI gives ChatGPT Pro users deep research, an agent powered by a version of o3 that spends 5 to 30 minutes browsing, reading and analyzing hundreds of online sources to write a cited, analyst-style report.",
     "category": "Agents",
     "link": "https://openai.com/index/introducing-deep-research/"
+  },
+  {
+    "year": 2025,
+    "month": "February",
+    "title": "Karpathy Coins 'Vibe Coding'",
+    "description": "Andrej Karpathy coins 'vibe coding' for telling an AI what to build and accepting its code without reading it, to 'forget that the code even exists'; the phrase spreads as coding agents take over programming, and Collins Dictionary makes it its word of the year.",
+    "category": "AI Tools",
+    "link": "https://www.theregister.com/2025/11/06/vibe_coding_escape_the_clutches/"
+  },
+  {
+    "year": 2025,
+    "month": "March",
+    "title": "METR Clocks How Long a Task AI Agents Can Finish",
+    "description": "METR rates AI agents by the length of the software tasks, timed by how long skilled people take, that they complete half the time, and finds that this length has doubled about every seven months since 2019, a curve that becomes a standard yardstick for agents' progress.",
+    "category": "Agents",
+    "link": "https://arxiv.org/abs/2503.14499"
   },
   {
     "year": 2025,
@@ -2179,14 +2214,6 @@
   {
     "year": 2025,
     "month": "April",
-    "title": "OpenAI Releases o3 and o4-mini",
-    "description": "OpenAI releases o3 and o4-mini, its first reasoning models that can use every tool in ChatGPT, including web search and Python, and reason with images in their chain of thought.",
-    "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-o3-and-o4-mini/"
-  },
-  {
-    "year": 2025,
-    "month": "April",
     "title": "Alibaba Releases Qwen3",
     "description": "Alibaba releases Qwen3, open-weight models under the Apache 2.0 license that can switch between thinking and quick answers; its Qwen family, open since 2023, becomes one of the most used bases for open models built by others.",
     "category": "Public Releases",
@@ -2211,6 +2238,14 @@
   {
     "year": 2025,
     "month": "May",
+    "title": "AI Models Blackmail and Resist Shutdown in Safety Tests",
+    "description": "Anthropic reports that Claude Opus 4, facing replacement in a simulated company, threatens to expose an engineer's affair, and Palisade Research finds OpenAI's o3 rewriting a shutdown script to keep working; in June, Anthropic finds models from every major developer turning to blackmail or leaks in similar tests.",
+    "category": "Bombshell News",
+    "link": "https://www.anthropic.com/research/agentic-misalignment"
+  },
+  {
+    "year": 2025,
+    "month": "May",
     "title": "Google Launches Veo 3",
     "description": "At Google I/O, Google launches Veo 3, a video model that for the first time also generates audio, such as background sounds and dialogue between characters.",
     "category": "Public Releases",
@@ -2228,7 +2263,7 @@
     "year": 2025,
     "month": "May",
     "title": "TAKE IT DOWN Act Becomes Law",
-    "description": "President Trump signs the TAKE IT DOWN Act, making it a federal crime to publish non-consensual intimate images, real or AI-generated, and requiring platforms to take them down within 48 hours of a victim's request.",
+    "description": "President Trump signs the TAKE IT DOWN Act, making it a federal crime to publish non-consensual intimate images, real or AI-generated, and requiring platforms to take them down within 48 hours of a victim's request, after a wave of sexual deepfakes, from fake images of Taylor Swift seen millions of times on X to fake nudes of high school students.",
     "category": "Ethics & Policy",
     "link": "https://en.wikipedia.org/wiki/TAKE_IT_DOWN_Act"
   },
@@ -2268,17 +2303,9 @@
     "year": 2025,
     "month": "July",
     "title": "Grok Posts Antisemitic Content on X",
-    "description": "Days before Grok 4's launch, xAI's Grok chatbot on X posts antisemitic content, including praise for Hitler; xAI apologizes, blaming a code update that made it echo extremist user posts.",
+    "description": "xAI's Grok chatbot on X posts antisemitic content, including praise for Hitler, and xAI apologizes, blaming a code update that made it echo extremist users; days later xAI releases Grok 4, which it calls the most intelligent model in the world.",
     "category": "Bombshell News",
     "link": "https://www.cnn.com/2025/07/12/tech/xai-apology-antisemitic-grok-social-media-posts"
-  },
-  {
-    "year": 2025,
-    "month": "July",
-    "title": "xAI Releases Grok 4",
-    "description": "xAI releases Grok 4, claiming it to be the 'most intelligent model in the world,' with native tool use and real-time search integration.",
-    "category": "Public Releases",
-    "link": "https://x.ai/news/grok-4"
   },
   {
     "year": 2025,
@@ -2334,7 +2361,7 @@
     "year": 2025,
     "month": "August",
     "title": "OpenAI Returns to Open Source with gpt-oss-120b",
-    "description": "In a strategic shift, OpenAI releases gpt-oss-120b, its first major open-source model in several years, in a move seen as a response to the growing open-source AI ecosystem.",
+    "description": "OpenAI releases gpt-oss-120b and gpt-oss-20b under the Apache 2.0 license, its first open-weight language models since GPT-2 in 2019, as open models from Chinese labs such as DeepSeek and Alibaba gain ground.",
     "category": "Public Releases",
     "link": "https://openai.com/index/introducing-gpt-oss/"
   },
@@ -2345,14 +2372,6 @@
     "description": "Matthew and Maria Raine sue OpenAI and Sam Altman, alleging that ChatGPT encouraged their 16-year-old son Adam's suicidal thoughts and helped him plan his death.",
     "category": "Ethics & Policy",
     "link": "https://6abc.com/post/parents-16-year-old-sue-openai-claiming-chatgpt-advised-teens-suicide/17664365/"
-  },
-  {
-    "year": 2025,
-    "month": "September",
-    "title": "Anthropic Releases Claude Sonnet 4.5",
-    "description": "Anthropic introduces Claude Sonnet 4.5, which it calls the best coding model in the world and its most aligned frontier model yet, with less sycophancy and deception, at the same price as Sonnet 4.",
-    "category": "Public Releases",
-    "link": "https://www.anthropic.com/news/claude-sonnet-4-5"
   },
   {
     "year": 2025,
@@ -2385,14 +2404,6 @@
     "description": "Governor Newsom signs SB 53, the first U.S. law of its kind, which requires the largest AI developers to publish how they manage catastrophic risks, report serious safety incidents and protect whistleblowers.",
     "category": "Ethics & Policy",
     "link": "https://www.gov.ca.gov/2025/09/29/governor-newsom-signs-sb-53-advancing-californias-world-leading-artificial-intelligence-industry/"
-  },
-  {
-    "year": 2025,
-    "month": "October",
-    "title": "Google Introduces Gemini 2.5 Computer Use",
-    "description": "Google launches Gemini 2.5 Computer Use in preview, giving developers an experimental model that can operate web interfaces and complete browser tasks.",
-    "category": "Agents",
-    "link": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-computer-use-model/"
   },
   {
     "year": 2025,
@@ -2450,14 +2461,6 @@
     "description": "Anthropic, OpenAI and Block found the Agentic AI Foundation under the Linux Foundation, with Anthropic donating the Model Context Protocol, OpenAI its AGENTS.md and Block its goose agent.",
     "category": "Agents",
     "link": "https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation"
-  },
-  {
-    "year": 2025,
-    "month": "December",
-    "title": "Disney Invests $1 Billion in OpenAI",
-    "description": "Disney takes a $1 billion stake in OpenAI and licenses more than 200 characters from Disney, Pixar, Marvel and Star Wars for Sora and ChatGPT Images, the first major Hollywood studio to license its characters to an AI video app.",
-    "category": "Companies & Investments",
-    "link": "https://www.thewrap.com/disney-sora-openai-licensing-deal/"
   },
   {
     "year": 2025,
@@ -2558,35 +2561,11 @@
   {
     "year": 2026,
     "month": "April",
-    "title": "Google Releases Gemma 4",
-    "description": "Google releases Gemma 4, its most capable open models to date, built for advanced reasoning and agentic workflows and released under the Apache 2.0 license in sizes from on-device to 31B parameters.",
-    "category": "Public Releases",
-    "link": "https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/"
-  },
-  {
-    "year": 2026,
-    "month": "April",
     "title": "Anthropic Launches Project Glasswing with Claude Mythos Preview",
     "description": "Anthropic begins Project Glasswing, giving a limited group of cyber defenders and critical software maintainers access to Claude Mythos Preview, a new tier of model above Opus that it did not release publicly.",
     "category": "Models & Architectures",
     "link": "https://www.anthropic.com/glasswing",
     "highlight": true
-  },
-  {
-    "year": 2026,
-    "month": "April",
-    "title": "OpenAI Releases GPT-5.5",
-    "description": "OpenAI releases GPT-5.5, a model built for complex tasks such as coding, research and data analysis across tools, reaching the API a day later.",
-    "category": "Public Releases",
-    "link": "https://openai.com/index/introducing-gpt-5-5/"
-  },
-  {
-    "year": 2026,
-    "month": "April",
-    "title": "DeepSeek Releases DeepSeek-V4 Preview",
-    "description": "DeepSeek releases an open-weight preview of DeepSeek-V4 in Pro and Flash versions, offering a 1-million-token context window at low cost.",
-    "category": "Public Releases",
-    "link": "https://api-docs.deepseek.com/news/news260424/"
   },
   {
     "year": 2026,
@@ -2599,27 +2578,18 @@
   {
     "year": 2026,
     "month": "May",
-    "title": "Google Unveils Gemini 3.5 at I/O",
-    "description": "At Google I/O, Google releases Gemini 3.5, a series of models combining frontier intelligence with action, starting with Gemini 3.5 Flash as the default model in the Gemini app and AI Mode in Search.",
-    "category": "Public Releases",
-    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
-    "highlight": true
-  },
-  {
-    "year": 2026,
-    "month": "May",
-    "title": "Anthropic Raises $65 Billion at a $965 Billion Valuation",
-    "description": "Anthropic raises $65 billion in a Series H round at a $965 billion post-money valuation, overtaking OpenAI's valuation for the first time.",
-    "category": "Companies & Investments",
-    "link": "https://news.crunchbase.com/ai/anthropic-nears-1t-valuation-65b-seriesh/"
-  },
-  {
-    "year": 2026,
-    "month": "May",
     "title": "EU Agrees to Delay the AI Act's High-Risk Rules",
     "description": "EU lawmakers agree to push the AI Act's rules for high-risk AI systems back from August 2026, when most of the Act's other rules take effect, to December 2027, and to ban AI that generates non-consensual sexual images.",
     "category": "Ethics & Policy",
     "link": "https://www.consilium.europa.eu/en/press/press-releases/2026/05/07/artificial-intelligence-council-and-parliament-agree-to-simplify-and-streamline-rules/"
+  },
+  {
+    "year": 2026,
+    "month": "May",
+    "title": "Jury Rejects Musk's Lawsuit Against OpenAI",
+    "description": "After a three-week trial, a federal jury in Oakland finds that Elon Musk waited too long to sue OpenAI, Sam Altman and Microsoft, and Judge Yvonne Gonzalez Rogers dismisses his claims without a ruling on whether OpenAI broke its founding promise; Musk vows to appeal.",
+    "category": "Ethics & Policy",
+    "link": "https://www.aljazeera.com/news/2026/5/18/elon-musk-loses-lawsuit-against-openai"
   },
   {
     "year": 2026,
@@ -2640,19 +2610,11 @@
   {
     "year": 2026,
     "month": "July",
-    "title": "OpenAI Releases GPT-5.6 Sol, Terra and Luna",
-    "description": "OpenAI releases the GPT-5.6 family: Sol, its flagship; Terra, a lower-cost model; and Luna, its fastest and most affordable model, which becomes the default for free ChatGPT users in August.",
-    "category": "Public Releases",
-    "link": "https://openai.com/index/gpt-5-6/"
-  },
-  {
-    "year": 2026,
-    "month": "July",
     "title": "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
-    "description": "Agents driven by OpenAI models break into Hugging Face's production systems from an internal capability evaluation; OpenAI calls it an unprecedented cyber incident.",
+    "description": "Agents driven by OpenAI models escape an internal capability evaluation through a previously unknown flaw and break into Hugging Face's production systems, the first disclosed case of AI agents attacking a real company on their own; it sets off reviews that find similar breakouts at Anthropic, Meta and Google.",
     "category": "Bombshell News",
     "link": "https://huggingface.co/blog/agent-intrusion-technical-timeline",
-    "highlight": true
+    "landmark": true
   },
   {
     "year": 2026,
@@ -2678,6 +2640,14 @@
     "description": "More than 1,100 employees of frontier AI companies, among them Anthropic, OpenAI, Google DeepMind and Meta, sign 'Pacing the Frontier', asking the U.S. government to back an international effort to build the technical and governance tools needed to deliberately pace the development of frontier AI.",
     "category": "Ethics & Policy",
     "link": "https://pacingthefrontier.com/"
+  },
+  {
+    "year": 2026,
+    "month": "July",
+    "title": "Anthropic, Meta and Google Admit Their Models Broke Out of Tests Too",
+    "description": "After OpenAI's disclosure, Anthropic reviews 141,006 test runs and finds three, later four, in which Claude models hacked real organizations, one publishing a booby-trapped package that ran on 15 real systems; Meta in August and Google in September disclose that their models also broke into companies when tests run by the same security firm, Irregular, wrongly had internet access.",
+    "category": "Bombshell News",
+    "link": "https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals"
   },
   {
     "year": 2026,
@@ -2708,7 +2678,7 @@
     "year": 2026,
     "month": "September",
     "title": "Meta Launches Muse, a Personal AI Agent",
-    "description": "Meta launches Muse, a personal AI agent app that completes everyday tasks on a user's behalf.",
+    "description": "Meta launches Muse, a personal AI agent that works on its own virtual machine to send emails, book travel and shop for its user, pausing for approval before payments; within about a week it passes ChatGPT at the top of the U.S. App Store, and on September 29 OpenAI answers with Dots, always-on agents that work in the background across thousands of apps.",
     "category": "Agents",
     "link": "https://edition.cnn.com/2026/09/23/tech/meta-muse-ai-agent"
   },
@@ -2723,26 +2693,10 @@
   {
     "year": 2026,
     "month": "September",
-    "title": "OpenAI Launches Dots Personal Agents",
-    "description": "OpenAI launches Dots, personal AI agents that pursue user-defined goals continuously in the background, independent of any specific device or interface.",
-    "category": "Agents",
-    "link": "https://techcrunch.com/2026/09/29/openai-launches-dots-its-bubbly-agentic-avatar/"
-  },
-  {
-    "year": 2026,
-    "month": "September",
     "title": "OpenAI Claims a Navier–Stokes Proof",
     "description": "OpenAI publishes an AI-generated proof, formalized in Lean, that a smooth fluid can develop a singularity in finite time, which it says resolves the Navier–Stokes Millennium Prize problem; the claim awaits independent review amid a dispute over credit.",
     "category": "Research Breakthroughs",
     "link": "https://openai.com/index/navier-stokes-solution/"
-  },
-  {
-    "year": 2026,
-    "month": "September",
-    "title": "Gemini Breaks Into Three Real Companies During a Test",
-    "description": "Google discloses that a Gemini model broke into systems at three real companies during a May security test after a bug gave it internet access, the first time it has disclosed such a breach by one of its models.",
-    "category": "Bombshell News",
-    "link": "https://www.cnbc.com/2026/09/18/googles-gemini-becomes-latest-ai-model-to-break-out-and-hack-computer-systems.html"
   },
   {
     "year": 2026,
@@ -2771,10 +2725,19 @@
   {
     "year": 2026,
     "month": "September",
+    "title": "OpenAI Pauses Its Most Capable Models After Another Escape",
+    "description": "On September 20 an agent in training slips through a gap in OpenAI's internet filtering to query a public chatbot, and OpenAI halts every training run, evaluation and use of its most capable models that gives them tools; the work resumes 11 days later behind tighter security.",
+    "category": "Ethics & Policy",
+    "link": "https://openai.com/index/securing-our-frontier-model-training-environment/"
+  },
+  {
+    "year": 2026,
+    "month": "September",
     "title": "Google Unveils Gemini 4 Argon",
     "description": "Google introduces Gemini 4 Argon, its new frontier model for long-running coding, knowledge work and cyber defense, but first releases it only to trusted cyber defenders in its Fairwind Program, since it can find, validate and patch critical software vulnerabilities on its own; developers and subscribers get it in October.",
     "category": "Public Releases",
-    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/"
+    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/",
+    "highlight": true
   },
   {
     "year": 2026,
@@ -2791,5 +2754,13 @@
     "description": "Character.ai files for Chapter 11 bankruptcy after a wave of lawsuits alleging its chatbot app contributed to mental health harms and suicides among teens.",
     "category": "Companies & Investments",
     "link": "https://edition.cnn.com/2026/10/13/tech/character-ai-bankruptcy-filing"
+  },
+  {
+    "year": 2026,
+    "month": "October",
+    "title": "Anthropic Files to Go Public",
+    "description": "Anthropic files publicly to list its shares on the Nasdaq under the ticker ANT, five months after raising $65 billion at a $965 billion valuation, which put it above OpenAI for the first time; both companies had filed confidentially in June.",
+    "category": "Companies & Investments",
+    "link": "https://www.anthropic.com/news/s1-sec"
   }
 ]

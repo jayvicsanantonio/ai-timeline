@@ -9,14 +9,14 @@ _An interactive, cinematic exploration of AI's evolution from 1943 to October 20
 
 ## Overview
 
-This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **344 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
+This project presents the complete history of artificial intelligence through an immersive, interactive timeline featuring **340 curated events** spanning from 1943 to October 2026. Built with modern web technologies, it combines storytelling with data visualization to create an engaging educational experience.
 
 ### Key Features
 
-- **Comprehensive Dataset**: 344 meticulously researched AI milestones with verified sources
+- **Comprehensive Dataset**: 340 meticulously researched AI milestones with verified sources
 - **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook, a chat thread and an agent's task log
 - **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–5 and /
-- **Landmarks and Sources**: Twenty turning points stand out in every era, and each card names the site its link opens
+- **Landmarks and Sources**: Twenty-six turning points stand out across the eras, and each card names the site its link opens
 - **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread and the agent's task log sum up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
 - **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
 - **Accessibility First**: A skip link, full keyboard access, visible focus rings and reduced motion support
@@ -211,7 +211,7 @@ This project demonstrates:
 
 ## At a Glance
 
-- **344 Events**: Comprehensive historical coverage
+- **340 Events**: Comprehensive historical coverage
 - **Mobile-First**: Responsive across all devices
 
 ---
