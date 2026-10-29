@@ -56,7 +56,6 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
               activity={activity}
               orientation="horizontal"
               onSelectYear={scrollToYear}
-              marksLandmarks
               className="h-32 sm:h-44"
             />
           </div>
@@ -67,7 +66,6 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
                 Events per year. {latestEra.events.length} of the {totalEvents} events happened since{' '}
                 {latestEra.range[0]}.{' '}
                 {/* The bars answer only the pointer, so assistive technology skips this with the chart */}
-                <span aria-hidden="true">Gold dots mark the years with a landmark.</span>{' '}
                 <span aria-hidden="true">Click a bar to jump to that year.</span>
               </p>
             ) : null}

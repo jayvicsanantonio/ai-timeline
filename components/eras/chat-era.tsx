@@ -15,7 +15,6 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
-  TurningPoints,
   YearColumn,
   countOf,
   eraEventCount,
@@ -197,16 +196,6 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
                 {lastEvent ? ` through ${formatEventDate(lastEvent)}` : null}{' '}
                 <span aria-hidden="true">·</span> {era.interfaceName}
               </p>
-              {/* Offered as chips under the answer, as chats suggest where to go next */}
-              <TurningPoints
-                era={era}
-                className="mt-6"
-                labelClassName="flex items-center gap-1.5 text-sm text-[#c4bdf7]"
-                marker={<Star className="size-3.5" />}
-                listClassName="mt-3 flex flex-wrap gap-2"
-                linkClassName="inline-flex items-baseline gap-1.5 rounded-full border border-[#9085e9]/45 bg-[#9085e9]/10 px-3 py-1.5 text-sm text-[#e4e1ff] transition-colors hover:border-[#9085e9] hover:bg-[#9085e9]/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b4abf5]"
-                yearClassName="text-xs text-[#b4abf5]"
-              />
             </div>
           </div>
         </header>

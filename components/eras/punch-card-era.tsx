@@ -19,7 +19,6 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
-  TurningPoints,
   YearColumn,
   YearGap,
   countOf,
@@ -81,16 +80,6 @@ export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
             {eraEventCount(era, totalEvents)} <span aria-hidden="true">·</span>{' '}
             {era.interfaceName}
           </p>
-          {/* Printed on the teletype as the run's index of its marked cards */}
-          <TurningPoints
-            era={era}
-            className="mt-8 border-t-2 border-dashed border-[#3a3226]/35 pt-5"
-            labelClassName="text-xs uppercase tracking-[0.25em] text-[#a63a28]"
-            marker="★ "
-            listClassName="mt-3 space-y-1.5 text-sm uppercase tracking-[0.06em]"
-            linkClassName="font-semibold text-[#1f1a12] decoration-2 underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3a3226]"
-            yearClassName="mr-3 text-[#a63a28]"
-          />
         </header>
 
         <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">

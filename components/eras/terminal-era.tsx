@@ -3,7 +3,6 @@
 'use client';
 
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
-import { cn } from '@/lib/utils';
 import { groupEventsByYear } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import {
@@ -11,7 +10,6 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
-  TurningPoints,
   YearColumn,
   YearGap,
   eraEventCount,
@@ -72,16 +70,6 @@ export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
             {eraEventCount(era, totalEvents)} found <span aria-hidden="true">·</span>{' '}
             {era.interfaceName}
           </p>
-          {/* The session lists its priority records before recalling them all */}
-          <TurningPoints
-            era={era}
-            className="mt-8 border-t border-dashed border-[#1d5236] pt-5"
-            labelClassName="text-xs uppercase tracking-[0.2em] text-[#38b874]"
-            marker="> LIST PRIORITY · "
-            listClassName="mt-3 space-y-1 text-sm uppercase tracking-[0.04em]"
-            linkClassName="crt-glow -mx-1 px-1 font-bold text-[#9dffc4] hover:bg-[#5cf09a] hover:text-[#03140a] hover:[text-shadow:none] focus-visible:bg-[#5cf09a] focus-visible:text-[#03140a] focus-visible:outline-none focus-visible:[text-shadow:none]"
-            yearClassName="mr-3"
-          />
         </header>
 
         <ol className="mt-10 border-b border-dashed border-[#1d5236]">
@@ -124,43 +112,27 @@ export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
   );
 }
 
-// A landmark is printed as a priority record: boxed in a double rule under a bar in inverse video, as
-// terminals flagged the records that mattered most, with a larger title.
 function TerminalRecord({ event }: { event: TimelineEvent }) {
   return (
     <article
       {...eventCardAttributes(event)}
-      className={cn(
-        'reveal-on-scroll group relative scroll-mt-[var(--timeline-sticky-offset,0px)] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[#9dffc4]',
-        event.landmark
-          ? 'my-6 border-[3px] border-double border-[#5cf09a]/80 px-4 pb-6 shadow-[0_0_32px_-8px_rgba(92,240,154,0.45)] sm:px-6'
-          : 'py-6'
-      )}
+      className="reveal-on-scroll group relative scroll-mt-[var(--timeline-sticky-offset,0px)] py-6 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[#9dffc4]"
     >
-      {event.landmark ? (
-        <p className="-mx-4 mb-5 flex flex-wrap items-center justify-between gap-x-4 bg-[#5cf09a] px-4 py-1 text-xs font-bold uppercase tracking-[0.25em] text-[#03140a] sm:-mx-6 sm:px-6">
-          <span aria-hidden="true">
-            *** Priority<span className="hidden sm:inline"> record</span> ***
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span aria-hidden="true">★</span>
-            <span>{LANDMARK_LABEL}</span>
-          </span>
-        </p>
-      ) : null}
-      <p className="text-xs uppercase tracking-[0.2em] text-[#38b874]">
-        <span aria-hidden="true">&gt; RECALL </span>
-        <time dateTime={eventDateTime(event)} className="crt-glow text-sm font-bold text-[#9dffc4]">
-          {formatEventDate(event)}
-        </time>
+      <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs uppercase tracking-[0.2em] text-[#38b874]">
+        <span>
+          <span aria-hidden="true">&gt; RECALL </span>
+          <time dateTime={eventDateTime(event)} className="crt-glow text-sm font-bold text-[#9dffc4]">
+            {formatEventDate(event)}
+          </time>
+        </span>
+        {event.landmark ? (
+          <span className="bg-[#5cf09a] px-1.5 font-bold text-[#03140a]">{LANDMARK_LABEL}</span>
+        ) : null}
       </p>
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <EventHeading
           event={event}
-          className={cn(
-            'min-w-0 font-bold uppercase leading-snug tracking-[0.04em] text-[#9dffc4]',
-            event.landmark ? 'text-lg sm:text-2xl' : 'text-base sm:text-lg'
-          )}
+          className="min-w-0 text-base font-bold uppercase leading-snug tracking-[0.04em] text-[#9dffc4] sm:text-lg"
           linkClassName="crt-glow -mx-1 px-1 group-hover:bg-[#5cf09a] group-hover:text-[#03140a] group-hover:[text-shadow:none]"
         />
         <p className="shrink-0 text-xs uppercase tracking-[0.15em] text-[#38b874] sm:pt-1">
