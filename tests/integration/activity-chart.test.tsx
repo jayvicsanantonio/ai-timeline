@@ -1,5 +1,5 @@
 // Integration tests for ActivityChart, the events-per-year "seismograph" used by the hero and the navigation.
-// Covers bar scaling, era colors, filtered-out ghosts, the current year, hover readouts and picking a year.
+// Covers bar scaling, era colors, filtered-out ghosts, the current year, landmark dots, hover readouts and picking a year.
 import { render } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { userEvent } from "vitest/browser"
@@ -8,10 +8,18 @@ import { ERA_DEFINITIONS } from "@/lib/eras"
 import type { YearActivity } from "@/lib/timeline-activity"
 
 const activity: YearActivity[] = [
-  { year: 1968, total: 2, matching: 2, eraId: "the-foundation-era" },
-  { year: 1969, total: 0, matching: 0, eraId: "the-foundation-era" },
-  { year: 1970, total: 4, matching: 1, eraId: "the-knowledge-era" },
-  { year: 1971, total: 1, matching: 0, eraId: "the-knowledge-era" },
+  { year: 1968, total: 2, matching: 2, landmarks: 0, eraId: "the-foundation-era" },
+  { year: 1969, total: 0, matching: 0, landmarks: 0, eraId: "the-foundation-era" },
+  { year: 1970, total: 4, matching: 1, landmarks: 0, eraId: "the-knowledge-era" },
+  { year: 1971, total: 1, matching: 0, landmarks: 0, eraId: "the-knowledge-era" },
+]
+
+// The same years, with a landmark in 1968 and in 1970, the busiest year
+const withLandmarks: YearActivity[] = [
+  { year: 1968, total: 2, matching: 2, landmarks: 1, eraId: "the-foundation-era" },
+  { year: 1969, total: 0, matching: 0, landmarks: 0, eraId: "the-foundation-era" },
+  { year: 1970, total: 4, matching: 4, landmarks: 2, eraId: "the-knowledge-era" },
+  { year: 1971, total: 1, matching: 1, landmarks: 0, eraId: "the-knowledge-era" },
 ]
 
 // Resolves a hex color to the rgb() form that computed styles report.
@@ -30,6 +38,10 @@ function bars(container: HTMLElement) {
 
 function part(bar: HTMLElement, name: "total" | "matching") {
   return bar.querySelector<HTMLElement>(`[data-part="${name}"]`)!
+}
+
+function landmarkDot(bar: HTMLElement) {
+  return bar.querySelector<HTMLElement>('[data-part="landmark"]')
 }
 
 describe.each(["horizontal", "vertical"] as const)("ActivityChart drawn %s", (orientation) => {
@@ -67,6 +79,32 @@ describe.each(["horizontal", "vertical"] as const)("ActivityChart drawn %s", (or
     expect(bars(container).map((bar) => bar.dataset.current)).toEqual(["false", "false", "true", "false"])
   })
 
+  it("marks the years with a landmark by a dot, only when asked to", () => {
+    const marked = render(<ActivityChart activity={withLandmarks} orientation={orientation} marksLandmarks />)
+    expect(bars(marked.container).map((bar) => landmarkDot(bar) !== null)).toEqual([true, false, true, false])
+    marked.unmount()
+
+    const unmarked = render(<ActivityChart activity={withLandmarks} orientation={orientation} />)
+    expect(unmarked.container.querySelectorAll('[data-part="landmark"]')).toHaveLength(0)
+  })
+
+  it("sets each landmark's dot just past the end of its bar, and inside the chart beside the busiest year", () => {
+    const { container } = render(
+      <ActivityChart activity={withLandmarks} orientation={orientation} marksLandmarks className="h-40 w-40" />,
+    )
+    const [first, , busiest] = bars(container)
+    const chart = container.firstElementChild!.getBoundingClientRect()
+    const box = (element: HTMLElement) => element.getBoundingClientRect()
+
+    if (orientation === "horizontal") {
+      expect(box(landmarkDot(first)!).bottom).toBeLessThanOrEqual(box(part(first, "matching")).top)
+      expect(box(landmarkDot(busiest)!).top).toBeGreaterThanOrEqual(chart.top)
+    } else {
+      expect(box(landmarkDot(first)!).left).toBeGreaterThanOrEqual(box(part(first, "matching")).right)
+      expect(box(landmarkDot(busiest)!).right).toBeLessThanOrEqual(chart.right)
+    }
+  })
+
   it("is hidden from assistive technology, which reaches the same places through the chapter buttons", () => {
     const { container } = render(<ActivityChart activity={activity} orientation={orientation} />)
 
@@ -76,10 +114,10 @@ describe.each(["horizontal", "vertical"] as const)("ActivityChart drawn %s", (or
 
 describe("ActivityChart at small sizes", () => {
   const sparse: YearActivity[] = [
-    { year: 2000, total: 1, matching: 1, eraId: "the-learning-era" },
-    { year: 2001, total: 0, matching: 0, eraId: "the-learning-era" },
-    { year: 2002, total: 64, matching: 64, eraId: "the-learning-era" },
-    { year: 2003, total: 2, matching: 0, eraId: "the-learning-era" },
+    { year: 2000, total: 1, matching: 1, landmarks: 0, eraId: "the-learning-era" },
+    { year: 2001, total: 0, matching: 0, landmarks: 0, eraId: "the-learning-era" },
+    { year: 2002, total: 64, matching: 64, landmarks: 0, eraId: "the-learning-era" },
+    { year: 2003, total: 2, matching: 0, landmarks: 0, eraId: "the-learning-era" },
   ]
 
   it.each([
@@ -107,6 +145,18 @@ describe("ActivityChart interaction", () => {
 
     await userEvent.hover(bars(container)[2])
     expect(getByText("1970 · 1 of 4 events")).toBeVisible()
+  })
+
+  it("counts a year's landmarks in its readout", async () => {
+    const { container, getByText } = render(
+      <ActivityChart activity={withLandmarks} orientation="horizontal" className="h-40 w-80" />,
+    )
+
+    await userEvent.hover(bars(container)[0])
+    expect(getByText("1968 · 2 events · ★ 1 landmark")).toBeVisible()
+
+    await userEvent.hover(bars(container)[2])
+    expect(getByText("1970 · 4 events · ★ 2 landmarks")).toBeVisible()
   })
 
   it("picks a year that has events to show", async () => {

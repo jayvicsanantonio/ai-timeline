@@ -1,5 +1,5 @@
 // Unit tests for counting timeline events per year for the activity charts.
-// Covers zero-filled years, counts of events that pass the filters, era assignment and the real dataset.
+// Covers zero-filled years, counts of events and landmarks that pass the filters, era assignment and the real dataset.
 import { describe, expect, it } from "vitest"
 import timelineData from "@/data/timeline-events.json"
 import { countEventsByYear } from "@/lib/timeline-activity"
@@ -37,6 +37,13 @@ describe("countEventsByYear", () => {
 
   it("counts how many of each year's events are in the matching subset", () => {
     expect(countEventsByYear([first, second, third], [third]).map(({ matching }) => matching)).toEqual([0, 0, 0, 1])
+  })
+
+  it("counts the landmarks among each year's matching events", () => {
+    const landmark = { ...makeEvent(1970, "Landmark"), landmark: true }
+
+    expect(countEventsByYear([first, second, landmark]).map(({ landmarks }) => landmarks)).toEqual([0, 0, 0, 1])
+    expect(countEventsByYear([first, second, landmark], [second]).map(({ landmarks }) => landmarks)).toEqual([0, 0, 0, 0])
   })
 
   it("names the era each year belongs to", () => {

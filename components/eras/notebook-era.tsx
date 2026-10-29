@@ -2,6 +2,7 @@
 // Each event is a code cell that records the milestone's date and title, followed by an output cell that describes it.
 'use client';
 
+import { Star } from 'lucide-react';
 import { CategoryIcon } from '@/components/ui/category-icon';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { groupEventsByYear } from '@/lib/year-groups';
@@ -11,6 +12,7 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
+  TurningPoints,
   YearColumn,
   countOf,
   eraEventCount,
@@ -75,6 +77,15 @@ export function NotebookEra({ era, totalEvents }: EraInterfaceProps) {
               </h2>
               <p className="mt-4 text-base leading-7 text-[#333]">{era.description}</p>
               <p className="mt-3 text-sm text-[#5f5f5f]">{era.interfaceName}</p>
+              {/* The introduction's markdown ends in a numbered list of links to the landmark cells */}
+              <TurningPoints
+                era={era}
+                className="mt-6"
+                labelClassName="text-lg font-bold tracking-tight"
+                listClassName="mt-2 list-decimal space-y-1 pl-6 text-[15px] marker:text-[#5f5f5f]"
+                linkClassName="text-[#1f5fa8] underline-offset-2 hover:underline focus-visible:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2a78d6]"
+                yearClassName="mr-2 font-mono text-[13px] text-[#5f5f5f]"
+              />
             </div>
           </header>
 
@@ -141,12 +152,25 @@ interface NotebookCellProps {
   cellNumber: number;
 }
 
+// A landmark's cells open under a markdown cell that heads them, rendered as notebooks render markdown, with no prompt
 function NotebookCell({ event, cellNumber }: NotebookCellProps) {
   return (
     <article
       {...eventCardAttributes(event)}
       className="reveal-on-scroll notebook-cell group relative mt-4 scroll-mt-[var(--timeline-sticky-offset,0px)] py-2 hover:border-l-[#2a78d6] has-[a:focus-visible]:border-l-[#2a78d6] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[#2a78d6] data-[landmark]:border-l-[#d95926]"
     >
+      {event.landmark ? (
+        <>
+          <span aria-hidden="true" />
+          <p
+            data-markdown-cell=""
+            className="mb-1 flex items-center gap-2 border-b border-[#f3d2c1] px-3 pb-2 pt-1 text-xl font-bold tracking-tight text-[#c2410c] sm:text-2xl"
+          >
+            <Star aria-hidden="true" className="size-5 shrink-0 fill-current sm:size-6" />
+            <span>{LANDMARK_LABEL}</span>
+          </p>
+        </>
+      ) : null}
       <span aria-hidden="true" className="notebook-prompt text-[#303f9f]">
         In [{cellNumber}]:
       </span>
@@ -175,11 +199,6 @@ function NotebookCell({ event, cellNumber }: NotebookCellProps) {
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium uppercase tracking-[0.12em] text-[#5f5f5f]">
           <CategoryIcon category={event.category} className="size-3.5 shrink-0 text-[#d95926]" />
           <span>{event.category}</span>
-          {event.landmark ? (
-            <span className="rounded-sm bg-[#c2410c] px-1.5 py-px font-semibold text-white">
-              {LANDMARK_LABEL}
-            </span>
-          ) : null}
         </p>
         <p className="mt-2 text-[15px] leading-7 text-[#262626]">{event.description}</p>
         <p className="mt-1 font-mono text-xs text-[#1f5fa8]">
