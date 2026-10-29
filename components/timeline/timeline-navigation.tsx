@@ -117,7 +117,6 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
               orientation="vertical"
               currentYear={position.year}
               onSelectYear={scrollToYear}
-              marksLandmarks
               className="absolute inset-y-0 left-11 right-0"
             />
             {eras.map((era) => {
@@ -159,11 +158,6 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
 
           <p className="mt-3 px-1 text-[11px] leading-snug text-zinc-500">
             Events per year, {firstYear}–{lastYear}
-            {/* The chart is a picture, so assistive technology skips its key with it */}
-            <span aria-hidden="true" className="mt-1 flex items-center gap-1.5">
-              <span className="size-[5px] shrink-0 rounded-full bg-[#e8c14a]" />
-              Years with a landmark
-            </span>
           </p>
         </div>
       </nav>

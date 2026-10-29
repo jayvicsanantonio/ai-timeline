@@ -2,7 +2,7 @@
 // Each event is a window: its date, icon and title in the title bar, its description inside, its category and source below.
 'use client';
 
-import { FolderOpen, Info, Star } from 'lucide-react';
+import { FolderOpen, Info } from 'lucide-react';
 import { CategoryIcon } from '@/components/ui/category-icon';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { cn } from '@/lib/utils';
@@ -13,7 +13,6 @@ import {
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
-  TurningPoints,
   YearColumn,
   YearGap,
   eraEventCount,
@@ -77,16 +76,6 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
               <div className="desktop-progress h-full" />
             </div>
             <p className="mt-2 text-sm text-[#333]">{eraEventCount(era, totalEvents)} loaded</p>
-            {/* A list box of the landmarks, highlighting the row the pointer or keyboard is on, as list boxes did */}
-            <TurningPoints
-              era={era}
-              className="mt-6"
-              labelClassName="text-sm font-bold"
-              marker="★ "
-              listClassName="desktop-sunken mt-1.5 bg-white py-1 text-[15px]"
-              linkClassName="flex gap-3 px-2 py-0.5 hover:bg-[#000080] hover:text-white focus-visible:bg-[#000080] focus-visible:text-white focus-visible:outline-1 focus-visible:outline-dotted focus-visible:outline-offset-[-2px] focus-visible:outline-white"
-              yearClassName="w-10 shrink-0 tabular-nums"
-            />
           </div>
         </header>
 
@@ -141,16 +130,11 @@ export function DesktopEra({ era, totalEvents }: EraInterfaceProps) {
   );
 }
 
-// A landmark opens wider, its label raised in the title bar like the bar's buttons, and a star beside its
-// text, as the message boxes of the day set an icon beside theirs.
 function EventWindow({ event }: { event: TimelineEvent }) {
   return (
     <article
       {...eventCardAttributes(event)}
-      className={cn(
-        'reveal-on-scroll desktop-window group relative scroll-mt-[var(--timeline-sticky-offset,0px)] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-white',
-        event.landmark ? 'max-w-3xl' : 'max-w-2xl'
-      )}
+      className="reveal-on-scroll desktop-window group relative max-w-2xl scroll-mt-[var(--timeline-sticky-offset,0px)] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-white"
     >
       <div className="desktop-title-bar">
         <CategoryIcon category={event.category} className="size-4 shrink-0" />
@@ -161,23 +145,9 @@ function EventWindow({ event }: { event: TimelineEvent }) {
           {formatEventDate(event)}
         </time>
         <EventHeading event={event} className="min-w-0 flex-1 text-[15px] font-bold leading-snug" />
-        {event.landmark ? (
-          <span className="desktop-raised inline-flex shrink-0 items-center gap-1 bg-[#c0c0c0] px-1.5 text-[13px] font-bold leading-5 text-black">
-            <span aria-hidden="true">★</span>
-            <span>{LANDMARK_LABEL}</span>
-          </span>
-        ) : null}
         <WindowControls className="hidden sm:flex" />
       </div>
-      <div
-        className={cn(
-          'desktop-sunken m-1 bg-white text-black',
-          event.landmark ? 'flex gap-4 px-4 py-4 text-base leading-7 sm:px-5' : 'px-4 py-3 text-[15px] leading-7'
-        )}
-      >
-        {event.landmark ? (
-          <Star aria-hidden="true" strokeWidth={1.5} className="mt-0.5 size-9 shrink-0 fill-[#ffd400] text-black" />
-        ) : null}
+      <div className="desktop-sunken m-1 bg-white px-4 py-3 text-[15px] leading-7 text-black">
         <p>{event.description}</p>
       </div>
       <div className="flex gap-1 px-1 pb-1 text-[13px] text-black">
@@ -187,6 +157,12 @@ function EventWindow({ event }: { event: TimelineEvent }) {
         <p className="desktop-sunken flex min-w-0 flex-[2] px-2 py-0.5">
           <EventSource event={event} />
         </p>
+        {event.landmark ? (
+          <p className="desktop-sunken shrink-0 px-2 py-0.5 font-bold">
+            <span aria-hidden="true">★ </span>
+            <span>{LANDMARK_LABEL}</span>
+          </p>
+        ) : null}
       </div>
     </article>
   );

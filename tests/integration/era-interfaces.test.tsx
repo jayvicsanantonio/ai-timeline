@@ -4,7 +4,7 @@ import { render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { page, userEvent } from "vitest/browser"
 import { EraChapter } from "@/components/eras/era-chapter"
-import { NO_MATCHING_EVENTS, TURNING_POINTS_LABEL } from "@/components/eras/era-parts"
+import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
 import { ERA_DEFINITIONS, groupEventsByEra, type EraInterface } from "@/lib/eras"
 import { eventAnchorId, eventDateTime, eventSource, formatEventDate } from "@/lib/event-format"
 import { encodeHollerith } from "@/lib/hollerith"
@@ -206,38 +206,9 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
     expect(within(section).queryAllByRole("button")).toEqual([])
   })
 
-  it("lists the era's turning points at its opening, each linking to its card", () => {
-    const { section } = renderEra(eraInterface)
-
-    const list = within(section).getByRole("list", { name: TURNING_POINTS_LABEL })
-    const landmarks = events.filter((event) => event.landmark)
-    const links = within(list).getAllByRole("link")
-    expect(links.map((link) => link.textContent)).toEqual(landmarks.map((event) => `${event.year} ${event.title}`))
-    links.forEach((link, index) => {
-      expect(link).toHaveAttribute("href", `#${eventAnchorId(landmarks[index])}`)
-      expect(section.querySelector(link.getAttribute("href")!)).toHaveAttribute("data-landmark")
-    })
-    const firstCard = within(section).getAllByRole("article")[0]
-    expect(list.compareDocumentPosition(firstCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-  })
-
-  it("leaves the turning points out when none of the era's events is a landmark", () => {
-    const { section } = renderEra(
-      eraInterface,
-      events.map(({ landmark: _landmark, ...event }) => event),
-    )
-
-    expect(section.querySelector("[data-turning-points]")).toBeNull()
-    expect(within(section).queryByText(TURNING_POINTS_LABEL)).not.toBeInTheDocument()
-  })
-
-  it("lets keyboard users tab to each turning point, then to every event link in order", async () => {
+  it("lets keyboard users tab to every event link in order", async () => {
     renderEra(eraInterface)
 
-    for (const event of events.filter((candidate) => candidate.landmark)) {
-      await userEvent.tab()
-      expect(document.activeElement).toBe(screen.getByRole("link", { name: `${event.year} ${event.title}` }))
-    }
     for (const event of events) {
       await userEvent.tab()
       expect(document.activeElement).toBe(screen.getByRole("link", { name: event.title }))
