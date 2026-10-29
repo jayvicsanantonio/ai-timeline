@@ -340,10 +340,11 @@ test("shows a busy year in full from its Show all button", async ({ page }) => {
 test("lists the busy years in brief in under half the length of showing them in full", async ({ page }) => {
   await page.goto("/")
   await waitForHydration(page)
-  // The busy years run through the chat thread and the agent's log
-  const busyEras = page.locator("#the-generative-ai-era, #the-agentic-era")
+  // The busy years run through the chat thread and the agent's log. Only the years are measured, since the eras'
+  // introductions and closing lines keep their length either way.
+  const busyGroups = page.locator(busyYears.map((group) => `[data-year-group="${group.year}"]`).join(", "))
   const height = () =>
-    busyEras.evaluateAll((sections) => sections.reduce((sum, section) => sum + section.getBoundingClientRect().height, 0))
+    busyGroups.evaluateAll((groups) => groups.reduce((sum, group) => sum + group.getBoundingClientRect().height, 0))
   const inBrief = await height()
 
   for (const group of busyYears) {
