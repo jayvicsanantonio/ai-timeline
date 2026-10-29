@@ -1,5 +1,5 @@
 // End-to-end tests for the timeline page in a real Next.js server: error-free loading with and without reduced
-// motion, cards that settle in place, card dates, the opening's events-per-year chart and an insight stat.
+// motion, cards that settle in place, card dates, the opening's events-per-year chart and its landmark dots, and an insight stat.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 
@@ -90,6 +90,23 @@ test("charts every year from the first event to the last, and labels the busiest
   const chart = page.getByRole("figure")
   await expect(chart.locator("[data-year-bar]")).toHaveCount(lastYear - firstYear + 1)
   await expect(chart).toContainText(`${busiestCount} events in ${busiestYear}`)
+})
+
+test("dots each landmark's year on the opening chart and the chapter rail", async ({ page }) => {
+  const landmarkYears = [...new Set(timelineData.filter((event) => "landmark" in event).map((event) => event.year))]
+  const dottedYears = (chart: ReturnType<Page["locator"]>) =>
+    chart
+      .locator('[data-year-bar]:has([data-part="landmark"])')
+      .evaluateAll((bars) => bars.map((bar) => Number((bar as HTMLElement).dataset.year)))
+
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto("/")
+
+  await expect(page.getByRole("figure")).toContainText("Gold dots mark the years with a landmark.")
+  expect(await dottedYears(page.getByRole("figure"))).toEqual(landmarkYears)
+  // The rail stays hidden until the reader reaches the timeline, and the phone's bar is hidden on a wide screen
+  const rail = page.getByRole("navigation", { name: "Timeline chapter navigation", includeHidden: true }).first()
+  expect(await dottedYears(rail.locator('[data-orientation="vertical"]'))).toEqual(landmarkYears)
 })
 
 test("jumps to a year's first event from its bar in the opening chart, as the chart's hint says", async ({ page }) => {

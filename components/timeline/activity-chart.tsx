@@ -1,5 +1,6 @@
 // Draws how many timeline events happened each year as a seismograph of thin bars colored by era.
-// Events hidden by the filters stay as a faint ghost of each year's total, and a year can be picked to jump to it.
+// Events hidden by the filters stay as a faint ghost of each year's total, a gold dot can mark the years with a landmark,
+// and a year can be picked to jump to it.
 'use client';
 
 import { useState } from 'react';
@@ -17,18 +18,26 @@ interface ActivityChartProps {
   className?: string;
   // Overrides the 2px gap between neighboring bars, for charts too small to spare it
   barsClassName?: string;
+  // Marks each year with a landmark among its matching events by a dot just past its bar
+  marksLandmarks?: boolean;
 }
 
 const ERA_COLORS = new Map(ERA_DEFINITIONS.map((era) => [era.id, era.color]));
 const OUTSIDE_ERA_COLOR = '#71717a';
+// The gold the agent's checkpoints use, apart from every era's color and the white playhead
+const LANDMARK_COLOR = '#e8c14a';
+// A landmark's dot, in px, and the space it leaves past the end of its bar
+const LANDMARK_DOT = 5;
+const LANDMARK_GAP = 3;
 
 function share(value: number, busiest: number) {
   return busiest > 0 ? `${Math.round((value / busiest) * 10000) / 100}%` : '0%';
 }
 
-function describeYear({ year, total, matching }: YearActivity) {
+function describeYear({ year, total, matching, landmarks }: YearActivity) {
   const noun = total === 1 ? 'event' : 'events';
-  return matching === total ? `${year} · ${total} ${noun}` : `${year} · ${matching} of ${total} ${noun}`;
+  const events = matching === total ? `${year} · ${total} ${noun}` : `${year} · ${matching} of ${total} ${noun}`;
+  return landmarks > 0 ? `${events} · ★ ${landmarks} ${landmarks === 1 ? 'landmark' : 'landmarks'}` : events;
 }
 
 // Keeps the readout inside the chart near its ends instead of centering it past the edge
@@ -45,6 +54,7 @@ export function ActivityChart({
   onSelectYear,
   className,
   barsClassName,
+  marksLandmarks = false,
 }: ActivityChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const isHorizontal = orientation === 'horizontal';
@@ -56,6 +66,9 @@ export function ActivityChart({
   const barEnd = isHorizontal ? 'inset-x-0 bottom-0 rounded-t-[2px]' : 'inset-y-0 left-0 rounded-r-[2px]';
   // A year with even one event keeps a sliver, so it never vanishes next to the busiest years
   const sliver = isHorizontal ? 'min-h-[2px]' : 'min-w-[2px]';
+  // The dot sits just past the end of its bar, and inside the chart beside the busiest years
+  const dotEnd = isHorizontal ? 'bottom' : 'left';
+  const dotAcross = isHorizontal ? 'left-1/2 -translate-x-1/2' : 'top-1/2 -translate-y-1/2';
 
   return (
     <div
@@ -101,6 +114,18 @@ export function ActivityChart({
                 )}
                 style={{ [length]: share(year.matching, busiest), backgroundColor: color }}
               />
+              {marksLandmarks && year.landmarks > 0 ? (
+                <span
+                  data-part="landmark"
+                  className={cn('absolute rounded-full shadow-[0_0_5px_rgba(232,193,74,0.8)]', dotAcross)}
+                  style={{
+                    [dotEnd]: `min(calc(${share(year.matching, busiest)} + ${LANDMARK_GAP}px), calc(100% - ${LANDMARK_DOT}px))`,
+                    width: LANDMARK_DOT,
+                    height: LANDMARK_DOT,
+                    backgroundColor: LANDMARK_COLOR,
+                  }}
+                />
+              ) : null}
               {isCurrent ? (
                 <span
                   data-part="playhead"
