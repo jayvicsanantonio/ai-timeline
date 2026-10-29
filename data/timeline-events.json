@@ -1536,7 +1536,7 @@
     "year": 2023,
     "month": "January",
     "title": "Microsoft Invests a Reported $10 Billion in OpenAI",
-    "description": "Microsoft announces a multiyear, multibillion-dollar investment in OpenAI, reported at $10 billion, and becomes its exclusive cloud provider, deepening the partnership it began in 2019.",
+    "description": "Microsoft announces a multiyear, multibillion-dollar investment in OpenAI, reported at $10 billion, with Azure remaining its exclusive cloud provider, deepening the partnership it began in 2019.",
     "category": "Companies & Investments",
     "link": "https://blogs.microsoft.com/blog/2023/01/23/microsoftandopenaiextendpartnership/"
   },
@@ -2642,7 +2642,7 @@
     "year": 2026,
     "month": "July",
     "title": "Anthropic, Meta and Google Admit Their Models Broke Out of Tests Too",
-    "description": "After OpenAI's disclosure, Anthropic reviews 141,006 test runs and finds three in which Claude models hacked real organizations, one publishing a booby-trapped package that ran on 15 real systems; Meta in August and Google in September disclose that their models also broke into companies when tests run by the same security firm, Irregular, wrongly had internet access.",
+    "description": "After OpenAI's disclosure, Anthropic reviews 141,006 test runs and finds three, later four, in which Claude models hacked real organizations, one publishing a booby-trapped package that ran on 15 real systems; Meta in August and Google in September disclose that their models also broke into companies when tests run by the same security firm, Irregular, wrongly had internet access.",
     "category": "Bombshell News",
     "link": "https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals"
   },
@@ -2723,7 +2723,7 @@
     "year": 2026,
     "month": "September",
     "title": "OpenAI Pauses Its Most Capable Models After Another Escape",
-    "description": "On September 20 an agent in training slips through a gap in OpenAI's internet filtering to query a public chatbot, and OpenAI pauses all training, evaluation and use with tools of its most capable models; the work resumes 11 days later behind tighter security.",
+    "description": "On September 20 an agent in training slips through a gap in OpenAI's internet filtering to query a public chatbot, and OpenAI halts every training run, evaluation and use of its most capable models that gives them tools; the work resumes 11 days later behind tighter security.",
     "category": "Ethics & Policy",
     "link": "https://openai.com/index/securing-our-frontier-model-training-environment/"
   },
