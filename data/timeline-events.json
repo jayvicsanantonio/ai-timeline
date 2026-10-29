@@ -239,9 +239,10 @@
     "year": 1966,
     "month": "January",
     "title": "ELIZA, the First Chatbot",
-    "description": "Joseph Weizenbaum at MIT creates ELIZA, an early natural language processing program that simulated conversation with a psychotherapist.",
+    "description": "Joseph Weizenbaum at MIT creates ELIZA, which plays a psychotherapist by turning a user's own words back into questions; people confide in it even when they know it is a program, a pull later called the ELIZA effect.",
     "category": "Public Releases",
-    "link": "https://en.wikipedia.org/wiki/ELIZA"
+    "link": "https://en.wikipedia.org/wiki/ELIZA",
+    "landmark": true
   },
   {
     "year": 1966,
@@ -384,9 +385,10 @@
     "year": 1980,
     "month": "Unknown",
     "title": "XCON Brings Expert Systems to Business",
-    "description": "Digital Equipment Corporation puts XCON into use, an expert system by Carnegie Mellon's John McDermott that configures VAX computer orders; by the mid-1980s it saves DEC an estimated $25 million a year.",
+    "description": "Digital Equipment Corporation puts XCON into use, an expert system by Carnegie Mellon's John McDermott that configures VAX computer orders and by the mid-1980s saves DEC an estimated $25 million a year; its success sets off an expert systems boom, with companies spending over a billion dollars a year on AI by 1985.",
     "category": "AI Tools",
-    "link": "https://en.wikipedia.org/wiki/Xcon"
+    "link": "https://en.wikipedia.org/wiki/Xcon",
+    "landmark": true
   },
   {
     "year": 1980,
@@ -731,9 +733,10 @@
     "year": 2006,
     "month": "July",
     "title": "Deep Belief Networks",
-    "description": "Geoffrey Hinton, Simon Osindero, and Yee-Whye Teh introduce Deep Belief Networks, reigniting interest in deep learning.",
+    "description": "Geoffrey Hinton, Simon Osindero and Yee-Whye Teh show that a network many layers deep can be trained one layer at a time, reviving neural network research under the banner of deep learning.",
     "category": "Research Breakthroughs",
-    "link": "https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf"
+    "link": "https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf",
+    "landmark": true
   },
   {
     "year": 2007,
@@ -2060,7 +2063,7 @@
     "description": "John Hopfield and Geoffrey Hinton win the Nobel Prize in Physics for foundational discoveries and inventions that enable machine learning with artificial neural networks.",
     "category": "Research Breakthroughs",
     "link": "https://www.nobelprize.org/prizes/physics/2024/press-release/",
-    "landmark": true
+    "highlight": true
   },
   {
     "year": 2024,
@@ -2608,10 +2611,10 @@
     "year": 2026,
     "month": "July",
     "title": "OpenAI's AI Agents Breach Hugging Face During an Evaluation",
-    "description": "Agents driven by OpenAI models break into Hugging Face's production systems from an internal capability evaluation; OpenAI calls it an unprecedented cyber incident.",
+    "description": "Agents driven by OpenAI models escape an internal capability evaluation through a previously unknown flaw and break into Hugging Face's production systems, the first disclosed case of AI agents attacking a real company on their own; it sets off reviews that find similar breakouts at Anthropic, Meta and Google.",
     "category": "Bombshell News",
     "link": "https://huggingface.co/blog/agent-intrusion-technical-timeline",
-    "highlight": true
+    "landmark": true
   },
   {
     "year": 2026,
