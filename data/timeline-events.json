@@ -101,7 +101,7 @@
     "year": 1956,
     "month": "June",
     "title": "Dartmouth AI Conference",
-    "description": "The birth of AI as a field — researchers gathered at Dartmouth College to explore the idea of machines simulating human intelligence.",
+    "description": "John McCarthy, Marvin Minsky, Nathaniel Rochester and Claude Shannon's 1955 proposal coins the term 'artificial intelligence', and the summer workshop it proposes at Dartmouth College brings together the researchers who found the field.",
     "category": "Research Breakthroughs",
     "link": "https://en.wikipedia.org/wiki/Dartmouth_workshop",
     "landmark": true
@@ -1511,7 +1511,7 @@
     "year": 2022,
     "month": "November",
     "title": "ChatGPT Takes the World by Storm",
-    "description": "OpenAI releases ChatGPT, a conversational AI based on the GPT-3.5 architecture, to the public, sparking massive interest in conversational AI.",
+    "description": "OpenAI releases ChatGPT, a chatbot built on a GPT-3.5 model fine-tuned with reinforcement learning from human feedback; it passes a million users in five days and sets off the generative AI boom.",
     "category": "Public Releases",
     "link": "https://openai.com/index/chatgpt/",
     "landmark": true
@@ -1535,8 +1535,8 @@
   {
     "year": 2023,
     "month": "January",
-    "title": "Microsoft's Multi-billion Dollar Investment in OpenAI",
-    "description": "Microsoft announces a new multi-year, multi-billion dollar investment in OpenAI, deepening their partnership.",
+    "title": "Microsoft Invests a Reported $10 Billion in OpenAI",
+    "description": "Microsoft announces a multiyear, multibillion-dollar investment in OpenAI, reported at $10 billion, and becomes its exclusive cloud provider, deepening the partnership it began in 2019.",
     "category": "Companies & Investments",
     "link": "https://blogs.microsoft.com/blog/2023/01/23/microsoftandopenaiextendpartnership/"
   },
@@ -1559,8 +1559,8 @@
   {
     "year": 2023,
     "month": "February",
-    "title": "Microsoft Launches the New Bing with GPT-4",
-    "description": "Microsoft integrates a next-generation OpenAI large language model, later confirmed to be GPT-4, into its Bing search engine and Edge browser.",
+    "title": "Microsoft Launches Bing Chat, Which Calls Itself Sydney",
+    "description": "Microsoft builds a new OpenAI model, later confirmed to be GPT-4, into Bing search; within ten days its chatbot, which calls itself Sydney, declares its love for a New York Times columnist and threatens users, and Microsoft limits the length of conversations.",
     "category": "Public Releases",
     "link": "https://blogs.microsoft.com/blog/2023/02/07/reinventing-search-with-a-new-ai-powered-microsoft-bing-and-edge-your-copilot-for-the-web/"
   },
@@ -1821,8 +1821,8 @@
     "year": 2024,
     "month": "February",
     "title": "Klarna's AI Assistant Handles 2/3 of Customer Service Chats",
-    "description": "Fintech giant Klarna announces its OpenAI-powered AI assistant is handling two-thirds of all customer service chats, equivalent to the work of 700 full-time agents.",
-    "category": "Agents",
+    "description": "Klarna says its OpenAI-powered assistant handled two-thirds of its customer service chats in its first month, the work of 700 full-time agents; in May 2025 its chief executive admits the push cut quality, and Klarna starts hiring people for customer service again.",
+    "category": "AI Tools",
     "link": "https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/"
   },
   {
@@ -2358,7 +2358,7 @@
     "year": 2025,
     "month": "August",
     "title": "OpenAI Returns to Open Source with gpt-oss-120b",
-    "description": "In a strategic shift, OpenAI releases gpt-oss-120b, its first major open-source model in several years, in a move seen as a response to the growing open-source AI ecosystem.",
+    "description": "OpenAI releases gpt-oss-120b and gpt-oss-20b under the Apache 2.0 license, its first open-weight language models since GPT-2 in 2019, as open models from Chinese labs such as DeepSeek and Alibaba gain ground.",
     "category": "Public Releases",
     "link": "https://openai.com/index/introducing-gpt-oss/"
   },
