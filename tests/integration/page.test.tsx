@@ -1,9 +1,11 @@
 // Integration tests for the AI Timeline page composition: landmarks, era headings,
-// and event links rendered from the real timeline data.
+// event links and structured data rendered from the real timeline data.
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import timelineData from "@/data/timeline-events.json"
 import AITimelinePage from "@/app/page"
+import { websiteStructuredData } from "@/lib/site"
+import { parseTimelineEvents } from "@/lib/timeline-events"
 
 const ERA_TITLES = [
   "The Foundation Era",
@@ -33,5 +35,15 @@ describe("AITimelinePage", () => {
     const { container } = render(<AITimelinePage />)
 
     expect(container.querySelectorAll('h3 a[target="_blank"]')).toHaveLength(timelineData.length)
+  })
+
+  it("describes the site to search engines as one block of structured data", () => {
+    const { container } = render(<AITimelinePage />)
+
+    const scripts = container.querySelectorAll('script[type="application/ld+json"]')
+    expect(scripts).toHaveLength(1)
+    expect(JSON.parse(scripts[0].textContent ?? "")).toEqual(
+      websiteStructuredData(parseTimelineEvents(timelineData)),
+    )
   })
 })
