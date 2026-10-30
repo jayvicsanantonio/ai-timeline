@@ -1,9 +1,12 @@
-// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts and the global styles.
-// Wraps every page with the skip link and main landmark.
+// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts and the global styles, and sets the
+// metadata search engines and link previews read. Wraps every page with the skip link and main landmark.
 import type React from 'react';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { SkipToContent } from '@/components/accessibility/skip-to-content';
+import timelineData from '@/data/timeline-events.json';
+import { siteMetadata } from '@/lib/site';
+import { parseTimelineEvents } from '@/lib/timeline-events';
 import './globals.css';
 
 // Work Sans and Open Sans ship with the app (latin subsets, variable weight 300-700), so `next build` never fetches them from Google Fonts.
@@ -21,12 +24,7 @@ const openSans = localFont({
   weight: '300 700',
 });
 
-export const metadata: Metadata = {
-  title:
-    'The AI Timeline - Journey Through Artificial Intelligence History',
-  description:
-    'An immersive exploration of artificial intelligence milestones from the 1940s to the present day',
-};
+export const metadata: Metadata = siteMetadata(parseTimelineEvents(timelineData));
 
 export default function RootLayout({
   children,
