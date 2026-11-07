@@ -189,7 +189,7 @@ export function TimelineControls({
           <span className="px-1">·</span>
           <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">1</kbd>
           –
-          <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">5</kbd>
+          <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">6</kbd>
           eras
         </p>
 

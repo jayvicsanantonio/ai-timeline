@@ -104,7 +104,7 @@ function AgentPlan({ groups }: { groups: YearGroup[] }) {
         <ResultElbow className="mt-0.5" />
         <ul className="space-y-1.5">
           {groups.map((group, index) => {
-            const running = index === groups.length - 1;
+            const running = index === 0;
 
             return (
               <li key={group.year} className="flex items-center gap-2.5">
@@ -271,7 +271,7 @@ export function AgentEra({ era, totalEvents }: EraInterfaceProps) {
     );
   }
 
-  const lastEvent = era.events.at(-1);
+  const latestEvent = era.events[0];
   const groups = groupEventsByYear(era.events);
   // While the reader filters, every match shows in full
   const filtering = era.events.length < totalEvents;
@@ -304,14 +304,14 @@ export function AgentEra({ era, totalEvents }: EraInterfaceProps) {
             <p className="mt-4 text-sm leading-7 text-[#c8c8d0] sm:text-[15px]">{era.description}</p>
             <p className="mt-4 text-sm text-[#8b8b96]">
               {eraEventCount(era, totalEvents)}
-              {lastEvent ? ` through ${formatEventDate(lastEvent)}` : null}{' '}
+              {latestEvent ? ` through ${formatEventDate(latestEvent)}` : null}{' '}
               <span aria-hidden="true">·</span> {era.interfaceName}
             </p>
             <AgentPlan groups={groups} />
           </header>
 
           {groups.map((group, index) => (
-            <AgentYear key={group.year} group={group} running={index === groups.length - 1} filtering={filtering} />
+            <AgentYear key={group.year} group={group} running={index === 0} filtering={filtering} />
           ))}
         </div>
         <ConsoleStatusBar steps={era.events.length} />

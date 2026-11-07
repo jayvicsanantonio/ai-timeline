@@ -6,7 +6,7 @@ import { userEvent } from "vitest/browser"
 import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
 import { StoryEngine } from "@/components/storytelling/story-engine"
 import timelineData from "@/data/timeline-events.json"
-import { ERA_DEFINITIONS, groupEventsByEra } from "@/lib/eras"
+import { groupEventsByEra } from "@/lib/eras"
 import { filterEvents } from "@/lib/timeline-filter"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 
@@ -21,13 +21,13 @@ afterEach(() => {
 })
 
 describe("StoryEngine", () => {
-  it("draws the eras in order, each in its own interface", () => {
+  it("draws the eras in order from newest to oldest, each in its own interface", () => {
     render(<StoryEngine events={events} />)
 
-    const interfaces = ERA_DEFINITIONS.map(
-      (era) => screen.getByRole("region", { name: era.name }).dataset.interface,
-    )
-    expect(interfaces).toEqual(["punch-card", "terminal", "desktop", "notebook", "chat", "agent"])
+    const interfaces = screen
+      .getAllByRole("region")
+      .flatMap((section) => (section.dataset.interface ? [section.dataset.interface] : []))
+    expect(interfaces).toEqual(["agent", "chat", "notebook", "desktop", "terminal", "punch-card"])
     expect(eventCards()).toHaveLength(events.length)
   })
 
@@ -40,7 +40,7 @@ describe("StoryEngine", () => {
     expect(matches.length).toBeGreaterThan(0)
     await expect.poll(() => eventCards().length).toBe(matches.length)
     expect(eventCards().map((card) => within(card).getByRole("link").textContent)).toEqual(
-      matches.map((event) => event.title),
+      [...matches].reverse().map((event) => event.title),
     )
     expect(screen.getByRole("status")).toHaveTextContent(`Showing ${matches.length} of ${events.length} events`)
   })
@@ -68,7 +68,7 @@ describe("StoryEngine", () => {
 
     await userEvent.keyboard("j")
 
-    expect(screen.getByRole("link", { name: events[0].title })).toHaveFocus()
+    expect(screen.getByRole("link", { name: events.at(-1)!.title })).toHaveFocus()
   })
 
   it("jumps to an era's title with its number key", async () => {
@@ -87,17 +87,17 @@ describe("StoryEngine", () => {
     expect(screen.getByRole("searchbox", { name: "Search events" })).toHaveFocus()
   })
 
-  it("opens the final era with how much faster its events come, between it and the era before", () => {
+  it("follows the latest era with how much faster its events come, between it and the era before", () => {
     const { container } = render(<StoryEngine events={events} />)
 
     const paceLine = container.querySelector("[data-pace-line]")!
     expect(paceLine).toHaveTextContent(
-      "The next 2 years hold 80 events, 13 times the yearly pace of the 82 years before them.",
+      "The latest 2 years hold 80 events, 13 times the yearly pace of the 82 years before them.",
     )
     const generative = screen.getByRole("region", { name: "The Generative AI Era" })
     const agentic = screen.getByRole("region", { name: "The Agentic Era" })
-    expect(generative.compareDocumentPosition(paceLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(paceLine.compareDocumentPosition(agentic) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(agentic.compareDocumentPosition(paceLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(paceLine.compareDocumentPosition(generative) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it("leaves the pace line out while the reader filters", async () => {

@@ -55,6 +55,7 @@ function EraProgress({ progress, color, className }: EraProgressProps) {
 export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavigationProps) {
   const reduceMotion = usePrefersReducedMotion();
   const eraIds = useMemo(() => eras.map((era) => era.id), [eras]);
+  const railActivity = useMemo(() => [...activity].reverse(), [activity]);
   const position = useTimelinePosition(eraIds, contentKey);
   const [isPhoneListOpen, setIsPhoneListOpen] = useState(false);
   const phoneListId = useId();
@@ -66,14 +67,15 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
 
   const activeIndex = Math.max(eraIds.indexOf(position.eraId), 0);
   const activeEra = eras[activeIndex];
-  // While an era's introduction is being read, the clock shows the year the era begins
-  const year = position.year ?? activeEra.range[0];
+  // While an era's introduction is being read, the clock shows the year of the era's first event
+  const year = position.year ?? activeEra.events[0]?.year ?? activeEra.range[0];
   const firstYear = activity[0]?.year ?? activeEra.range[0];
   const lastYear = activity.at(-1)?.year ?? firstYear;
 
   const startShare = (era: Era) => {
-    const index = Math.min(Math.max(era.range[0] - firstYear, 0), activity.length - 1);
-    return activity.length > 0 ? index / activity.length : 0;
+    const eraTopYear = Math.min(era.range[1] - 1, lastYear);
+    const index = Math.min(Math.max(lastYear - eraTopYear, 0), railActivity.length - 1);
+    return railActivity.length > 0 ? index / railActivity.length : 0;
   };
 
   const handlePhoneNavigate = (eraId: string) => {
@@ -113,14 +115,16 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
 
           <div className="relative mt-4 h-[min(48vh,28rem)]">
             <ActivityChart
-              activity={activity}
+              activity={railActivity}
               orientation="vertical"
               currentYear={position.year}
               onSelectYear={scrollToYear}
               className="absolute inset-y-0 left-11 right-0"
             />
-            {eras.map((era) => {
+            {eras.map((era, index) => {
               const isActive = era.id === activeEra.id;
+              const minTop = `${index * 1.875}rem`;
+              const maxTop = `calc(100% - ${(eras.length - index) * 1.875 - 0.125}rem)`;
 
               return (
                 <button
@@ -136,7 +140,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                       : 'border-transparent text-zinc-400 hover:bg-white/[0.08] hover:text-white'
                   )}
                   style={{
-                    top: `clamp(0px, calc(${startShare(era) * 100}% - 0.875rem), calc(100% - 1.75rem))`,
+                    top: `clamp(${minTop}, calc(${startShare(era) * 100}% - 0.875rem), ${maxTop})`,
                   }}
                 >
                   <span
@@ -157,7 +161,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
           </div>
 
           <p className="mt-3 px-1 text-[11px] leading-snug text-zinc-500">
-            Events per year, {firstYear}–{lastYear}
+            Events per year, {lastYear}–{firstYear}
           </p>
         </div>
       </nav>

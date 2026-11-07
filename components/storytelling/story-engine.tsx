@@ -10,7 +10,7 @@ import { TimelineInsights } from '@/components/interactive/timeline-insights';
 import { TimelineControls } from '@/components/timeline/timeline-controls';
 import { TimelineNavigation } from '@/components/timeline/timeline-navigation';
 import { useTimelineShortcuts } from '@/hooks/use-timeline-shortcuts';
-import { groupEventsByEra } from '@/lib/eras';
+import { ERA_DEFINITIONS, groupEventsByEra } from '@/lib/eras';
 import { describePace, type Pace } from '@/lib/pace';
 import { countEventsByYear } from '@/lib/timeline-activity';
 import {
@@ -33,7 +33,7 @@ export function StoryEngine({ events }: StoryEngineProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const eras = useMemo(() => groupEventsByEra(events), [events]);
-  const eraIds = useMemo(() => eras.map((era) => era.id), [eras]);
+  const eraIds = useMemo(() => ERA_DEFINITIONS.map((era) => era.id), []);
   const shownEvents = useMemo(() => filterEvents(events, filters), [events, filters]);
   const shownEras = useMemo(() => groupEventsByEra(shownEvents), [shownEvents]);
   const activity = useMemo(() => countEventsByYear(events), [events]);
@@ -42,7 +42,7 @@ export function StoryEngine({ events }: StoryEngineProps) {
     [events, shownEvents]
   );
   const categoryCounts = useMemo(() => countEventsByCategory(events), [events]);
-  const pace = useMemo(() => describePace(events, eras[eras.length - 1].range[0]), [events, eras]);
+  const pace = useMemo(() => describePace(events, eras[0].range[0]), [events, eras]);
 
   useTimelineShortcuts({ eraIds, searchInputRef });
 
@@ -91,8 +91,8 @@ export function StoryEngine({ events }: StoryEngineProps) {
         />
         {shownEras.map((era, index) => (
           <Fragment key={era.id}>
-            {/* The turn into the final era says how much faster its events come, unless the reader is filtering */}
-            {index === shownEras.length - 1 && pace && !isFiltering(filters) ? <PaceLine pace={pace} /> : null}
+            {/* After the latest era, a line says how much faster its events came than in the eras below */}
+            {index === 1 && pace && !isFiltering(filters) ? <PaceLine pace={pace} /> : null}
             <EraChapter era={era} totalEvents={eras[index].events.length} />
           </Fragment>
         ))}
@@ -102,7 +102,7 @@ export function StoryEngine({ events }: StoryEngineProps) {
 
       <TimelineInsights events={events} />
 
-      <EpilogueScene firstEraId={eras[0].id} firstYear={activity[0]?.year ?? eras[0].range[0]} />
+      <EpilogueScene firstEraId={eras[0].id} firstYear={activity.at(-1)?.year ?? eras[0].range[0]} />
     </div>
   );
 }
@@ -115,7 +115,7 @@ function PaceLine({ pace }: { pace: Pace }) {
         data-pace-line=""
         className="mx-auto max-w-2xl text-balance text-center text-xl font-light leading-9 text-zinc-400 sm:text-2xl sm:leading-10"
       >
-        The next <span className="font-medium text-white">{pace.years} years</span> hold{' '}
+        The latest <span className="font-medium text-white">{pace.years} years</span> hold{' '}
         <span className="font-medium text-white">{pace.events} events</span>,{' '}
         <span className="font-medium text-white">{pace.multiple} times</span> the yearly pace of the{' '}
         {pace.yearsBefore} years before them.

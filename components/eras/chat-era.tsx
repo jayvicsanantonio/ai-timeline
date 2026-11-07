@@ -162,7 +162,7 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
     );
   }
 
-  const lastEvent = era.events.at(-1);
+  const latestEvent = era.events[0];
   // While the reader filters, every match shows in full
   const filtering = era.events.length < totalEvents;
 
@@ -193,7 +193,7 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
               </p>
               <p className="mt-4 text-sm text-[#a1a1aa]">
                 {eraEventCount(era, totalEvents)}
-                {lastEvent ? ` through ${formatEventDate(lastEvent)}` : null}{' '}
+                {latestEvent ? ` through ${formatEventDate(latestEvent)}` : null}{' '}
                 <span aria-hidden="true">·</span> {era.interfaceName}
               </p>
             </div>

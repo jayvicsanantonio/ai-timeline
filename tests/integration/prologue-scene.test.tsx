@@ -51,7 +51,7 @@ describe("PrologueScene", () => {
   it("sums up how many events fall in the latest era under the chart", () => {
     renderPrologue()
 
-    const latest = eras.at(-1)!
+    const latest = eras[0]!
     expect(screen.getByRole("figure")).toHaveTextContent(
       `${latest.events.length} of the ${events.length} events happened since ${latest.range[0]}`,
     )
@@ -77,10 +77,10 @@ describe("PrologueScene", () => {
     expect(rows[0]).toHaveTextContent(`${yearsWithEvents[0].year}${yearsWithEvents[0].total}`)
   })
 
-  it("starts the story at the first era", () => {
+  it("starts the story at the latest era", () => {
     renderPrologue()
 
-    expect(screen.getByRole("link", { name: `Begin in ${activity[0].year}` })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: `Begin in ${activity.at(-1)!.year}` })).toHaveAttribute(
       "href",
       `#${eras[0].id}`,
     )

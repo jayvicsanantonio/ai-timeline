@@ -96,7 +96,7 @@ describe("data/timeline-events.json", () => {
     const eras = groupEventsByEra(parseTimelineEvents(timelineData))
 
     const thinEras = eras
-      .slice(0, -1)
+      .slice(1)
       .filter((era) => era.events.length < 20)
       .map((era) => `${era.name} has ${era.events.length}`)
     expect(thinEras).toEqual([])

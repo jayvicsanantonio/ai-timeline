@@ -17,8 +17,8 @@ const summarizedYears = [
 
 describe("the year summaries data", () => {
   it("sums up every year of the chat thread and the agent's task log, and only those, once each and in order", () => {
-    expect(summarizedYears).toEqual([2020, 2021, 2022, 2023, 2024, 2025, 2026])
-    expect(yearSummaryData.map(({ year }) => year)).toEqual(summarizedYears)
+    expect(summarizedYears).toEqual([2026, 2025, 2024, 2023, 2022, 2021, 2020])
+    expect(yearSummaryData.map(({ year }) => year)).toEqual([...summarizedYears].reverse())
   })
 
   it("answers each year in one short sentence", () => {

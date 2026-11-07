@@ -60,18 +60,18 @@ describe("getEraForYear", () => {
 })
 
 describe("groupEventsByEra", () => {
-  it("puts each event in the era whose years contain it, keeping the events' order", () => {
+  it("puts each event in the era whose years contain it, ordering eras and events from newest to oldest", () => {
     const events = [1969, 1970, 1989, 1990, 2009, 2010, 2019, 2020, 2024, 2025, 2026].map((year) => makeEvent(year))
 
     const eras = groupEventsByEra(events)
 
     expect(eras.map((era) => era.events.map((event) => event.year))).toEqual([
+      [2026, 2025],
+      [2024, 2020],
+      [2019, 2010],
+      [2009, 1990],
+      [1989, 1970],
       [1969],
-      [1970, 1989],
-      [1990, 2009],
-      [2010, 2019],
-      [2020, 2024],
-      [2025, 2026],
     ])
   })
 
@@ -79,27 +79,27 @@ describe("groupEventsByEra", () => {
     const eras = groupEventsByEra([makeEvent(2024)])
 
     expect(eras).toHaveLength(6)
-    expect(eras.map((era) => era.events.length)).toEqual([0, 0, 0, 0, 1, 0])
+    expect(eras.map((era) => era.events.length)).toEqual([0, 1, 0, 0, 0, 0])
   })
 
   it("numbers the chapters and gives each era a section id, short label and subtitle of its decades or years", () => {
     const eras = groupEventsByEra([])
 
     expect(eras.map((era) => [era.id, era.label, era.chapter, era.number, era.subtitle])).toEqual([
-      ["the-foundation-era", "Foundation Era", "Chapter 1", "01", "1940s – 1960s"],
-      ["the-knowledge-era", "Knowledge Era", "Chapter 2", "02", "1970s – 1980s"],
-      ["the-learning-era", "Learning Era", "Chapter 3", "03", "1990s – 2000s"],
-      ["the-deep-learning-revolution", "Deep Learning Revolution", "Chapter 4", "04", "2010s"],
-      ["the-generative-ai-era", "Generative AI Era", "Chapter 5", "05", "2020 – 2024"],
       ["the-agentic-era", "Agentic Era", "Chapter 6", "06", "2025 – Present"],
+      ["the-generative-ai-era", "Generative AI Era", "Chapter 5", "05", "2020 – 2024"],
+      ["the-deep-learning-revolution", "Deep Learning Revolution", "Chapter 4", "04", "2010s"],
+      ["the-learning-era", "Learning Era", "Chapter 3", "03", "1990s – 2000s"],
+      ["the-knowledge-era", "Knowledge Era", "Chapter 2", "02", "1970s – 1980s"],
+      ["the-foundation-era", "Foundation Era", "Chapter 1", "01", "1940s – 1960s"],
     ])
   })
 
-  it("places every event in data/timeline-events.json in an era", () => {
+  it("places every event in data/timeline-events.json in an era from newest to oldest", () => {
     const events = parseTimelineEvents(timelineData)
 
     const eras = groupEventsByEra(events)
 
-    expect(eras.flatMap((era) => era.events)).toEqual(events)
+    expect(eras.flatMap((era) => era.events)).toEqual([...events].reverse())
   })
 })

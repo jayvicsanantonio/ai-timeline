@@ -20,7 +20,7 @@ interface PrologueSceneProps {
 export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProps) {
   const firstYear = activity[0]?.year;
   const lastYear = activity.at(-1)?.year;
-  const latestEra = eras.at(-1);
+  const latestEra = eras[0];
 
   return (
     <section
@@ -34,7 +34,7 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
 
       <div className="relative mx-auto max-w-6xl">
         <p className="prologue-rise font-mono text-xs uppercase tracking-[0.3em] text-zinc-400">
-          {firstYear} – {lastYear} <span aria-hidden="true">·</span> {totalEvents} events{' '}
+          {lastYear} – {firstYear} <span aria-hidden="true">·</span> {totalEvents} events{' '}
           <span aria-hidden="true">·</span> {eras.length} eras
         </p>
         <h1
@@ -45,8 +45,8 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
         </h1>
         <p className="prologue-rise mt-8 max-w-2xl text-lg leading-8 text-zinc-300 [animation-delay:160ms] sm:text-xl sm:leading-9">
           For decades, humanity has dreamed of building minds. This is the story of that dream, from its
-          first spark to its living, breathing forms today, with each era drawn in the computer interface of
-          its day.
+          living, breathing forms today back to its first spark, with each era drawn in the computer interface
+          of its day.
         </p>
 
         <figure className="prologue-rise mt-14 [animation-delay:240ms] sm:mt-20">
@@ -105,12 +105,12 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
           ))}
         </ol>
 
-        {eras[0] && firstYear !== undefined ? (
+        {eras[0] && lastYear !== undefined ? (
           <a
             href={`#${eras[0].id}`}
             className="mt-14 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
           >
-            Begin in {firstYear}
+            Begin in {lastYear}
             <ArrowDown aria-hidden="true" className="size-4 motion-safe:animate-bounce" />
           </a>
         ) : null}
@@ -154,13 +154,14 @@ function EraAxis({ eras, activity }: { eras: Era[]; activity: YearActivity[] }) 
 
   const firstYear = activity[0].year;
   const lastYear = activity[activity.length - 1].year;
+  const chronologicalEras = [...eras].sort((a, b) => a.range[0] - b.range[0]);
 
   return (
     <div aria-hidden="true" data-era-axis="" className="mt-2 flex gap-[2px]">
-      {eras.map((era, index) => {
+      {chronologicalEras.map((era, index) => {
         const start = Math.max(era.range[0], firstYear);
         const end = Math.min(era.range[1] - 1, lastYear);
-        const isLast = index === eras.length - 1;
+        const isLast = index === chronologicalEras.length - 1;
         // An era of only a few years has room for its first year on a wide screen, and never for its name
         const isShort = end - start + 1 < 8;
 

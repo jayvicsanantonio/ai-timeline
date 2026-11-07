@@ -115,6 +115,7 @@ export function getEraForYear(year: number) {
   return ERA_DEFINITIONS.find(({ range }) => year >= range[0] && year < range[1]);
 }
 
+// Groups events into eras from the newest era to the oldest, with each era's events ordered newest first
 export function groupEventsByEra(events: TimelineEvent[]): Era[] {
   return ERA_DEFINITIONS.map((era, index) => ({
     ...era,
@@ -122,6 +123,6 @@ export function groupEventsByEra(events: TimelineEvent[]): Era[] {
     chapter: `Chapter ${index + 1}`,
     number: String(index + 1).padStart(2, '0'),
     subtitle: formatSubtitle(era.range, index === ERA_DEFINITIONS.length - 1),
-    events: events.filter((event) => getEraForYear(event.year)?.id === era.id),
-  }));
+    events: events.filter((event) => getEraForYear(event.year)?.id === era.id).reverse(),
+  })).reverse();
 }

@@ -94,7 +94,7 @@ test("charts every year from the first event to the last, and labels the busiest
 
 test("jumps to a year's first event from its bar in the opening chart, as the chart's hint says", async ({ page }) => {
   const year = 1956
-  const firstOfYear = timelineData.find((event) => event.year === year)!
+  const firstOfYear = timelineData.filter((event) => event.year === year).at(-1)!
   // Some eras set titles in capitals, so the link is matched by its whole title in any case
   const escapedTitle = firstOfYear.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 

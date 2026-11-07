@@ -41,8 +41,8 @@ function findMostCommonCategory(counts: ReturnType<typeof countEventsByCategory>
 // repeats the opening chart, which already shows the busiest year and the climb since 2020.
 function getInsights(events: TimelineEvent[]) {
   const eras = groupEventsByEra(events)
-  const latest = eras[eras.length - 1]
-  const previous = eras[eras.length - 2]
+  const latest = eras[0]
+  const previous = eras[1]
   const latestRate = eventsPerYear(latest, true)
   const previousRate = eventsPerYear(previous, false)
   const counts = countEventsByCategory(events)

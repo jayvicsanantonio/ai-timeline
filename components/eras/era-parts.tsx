@@ -107,7 +107,7 @@ interface YearGapProps {
   className?: string;
 }
 
-// Says how many years passed before the entry at `index` when more than one did, so an era's
+// Says how many years separate the entry at `index` from the one before it when more than one did, so an era's
 // quiet stretches show between its cards. It goes ahead of the cards, outside them.
 export function YearGap({ events, index, className }: YearGapProps) {
   const years = yearsSincePreviousEvent(events, index);
@@ -115,7 +115,12 @@ export function YearGap({ events, index, className }: YearGapProps) {
     return null;
   }
 
-  return <p className={className}>{years} years later</p>;
+  const direction = events[index].year < events[index - 1].year ? 'earlier' : 'later';
+  return (
+    <p className={className}>
+      {years} years {direction}
+    </p>
+  );
 }
 
 interface YearColumnProps {

@@ -14,11 +14,13 @@ describe("yearsSincePreviousEvent", () => {
 
   it("counts the years since the event before, when more than one passed", () => {
     expect(yearsSincePreviousEvent(eventsIn(1943, 1950), 1)).toBe(7)
+    expect(yearsSincePreviousEvent(eventsIn(1950, 1943), 1)).toBe(7)
     expect(yearsSincePreviousEvent(eventsIn(1950, 1956, 1958), 2)).toBe(2)
   })
 
-  it("leaves events in the same year or the next year unmarked", () => {
+  it("leaves events in the same year or an adjacent year unmarked", () => {
     expect(yearsSincePreviousEvent(eventsIn(1956, 1956), 1)).toBeNull()
     expect(yearsSincePreviousEvent(eventsIn(1956, 1957), 1)).toBeNull()
+    expect(yearsSincePreviousEvent(eventsIn(1957, 1956), 1)).toBeNull()
   })
 })

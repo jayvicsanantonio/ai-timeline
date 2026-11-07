@@ -61,7 +61,7 @@ test.describe("event links", () => {
 
     const links = page.locator(EVENT_LINKS)
     await expect(links).toHaveCount(timelineData.length)
-    await expect(links.first()).toHaveAttribute("href", timelineData[0].link)
+    await expect(links.first()).toHaveAttribute("href", timelineData.at(-1)!.link)
     await expect(links.first()).toHaveAttribute("rel", "noopener noreferrer")
   })
 
@@ -197,7 +197,7 @@ test.describe("motion when reduced motion is preferred", () => {
     await waitForHydration(page)
 
     const opacityJustAfterEntering = await page.evaluate(async () => {
-      document.getElementById("the-foundation-era")!.scrollIntoView({ behavior: "instant" as ScrollBehavior })
+      document.getElementById("the-agentic-era")!.scrollIntoView({ behavior: "instant" as ScrollBehavior })
       // Gives the scroll handler a frame to measure and React a moment to render, far less than a fade takes
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 50))))
       const navs = [...document.querySelectorAll('nav[aria-label="Timeline chapter navigation"]')]

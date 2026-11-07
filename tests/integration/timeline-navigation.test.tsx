@@ -84,12 +84,12 @@ describe("TimelineNavigation on a wide screen", () => {
 
     const buttons = within(rail()).getAllByRole("button", { name: /^Chapter \d/ })
     expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual([
-      "Chapter 1: Foundation Era",
-      "Chapter 2: Knowledge Era",
-      "Chapter 3: Learning Era",
-      "Chapter 4: Deep Learning Revolution",
-      "Chapter 5: Generative AI Era",
       "Chapter 6: Agentic Era",
+      "Chapter 5: Generative AI Era",
+      "Chapter 4: Deep Learning Revolution",
+      "Chapter 3: Learning Era",
+      "Chapter 2: Knowledge Era",
+      "Chapter 1: Foundation Era",
     ])
     expect(buttons[0]).toHaveAttribute("aria-current", "location")
   })
@@ -160,8 +160,8 @@ describe("TimelineNavigation on a phone", () => {
 
     const phoneNav = toggle().closest("nav")!
     expect(toggle()).toHaveAttribute("aria-expanded", "false")
-    expect(toggle()).toHaveTextContent("Foundation Era")
-    expect(toggle()).toHaveTextContent("01 / 06")
+    expect(toggle()).toHaveTextContent("Agentic Era")
+    expect(toggle()).toHaveTextContent("06 / 06")
     expect(within(phoneNav).getAllByRole("button")).toEqual([toggle()])
   })
 

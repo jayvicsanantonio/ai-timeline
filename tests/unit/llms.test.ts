@@ -71,15 +71,13 @@ describe("llmsFullTxt", () => {
 
     expect(text).toContain(
       [
+        "## The Knowledge Era (1970s – 1980s)",
+        "",
+        groupEventsByEra([neuron]).at(-2)!.description,
+        "",
         "## The Foundation Era (1940s – 1960s)",
         "",
-        groupEventsByEra([neuron])[0].description,
-        "",
-        "### 1943",
-        "",
-        "- McCulloch-Pitts Neuron (December 1943, Research Breakthroughs, landmark)",
-        "  The first mathematical model of a neural network.",
-        "  Source: https://example.com/neuron",
+        groupEventsByEra([neuron]).at(-1)!.description,
         "",
         "### 1958",
         "",
@@ -87,7 +85,11 @@ describe("llmsFullTxt", () => {
         "  A machine that learns to recognize patterns.",
         "  Source: https://example.com/perceptron",
         "",
-        "## The Knowledge Era (1970s – 1980s)",
+        "### 1943",
+        "",
+        "- McCulloch-Pitts Neuron (December 1943, Research Breakthroughs, landmark)",
+        "  The first mathematical model of a neural network.",
+        "  Source: https://example.com/neuron",
       ].join("\n"),
     )
     expect(text).toContain(

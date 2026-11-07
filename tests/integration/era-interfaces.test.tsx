@@ -68,7 +68,7 @@ function renderEra(eraInterface: EraInterface, events = eventsByInterface[eraInt
 }
 
 describe.each(INTERFACES)("the %s era", (eraInterface) => {
-  const events = eventsByInterface[eraInterface]
+  const events = [...eventsByInterface[eraInterface]].reverse()
 
   it("is a section named by its era title, a level-2 heading that can take focus", () => {
     const { era, section } = renderEra(eraInterface)
@@ -250,18 +250,18 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
 describe.each(["punch-card", "terminal", "desktop"] as const)("the %s era's year gaps", (eraInterface) => {
   const [first, second] = eventsByInterface[eraInterface]
 
-  it("says how many years passed before an event, when more than one did", () => {
+  it("says how many years passed between events, when more than one did", () => {
     const { section } = renderEra(eraInterface)
 
-    const markers = within(section).getAllByText(/^\d+ years later$/)
-    expect(markers.map((marker) => marker.textContent)).toEqual([`${second.year - first.year} years later`])
+    const markers = within(section).getAllByText(/^\d+ years earlier$/)
+    expect(markers.map((marker) => marker.textContent)).toEqual([`${second.year - first.year} years earlier`])
   })
 
   it("sits ahead of the year's first card in its list item, where assistive technology reads it too", () => {
     const { section } = renderEra(eraInterface)
 
-    const marker = within(section).getByText(/^\d+ years later$/)
-    const card = section.querySelector(`#${eventAnchorId(second)}`)!
+    const marker = within(section).getByText(/^\d+ years earlier$/)
+    const card = section.querySelector(`#${eventAnchorId(first)}`)!
     expect(marker.closest("li")!.contains(card)).toBe(true)
     expect(marker.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(marker.closest("article")).toBeNull()
@@ -274,7 +274,7 @@ describe.each(["punch-card", "terminal", "desktop"] as const)("the %s era's year
       makeEvent(first.year + 1, "June", "The Next Year", "AI Tools"),
     ])
 
-    expect(within(section).queryByText(/years later/)).toBeNull()
+    expect(within(section).queryByText(/years (later|earlier)/)).toBeNull()
   })
 })
 
@@ -289,7 +289,7 @@ function drawnYear(column: HTMLElement) {
 
 // Every era groups its events by year, beside a column that names the year in the era's own style
 describe.each(INTERFACES)("the %s era's year column", (eraInterface) => {
-  const events = eventsByInterface[eraInterface]
+  const events = [...eventsByInterface[eraInterface]].reverse()
   const years = [...new Set(events.map((event) => event.year))]
 
   it("names each year ahead of its events, in plain words for assistive technology", () => {
@@ -354,10 +354,12 @@ describe.each(INTERFACES)("the %s era's year column", (eraInterface) => {
 })
 
 describe("the punch-card era", () => {
+  const events = [...eventsByInterface["punch-card"]].reverse()
+
   it("counts each year's cards as records and lights the months they fall in", () => {
     const { section } = renderEra("punch-card")
 
-    const [year1951, year1956] = yearColumns(section)
+    const [year1956, year1951] = yearColumns(section)
     const litMonths = (column: HTMLElement) =>
       [...column.querySelectorAll<HTMLElement>("[data-month-square]")]
         .filter((square) => square.dataset.count !== "0")
@@ -391,7 +393,7 @@ describe("the punch-card era", () => {
     within(section)
       .getAllByRole("article")
       .forEach((article, index) => {
-        const expectedHoles = encodeHollerith(eventsByInterface["punch-card"][index].title).flat().length
+        const expectedHoles = encodeHollerith(events[index].title).flat().length
         expect(article.querySelectorAll("svg [data-hole]")).toHaveLength(expectedHoles)
         expect(article.querySelector("svg")).toHaveAttribute("aria-hidden", "true")
       })
@@ -408,7 +410,7 @@ describe("the punch-card era", () => {
     within(section)
       .getAllByRole("article")
       .forEach((card, index) => {
-        const event = eventsByInterface["punch-card"][index]
+        const event = events[index]
         const description = within(card).getByText(event.description).getBoundingClientRect()
         for (const field of cardFields(card, event)) {
           expect(field.getBoundingClientRect().top).toBeGreaterThanOrEqual(description.bottom)
@@ -431,7 +433,7 @@ describe("the punch-card era", () => {
       within(section)
         .getAllByRole("article")
         .forEach((card, index) => {
-          const event = eventsByInterface["punch-card"][index]
+          const event = events[index]
           const title = within(card).getByRole("heading", { level: 3 }).getBoundingClientRect()
           const holes = card.querySelector("svg")!.getBoundingClientRect()
           for (const field of cardFields(card, event)) {
@@ -459,7 +461,7 @@ describe("the terminal era", () => {
   it("recalls each event at a command prompt that prints its date", () => {
     const { section } = renderEra("terminal")
 
-    const [mycin, xcon] = within(section).getAllByRole("article")
+    const [xcon, mycin] = within(section).getAllByRole("article")
     expect(mycin).toHaveTextContent("> RECALL 1974")
     expect(xcon).toHaveTextContent("> RECALL March 1980")
   })
@@ -467,7 +469,7 @@ describe("the terminal era", () => {
   it("prints each year in hex beside its count of records, as the terminal would", () => {
     const { section } = renderEra("terminal")
 
-    const [year1974] = yearColumns(section)
+    const [, year1974] = yearColumns(section)
     expect(drawnYear(year1974)).toHaveTextContent("0X7B6 · 1 REC")
   })
 })
@@ -476,7 +478,7 @@ describe("the desktop era", () => {
   it("files each year in a folder named for it, as the desktop would", () => {
     const { section } = renderEra("desktop")
 
-    const [year1997] = yearColumns(section)
+    const [, year1997] = yearColumns(section)
     expect(drawnYear(year1997)).toHaveTextContent("C:\\AI\\1997 (1)")
     expect(drawnYear(year1997).querySelector("svg")).not.toBeNull()
   })
@@ -501,6 +503,8 @@ function luminance(color: string) {
 }
 
 describe("the notebook era", () => {
+  const events = [...eventsByInterface.notebook].reverse()
+
   it("sets the white notebook on a dark desk, so it does not flash between the dark eras", () => {
     const { section } = renderEra("notebook")
 
@@ -516,7 +520,7 @@ describe("the notebook era", () => {
     within(section)
       .getAllByRole("article")
       .forEach((cell, index) => {
-        const event = eventsByInterface.notebook[index]
+        const event = events[index]
         expect(cell.textContent!.split(formatEventDate(event))).toHaveLength(2)
         expect(cell).not.toHaveTextContent(eventDateTime(event))
       })
@@ -533,7 +537,7 @@ describe("the notebook era", () => {
   it("heads each year like a markdown cell, with its count of cells", () => {
     const { section } = renderEra("notebook")
 
-    const [year2012] = yearColumns(section)
+    const [, year2012] = yearColumns(section)
     expect(drawnYear(year2012)).toHaveTextContent("# 2012")
     expect(drawnYear(year2012)).toHaveTextContent("1 cell")
   })
@@ -588,36 +592,36 @@ describe("the chat era", () => {
     const { container } = renderEra("chat")
 
     const dividers = [...container.querySelectorAll("[data-month-divider]")]
-    expect(dividers.map((divider) => divider.textContent)).toEqual(["March 2023", "May 2024"])
-    expect(dividers[0].closest("[data-month]")!.querySelectorAll("article")).toHaveLength(2)
+    expect(dividers.map((divider) => divider.textContent)).toEqual(["May 2024", "March 2023"])
+    expect(dividers[1].closest("[data-month]")!.querySelectorAll("article")).toHaveLength(2)
   })
 
   it("asks about each new year before that year's first message", () => {
     const { container } = renderEra("chat")
 
     const prompts = [...container.querySelectorAll("[data-year-prompt]")]
-    expect(prompts.map((prompt) => prompt.textContent)).toEqual(["What happened in 2023?", "What happened in 2024?"])
-    const firstOf2024 = container.querySelector('article[data-year="2024"]')!
-    expect(prompts[1].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(prompts[0].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(prompts.map((prompt) => prompt.textContent)).toEqual(["What happened in 2024?", "What happened in 2023?"])
+    const firstOf2023 = container.querySelector('article[data-year="2023"]')!
+    expect(prompts[1].compareDocumentPosition(firstOf2023) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(prompts[0].compareDocumentPosition(firstOf2023) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it("answers each year's question with that year's summary, ahead of its first message", () => {
     const { container } = renderEra("chat")
 
     const answers = [...container.querySelectorAll("[data-year-summary]")]
-    expect(answers.map((answer) => answer.textContent)).toEqual([yearSummary(2023), yearSummary(2024)])
-    const prompt2024 = container.querySelectorAll("[data-year-prompt]")[1]
-    const firstOf2024 = container.querySelector('article[data-year="2024"]')!
-    expect(prompt2024.compareDocumentPosition(answers[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(answers[1].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(answers.map((answer) => answer.textContent)).toEqual([yearSummary(2024), yearSummary(2023)])
+    const prompt2023 = container.querySelectorAll("[data-year-prompt]")[1]
+    const firstOf2023 = container.querySelector('article[data-year="2023"]')!
+    expect(prompt2023.compareDocumentPosition(answers[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(answers[1].compareDocumentPosition(firstOf2023) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(answers[1].closest('[aria-hidden="true"]')).toBeNull()
   })
 
   it("counts each year's events and landmarks beside them", () => {
     const { section } = renderEra("chat")
 
-    const [year2023, year2024] = yearColumns(section)
+    const [year2024, year2023] = yearColumns(section)
     expect(drawnYear(year2023)).toHaveTextContent("2 events")
     expect(drawnYear(year2023)).toHaveTextContent("★ 1 landmark")
     expect(drawnYear(year2024)).toHaveTextContent("1 event")
@@ -644,7 +648,7 @@ describe("the chat era", () => {
 
     const replies = [...container.querySelectorAll<HTMLElement>("[data-year-reply]")]
     const prompts = [...container.querySelectorAll("[data-year-prompt]")]
-    expect(replies.map((reply) => reply.dataset.yearReply)).toEqual(["2023", "2024"])
+    expect(replies.map((reply) => reply.dataset.yearReply)).toEqual(["2024", "2023"])
     replies.forEach((reply, index) => {
       expect(reply.querySelector("[data-year-summary]")).toHaveTextContent(yearSummary(Number(reply.dataset.yearReply))!)
       expect(reply.querySelectorAll("article")).toHaveLength(
@@ -674,10 +678,10 @@ describe("the chat era", () => {
 
     const rows = [...container.querySelectorAll("[data-reply-actions]")]
     expect(rows).toHaveLength(2)
-    const lastOf2023 = [...container.querySelectorAll('article[data-year="2023"]')].at(-1)!
-    const firstOf2024 = container.querySelector('article[data-year="2024"]')!
-    expect(lastOf2023.compareDocumentPosition(rows[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(rows[0].compareDocumentPosition(firstOf2024) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const lastOf2024 = [...container.querySelectorAll('article[data-year="2024"]')].at(-1)!
+    const firstOf2023 = container.querySelector('article[data-year="2023"]')!
+    expect(lastOf2024.compareDocumentPosition(rows[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(rows[0].compareDocumentPosition(firstOf2023) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     for (const row of rows) {
       expect(row.closest('[aria-hidden="true"]')).not.toBeNull()
       expect(row.querySelectorAll("svg")).toHaveLength(4)
@@ -730,8 +734,8 @@ describe("the agent era", () => {
 
     const steps = [...container.querySelectorAll<HTMLElement>("[data-plan-step]")]
     expect(steps.map((step) => [step.textContent, step.dataset.status])).toEqual([
-      ["Research 2025", "done"],
       ["Research 2026", "running"],
+      ["Research 2025", "done"],
     ])
     expect(steps[0].closest('[aria-hidden="true"]')).not.toBeNull()
   })
@@ -740,28 +744,28 @@ describe("the agent era", () => {
     const { container } = renderEra("agent")
 
     const tasks = [...container.querySelectorAll("[data-year-task]")]
-    expect(tasks.map((task) => task.textContent)).toEqual(["Research 2025", "Research 2026"])
-    const firstOf2026 = container.querySelector('article[data-year="2026"]')!
-    expect(tasks[1].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(tasks[0].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(tasks.map((task) => task.textContent)).toEqual(["Research 2026", "Research 2025"])
+    const firstOf2025 = container.querySelector('article[data-year="2025"]')!
+    expect(tasks[1].compareDocumentPosition(firstOf2025) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(tasks[0].compareDocumentPosition(firstOf2025) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it("reports each year's summary after its task, ahead of its first step", () => {
     const { container } = renderEra("agent")
 
     const reports = [...container.querySelectorAll("[data-year-summary]")]
-    expect(reports.map((report) => report.textContent)).toEqual([yearSummary(2025), yearSummary(2026)])
-    const task2026 = container.querySelectorAll("[data-year-task]")[1]
-    const firstOf2026 = container.querySelector('article[data-year="2026"]')!
-    expect(task2026.compareDocumentPosition(reports[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(reports[1].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(reports.map((report) => report.textContent)).toEqual([yearSummary(2026), yearSummary(2025)])
+    const task2025 = container.querySelectorAll("[data-year-task]")[1]
+    const firstOf2025 = container.querySelector('article[data-year="2025"]')!
+    expect(task2025.compareDocumentPosition(reports[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(reports[1].compareDocumentPosition(firstOf2025) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(reports[1].closest('[aria-hidden="true"]')).toBeNull()
   })
 
   it("counts each year's events and landmarks beside them", () => {
     const { section } = renderEra("agent")
 
-    const [year2025, year2026] = yearColumns(section)
+    const [year2026, year2025] = yearColumns(section)
     expect(drawnYear(year2025)).toHaveTextContent("2 events")
     expect(drawnYear(year2025)).toHaveTextContent("★ 1 landmark")
     expect(drawnYear(year2026)).toHaveTextContent("1 event")
@@ -784,11 +788,11 @@ describe("the agent era", () => {
     ])
 
     const notes = [...container.querySelectorAll("[data-year-activity]")]
-    expect(notes.map((note) => note.textContent)).toEqual(["Read 3 pages from 2 sites", "Read 1 page from 1 site"])
-    const task2026 = container.querySelectorAll("[data-year-task]")[1]
-    const firstOf2026 = container.querySelector('article[data-year="2026"]')!
-    expect(task2026.compareDocumentPosition(notes[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(notes[1].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(notes.map((note) => note.textContent)).toEqual(["Read 1 page from 1 site", "Read 3 pages from 2 sites"])
+    const task2025 = container.querySelectorAll("[data-year-task]")[1]
+    const firstOf2025 = container.querySelector('article[data-year="2025"]')!
+    expect(task2025.compareDocumentPosition(notes[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(notes[1].compareDocumentPosition(firstOf2025) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(notes[0].closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
@@ -873,7 +877,7 @@ describe("the agent era", () => {
   it("fills a twelve-month progress bar beside each year, to its latest month while the year is still running", () => {
     const { section } = renderEra("agent")
 
-    const [done, running] = yearColumns(section).map((column) => column.querySelector<HTMLElement>("[data-year-progress]")!)
+    const [running, done] = yearColumns(section).map((column) => column.querySelector<HTMLElement>("[data-year-progress]")!)
     expect(done).toHaveTextContent("12/12 mo")
     expect(done.querySelectorAll("[data-month-cell]")).toHaveLength(12)
     expect(done.querySelectorAll("[data-month-cell][data-filled]")).toHaveLength(12)
@@ -885,8 +889,8 @@ describe("the agent era", () => {
     const { section } = renderEra("agent", busyYearIn(2025))
 
     const batches = [...section.querySelectorAll("[data-batch]")]
-    expect(batches.map((batch) => batch.textContent)).toEqual(["2 fetches in parallel", "10 fetches in parallel"])
-    const firstOfEachRun = ["Release 2", "Release 5"].map((title) => within(section).getByRole("link", { name: title }))
+    expect(batches.map((batch) => batch.textContent)).toEqual(["10 fetches in parallel", "2 fetches in parallel"])
+    const firstOfEachRun = ["Release 14", "Release 3"].map((title) => within(section).getByRole("link", { name: title }))
     batches.forEach((batch, index) => {
       expect(batch.compareDocumentPosition(firstOfEachRun[index]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
       expect(batch.closest('[aria-hidden="true"]')).not.toBeNull()
@@ -900,7 +904,7 @@ describe("the agent era", () => {
     const { section } = renderEra("agent", events)
 
     const batches = [...section.querySelectorAll("[data-batch]")]
-    expect(batches.map((batch) => batch.textContent)).toEqual(["1 fetch", "10 fetches in parallel"])
+    expect(batches.map((batch) => batch.textContent)).toEqual(["10 fetches in parallel", "1 fetch"])
   })
 
   it("asks at each landmark whether to mark a turning point, with yes chosen", () => {
@@ -923,8 +927,8 @@ describe("the agent era", () => {
     expect(writes[0]).toHaveTextContent("+2 events · 1 landmark")
     const lastOf2025 = [...container.querySelectorAll('article[data-year="2025"]')].at(-1)!
     const firstOf2026 = container.querySelector('article[data-year="2026"]')!
+    expect(firstOf2026.compareDocumentPosition(lastOf2025) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(lastOf2025.compareDocumentPosition(writes[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(writes[0].compareDocumentPosition(firstOf2026) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(writes[0].closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
@@ -968,7 +972,7 @@ describe.each([
   ["agent", 2025],
 ] as const)("the %s era's busy years", (eraInterface, year) => {
   const busyYear = busyYearIn(year)
-  const fullSizeTitles = ["Release 1", "Release 4"]
+  const fullSizeTitles = ["Release 4", "Release 1"]
 
   function cards(section: HTMLElement) {
     return within(section).getAllByRole("article")

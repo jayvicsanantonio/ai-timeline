@@ -11,7 +11,7 @@ import { yearsSincePreviousEvent } from "../../lib/year-gaps"
 import { groupEventsByYear, isBusyYear, latestMonth } from "../../lib/year-groups"
 import type { TimelineEvent } from "../../types/timeline"
 
-const INTERFACES = ["punch-card", "terminal", "desktop", "notebook", "chat", "agent"]
+const INTERFACES = ["agent", "chat", "notebook", "desktop", "terminal", "punch-card"]
 
 const erasOfData = groupEventsByEra(timelineData as TimelineEvent[])
 
@@ -105,11 +105,11 @@ test("marks each stretch of more than a year between events, ahead of the event 
   for (const era of erasWithGaps) {
     const expected = era.events.flatMap((event, index) => {
       const years = yearsSincePreviousEvent(era.events, index)
-      return years === null ? [] : [`${years} years later, then ${event.title}`]
+      return years === null ? [] : [`${years} years earlier, then ${event.title}`]
     })
     const marked = await page.locator(`#${era.id} li`).evaluateAll((items) =>
       items.flatMap((item) => {
-        const marker = [...item.children].find((child) => /^\d+ years later$/.test(child.textContent ?? ""))
+        const marker = [...item.children].find((child) => /^\d+ years earlier$/.test(child.textContent ?? ""))
         return marker ? [`${marker.textContent}, then ${item.querySelector("a[data-event-link]")!.textContent}`] : []
       }),
     )
@@ -177,7 +177,7 @@ test("fills each year's progress bar in the agent's console, to its latest month
 
   const agentYears = groupEventsByYear(erasOfData.find((candidate) => candidate.interface === "agent")!.events)
   const expected = agentYears.map(({ events }, index) =>
-    index === agentYears.length - 1 ? `${latestMonth(events)}/12 mo` : "12/12 mo",
+    index === 0 ? `${latestMonth(events)}/12 mo` : "12/12 mo",
   )
   await expect(page.locator("#the-agentic-era [data-year-progress] [data-progress-label]")).toHaveText(expected)
 })
@@ -192,7 +192,7 @@ test("ends the chat thread by typing into its message box the task the agent's c
 test("sums up each year of the chat thread and the agent's log with its summary from the data", async ({ page }) => {
   await page.goto("/")
 
-  await expect(page.locator("[data-year-summary]")).toHaveText(yearSummaryData.map(({ summary }) => summary))
+  await expect(page.locator("[data-year-summary]")).toHaveText([...yearSummaryData].reverse().map(({ summary }) => summary))
 })
 
 test("inverts a terminal record's title while the pointer is over it", async ({ page }) => {
@@ -303,12 +303,12 @@ test("dissolves each era into the next through the page's black", async ({ page 
   }
 })
 
-const busyYears = groupEventsByYear(timelineData as TimelineEvent[]).filter((group) => isBusyYear(group.events))
+const busyYears = erasOfData.flatMap((era) => groupEventsByYear(era.events)).filter((group) => isBusyYear(group.events))
 
 test("keeps only each busy year's landmarks and highlights in full, and lists the rest in brief", async ({ page }) => {
   await page.goto("/")
 
-  expect(busyYears.map((group) => group.year)).toEqual([2022, 2023, 2024, 2025, 2026])
+  expect(busyYears.map((group) => group.year)).toEqual([2026, 2025, 2024, 2023, 2022])
   await expect(page.locator("article")).toHaveCount(timelineData.length)
   for (const group of busyYears) {
     const fullSize = group.events.filter((event) => event.landmark || event.highlight).map((event) => event.title)
@@ -363,20 +363,20 @@ test("lists the busy years in brief in under half the length of showing them in 
   expect(inBrief).toBeLessThan(inFull / 2)
 })
 
-test("opens the Agentic Era with how much faster the events come", async ({ page }) => {
+test("follows the Agentic Era with how much faster the events come", async ({ page }) => {
   const pace = describePace(timelineData as TimelineEvent[], 2025)!
   await page.goto("/")
 
   const paceLine = page.locator("[data-pace-line]")
   await expect(paceLine).toHaveText(
-    `The next ${pace.years} years hold ${pace.events} events, ${pace.multiple} times the yearly pace of the ${pace.yearsBefore} years before them.`,
+    `The latest ${pace.years} years hold ${pace.events} events, ${pace.multiple} times the yearly pace of the ${pace.yearsBefore} years before them.`,
   )
   const order = await paceLine.evaluate((line) => {
     const chat = document.getElementById("the-generative-ai-era")!
     const agent = document.getElementById("the-agentic-era")!
     return [
-      Boolean(chat.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
-      Boolean(line.compareDocumentPosition(agent) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(agent.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(line.compareDocumentPosition(chat) & Node.DOCUMENT_POSITION_FOLLOWING),
     ]
   })
   expect(order).toEqual([true, true])
@@ -385,7 +385,7 @@ test("opens the Agentic Era with how much faster the events come", async ({ page
 const PHONE = { width: 390, height: 844 }
 const TABLET = { width: 900, height: 1000 }
 
-const foundationCards = groupEventsByEra(timelineData as TimelineEvent[])[0].events.map((event) => ({
+const foundationCards = groupEventsByEra(timelineData as TimelineEvent[]).at(-1)!.events.map((event) => ({
   description: event.description,
   fields: [event.category, eventSource(event)],
 }))
