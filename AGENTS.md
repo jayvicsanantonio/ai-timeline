@@ -29,15 +29,15 @@ Note: This project uses pnpm for package management, at the version `packageMana
 
 ## Project Architecture
 
-This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 340 AI historical events from 1943 to October 2026. Its design is "Interfaces Through Time": each era is drawn in the computer interface of its day, from punch cards to an agent's task log.
+This is an interactive AI timeline application built with Next.js 15, React 19, TypeScript, and Framer Motion. The project showcases 340 AI historical events from 1943 to October 2026. Its design is "Interfaces Through Time": each era is drawn in the computer interface of its day, from punch cards to an agent's task log. The page reads newest first: it opens on the latest events, then runs from the Agentic Era at the top down to the Foundation Era, every era its latest year and its latest event first.
 
 ### Core Architecture Pattern
 
 The application follows a story-driven architecture centered around a "StoryEngine" component that orchestrates the entire timeline experience and holds the search and category filters:
 
 ```
-app/page.tsx → StoryEngine → PrologueScene
-                           → TimelineControls + EraChapter × 6 (one interface per era)
+app/page.tsx → StoryEngine → PrologueScene (the latest events, the chart and the era tiles)
+                           → TimelineControls + EraChapter × 6 (one interface per era, the latest era first)
                            → TimelineNavigation (rail on wide screens, bar on phones)
                            → TimelineInsights + EpilogueScene
 ```
@@ -45,6 +45,7 @@ app/page.tsx → StoryEngine → PrologueScene
 ### Key Data Structures
 
 - **Timeline Events**: Central data stored in `/data/timeline-events.json` with TypeScript interfaces in `/types/timeline.ts`, loaded through `parseTimelineEvents` in `/lib/timeline-events.ts`, which throws on unknown categories, so bad data fails the build
+- **Newest First**: The data keeps its events oldest first, and `/lib/newest-first.ts` reverses that order in one place: StoryEngine hands the eras and the navigation `erasNewestFirst`, and the opening's latest events come from `latestEvents`. Every era interface draws the events in the order it is given, and its decorations are built for newest first: the running year comes first, a year gap says how many years earlier, and so on. Chapter numbers keep their time order, so the Agentic Era at the top is Chapter 6, and the opening's chart, the era axis and the epilogue's era trail still run left to right through time
 - **Era-based Organization**: `ERA_DEFINITIONS` in `/lib/eras.ts` groups events into Foundation (1940-1970), Knowledge (1970-1990), Learning (1990-2010), Deep Learning Revolution (2010-2020), Generative AI (2020-2025) and Agentic (2025-2030) eras. Each era names its interface (`punch-card`, `terminal`, `desktop`, `notebook`, `chat`, `agent`) and an accent color; the six colors were validated together as a categorical palette on the dark chrome. An era of whole decades is subtitled by its decades and any other by its years
 - **Landmarks**: About 25 turning points carry `"landmark": true` in the data, and each era interface sets them apart in its own style. Keep the list curated; a unit test pins it
 - **Highlights**: A busy year, one with more than 12 events (`isBusyYear` in `/lib/year-groups.ts`), lists its events in brief in the chat thread or the agent's task log, one line each, apart from its landmarks and the events marked `"highlight": true`, until its "Show all" button shows the whole year in full. A search or filter shows every match in full. Keep about five full-size events per busy year, landmarks included; a unit test pins the approved list
@@ -56,18 +57,18 @@ app/page.tsx → StoryEngine → PrologueScene
 
 Components are organized by purpose rather than type:
 
-- **`/components/storytelling/`**: Narrative flow components (story-engine, prologue-scene, epilogue-scene). Before the final era, the story engine sets a line saying how many times faster its events come, in events per year, than in all the years before it (`describePace` in `/lib/pace.ts`), left out while the reader filters
-- **`/components/eras/`**: The six era interfaces (punch-card-era, terminal-era, desktop-era, notebook-era, chat-era, agent-era), the era-chapter section that picks one, their shared era-parts, and the era-preview miniatures on the opening tiles. Every interface renders the same accessible structure: a section named by its h2, and one article per event (attributes from `eventCardAttributes`) whose date comes before its h3, whose h3 links to the source (`EventHeading` in era-parts), and which names the source site. An era that the filters empty shrinks to a short row (`CompactEraText`). The punch-card, terminal and desktop eras say how many years passed between two events when more than one did (`YearGap`, from `yearsSincePreviousEvent` in `/lib/year-gaps.ts`). Every interface groups its events by year (`groupEventsByYear` in `/lib/year-groups.ts`) beside a `YearColumn` that stays in view from the md breakpoint up and becomes a one-line label on phones. Each era draws the year in its own style, rules it off from its events with a divider (a right border from md up, a bottom border on phones), and screen readers hear the year and its count in plain words instead. Keep every era within `max-w-4xl`, so its cards stay clear of the navigation rail on a 1280px screen. The Generative AI and Agentic Eras sit side by side and must stay unlike each other: the chat thread is rounded and sans-serif, under its aurora, and answers each year in one reply that writes its events out as points; the agent's console is square and monospace on a flat black, and traces each year as tool calls, parallel fetches and checkpoints. Tests pin both
+- **`/components/storytelling/`**: Narrative flow components (story-engine, prologue-scene, epilogue-scene). The prologue opens with the three latest events, each linking to its card in the timeline (`scrollToEvent` in `/lib/timeline-scroll.ts`), and its era tiles and numbers table run newest first. Below the latest era, the story engine sets a line saying how many times faster its events came, in events per year, than in all the years before it (`describePace` in `/lib/pace.ts`), left out while the reader filters. The epilogue, below the oldest events, links back up to the latest
+- **`/components/eras/`**: The six era interfaces (punch-card-era, terminal-era, desktop-era, notebook-era, chat-era, agent-era), the era-chapter section that picks one, their shared era-parts, and the era-preview miniatures on the opening tiles. Every interface renders the same accessible structure: a section named by its h2, and one article per event (attributes from `eventCardAttributes`) whose date comes before its h3, whose h3 links to the source (`EventHeading` in era-parts), and which names the source site. An era that the filters empty shrinks to a short row (`CompactEraText`). The punch-card, terminal and desktop eras say how many years earlier an event came than the one above it when more than one year lies between them (`YearGap`, from `yearsEarlierThanPrevious` in `/lib/year-gaps.ts`). Every interface groups its events by year (`groupEventsByYear` in `/lib/year-groups.ts`) beside a `YearColumn` that stays in view from the md breakpoint up and becomes a one-line label on phones. Each era draws the year in its own style, rules it off from its events with a divider (a right border from md up, a bottom border on phones), and screen readers hear the year and its count in plain words instead. Keep every era within `max-w-4xl`, so its cards stay clear of the navigation rail on a 1280px screen. The Generative AI and Agentic Eras sit side by side and must stay unlike each other: the chat thread is rounded and sans-serif, under its aurora, and answers each year in one reply that writes its events out as points; the agent's console is square and monospace on a flat black, and traces each year as tool calls, parallel fetches and checkpoints. Read newest first, the chat keeps its message box at the top, where the hand-off to the agent is typed, as a feed keeps its composer above the newest post; the agent's console keeps its status bar under its title bar, opens each finished year with its write-up, and ends at the instruction it was given, just above the chat's message box. Tests pin both
 - **`/components/interactive/`**: User interaction features (timeline-insights)
 - **`/components/accessibility/`**: WCAG compliance components (skip-to-content)
-- **`/components/timeline/`**: Timeline-specific UI (timeline-controls, timeline-navigation, activity-chart)
+- **`/components/timeline/`**: Timeline-specific UI (timeline-controls, timeline-navigation, activity-chart). The toolbar says the timeline reads newest first. Vertical activity charts, like the rail's, run the latest year at the top, as the page does, and the rail stacks its chapter buttons in page order
 - **`/components/ui/`**: Shared pieces (category-icon). The page keeps the system cursor
 
 ### Animation System
 
 Most motion is CSS in the `@layer components` block of `app/globals.css`, always inside `prefers-reduced-motion: no-preference`: event cards rise in with a scroll-driven animation (`animation-timeline: view()`), and the eras' carets, progress bar, typing dots and the agent's shimmering status run as keyframes. Framer Motion animates the phone chapter list. Hooks that move the reader around:
 - `useTimelinePosition()` - Measures, once per animation frame while scrolling, the era, event year and month at the reading line (`READING_LINE` in `/lib/timeline-scroll.ts`) and how far through the era the reader has come
-- `useTimelineShortcuts()` - J and K step between events, 1 to 6 jump to an era, and / focuses search
+- `useTimelineShortcuts()` - J and K step down and up the page between events, so J moves to older ones, 1 to 6 jump to an era by its chapter number, and / focuses search
 
 Derive styles from MotionValues with `useTransform` or `useMotionTemplate`. Interpolating a MotionValue into a plain template string silently produces an invalid style.
 
@@ -129,5 +130,5 @@ The application uses React's built-in state management with no external state li
 
 ## Data Stewardship
 
-- Keep `data/timeline-events.json` sorted by year, with a verified source URL for every event
+- Keep `data/timeline-events.json` sorted by year, oldest first, with a verified source URL for every event. The page reverses the order itself (`/lib/newest-first.ts`), so never store the events newest first
 - Document large data updates in the PR body
