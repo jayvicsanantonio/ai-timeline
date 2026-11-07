@@ -1,4 +1,5 @@
-// Draws the Foundation Era as a deck of 80-column punch cards under a teletype printout, grouped beside each year's label.
+// Draws the Foundation Era as a deck of 80-column punch cards under a teletype printout, sorted with the latest card on top
+// and grouped beside each year's label.
 // Each card leads with its date, then carries its title punched in IBM 029 Hollerith code, its description and source.
 'use client';
 

@@ -1,16 +1,16 @@
-// The close of the page: an empty frame for the interface of the next era, a last word, and a way back to the start.
-// Every era so far brought a new way to talk to machines, so the next chapter is left open.
+// The close of the page, below the oldest events: an empty frame for the interface of the next era, a last word, and a
+// way back up to the latest events. Every era so far brought a new way to talk to machines, so the next chapter is left open.
 'use client';
 
 import { ArrowUp } from 'lucide-react';
 import { ERA_DEFINITIONS } from '@/lib/eras';
 
 interface EpilogueSceneProps {
-  firstEraId: string;
-  firstYear: number;
+  // The era at the top of the timeline
+  latestEraId: string;
 }
 
-export function EpilogueScene({ firstEraId, firstYear }: EpilogueSceneProps) {
+export function EpilogueScene({ latestEraId }: EpilogueSceneProps) {
   return (
     <section
       aria-labelledby="epilogue-title"
@@ -44,7 +44,7 @@ export function EpilogueScene({ firstEraId, firstYear }: EpilogueSceneProps) {
         </h2>
         <div className="mx-auto mt-8 max-w-2xl space-y-5 text-lg leading-8 text-zinc-300">
           <p>
-            From punch cards to agents at work, every era of artificial intelligence arrived with a new way for
+            From agents at work back to punch cards, every era of artificial intelligence arrived with a new way for
             people and machines to work together.
           </p>
           <p>
@@ -56,11 +56,12 @@ export function EpilogueScene({ firstEraId, firstYear }: EpilogueSceneProps) {
           The next chapter of this story is ours to write.
         </p>
 
+        {/* New events join the timeline at its top */}
         <a
-          href={`#${firstEraId}`}
+          href={`#${latestEraId}`}
           className="mt-14 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
         >
-          Back to {firstYear}
+          Back to the latest
           <ArrowUp aria-hidden="true" className="size-4" />
         </a>
 

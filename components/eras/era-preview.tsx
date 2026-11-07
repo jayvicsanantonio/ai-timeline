@@ -1,4 +1,4 @@
-// Miniature pictures of the six era interfaces, shown on the tiles that open the page.
+// Miniature pictures of the six era interfaces, shown on the tiles that open the page, laid out newest first as the eras are.
 // They are decoration only: every tile names its era and interface in text beside the picture.
 'use client';
 
@@ -38,7 +38,7 @@ function TerminalPreview() {
   return (
     <div className="crt-scanlines h-full bg-[#04100a] px-3 py-2.5 font-mono text-[10px] leading-4 text-[#5cf09a]">
       <p className="text-[#38b874]">READY.</p>
-      <p>&gt; RUN KNOWLEDGE.ERA</p>
+      <p>&gt; LIST KNOWLEDGE.ERA</p>
       <p className="crt-glow mt-1 text-[13px] font-bold text-[#9dffc4]">THE KNOWLEDGE ERA</p>
       <p className="mt-1 text-[#38b874]">12 RECORDS FOUND.</p>
       <p>
@@ -101,6 +101,10 @@ function NotebookPreview() {
 function ChatPreview() {
   return (
     <div className="chat-backdrop flex h-full flex-col justify-center gap-2 px-3">
+      {/* A thread read newest first keeps its message box at the top */}
+      <div className="flex h-5 items-center justify-end rounded-full border border-white/10 bg-[#1d1c27] px-1">
+        <span className="size-3 rounded-full bg-[#ececf1]" />
+      </div>
       <div className="ml-auto h-4 w-1/2 rounded-full bg-[#2a2a33]" />
       <div className="flex gap-2">
         <span className="size-4 shrink-0 rounded-full bg-[#9085e9]" />
@@ -116,9 +120,6 @@ function ChatPreview() {
           </span>
         </div>
       </div>
-      <div className="flex h-5 items-center justify-end rounded-full border border-white/10 bg-[#1d1c27] px-1">
-        <span className="size-3 rounded-full bg-[#ececf1]" />
-      </div>
     </div>
   );
 }
@@ -130,6 +131,10 @@ function AgentPreview() {
         <p className="border-b border-[#2a2a30] px-1.5">
           <span className="text-[#e77fb8]">◆</span> agent
         </p>
+        {/* The log reads newest first, so its status sits under the title bar */}
+        <p className="border-b border-[#2a2a30] px-1.5">
+          <span className="agent-spinner text-[#e77fb8]">✻</span> <span className="agent-shimmer">Working…</span>
+        </p>
         <div className="flex flex-1 flex-col justify-center gap-0.5 px-1.5">
           <p>
             <span className="text-[#e77fb8]">●</span> <span className="font-bold text-[#f2f2f5]">Fetch</span>(openai.com)
@@ -139,9 +144,6 @@ function AgentPreview() {
           </p>
           <p className="text-[#e8c14a]">⚑ checkpoint</p>
         </div>
-        <p className="border-t border-[#2a2a30] px-1.5">
-          <span className="agent-spinner text-[#e77fb8]">✻</span> <span className="agent-shimmer">Working…</span>
-        </p>
       </div>
     </div>
   );

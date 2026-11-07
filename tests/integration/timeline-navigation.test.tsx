@@ -1,11 +1,13 @@
 // Integration tests for TimelineNavigation in real Chromium: the wide-screen rail with its chapter buttons,
-// year readout and activity chart, and the phone bar that names the current era and opens a chapter list.
+// year readout and activity chart, and the phone bar that names the current era and opens a chapter list. Both follow the
+// page, which reads newest first, the latest era at the top.
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { page, userEvent } from "vitest/browser"
 import { TimelineNavigation } from "@/components/timeline/timeline-navigation"
 import { groupEventsByEra } from "@/lib/eras"
 import { eventAnchorId } from "@/lib/event-format"
+import { erasNewestFirst } from "@/lib/newest-first"
 import { countEventsByYear } from "@/lib/timeline-activity"
 import type { TimelineEvent } from "@/types/timeline"
 
@@ -28,8 +30,13 @@ const events = [
   makeEvent(2012, "ImageNet Breakthrough"),
   makeEvent(2023, "OpenAI Releases GPT-4"),
 ]
-const eras = groupEventsByEra(events)
+// In the page's order, the latest era first, each with its events newest first
+const eras = erasNewestFirst(groupEventsByEra(events))
 const activity = countEventsByYear(events)
+
+function eraOf(eraInterface: string) {
+  return eras.find((era) => era.interface === eraInterface)!
+}
 
 function renderNavigation({ spacerBefore = false } = {}) {
   render(
@@ -79,19 +86,56 @@ describe("TimelineNavigation on a wide screen", () => {
     return screen.getByRole("navigation", { name: "Timeline chapter navigation" })
   }
 
-  it("shows a button for every chapter and marks the current one", () => {
+  it("shows a button for every chapter in the page's order, the latest first, and marks the current one", () => {
     renderNavigation()
 
     const buttons = within(rail()).getAllByRole("button", { name: /^Chapter \d/ })
     expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual([
-      "Chapter 1: Foundation Era",
-      "Chapter 2: Knowledge Era",
-      "Chapter 3: Learning Era",
-      "Chapter 4: Deep Learning Revolution",
-      "Chapter 5: Generative AI Era",
       "Chapter 6: Agentic Era",
+      "Chapter 5: Generative AI Era",
+      "Chapter 4: Deep Learning Revolution",
+      "Chapter 3: Learning Era",
+      "Chapter 2: Knowledge Era",
+      "Chapter 1: Foundation Era",
     ])
     expect(buttons[0]).toHaveAttribute("aria-current", "location")
+  })
+
+  it("runs its chart from the latest year at the top down to the first, as the page does", () => {
+    renderNavigation()
+
+    const top = (year: number) =>
+      rail().querySelector(`[data-year-bar][data-year="${year}"]`)!.getBoundingClientRect().top
+    expect(top(2023)).toBeLessThan(top(1997))
+    expect(top(1997)).toBeLessThan(top(1956))
+    expect(rail()).toHaveTextContent("Events per year, 2023 back to 1956")
+  })
+
+  // The short eras of the 2020s take up only a few rows at the top of the chart
+  it("stacks the chapter buttons down the chart without letting them overlap", () => {
+    renderNavigation()
+
+    const boxes = within(rail())
+      .getAllByRole("button", { name: /^Chapter \d/ })
+      .map((button) => button.getBoundingClientRect())
+    boxes.slice(1).forEach((box, index) => {
+      expect(box.top).toBeGreaterThanOrEqual(boxes[index].bottom - 0.5)
+    })
+  })
+
+  it("shows the era's latest year while its introduction is being read", async () => {
+    renderNavigation()
+
+    const learningEra = document.getElementById(eraOf("desktop").id)!
+    window.scrollTo({
+      top: window.scrollY + learningEra.getBoundingClientRect().top - window.innerHeight / 2 + 4,
+      behavior: "instant" as ScrollBehavior,
+    })
+
+    await expect
+      .poll(() => within(rail()).getByRole("button", { name: "Chapter 3: Learning Era" }).getAttribute("aria-current"))
+      .toBe("location")
+    expect(within(rail()).getByText("2009")).toBeVisible()
   })
 
   it("jumps to a chapter and moves focus to its title", async () => {
@@ -120,7 +164,7 @@ describe("TimelineNavigation on a wide screen", () => {
     renderNavigation()
     const progress = () => parseFloat(rail().querySelector<HTMLElement>("[data-era-progress]")!.style.width)
 
-    const learningEra = document.getElementById(eras[2].id)!
+    const learningEra = document.getElementById(eraOf("desktop").id)!
     window.scrollTo({
       top: window.scrollY + learningEra.getBoundingClientRect().top + learningEra.offsetHeight / 2 - window.innerHeight / 2,
       behavior: "instant" as ScrollBehavior,
@@ -160,8 +204,8 @@ describe("TimelineNavigation on a phone", () => {
 
     const phoneNav = toggle().closest("nav")!
     expect(toggle()).toHaveAttribute("aria-expanded", "false")
-    expect(toggle()).toHaveTextContent("Foundation Era")
-    expect(toggle()).toHaveTextContent("01 / 06")
+    expect(toggle()).toHaveTextContent("Agentic Era")
+    expect(toggle()).toHaveTextContent("06 / 06")
     expect(within(phoneNav).getAllByRole("button")).toEqual([toggle()])
   })
 
@@ -173,6 +217,7 @@ describe("TimelineNavigation on a phone", () => {
     const chapterList = chapterListOf(toggle())!
     const chapters = within(chapterList).getAllByRole("button")
     expect(chapters).toHaveLength(eras.length)
+    expect(chapters.map((chapter) => chapter.textContent)).toEqual(eras.map((era) => `${era.number}${era.label}${era.subtitle}`))
     expect(chapters[0]).toHaveAttribute("aria-current", "location")
 
     await userEvent.click(toggle())

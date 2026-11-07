@@ -1,24 +1,24 @@
-// Unit tests for measuring the quiet stretches between timeline events.
-// A stretch counts only when more than a year passes between one event and the next.
+// Unit tests for measuring the quiet stretches between timeline events, which the page lists newest first.
+// A stretch counts only when more than a year lies between an event and the one shown above it.
 import { describe, expect, it } from "vitest"
-import { yearsSincePreviousEvent } from "@/lib/year-gaps"
+import { yearsEarlierThanPrevious } from "@/lib/year-gaps"
 
 function eventsIn(...years: number[]) {
   return years.map((year) => ({ year }))
 }
 
-describe("yearsSincePreviousEvent", () => {
-  it("has nothing to measure before the first event", () => {
-    expect(yearsSincePreviousEvent(eventsIn(1943, 1950), 0)).toBeNull()
+describe("yearsEarlierThanPrevious", () => {
+  it("has nothing to measure for the first event", () => {
+    expect(yearsEarlierThanPrevious(eventsIn(1950, 1943), 0)).toBeNull()
   })
 
-  it("counts the years since the event before, when more than one passed", () => {
-    expect(yearsSincePreviousEvent(eventsIn(1943, 1950), 1)).toBe(7)
-    expect(yearsSincePreviousEvent(eventsIn(1950, 1956, 1958), 2)).toBe(2)
+  it("counts how many years earlier an event came than the one above it, when more than one lies between", () => {
+    expect(yearsEarlierThanPrevious(eventsIn(1950, 1943), 1)).toBe(7)
+    expect(yearsEarlierThanPrevious(eventsIn(1958, 1956, 1950), 2)).toBe(6)
   })
 
-  it("leaves events in the same year or the next year unmarked", () => {
-    expect(yearsSincePreviousEvent(eventsIn(1956, 1956), 1)).toBeNull()
-    expect(yearsSincePreviousEvent(eventsIn(1956, 1957), 1)).toBeNull()
+  it("leaves events in the same year or the year before unmarked", () => {
+    expect(yearsEarlierThanPrevious(eventsIn(1956, 1956), 1)).toBeNull()
+    expect(yearsEarlierThanPrevious(eventsIn(1957, 1956), 1)).toBeNull()
   })
 })

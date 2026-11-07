@@ -1,5 +1,7 @@
 // Draws the Generative AI Era as a chat thread, the interface the era made familiar, with each year's label beside its part of the thread.
-// Each year's question gets one reply: its summary, then its events written out as points under month headings. The thread ends at the message box.
+// The thread reads newest first, like a feed, so its message box sits at the top, where the hand-off to the agent is typed, and the
+// years follow, the latest first. Each year's question gets one reply: its summary, then its events written out as points under
+// month headings, the latest first.
 'use client';
 
 import { ArrowUp, ChevronDown, ChevronsUpDown, Copy, RefreshCw, Sparkles, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
@@ -29,7 +31,7 @@ interface EventGroup<Key> {
   events: TimelineEvent[];
 }
 
-// Groups back-to-back events that share a key, which the sorted data keeps together
+// Groups back-to-back events that share a key, which the date order keeps together
 function groupEvents<Key>(events: TimelineEvent[], keyOf: (event: TimelineEvent) => Key) {
   const groups: EventGroup<Key>[] = [];
   for (const event of events) {
@@ -122,11 +124,11 @@ function ReplyActions() {
   );
 }
 
-// The message box the thread ends at, with the reader typing the task the next era's agent opens with, under the
-// reminder chat apps print below it
+// The message box at the top of the thread, where a thread read newest first takes its next message, with the reader typing
+// the task the agent's console above was given, over the reminder chat apps print below it
 function Composer({ nextEraStart }: { nextEraStart: number }) {
   return (
-    <div aria-hidden="true" data-composer="" className="mt-16 md:pl-40">
+    <div aria-hidden="true" data-composer="" className="mt-12 md:pl-40">
       <div className="flex items-end gap-3 rounded-[1.75rem] border border-white/10 bg-[#1d1c27] py-3 pl-5 pr-3 shadow-[0_16px_48px_-20px_rgba(0,0,0,0.9)]">
         <p className="min-w-0 flex-1 py-1 text-base leading-7 text-[#ececf1]">
           <span data-composer-message="">
@@ -162,7 +164,8 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
     );
   }
 
-  const lastEvent = era.events.at(-1);
+  // The events come newest first
+  const latestEvent = era.events[0];
   // While the reader filters, every match shows in full
   const filtering = era.events.length < totalEvents;
 
@@ -193,20 +196,17 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
               </p>
               <p className="mt-4 text-sm text-[#a1a1aa]">
                 {eraEventCount(era, totalEvents)}
-                {lastEvent ? ` through ${formatEventDate(lastEvent)}` : null}{' '}
+                {latestEvent ? ` through ${formatEventDate(latestEvent)}` : null}{' '}
                 <span aria-hidden="true">·</span> {era.interfaceName}
               </p>
             </div>
           </div>
         </header>
 
-        {groupEventsByYear(era.events).map((group) => (
-          <ChatYear key={group.year} group={group} filtering={filtering} />
-        ))}
-
+        {/* The era's last moment, so the first thing under its introduction */}
         <Composer nextEraStart={era.range[1]} />
 
-        <p className="mt-10 flex items-center gap-3 text-sm text-[#a1a1aa] md:pl-40">
+        <p className="mt-6 flex items-center gap-3 text-sm text-[#a1a1aa] md:pl-40">
           <span aria-hidden="true" className="chat-typing flex gap-1">
             <span />
             <span />
@@ -214,6 +214,10 @@ export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
           </span>
           Handing the work to an agent
         </p>
+
+        {groupEventsByYear(era.events).map((group) => (
+          <ChatYear key={group.year} group={group} filtering={filtering} />
+        ))}
       </div>
     </div>
   );

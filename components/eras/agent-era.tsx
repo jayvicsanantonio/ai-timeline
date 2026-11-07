@@ -1,5 +1,7 @@
 // Draws the Agentic Era as an agent working in a console, the interface the era made familiar, with each year's progress beside its part of the log.
-// A plan checks off the years; each year's task traces what the agent read, fetched in parallel and wrote up, landmarks raised as checkpoints. The log ends still working.
+// The log reads newest first: its status, still working, sits under the title bar, the year still running comes first, and the instruction
+// the agent was given waits at the bottom. A plan checks off the years; each year's task traces what the agent wrote up, read and fetched
+// in parallel, its latest step first, landmarks raised as checkpoints.
 'use client';
 
 import { Check, ChevronsUpDown, Flag, Globe } from 'lucide-react';
@@ -68,12 +70,13 @@ function ConsoleTitleBar() {
 }
 
 // The console's status bar, still working: the spinner and what the agent is doing, then how many steps it has taken.
+// It sits under the title bar, beside the newest work, since the log reads newest first.
 // The shimmer sets its own color, so the muted color sits on the line around it.
 function ConsoleStatusBar({ steps }: { steps: number }) {
   return (
     <div
       data-console-status=""
-      className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-[#2a2a30] px-4 py-2.5 text-sm text-[#8b8b96] sm:px-6"
+      className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-[#2a2a30] px-4 py-2.5 text-sm text-[#8b8b96] sm:px-6"
     >
       <span aria-hidden="true" className="order-2 ml-auto text-xs">
         {countOf(steps, 'step')} <span className="text-[#4a4a55]">·</span> esc to interrupt
@@ -92,7 +95,7 @@ function ConsoleStatusBar({ steps }: { steps: number }) {
   );
 }
 
-// The agent's to-do list, folded under its call: one box per year, every year but the one still running checked off
+// The agent's to-do list, folded under its call: one box per year, the latest first, every year but the one still running checked off
 function AgentPlan({ groups }: { groups: YearGroup[] }) {
   return (
     <div aria-hidden="true" className="mt-8 text-sm">
@@ -104,7 +107,7 @@ function AgentPlan({ groups }: { groups: YearGroup[] }) {
         <ResultElbow className="mt-0.5" />
         <ul className="space-y-1.5">
           {groups.map((group, index) => {
-            const running = index === groups.length - 1;
+            const running = index === 0;
 
             return (
               <li key={group.year} className="flex items-center gap-2.5">
@@ -228,12 +231,13 @@ function YearReport({ year }: { year: number }) {
   );
 }
 
-// Closes a finished year by writing up what the agent found: the year's file, and the events and landmarks it added
+// A finished year's last step, writing up what the agent found: the year's file, and the events and landmarks it added.
+// The log reads newest first, so it opens the year's trace.
 function YearWrite({ group }: { group: YearGroup }) {
   const landmarks = group.events.filter((event) => event.landmark).length;
 
   return (
-    <div aria-hidden="true" data-year-write="" className="relative mt-4 pl-6 text-xs leading-5">
+    <div aria-hidden="true" data-year-write="" className="relative mb-4 pl-6 text-xs leading-5">
       <span className={cn(TRACE_MARKER_CLASS, 'top-[3px]')}>
         <span className="size-2 rounded-full bg-[#e77fb8]" />
       </span>
@@ -271,7 +275,8 @@ export function AgentEra({ era, totalEvents }: EraInterfaceProps) {
     );
   }
 
-  const lastEvent = era.events.at(-1);
+  // The events come newest first, so the first year is the one still running
+  const latestEvent = era.events[0];
   const groups = groupEventsByYear(era.events);
   // While the reader filters, every match shows in full
   const filtering = era.events.length < totalEvents;
@@ -281,17 +286,11 @@ export function AgentEra({ era, totalEvents }: EraInterfaceProps) {
       {/* The console the agent works in: square, framed, between its title bar and its status bar */}
       <div data-console="" className={cn('mx-auto max-w-4xl rounded-[2px] border border-[#2a2a30]', CONSOLE_BACKGROUND)}>
         <ConsoleTitleBar />
+        <ConsoleStatusBar steps={era.events.length} />
         <div className="px-4 py-8 sm:px-6 sm:py-10">
           {/* The introduction sits in line with the log, past the years' column */}
           <header className="md:pl-40">
-            {/* The reader's instruction, echoed on its own row as consoles echo what a person types */}
-            <p className="flex gap-3 bg-white/[0.05] px-3 py-2 text-sm leading-6 text-[#f2f2f5]">
-              <TaskMark />
-              <span data-instruction="">
-                Take it from here: research AI from {era.range[0]} on, and keep going on your own.
-              </span>
-            </p>
-            <p className="mt-8 text-sm text-[#8b8b96]">
+            <p className="text-sm text-[#8b8b96]">
               {era.chapter} <span aria-hidden="true">·</span> {era.subtitle}
             </p>
             <h2
@@ -304,17 +303,27 @@ export function AgentEra({ era, totalEvents }: EraInterfaceProps) {
             <p className="mt-4 text-sm leading-7 text-[#c8c8d0] sm:text-[15px]">{era.description}</p>
             <p className="mt-4 text-sm text-[#8b8b96]">
               {eraEventCount(era, totalEvents)}
-              {lastEvent ? ` through ${formatEventDate(lastEvent)}` : null}{' '}
+              {latestEvent ? ` through ${formatEventDate(latestEvent)}` : null}{' '}
               <span aria-hidden="true">·</span> {era.interfaceName}
             </p>
             <AgentPlan groups={groups} />
           </header>
 
           {groups.map((group, index) => (
-            <AgentYear key={group.year} group={group} running={index === groups.length - 1} filtering={filtering} />
+            <AgentYear key={group.year} group={group} running={index === 0} filtering={filtering} />
           ))}
+
+          {/* The reader's instruction, the session's first prompt, so the oldest line of a log read newest first.
+              It sits in line with the log, echoed on its own row as consoles echo what a person types. */}
+          <div className="mt-16 md:pl-40">
+            <p className="flex gap-3 bg-white/[0.05] px-3 py-2 text-sm leading-6 text-[#f2f2f5]">
+              <TaskMark />
+              <span data-instruction="">
+                Take it from here: research AI from {era.range[0]} on, and keep going on your own.
+              </span>
+            </p>
+          </div>
         </div>
-        <ConsoleStatusBar steps={era.events.length} />
       </div>
     </div>
   );
@@ -369,8 +378,10 @@ function AgentYear({ group, running, filtering }: AgentYearProps) {
           <span aria-hidden="true" className="h-px min-w-6 flex-1 bg-[#2a2a30]" />
         </p>
 
-        {/* The year's trace: what the agent read, its report, then its steps, each with a node on the line down its left */}
+        {/* The year's trace, newest first: what the agent wrote up once the year was done, what it read, its report, then
+            its steps, the latest first, each with a node on the line down its left */}
         <div data-trace="" className="ml-[6.5px] border-l border-[#2a2a30] pt-3">
+          {running ? null : <YearWrite group={group} />}
           <YearActivity group={group} />
           <YearReport year={group.year} />
 
@@ -412,8 +423,6 @@ function AgentYear({ group, running, filtering }: AgentYearProps) {
               );
             })}
           </ol>
-
-          {running ? null : <YearWrite group={group} />}
         </div>
       </div>
     </div>

@@ -21,11 +21,11 @@ async function waitForHydration(page: Page) {
   })
 }
 
-// The chapter nav stays out of the way over the opening, so tests that use it start in the first era.
+// The chapter nav stays out of the way over the opening, so tests that use it start in the latest era, at the top of the timeline.
 async function enterTimeline(page: Page) {
   await page.goto("/")
   await waitForHydration(page)
-  await page.locator("#the-foundation-era").evaluate((section) =>
+  await page.locator("#the-agentic-era").evaluate((section) =>
     section.scrollIntoView({ behavior: "instant" as ScrollBehavior }),
   )
   await expect(page.locator(CHAPTER_NAV).filter({ visible: true })).toHaveCount(1)
@@ -132,8 +132,8 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
 
     const toggle = nav.getByRole("button", { name: /current era/i })
     await expect(toggle).toHaveAttribute("aria-expanded", "false")
-    await expect(toggle).toContainText("Foundation Era")
-    await expect(toggle).toContainText("01 / 06")
+    await expect(toggle).toContainText("Agentic Era")
+    await expect(toggle).toContainText("06 / 06")
   })
 
   test("opens the chapter list from the bar and closes it on a second tap", async ({ page }) => {

@@ -1,4 +1,5 @@
-// Draws the Deep Learning Revolution as a research notebook open on a dark desk, the tool of the 2010s neural network boom, with a heading for each year.
+// Draws the Deep Learning Revolution as a research notebook open on a dark desk, the tool of the 2010s neural network boom, with a
+// heading for each year and the latest cells first.
 // Each event is a code cell that records the milestone's date and title, followed by an output cell that describes it.
 'use client';
 

@@ -1,23 +1,31 @@
-// The opening of the page: the title, an events-per-year chart of all of AI history and a tile for each era.
-// Each tile previews the computer interface its era is drawn in and links to the era.
+// The opening of the page, which reads newest first: the title, the latest events, an events-per-year chart of all of
+// AI history and a tile for each era, the latest first. Each tile previews the computer interface its era is drawn in
+// and links to the era, and each of the latest events links to its place in the timeline below.
 'use client';
 
 import { ArrowDown } from 'lucide-react';
+import type { MouseEvent } from 'react';
 import { EraPreview } from '@/components/eras/era-preview';
 import { ActivityChart } from '@/components/timeline/activity-chart';
+import { CategoryIcon } from '@/components/ui/category-icon';
 import type { Era } from '@/lib/eras';
+import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
+import { newestFirst } from '@/lib/newest-first';
 import type { YearActivity } from '@/lib/timeline-activity';
-import { scrollToYear } from '@/lib/timeline-scroll';
+import { scrollToEvent, scrollToYear } from '@/lib/timeline-scroll';
 import { cn } from '@/lib/utils';
+import type { TimelineEvent } from '@/types/timeline';
 
 interface PrologueSceneProps {
-  // Every era with all of its events
+  // Every era with all of its events, in time order, as the chart runs
   eras: Era[];
   activity: YearActivity[];
+  // The newest events, newest first
+  latest: TimelineEvent[];
   totalEvents: number;
 }
 
-export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProps) {
+export function PrologueScene({ eras, activity, latest, totalEvents }: PrologueSceneProps) {
   const firstYear = activity[0]?.year;
   const lastYear = activity.at(-1)?.year;
   const latestEra = eras.at(-1);
@@ -44,10 +52,11 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
           The AI Timeline
         </h1>
         <p className="prologue-rise mt-8 max-w-2xl text-lg leading-8 text-zinc-300 [animation-delay:160ms] sm:text-xl sm:leading-9">
-          For decades, humanity has dreamed of building minds. This is the story of that dream, from its
-          first spark to its living, breathing forms today, with each era drawn in the computer interface of
-          its day.
+          For decades, humanity has dreamed of building minds. This is the story of that dream, told from
+          the latest news back to its first spark, with each era drawn in the computer interface of its day.
         </p>
+
+        <LatestEvents events={latest} />
 
         <figure className="prologue-rise mt-14 [animation-delay:240ms] sm:mt-20">
           <div className="relative pt-8">
@@ -77,7 +86,8 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
           aria-label="Eras"
           className="prologue-rise -mx-4 mt-16 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 [animation-delay:320ms] [scrollbar-width:none] sm:mx-0 sm:scroll-px-0 sm:px-0 lg:grid lg:grid-cols-6 lg:overflow-visible"
         >
-          {eras.map((era) => (
+          {/* In the page's order, the latest era first */}
+          {newestFirst(eras).map((era) => (
             <li key={era.id} className="w-[15.5rem] shrink-0 snap-start lg:w-auto">
               <a
                 href={`#${era.id}`}
@@ -105,17 +115,83 @@ export function PrologueScene({ eras, activity, totalEvents }: PrologueSceneProp
           ))}
         </ol>
 
-        {eras[0] && firstYear !== undefined ? (
+        {latestEra ? (
           <a
-            href={`#${eras[0].id}`}
+            href={`#${latestEra.id}`}
             className="mt-14 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
           >
-            Begin in {firstYear}
+            Start with the latest
             <ArrowDown aria-hidden="true" className="size-4 motion-safe:animate-bounce" />
           </a>
         ) : null}
       </div>
     </section>
+  );
+}
+
+// The newest events, so the latest news is the first thing on the page. Each one jumps to its card in the timeline,
+// where its description and source are, and works as a plain link to the card before the page has loaded.
+function LatestEvents({ events }: { events: TimelineEvent[] }) {
+  const newest = events[0];
+  if (!newest) {
+    return null;
+  }
+
+  const jumpToEvent = (event: MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+    if (scrollToEvent(anchorId)) {
+      event.preventDefault();
+    }
+  };
+
+  return (
+    <div data-latest-events="" className="prologue-rise mt-12 [animation-delay:200ms] sm:mt-14">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+        <h2
+          id="latest-title"
+          className="flex items-center gap-2.5 font-mono text-xs uppercase tracking-[0.3em] text-zinc-200"
+        >
+          <span aria-hidden="true" className="size-2 rounded-full bg-[#cf4f9a] motion-safe:animate-pulse" />
+          Latest
+        </h2>
+        <p className="text-sm text-zinc-400">
+          Through <time dateTime={eventDateTime(newest)}>{formatEventDate(newest)}</time>
+        </p>
+      </div>
+      <ol aria-labelledby="latest-title" className="mt-4 grid gap-3 lg:grid-cols-3">
+        {events.map((event) => {
+          const anchorId = eventAnchorId(event);
+
+          return (
+            <li key={anchorId}>
+              <a
+                href={`#${anchorId}`}
+                onClick={(click) => jumpToEvent(click, anchorId)}
+                className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition-colors hover:border-white/25 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 sm:p-5"
+              >
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-zinc-400">
+                  <time dateTime={eventDateTime(event)} className="font-medium text-zinc-200">
+                    {formatEventDate(event)}
+                  </time>
+                  <span aria-hidden="true">·</span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <CategoryIcon category={event.category} className="size-3.5 shrink-0" />
+                    {event.category}
+                  </span>
+                </span>
+                <span className="mt-2 text-base font-semibold leading-snug text-white text-pretty">{event.title}</span>
+                <span
+                  aria-hidden="true"
+                  className="mt-auto inline-flex items-center gap-1 pt-3 text-xs text-zinc-500 transition-colors group-hover:text-zinc-300"
+                >
+                  In the timeline
+                  <ArrowDown className="size-3" />
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 
@@ -180,9 +256,9 @@ function EraAxis({ eras, activity }: { eras: Era[]; activity: YearActivity[] }) 
   );
 }
 
-// The chart's numbers for readers who want them exactly, or who cannot see the bars
+// The chart's numbers for readers who want them exactly, or who cannot see the bars, the latest year first
 function YearTable({ activity }: { activity: YearActivity[] }) {
-  const yearsWithEvents = activity.filter((year) => year.total > 0);
+  const yearsWithEvents = newestFirst(activity.filter((year) => year.total > 0));
 
   return (
     <details className="shrink-0 sm:text-right">

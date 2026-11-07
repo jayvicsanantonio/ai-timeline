@@ -1,4 +1,5 @@
-// Draws the Learning Era as beveled windows cascading across a teal desktop, the look of 1990s PCs, beside a folder for each year.
+// Draws the Learning Era as beveled windows cascading across a teal desktop, the look of 1990s PCs, the latest window first,
+// beside a folder for each year.
 // Each event is a window: its date, icon and title in the title bar, its description inside, its category and source below.
 'use client';
 

@@ -1,5 +1,5 @@
 // Integration tests for EpilogueScene, the close of the page, in real Chromium.
-// It ends on a level-2 heading, leaves room for the next era's interface and links back to the start.
+// It ends on a level-2 heading below the oldest events, leaves room for the next era's interface and links back up to the latest.
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { EpilogueScene } from "@/components/storytelling/epilogue-scene"
@@ -13,20 +13,20 @@ function rgb(hex: string) {
 
 describe("EpilogueScene", () => {
   it("closes the story with a level-2 heading", () => {
-    render(<EpilogueScene firstEraId="the-foundation-era" firstYear={1943} />)
+    render(<EpilogueScene latestEraId="the-agentic-era" />)
 
     expect(screen.getByRole("heading", { level: 2, name: "The Story Continues" })).toBeInTheDocument()
   })
 
   it("leaves an empty frame for the interface of the next era", () => {
-    render(<EpilogueScene firstEraId="the-foundation-era" firstYear={1943} />)
+    render(<EpilogueScene latestEraId="the-agentic-era" />)
 
     expect(screen.getByText("Chapter 7")).toBeInTheDocument()
     expect(screen.getByText("Interface not yet invented")).toBeInTheDocument()
   })
 
   it("traces every era's color in order up to the open slot for the next one", () => {
-    const { container } = render(<EpilogueScene firstEraId="the-foundation-era" firstYear={1943} />)
+    const { container } = render(<EpilogueScene latestEraId="the-agentic-era" />)
 
     const trail = container.querySelector("[data-era-trail]")!
     expect(trail).toHaveAttribute("aria-hidden", "true")
@@ -39,9 +39,9 @@ describe("EpilogueScene", () => {
     expect(segments.at(-1)!.compareDocumentPosition(openSlot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
-  it("links back to the first era", () => {
-    render(<EpilogueScene firstEraId="the-foundation-era" firstYear={1943} />)
+  it("links back up to the latest era, at the top of the timeline", () => {
+    render(<EpilogueScene latestEraId="the-agentic-era" />)
 
-    expect(screen.getByRole("link", { name: "Back to 1943" })).toHaveAttribute("href", "#the-foundation-era")
+    expect(screen.getByRole("link", { name: "Back to the latest" })).toHaveAttribute("href", "#the-agentic-era")
   })
 })

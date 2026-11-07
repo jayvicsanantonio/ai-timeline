@@ -1,4 +1,4 @@
-// Moves the reader around the timeline: to an era's title, to a year's first event, or one event forward or back.
+// Moves the reader around the timeline: to an era's title, to a year's first event or one event, or one event forward or back.
 // Each move also moves keyboard focus to where the reader lands, so assistive technology follows along.
 
 // How far down the viewport, as a share of its height, the reader's eye rests. The era or
@@ -74,6 +74,7 @@ export function scrollToEra(eraId: string) {
   section.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
 }
 
+// Lands on the year's first event on the page, which is its latest, since the timeline reads newest first
 export function scrollToYear(year: number) {
   const link = document.querySelector<HTMLAnchorElement>(
     `article[data-year="${year}"] a[data-event-link]`
@@ -81,4 +82,15 @@ export function scrollToYear(year: number) {
   if (link) {
     focusEvent(link);
   }
+}
+
+// Lands on one event, found by its card's anchor id, and says whether the card is on the page
+export function scrollToEvent(anchorId: string) {
+  const link = document.getElementById(anchorId)?.querySelector<HTMLAnchorElement>('a[data-event-link]');
+  if (!link) {
+    return false;
+  }
+
+  focusEvent(link);
+  return true;
 }

@@ -1,5 +1,6 @@
 // Chapter navigation: a rail on wide screens with the current year, an events-per-year chart and a button per era,
-// and a phone bar that names the current era and opens a chapter list. Both stay hidden until the timeline starts.
+// and a phone bar that names the current era and opens a chapter list. Both follow the page, the latest era at the top,
+// and stay hidden until the timeline starts.
 'use client';
 
 import { motion } from 'framer-motion';
@@ -14,7 +15,7 @@ import { scrollToEra, scrollToYear } from '@/lib/timeline-scroll';
 import { cn } from '@/lib/utils';
 
 interface TimelineNavigationProps {
-  // Every era with all of its events, so the chapters keep their counts while filtering
+  // Every era with all of its events, so the chapters keep their counts while filtering, in the page's order, the latest first
   eras: Era[];
   activity: YearActivity[];
   // Changes whenever the shown events change, so the reading position is measured again
@@ -66,14 +67,17 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
 
   const activeIndex = Math.max(eraIds.indexOf(position.eraId), 0);
   const activeEra = eras[activeIndex];
-  // While an era's introduction is being read, the clock shows the year the era begins
-  const year = position.year ?? activeEra.range[0];
   const firstYear = activity[0]?.year ?? activeEra.range[0];
   const lastYear = activity.at(-1)?.year ?? firstYear;
+  // The latest year of an era the chart reaches, which heads the era's part of the chart and of the page
+  const eraTopYear = (era: Era) => Math.min(era.range[1] - 1, lastYear);
+  // While an era's introduction is being read, the clock shows the year the era's events start from
+  const year = position.year ?? eraTopYear(activeEra);
 
-  const startShare = (era: Era) => {
-    const index = Math.min(Math.max(era.range[0] - firstYear, 0), activity.length - 1);
-    return activity.length > 0 ? index / activity.length : 0;
+  // How far down the chart, which runs the latest year at the top, the era's part of it starts
+  const topShare = (era: Era) => {
+    const row = Math.min(Math.max(lastYear - eraTopYear(era), 0), activity.length - 1);
+    return activity.length > 0 ? row / activity.length : 0;
   };
 
   const handlePhoneNavigate = (eraId: string) => {
@@ -119,7 +123,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
               onSelectYear={scrollToYear}
               className="absolute inset-y-0 left-11 right-0"
             />
-            {eras.map((era) => {
+            {eras.map((era, index) => {
               const isActive = era.id === activeEra.id;
 
               return (
@@ -135,8 +139,10 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                       ? 'border-white/30 bg-white/[0.12] text-white'
                       : 'border-transparent text-zinc-400 hover:bg-white/[0.08] hover:text-white'
                   )}
+                  // Centered on where its era starts, but never above the bottom of the button before it,
+                  // since the short eras of the 2020s take up only a few rows at the top
                   style={{
-                    top: `clamp(0px, calc(${startShare(era) * 100}% - 0.875rem), calc(100% - 1.75rem))`,
+                    top: `clamp(${index} * 1.75rem, calc(${topShare(era) * 100}% - 0.875rem), calc(100% - 1.75rem))`,
                   }}
                 >
                   <span
@@ -157,7 +163,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
           </div>
 
           <p className="mt-3 px-1 text-[11px] leading-snug text-zinc-500">
-            Events per year, {firstYear}–{lastYear}
+            Events per year, {lastYear} back to {firstYear}
           </p>
         </div>
       </nav>

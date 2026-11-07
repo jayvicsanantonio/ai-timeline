@@ -1,9 +1,9 @@
 // Integration tests for TimelineControls, the timeline's search box and category filters, in real Chromium.
-// Covers searching, picking categories from the panel, clearing filters and the live count of shown events.
+// Covers searching, picking categories from the panel, clearing filters, the live count of shown events and the order the timeline reads in.
 import { render, screen, within } from "@testing-library/react"
 import { useState } from "react"
-import { describe, expect, it } from "vitest"
-import { userEvent } from "vitest/browser"
+import { afterEach, describe, expect, it } from "vitest"
+import { page, userEvent } from "vitest/browser"
 import { TimelineControls } from "@/components/timeline/timeline-controls"
 import { NO_FILTERS, type TimelineFilters } from "@/lib/timeline-filter"
 import { TIMELINE_CATEGORIES, type TimelineCategory } from "@/types/timeline"
@@ -121,6 +121,39 @@ describe("TimelineControls", () => {
 
     expect(screen.getByRole("status")).toHaveTextContent("275 events")
     expect(screen.getByRole("status")).not.toHaveTextContent("Showing")
+  })
+
+  it("tells screen reader users on a phone that the timeline reads newest first, where there is no room to show it", () => {
+    render(<ControlledControls />)
+
+    const order = document.querySelector<HTMLElement>("[data-timeline-order]")!
+    expect(order).toHaveTextContent("Newest first")
+    expect(order).toHaveClass("sr-only")
+    expect(order.closest('[aria-hidden="true"]')).toBeNull()
+  })
+
+  describe("on a wide screen", () => {
+    afterEach(async () => {
+      await page.viewport(414, 896)
+    })
+
+    it("shows that the timeline reads newest first beside the count, while it stays in view", async () => {
+      await page.viewport(1280, 800)
+      render(<ControlledControls />)
+
+      const order = document.querySelector<HTMLElement>("[data-timeline-order]")!
+      expect(order).toHaveTextContent("Newest first")
+      expect(order.getBoundingClientRect().width).toBeGreaterThan(40)
+      expect(order.getBoundingClientRect().left).toBeGreaterThan(screen.getByRole("status").getBoundingClientRect().right)
+    })
+
+    it("hints at a number key for every era", async () => {
+      await page.viewport(1280, 800)
+      render(<ControlledControls />)
+
+      const hint = [...document.querySelectorAll("p[aria-hidden]")].find((element) => element.textContent?.includes("eras"))!
+      expect([...hint.querySelectorAll("kbd")].map((key) => key.textContent)).toEqual(["J", "K", "1", "6"])
+    })
   })
 
   it("clears the search and the categories together", async () => {

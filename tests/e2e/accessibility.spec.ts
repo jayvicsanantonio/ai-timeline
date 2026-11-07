@@ -56,12 +56,12 @@ test.describe("landmarks and headings", () => {
 })
 
 test.describe("event links", () => {
-  test("renders a real link for every timeline event", async ({ page }) => {
+  test("renders a real link for every timeline event, the latest first", async ({ page }) => {
     await page.goto("/")
 
     const links = page.locator(EVENT_LINKS)
     await expect(links).toHaveCount(timelineData.length)
-    await expect(links.first()).toHaveAttribute("href", timelineData[0].link)
+    await expect(links.first()).toHaveAttribute("href", timelineData[timelineData.length - 1].link)
     await expect(links.first()).toHaveAttribute("rel", "noopener noreferrer")
   })
 

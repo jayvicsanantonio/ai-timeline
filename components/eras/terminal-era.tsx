@@ -1,4 +1,5 @@
-// Draws the Knowledge Era as a session on a green-phosphor terminal, the screen of the expert-system years, its records grouped by year.
+// Draws the Knowledge Era as a session on a green-phosphor terminal, the screen of the expert-system years, listing its records
+// newest first, grouped by year.
 // Each event is recalled at a command prompt that prints its date, with its title, category, description and source.
 'use client';
 
@@ -54,7 +55,7 @@ export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
           <p aria-hidden="true" className="mt-2 text-sm text-[#38b874]">
             READY.
             <br />
-            &gt; RUN {era.label.toUpperCase().replace(/\s+/g, '.')}
+            &gt; LIST {era.label.toUpperCase().replace(/\s+/g, '.')}, NEWEST FIRST
           </p>
           <h2
             id={eraHeadingId(era)}
