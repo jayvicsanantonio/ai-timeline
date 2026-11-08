@@ -57,7 +57,7 @@ test("draws the eras from the latest to the first, each on a backdrop of its own
   const eras = await page.locator("section[data-interface]").evaluateAll((sections) =>
     sections.map((section) => ({
       interface: (section as HTMLElement).dataset.interface,
-      backdrop: getComputedStyle(section.firstElementChild!).backgroundColor,
+      backdrop: getComputedStyle(section.querySelector("[data-era-backdrop]")!).backgroundColor,
     })),
   )
 
@@ -147,13 +147,38 @@ test("starts each year of the agent's log with its task, the year still running 
   await expect(page.locator("[data-year-task]")).toHaveText(yearsOf("agent").map((year) => `Research ${year}`))
 })
 
-test("notes for each year of the agent's log how many pages it read and from how many sites", async ({ page }) => {
+test("notes beside each year of the agent's log how many sites it read the year's events on", async ({ page }) => {
   await page.goto("/")
 
-  const notes = yearGroupsOf("agent").map(
-    ({ events }) => `Read ${events.length} pages from ${new Set(events.map(eventSource)).size} sites`,
-  )
-  await expect(page.locator("[data-year-activity]")).toHaveText(notes)
+  const notes = yearGroupsOf("agent").map(({ events }) => `from ${new Set(events.map(eventSource)).size} sites`)
+  await expect(page.locator("#the-agentic-era [data-year-sites]")).toHaveText(notes)
+})
+
+test("heads the timeline with the current era, marked now, and each era below with the year the rewind passes", async ({ page }) => {
+  await page.goto("/")
+
+  await expect(page.locator("[data-era-marker]")).toHaveText([
+    "Now",
+    "Before 2025",
+    "Before 2020",
+    "Before 2010",
+    "Before 1990",
+    "Before 1970",
+  ])
+})
+
+test("keeps the agent at work just above the newest event, watching for what comes after it", async ({ page }) => {
+  const newest = timelineData[timelineData.length - 1]
+  await page.goto("/")
+
+  const frontier = page.locator("#the-agentic-era [data-frontier]")
+  await expect(frontier).toHaveCount(1)
+  await expect(frontier).toContainText(`Watching for what comes after ${newest.month} ${newest.year}`)
+  const above = await frontier.evaluate((row) => {
+    const first = document.querySelector("#the-agentic-era article")!
+    return Boolean(row.compareDocumentPosition(first) & Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+  expect(above).toBe(true)
 })
 
 test("draws each full step of the agent's log as a call that fetches its source", async ({ page }) => {
@@ -176,12 +201,13 @@ test("draws each full step of the agent's log as a call that fetches its source"
   expect(calls).toEqual(sources.map((source) => `Fetch(${source})`))
 })
 
-test("writes the Generative AI Era in sans-serif and the Agentic Era in monospace", async ({ page }) => {
+test("writes the Generative AI Era's thread in sans-serif and the Agentic Era's console in monospace", async ({ page }) => {
   await page.goto("/")
 
+  // The eras' headers share the page's type, so only what each interface draws is compared
   const monospaced = (eraId: string) =>
     page
-      .locator(`#${eraId} h2, #${eraId} h3, #${eraId} [data-year-summary]`)
+      .locator(`#${eraId} [data-era-backdrop] h3, #${eraId} [data-era-backdrop] [data-year-summary]`)
       .evaluateAll((elements) => [...new Set(elements.map((element) => getComputedStyle(element).fontFamily.includes("monospace")))])
   expect(await monospaced("the-generative-ai-era")).toEqual([false])
   expect(await monospaced("the-agentic-era")).toEqual([true])
@@ -194,11 +220,16 @@ test("fills each year's progress bar in the agent's console, to its latest month
   await expect(page.locator("#the-agentic-era [data-year-progress] [data-progress-label]")).toHaveText(expected)
 })
 
-test("types into the chat thread's message box the task the agent's console above was given", async ({ page }) => {
+test("ends the agent's console at the instruction it was given, just above the chat thread that handed it over", async ({ page }) => {
   await page.goto("/")
 
-  const typed = await page.locator("#the-generative-ai-era [data-composer-message]").textContent()
-  await expect(page.locator("#the-agentic-era [data-instruction]")).toHaveText(typed!)
+  const instruction = page.locator("#the-agentic-era [data-instruction]")
+  await expect(instruction).toHaveText("Take it from here: research AI from 2025 on, and keep going on your own.")
+  const last = await instruction.evaluate((row) => {
+    const articles = document.querySelectorAll("#the-agentic-era article")
+    return Boolean(articles[articles.length - 1].compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+  expect(last).toBe(true)
 })
 
 test("sums up each year of the agent's log and the chat thread with its summary from the data, the latest year first", async ({
@@ -308,7 +339,9 @@ test("dissolves each era into the next through the page's black", async ({ page 
 
   const backdrops = await page
     .locator("section[data-interface]")
-    .evaluateAll((sections) => sections.map((section) => getComputedStyle(section.firstElementChild!).backgroundImage))
+    .evaluateAll((sections) =>
+      sections.map((section) => getComputedStyle(section.querySelector("[data-era-backdrop]")!).backgroundImage),
+    )
 
   expect(backdrops).toHaveLength(INTERFACES.length)
   // The seam comes first, whether other layers follow it or it is the only one
@@ -475,7 +508,7 @@ async function notebookPrompts(page: Page) {
 test("prompts each notebook code cell and its output with In [n]: and Out[n]:", async ({ page }) => {
   const prompts = await notebookPrompts(page)
 
-  expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 2}]: shown`, `Out[${index + 2}]: shown`]))
+  expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 1}]: shown`, `Out[${index + 1}]: shown`]))
 })
 
 test("shows each brief event's date before its title on a wide screen", async ({ page }) => {
@@ -533,7 +566,7 @@ test.describe(`on a phone (${PHONE.width}x${PHONE.height})`, () => {
   test("follows each notebook code cell with its output, keeping only the In [n]: prompt", async ({ page }) => {
     const prompts = await notebookPrompts(page)
 
-    expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 2}]: shown`, `Out[${index + 2}]: left out`]))
+    expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 1}]: shown`, `Out[${index + 1}]: left out`]))
   })
 
   test("leaves each brief event's date to its month's divider, still in the text screen readers hear", async ({ page }) => {

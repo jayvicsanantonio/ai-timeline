@@ -90,12 +90,14 @@ describe("StoryEngine", () => {
     expect(screen.getByRole("link", { name: events.at(-1)!.title })).toHaveFocus()
   })
 
-  it("jumps to an era's title with its chapter number, wherever the era sits on the page", async () => {
+  it("jumps to an era's title with its number key, counting down the page from the era at the top", async () => {
     render(<StoryEngine events={events} />)
 
-    await userEvent.keyboard("4")
+    await userEvent.keyboard("1")
+    expect(screen.getByRole("heading", { level: 2, name: "The Agentic Era" })).toHaveFocus()
 
-    expect(screen.getByRole("heading", { level: 2, name: "The Deep Learning Revolution" })).toHaveFocus()
+    await userEvent.keyboard("4")
+    expect(screen.getByRole("heading", { level: 2, name: "The Learning Era" })).toHaveFocus()
   })
 
   it("focuses the search box with /", async () => {
@@ -119,10 +121,24 @@ describe("StoryEngine", () => {
     expect(paceLine.compareDocumentPosition(generative) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
-  it("links back up to the latest era from the close of the page", () => {
+  it("ends the page where the timeline began, and links back up to now", () => {
     render(<StoryEngine events={events} />)
 
-    expect(screen.getByRole("link", { name: "Back to the latest" })).toHaveAttribute("href", "#the-agentic-era")
+    expect(screen.getByRole("heading", { level: 2, name: "Where It Began" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Back to now" })).toHaveAttribute("href", "#the-agentic-era")
+  })
+
+  it("heads the timeline with the current era, marked now, and every era below it with the year it rewinds past", () => {
+    const { container } = render(<StoryEngine events={events} />)
+
+    expect([...container.querySelectorAll("[data-era-marker]")].map((marker) => marker.textContent)).toEqual([
+      "Now",
+      "Before 2025",
+      "Before 2020",
+      "Before 2010",
+      "Before 1990",
+      "Before 1970",
+    ])
   })
 
   it("leaves the pace line out while the reader filters", async () => {

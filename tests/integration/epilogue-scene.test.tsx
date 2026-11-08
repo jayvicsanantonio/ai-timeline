@@ -1,9 +1,13 @@
-// Integration tests for EpilogueScene, the close of the page, in real Chromium.
-// It ends on a level-2 heading below the oldest events, leaves room for the next era's interface and links back up to the latest.
+// Integration tests for EpilogueScene, the close of the page below the oldest events, in real Chromium.
+// The rewind ends where the timeline began: a level-2 heading, how far the reader has come, the eras' colors and a way back up to now.
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { EpilogueScene } from "@/components/storytelling/epilogue-scene"
+import timelineData from "@/data/timeline-events.json"
 import { ERA_DEFINITIONS } from "@/lib/eras"
+import { parseTimelineEvents } from "@/lib/timeline-events"
+
+const events = parseTimelineEvents(timelineData)
 
 // The rgb() a computed style reports for a #rrggbb color
 function rgb(hex: string) {
@@ -11,22 +15,37 @@ function rgb(hex: string) {
   return `rgb(${red}, ${green}, ${blue})`
 }
 
-describe("EpilogueScene", () => {
-  it("closes the story with a level-2 heading", () => {
-    render(<EpilogueScene latestEraId="the-agentic-era" />)
+function renderEpilogue() {
+  return render(<EpilogueScene latestEraId="the-agentic-era" firstEvent={events[0]} latestYear={events.at(-1)!.year} />)
+}
 
-    expect(screen.getByRole("heading", { level: 2, name: "The Story Continues" })).toBeInTheDocument()
+describe("EpilogueScene", () => {
+  it("ends the rewind where the timeline began, under a level-2 heading and the first event's year", () => {
+    renderEpilogue()
+
+    expect(screen.getByRole("heading", { level: 2, name: "Where It Began" })).toBeInTheDocument()
+    expect(screen.getByText(String(events[0].year))).toBeInTheDocument()
   })
 
-  it("leaves an empty frame for the interface of the next era", () => {
-    render(<EpilogueScene latestEraId="the-agentic-era" />)
+  it("says how many years the reader has rewound, and to which event", () => {
+    renderEpilogue()
 
-    expect(screen.getByText("Chapter 7")).toBeInTheDocument()
-    expect(screen.getByText("Interface not yet invented")).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        `You have rewound ${events.at(-1)!.year - events[0].year} years, from agents at work back to the ${events[0].title} in ${events[0].year}.`,
+        { exact: false },
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it("leaves the next era's interface uninvented", () => {
+    renderEpilogue()
+
+    expect(screen.getByText(/The interface of the next era has not been invented yet\./)).toBeInTheDocument()
   })
 
   it("traces every era's color in order up to the open slot for the next one", () => {
-    const { container } = render(<EpilogueScene latestEraId="the-agentic-era" />)
+    const { container } = renderEpilogue()
 
     const trail = container.querySelector("[data-era-trail]")!
     expect(trail).toHaveAttribute("aria-hidden", "true")
@@ -39,9 +58,9 @@ describe("EpilogueScene", () => {
     expect(segments.at(-1)!.compareDocumentPosition(openSlot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
-  it("links back up to the latest era, at the top of the timeline", () => {
-    render(<EpilogueScene latestEraId="the-agentic-era" />)
+  it("links back up to now, the latest era at the top of the timeline", () => {
+    renderEpilogue()
 
-    expect(screen.getByRole("link", { name: "Back to the latest" })).toHaveAttribute("href", "#the-agentic-era")
+    expect(screen.getByRole("link", { name: "Back to now" })).toHaveAttribute("href", "#the-agentic-era")
   })
 })

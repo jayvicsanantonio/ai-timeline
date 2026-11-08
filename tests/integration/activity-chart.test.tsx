@@ -75,7 +75,7 @@ describe.each(["horizontal", "vertical"] as const)("ActivityChart drawn %s", (or
     expect(starts).toEqual(ordered)
   })
 
-  it("is hidden from assistive technology, which reaches the same places through the chapter buttons", () => {
+  it("is hidden from assistive technology, which reaches the same places through the era buttons", () => {
     const { container } = render(<ActivityChart activity={activity} orientation={orientation} />)
 
     expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true")

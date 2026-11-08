@@ -287,30 +287,6 @@
     background: linear-gradient(90deg, #851746, #b23b74);
   }
 
-  .desktop-progress {
-    background: repeating-linear-gradient(90deg, #000080 0 0.7rem, transparent 0.7rem 0.85rem);
-  }
-
-  /* The progress bar fills as the dialog scrolls into view */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .desktop-progress {
-        animation: desktop-progress linear both;
-        animation-timeline: view();
-        animation-range: entry 40% cover 55%;
-      }
-    }
-  }
-
-  @keyframes desktop-progress {
-    from {
-      clip-path: inset(0 100% 0 0);
-    }
-    to {
-      clip-path: inset(0 0 0 0);
-    }
-  }
-
   /* Deep Learning Revolution: a notebook open on a dark lab bench, its cells marked with In and Out
      prompts. The bench, lit by the screen above and warmed by the GPUs below, keeps the white page
      from flashing between the dark eras around it. */
@@ -391,40 +367,6 @@
     background-size: auto, auto, auto, 100% 140rem, 100% 140rem;
     background-position: 0 0, 0 0, 0 0, 0 40rem, 0 110rem;
     background-repeat: no-repeat, no-repeat, no-repeat, repeat-y, repeat-y;
-  }
-
-  .chat-typing span {
-    width: 0.4rem;
-    height: 0.4rem;
-    border-radius: 9999px;
-    background-color: #a1a1aa;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .chat-typing span {
-      animation: typing-dot 1.2s ease-in-out infinite;
-    }
-
-    .chat-typing span:nth-child(2) {
-      animation-delay: 0.15s;
-    }
-
-    .chat-typing span:nth-child(3) {
-      animation-delay: 0.3s;
-    }
-  }
-
-  @keyframes typing-dot {
-    0%,
-    60%,
-    100% {
-      opacity: 0.35;
-      transform: translateY(0);
-    }
-    30% {
-      opacity: 1;
-      transform: translateY(-0.2rem);
-    }
   }
 
   /* Agentic Era: an agent's console on flat black, with no glow behind it, set apart from the chat

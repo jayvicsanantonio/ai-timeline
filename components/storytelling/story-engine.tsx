@@ -1,5 +1,5 @@
-// Orchestrates the page, which reads newest first: the prologue with the latest events, the six era chapters from the
-// Agentic Era back to the Foundation Era with their toolbar and navigation, the insights and the epilogue.
+// Orchestrates the page, which rewinds from now: the prologue with the latest events, the six eras from the Agentic Era
+// back to the Foundation Era with their toolbar and navigation, the insights and the epilogue where it all began.
 // Holds the search and category filters, so every part of the timeline shows the same events.
 'use client';
 
@@ -38,12 +38,12 @@ export function StoryEngine({ events }: StoryEngineProps) {
   const toolbarRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // The eras in time order, as the opening's chart and the chapter numbers run
+  // The eras in time order, as the opening's chart runs
   const eras = useMemo(() => groupEventsByEra(events), [events]);
-  // The number keys pick chapters by number, so 1 stays the Foundation Era wherever it sits on the page
-  const chapterIds = useMemo(() => eras.map((era) => era.id), [eras]);
   // The eras in the page's order, the latest first, each with its events newest first
   const pageEras = useMemo(() => erasNewestFirst(eras), [eras]);
+  // The number keys follow the page, so 1 is the era at the top
+  const pageEraIds = useMemo(() => pageEras.map((era) => era.id), [pageEras]);
   const shownEvents = useMemo(() => filterEvents(events, filters), [events, filters]);
   const shownEras = useMemo(() => erasNewestFirst(groupEventsByEra(shownEvents)), [shownEvents]);
   const latest = useMemo(() => latestEvents(events, LATEST_COUNT), [events]);
@@ -55,7 +55,7 @@ export function StoryEngine({ events }: StoryEngineProps) {
   const categoryCounts = useMemo(() => countEventsByCategory(events), [events]);
   const pace = useMemo(() => describePace(events, eras[eras.length - 1].range[0]), [events, eras]);
 
-  useTimelineShortcuts({ eraIds: chapterIds, searchInputRef });
+  useTimelineShortcuts({ eraIds: pageEraIds, searchInputRef });
 
   // Sticky parts of the eras, like the chat's month dividers, sit just below the toolbar
   useEffect(() => {
@@ -104,7 +104,7 @@ export function StoryEngine({ events }: StoryEngineProps) {
           <Fragment key={era.id}>
             <EraChapter era={era} totalEvents={pageEras[index].events.length} />
             {/* The turn out of the latest era says how much faster its events came than those of the years below
-                it, unless the reader is filtering */}
+                it, ahead of the next era's header, unless the reader is filtering */}
             {index === 0 && pace && !isFiltering(filters) ? <PaceLine pace={pace} /> : null}
           </Fragment>
         ))}
@@ -114,18 +114,19 @@ export function StoryEngine({ events }: StoryEngineProps) {
 
       <TimelineInsights events={events} />
 
-      <EpilogueScene latestEraId={pageEras[0].id} />
+      <EpilogueScene latestEraId={pageEras[0].id} firstEvent={events[0]} latestYear={events[events.length - 1].year} />
     </div>
   );
 }
 
-// A line in the black between two eras, like a film's intertitle, with its numbers picked out in white
+// A line in the black between two eras, like a film's intertitle, with its numbers picked out in white. It leads into the
+// header of the era below, so it shares that header's box and left edge.
 function PaceLine({ pace }: { pace: Pace }) {
   return (
-    <div className="bg-[#0a0a0b] px-4 py-14 sm:px-6 sm:py-16">
+    <div className="bg-[#0a0a0b] pt-8 sm:pt-10">
       <p
         data-pace-line=""
-        className="mx-auto max-w-2xl text-balance text-center text-xl font-light leading-9 text-zinc-400 sm:text-2xl sm:leading-10"
+        className="mx-auto max-w-4xl text-balance px-4 text-xl font-light leading-9 text-zinc-400 sm:px-6 sm:text-2xl sm:leading-10"
       >
         The last <span className="font-medium text-white">{pace.years} years</span> hold{' '}
         <span className="font-medium text-white">{pace.events} events</span>,{' '}

@@ -38,16 +38,16 @@ describe("erasNewestFirst", () => {
   const gpt4 = makeEvent(2023, "March", "OpenAI Releases GPT-4")
   const gpt4o = makeEvent(2024, "May", "OpenAI Releases GPT-4o")
 
-  it("puts the latest era first and each era's latest event first, keeping the chapter numbers", () => {
+  it("puts the latest era first and each era's latest event first", () => {
     const eras = erasNewestFirst(groupEventsByEra([dartmouth, perceptron, gpt4, gpt4o]))
 
-    expect(eras.map((era) => era.chapter)).toEqual([
-      "Chapter 6",
-      "Chapter 5",
-      "Chapter 4",
-      "Chapter 3",
-      "Chapter 2",
-      "Chapter 1",
+    expect(eras.map((era) => era.label)).toEqual([
+      "Agentic Era",
+      "Generative AI Era",
+      "Deep Learning Revolution",
+      "Learning Era",
+      "Knowledge Era",
+      "Foundation Era",
     ])
     expect(eras[1].events).toEqual([gpt4o, gpt4])
     expect(eras[5].events).toEqual([perceptron, dartmouth])

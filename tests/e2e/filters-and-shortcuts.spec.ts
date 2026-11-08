@@ -115,7 +115,7 @@ test.describe("search and category filters", () => {
       // Enters the timeline at its top, the latest era, which the rail shows from
       await page.locator("#the-agentic-era").evaluate((era) => era.scrollIntoView({ behavior: "instant" as ScrollBehavior }))
 
-      const rail = page.locator('nav[aria-label="Timeline chapter navigation"]').filter({ visible: true })
+      const rail = page.locator('nav[aria-label="Timeline navigation"]').filter({ visible: true })
       const bar1956 = rail.locator('[data-year-bar][data-year="1956"]')
       await expect(bar1956.locator('[data-part="matching"]')).toHaveAttribute("style", /width: 0%/)
       await expect(bar1956.locator('[data-part="total"]')).not.toHaveAttribute("style", /width: 0%/)
@@ -154,8 +154,9 @@ test.describe("keyboard shortcuts", () => {
   test("jumps to an era's title with its number key, just below the toolbar", async ({ page }) => {
     await openPage(page)
 
+    // The keys count down the page from the era at the top, so the fourth is the Learning Era
     const title = page.getByRole("heading", { level: 2, name: "The Learning Era" })
-    await pressUntil(page, "3", () => expect(title).toBeFocused({ timeout: 1000 }))
+    await pressUntil(page, "4", () => expect(title).toBeFocused({ timeout: 1000 }))
 
     const toolbarHeight = await page.getByRole("search").evaluate((search) => search.parentElement!.getBoundingClientRect().height)
     await expect

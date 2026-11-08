@@ -1,6 +1,6 @@
-// Chapter navigation: a rail on wide screens with the current year, an events-per-year chart and a button per era,
-// and a phone bar that names the current era and opens a chapter list. Both follow the page, the latest era at the top,
-// and stay hidden until the timeline starts.
+// Era navigation: a rail on wide screens with the current year, an events-per-year chart and a button per era marking the
+// year it began, and a phone bar that names the current era and opens a list of eras. Both follow the page, which rewinds
+// from now at the top, and stay hidden until the timeline starts.
 'use client';
 
 import { motion } from 'framer-motion';
@@ -15,7 +15,7 @@ import { scrollToEra, scrollToYear } from '@/lib/timeline-scroll';
 import { cn } from '@/lib/utils';
 
 interface TimelineNavigationProps {
-  // Every era with all of its events, so the chapters keep their counts while filtering, in the page's order, the latest first
+  // Every era with all of its events, so the eras keep their counts while filtering, in the page's order, the latest first
   eras: Era[];
   activity: YearActivity[];
   // Changes whenever the shown events change, so the reading position is measured again
@@ -28,10 +28,6 @@ const SHOWN =
   'visible opacity-100 [transition:opacity_300ms,translate_300ms,visibility_0s] motion-reduce:transition-none';
 const HIDDEN =
   'invisible opacity-0 [transition:opacity_300ms,translate_300ms,visibility_0s_linear_300ms] motion-reduce:transition-none';
-
-function padNumber(value: number) {
-  return String(value).padStart(2, '0');
-}
 
 interface EraProgressProps {
   progress: number;
@@ -69,28 +65,28 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
   const activeEra = eras[activeIndex];
   const firstYear = activity[0]?.year ?? activeEra.range[0];
   const lastYear = activity.at(-1)?.year ?? firstYear;
-  // The latest year of an era the chart reaches, which heads the era's part of the chart and of the page
-  const eraTopYear = (era: Era) => Math.min(era.range[1] - 1, lastYear);
-  // While an era's introduction is being read, the clock shows the year the era's events start from
-  const year = position.year ?? eraTopYear(activeEra);
+  // While an era's header is being read, the clock shows the latest year of the era the chart reaches, where its events start
+  const year = position.year ?? Math.min(activeEra.range[1] - 1, lastYear);
+  // The year an era began, or the first year the chart reaches
+  const startYear = (era: Era) => Math.max(era.range[0], firstYear);
 
-  // How far down the chart, which runs the latest year at the top, the era's part of it starts
-  const topShare = (era: Era) => {
-    const row = Math.min(Math.max(lastYear - eraTopYear(era), 0), activity.length - 1);
-    return activity.length > 0 ? row / activity.length : 0;
+  // How far down the chart, which runs the latest year at the top, the middle of the row for the year an era began sits
+  const startShare = (era: Era) => {
+    const row = Math.min(Math.max(lastYear - startYear(era), 0), activity.length - 1);
+    return activity.length > 0 ? (row + 0.5) / activity.length : 0;
   };
 
   const handlePhoneNavigate = (eraId: string) => {
     scrollToEra(eraId);
     setIsPhoneListOpen(false);
-    // The picked chapter's button unmounts with the list, so focus moves back to the toggle
+    // The picked era's button unmounts with the list, so focus moves back to the toggle
     phoneToggleRef.current?.focus({ preventScroll: true });
   };
 
   return (
     <>
       <nav
-        aria-label="Timeline chapter navigation"
+        aria-label="Timeline navigation"
         data-state={position.inTimeline ? 'visible' : 'hidden'}
         className={cn(
           'fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 xl:block',
@@ -130,19 +126,19 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                 <button
                   key={era.id}
                   type="button"
-                  aria-label={`${era.chapter}: ${era.label}`}
+                  aria-label={`${era.label}, ${era.subtitle}`}
                   aria-current={isActive ? 'location' : undefined}
                   onClick={() => scrollToEra(era.id)}
                   className={cn(
-                    'group absolute left-0 flex h-7 w-9 items-center justify-center gap-1 rounded-lg border font-mono text-[11px] tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
+                    'group absolute left-0 flex h-7 w-10 items-center justify-center gap-1 rounded-lg border font-mono text-[11px] tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
                     isActive
                       ? 'border-white/30 bg-white/[0.12] text-white'
                       : 'border-transparent text-zinc-400 hover:bg-white/[0.08] hover:text-white'
                   )}
-                  // Centered on where its era starts, but never above the bottom of the button before it,
-                  // since the short eras of the 2020s take up only a few rows at the top
+                  // Centered on the row for the year its era began, like a tick on the chart's axis, but never above the
+                  // bottom of the button before it, since the short eras of the 2020s take up only a few rows at the top
                   style={{
-                    top: `clamp(${index} * 1.75rem, calc(${topShare(era) * 100}% - 0.875rem), calc(100% - 1.75rem))`,
+                    top: `clamp(${index} * 1.75rem, calc(${startShare(era) * 100}% - 0.875rem), calc(100% - 1.75rem))`,
                   }}
                 >
                   <span
@@ -150,7 +146,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                     className="size-1.5 rounded-full"
                     style={{ backgroundColor: era.color }}
                   />
-                  {era.number}
+                  {startYear(era)}
                   <span
                     aria-hidden="true"
                     className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-md border border-white/10 bg-[#18181b] px-2 py-1 font-sans text-xs text-white shadow-lg group-hover:block group-focus-visible:block"
@@ -163,13 +159,13 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
           </div>
 
           <p className="mt-3 px-1 text-[11px] leading-snug text-zinc-500">
-            Events per year, {lastYear} back to {firstYear}
+            Events per year, now back to {firstYear}
           </p>
         </div>
       </nav>
 
       <nav
-        aria-label="Timeline chapter navigation"
+        aria-label="Timeline navigation"
         data-state={position.inTimeline ? 'visible' : 'hidden'}
         className={cn(
           'fixed inset-x-0 bottom-3 z-40 px-3 xl:hidden',
@@ -202,9 +198,6 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
               {activeEra.label}
             </span>
             <span className="text-sm font-semibold tabular-nums">{year}</span>
-            <span className="rounded-full border border-white/10 px-2 py-0.5 font-mono text-[10px] tabular-nums text-zinc-300">
-              {activeEra.number} / {padNumber(eras.length)}
-            </span>
             <ChevronUp
               aria-hidden="true"
               className={cn(
@@ -249,7 +242,6 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                       className="size-2.5 shrink-0 rounded-full"
                       style={{ backgroundColor: era.color }}
                     />
-                    <span className="font-mono text-[10px] tabular-nums text-zinc-400">{era.number}</span>
                     <span className="min-w-0 flex-1 truncate text-sm font-medium">{era.label}</span>
                     <span className="shrink-0 text-xs text-zinc-400">{era.subtitle}</span>
                   </button>

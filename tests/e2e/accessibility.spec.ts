@@ -192,7 +192,7 @@ test.describe("motion when reduced motion is preferred", () => {
     expect(runningAnimations).toEqual([])
   })
 
-  test("shows the chapter navigation at once, without fading it in", async ({ page }) => {
+  test("shows the era navigation at once, without fading it in", async ({ page }) => {
     await page.goto("/")
     await waitForHydration(page)
 
@@ -200,7 +200,7 @@ test.describe("motion when reduced motion is preferred", () => {
       document.getElementById("the-foundation-era")!.scrollIntoView({ behavior: "instant" as ScrollBehavior })
       // Gives the scroll handler a frame to measure and React a moment to render, far less than a fade takes
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 50))))
-      const navs = [...document.querySelectorAll('nav[aria-label="Timeline chapter navigation"]')]
+      const navs = [...document.querySelectorAll('nav[aria-label="Timeline navigation"]')]
       const shown = navs.find((nav) => getComputedStyle(nav).display !== "none")!
       return { state: (shown as HTMLElement).dataset.state, opacity: getComputedStyle(shown).opacity }
     })

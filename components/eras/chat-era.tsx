@@ -1,10 +1,9 @@
 // Draws the Generative AI Era as a chat thread, the interface the era made familiar, with each year's label beside its part of the thread.
-// The thread reads newest first, like a feed, so its message box sits at the top, where the hand-off to the agent is typed, and the
-// years follow, the latest first. Each year's question gets one reply: its summary, then its events written out as points under
-// month headings, the latest first.
+// The thread reads newest first, so it opens under its model picker on the latest year. Each year's question gets one reply: its
+// summary, then its events written out as points under month headings, the latest first.
 'use client';
 
-import { ArrowUp, ChevronDown, ChevronsUpDown, Copy, RefreshCw, Sparkles, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { ChevronDown, ChevronsUpDown, Copy, RefreshCw, Sparkles, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { CategoryIcon } from '@/components/ui/category-icon';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
@@ -13,14 +12,11 @@ import { groupEventsByYear, type YearGroup } from '@/lib/year-groups';
 import { yearSummary } from '@/lib/year-summaries';
 import type { TimelineEvent } from '@/types/timeline';
 import {
-  CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
   YearColumn,
   countOf,
-  eraEventCount,
-  eraHeadingId,
   eventCardAttributes,
   useBriefListing,
   type EraInterfaceProps,
@@ -57,7 +53,7 @@ function UserBubble({ children, className }: { children: ReactNode; className?: 
 const USER_BUBBLE_CLASS =
   'max-w-md rounded-3xl rounded-br-lg bg-[#2a2a33] px-5 py-3 text-[15px] leading-7 text-[#ececf1]';
 
-// The assistant's avatar, beside the era's introduction and each year's answer
+// The assistant's avatar, beside each year's answer
 function AssistantAvatar() {
   return (
     <span
@@ -124,100 +120,23 @@ function ReplyActions() {
   );
 }
 
-// The message box at the top of the thread, where a thread read newest first takes its next message, with the reader typing
-// the task the agent's console above was given, over the reminder chat apps print below it
-function Composer({ nextEraStart }: { nextEraStart: number }) {
-  return (
-    <div aria-hidden="true" data-composer="" className="mt-12 md:pl-40">
-      <div className="flex items-end gap-3 rounded-[1.75rem] border border-white/10 bg-[#1d1c27] py-3 pl-5 pr-3 shadow-[0_16px_48px_-20px_rgba(0,0,0,0.9)]">
-        <p className="min-w-0 flex-1 py-1 text-base leading-7 text-[#ececf1]">
-          <span data-composer-message="">
-            Take it from here: research AI from {nextEraStart} on, and keep going on your own.
-          </span>
-        </p>
-        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#ececf1] text-[#0c0c10]">
-          <ArrowUp className="size-4" />
-        </span>
-      </div>
-      <p className="mt-3 text-center text-xs text-[#a1a1aa]">AI can make mistakes. Check important info.</p>
-    </div>
-  );
-}
-
 export function ChatEra({ era, totalEvents }: EraInterfaceProps) {
-  if (era.events.length === 0) {
-    return (
-      <div className="chat-backdrop px-4 py-6 text-[#ececf1] sm:px-6">
-        <div className="mx-auto flex max-w-3xl gap-3 sm:gap-4">
-          <AssistantAvatar />
-          <div className="min-w-0">
-            <CompactEraText
-              era={era}
-              totalEvents={totalEvents}
-              metaClassName="text-xs text-[#a1a1aa]"
-              headingClassName="mt-0.5 text-xl font-semibold tracking-tight text-white"
-              messageClassName="mt-0.5 text-sm text-[#d4d4d8]"
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // The events come newest first
-  const latestEvent = era.events[0];
   // While the reader filters, every match shows in full
   const filtering = era.events.length < totalEvents;
 
   return (
-    <div className="chat-backdrop px-4 py-24 text-[#ececf1] sm:px-6 sm:py-32">
+    <div data-era-backdrop="" className="chat-backdrop px-4 pb-16 pt-6 text-[#ececf1] sm:px-6 sm:pb-24 sm:pt-8">
       <div className="mx-auto max-w-4xl">
-        {/* The introduction and the closing line sit in line with the thread, past the years' column */}
-        <header className="md:pl-40">
+        {/* In line with the thread, past the years' column */}
+        <div className="md:pl-40">
           <ModelPicker />
-          <UserBubble className="mt-6">
-            <p className={USER_BUBBLE_CLASS}>What happened to AI after 2020?</p>
-          </UserBubble>
-          <div className="mt-8 flex gap-3 sm:gap-4">
-            <AssistantAvatar />
-            <div className="min-w-0">
-              <p className="text-sm text-[#a1a1aa]">
-                {era.chapter} <span aria-hidden="true">·</span> {era.subtitle}
-              </p>
-              <h2
-                id={eraHeadingId(era)}
-                tabIndex={-1}
-                className="mt-2 text-3xl font-semibold tracking-tight text-white focus:outline-none sm:text-5xl"
-              >
-                {era.name}
-              </h2>
-              <p className="mt-4 text-base leading-7 text-[#d4d4d8] sm:text-lg sm:leading-8">
-                {era.description}
-              </p>
-              <p className="mt-4 text-sm text-[#a1a1aa]">
-                {eraEventCount(era, totalEvents)}
-                {latestEvent ? ` through ${formatEventDate(latestEvent)}` : null}{' '}
-                <span aria-hidden="true">·</span> {era.interfaceName}
-              </p>
-            </div>
-          </div>
-        </header>
+        </div>
 
-        {/* The era's last moment, so the first thing under its introduction */}
-        <Composer nextEraStart={era.range[1]} />
-
-        <p className="mt-6 flex items-center gap-3 text-sm text-[#a1a1aa] md:pl-40">
-          <span aria-hidden="true" className="chat-typing flex gap-1">
-            <span />
-            <span />
-            <span />
-          </span>
-          Handing the work to an agent
-        </p>
-
-        {groupEventsByYear(era.events).map((group) => (
-          <ChatYear key={group.year} group={group} filtering={filtering} />
-        ))}
+        <div className="mt-8 space-y-16">
+          {groupEventsByYear(era.events).map((group) => (
+            <ChatYear key={group.year} group={group} filtering={filtering} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -234,7 +153,7 @@ function ChatYear({ group, filtering }: ChatYearProps) {
   const { offersShowAll, showAll, toggleShowAll, inBrief } = useBriefListing(group, filtering);
 
   return (
-    <div data-year-group={group.year} className="mt-16 md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8">
+    <div data-year-group={group.year} className="md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8">
       <YearColumn
         group={group}
         className="mb-6 border-b border-white/10 pb-2 md:mb-0 md:border-b-0 md:border-r md:pb-0 md:pr-5"

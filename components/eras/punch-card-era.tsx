@@ -1,5 +1,5 @@
-// Draws the Foundation Era as a deck of 80-column punch cards under a teletype printout, sorted with the latest card on top
-// and grouped beside each year's label.
+// Draws the Foundation Era as a deck of 80-column punch cards between two lines of teletype printout, sorted with the latest
+// card on top and grouped beside each year's label.
 // Each card leads with its date, then carries its title punched in IBM 029 Hollerith code, its description and source.
 'use client';
 
@@ -16,15 +16,12 @@ import { cn } from '@/lib/utils';
 import { countEventsByMonth, groupEventsByYear } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import {
-  CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
   YearColumn,
   YearGap,
   countOf,
-  eraEventCount,
-  eraHeadingId,
   eventCardAttributes,
   type EraInterfaceProps,
 } from './era-parts';
@@ -42,48 +39,21 @@ const HOLE_WIDTH = 4.5;
 const FIRST_DIGIT_ROW = PUNCH_CARD_ROWS.indexOf('0');
 const PRINTED_DIGITS = PUNCH_CARD_ROWS.slice(FIRST_DIGIT_ROW);
 
-export function PunchCardEra({ era, totalEvents }: EraInterfaceProps) {
-  if (era.events.length === 0) {
-    return (
-      <div className="punch-card-room px-4 py-6 sm:px-6">
-        <div className="teletype-paper mx-auto max-w-3xl px-10 py-4 font-mono text-[#3a3226] sm:px-16">
-          <CompactEraText
-            era={era}
-            totalEvents={totalEvents}
-            metaClassName="text-[11px] uppercase tracking-[0.2em] text-[#5e5139]"
-            headingClassName="mt-1 text-xl font-bold uppercase tracking-tight text-[#1f1a12]"
-            messageClassName="mt-1 text-xs uppercase tracking-[0.12em]"
-          />
-        </div>
-      </div>
-    );
-  }
-
+export function PunchCardEra({ era }: EraInterfaceProps) {
   const years = groupEventsByYear(era.events);
 
   return (
-    <div className="punch-card-room px-4 py-24 sm:px-6 sm:py-32">
+    <div data-era-backdrop="" className="punch-card-room px-4 pb-16 pt-6 sm:px-6 sm:pb-24 sm:pt-8">
       <div className="mx-auto max-w-4xl">
-        <header className="teletype-paper mx-auto max-w-3xl px-10 py-9 font-mono text-[#3a3226] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] sm:px-16 sm:py-12">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-xs uppercase tracking-[0.25em] text-[#5e5139]">
-            <span>{era.chapter}</span>
-            <span>{era.subtitle}</span>
-          </div>
-          <h2
-            id={eraHeadingId(era)}
-            tabIndex={-1}
-            className="mt-6 border-y-4 border-double border-[#3a3226]/70 py-4 text-3xl font-bold uppercase leading-none tracking-tight text-[#1f1a12] focus:outline-none sm:text-5xl"
-          >
-            {era.name}
-          </h2>
-          <p className="mt-6 text-sm leading-7 sm:text-base sm:leading-8">{era.description}</p>
-          <p className="mt-6 text-xs uppercase tracking-[0.25em] text-[#5e5139]">
-            {eraEventCount(era, totalEvents)} <span aria-hidden="true">·</span>{' '}
-            {era.interfaceName}
-          </p>
-        </header>
+        {/* The teletype's first line as the deck starts to run, matched by the end-of-job line it prints last */}
+        <p
+          aria-hidden="true"
+          className="teletype-paper mx-auto max-w-3xl px-10 py-4 text-center font-mono text-xs uppercase tracking-[0.3em] text-[#3a3226] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] sm:px-16"
+        >
+          <span>***</span> <span>DECK SORTED NEWEST FIRST</span> <span>***</span>
+        </p>
 
-        <ol className="mt-14 space-y-8 sm:mt-20 sm:space-y-10">
+        <ol className="mt-12 space-y-8 sm:mt-16 sm:space-y-10">
           {years.map((group, index) => (
             <li key={group.year}>
               <YearGap

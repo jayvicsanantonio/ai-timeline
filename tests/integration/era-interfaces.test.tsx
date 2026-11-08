@@ -1,15 +1,16 @@
 // Integration tests for the six era interfaces rendered by EraChapter in real Chromium.
-// Every interface draws its events newest first, as the page reads, and must give them the same accessible structure,
-// plus the details that make it its own.
+// Every era opens with the same header in the page's black, and every interface draws its events newest first, as the page
+// rewinds, and must give them the same accessible structure, plus the details that make it its own.
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { page, userEvent } from "vitest/browser"
 import { EraChapter } from "@/components/eras/era-chapter"
 import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
-import { ERA_DEFINITIONS, groupEventsByEra, type EraInterface } from "@/lib/eras"
+import { ERA_DEFINITIONS, groupEventsByEra, isCurrentEra, type EraInterface } from "@/lib/eras"
 import { eventAnchorId, eventDateTime, eventSource, formatEventDate } from "@/lib/event-format"
 import { encodeHollerith } from "@/lib/hollerith"
 import { erasNewestFirst, newestFirst } from "@/lib/newest-first"
+import { monthCountOf, relativeMonthLabel } from "@/lib/relative-time"
 import { yearSummary } from "@/lib/year-summaries"
 import type { TimelineCategory, TimelineEvent } from "@/types/timeline"
 
@@ -85,13 +86,42 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
     expect(heading).toHaveAttribute("tabindex", "-1")
   })
 
-  it("introduces the era with its chapter, years, description and interface", () => {
+  it("introduces the era with its years, description and interface, in a header ahead of its interface", () => {
     const { era, section } = renderEra(eraInterface)
 
-    expect(section).toHaveTextContent(era.chapter)
-    expect(section).toHaveTextContent(era.subtitle)
-    expect(section).toHaveTextContent(era.description)
-    expect(section).toHaveTextContent(era.interfaceName)
+    const header = section.querySelector<HTMLElement>("[data-era-header]")!
+    expect(header).toHaveTextContent(era.subtitle)
+    expect(header).toHaveTextContent(era.description)
+    expect(header).toHaveTextContent(era.interfaceName)
+    expect(header).toContainElement(within(section).getByRole("heading", { level: 2, name: era.name }))
+    const backdrop = section.querySelector("[data-era-backdrop]")!
+    expect(header.compareDocumentPosition(backdrop) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(header.contains(backdrop)).toBe(false)
+  })
+
+  // The timeline rewinds from now, so each header says where the reader has got to
+  it("marks the current era as now, and any other as before the year the era above it began", () => {
+    const { era, section } = renderEra(eraInterface)
+
+    const marker = section.querySelector("[data-era-marker]")!
+    expect(marker.textContent).toBe(isCurrentEra(era) ? "Now" : `Before ${era.range[1]}`)
+  })
+
+  it("says how recent its latest event is only while the era is still under way", () => {
+    const { era, section } = renderEra(eraInterface)
+
+    const header = section.querySelector("[data-era-header]")!
+    if (isCurrentEra(era)) {
+      expect(header).toHaveTextContent(`${events.length} events through ${formatEventDate(shown[0])}`)
+    } else {
+      expect(header.textContent).not.toMatch(/\bthrough\b/)
+    }
+  })
+
+  it("names no chapter, since the page rewinds rather than counting forward", () => {
+    const { section } = renderEra(eraInterface)
+
+    expect(section.textContent).not.toMatch(/chapter/i)
   })
 
   it("counts the era's events, and how many match while filtering", () => {
@@ -221,7 +251,7 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
     }
   })
 
-  it("says so when none of the era's events match the filters", () => {
+  it("says so in its header when none of the era's events match the filters", () => {
     const { era, section } = renderEra(eraInterface, [], 12)
 
     expect(within(section).getByRole("heading", { level: 2, name: era.name })).toBeInTheDocument()
@@ -232,23 +262,20 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
   })
 
   // One era's backdrop meets the next in the page's black, so moving between eras dissolves instead of cutting
-  it("fades its backdrop into the page's black at the top and bottom, with or without matches", () => {
+  it("fades its backdrop into the page's black at the top and bottom", () => {
     // The seam comes first, whether other layers follow it or it is the only one
     const seam = /^linear-gradient\(rgb\(10, 10, 11\), .*?, rgb\(10, 10, 11\)\)(, |$)/
 
-    const full = renderEra(eraInterface)
-    expect(getComputedStyle(full.section.firstElementChild!).backgroundImage).toMatch(seam)
-    full.unmount()
-
-    const empty = renderEra(eraInterface, [], 12)
-    expect(getComputedStyle(empty.section.firstElementChild!).backgroundImage).toMatch(seam)
+    const { section } = renderEra(eraInterface)
+    expect(getComputedStyle(section.querySelector("[data-era-backdrop]")!).backgroundImage).toMatch(seam)
   })
 
-  // Filtering can empty several eras at once, and their full introductions would push the results far down
-  it("shrinks to a short row when none of its events match the filters", () => {
+  // Filtering can empty several eras at once, and their full interfaces would push the results far down
+  it("shrinks to its header alone when none of its events match the filters", () => {
     const { section } = renderEra(eraInterface, [], 12)
 
-    expect(section.getBoundingClientRect().height).toBeLessThan(300)
+    expect(section.querySelector("[data-era-backdrop]")).toBeNull()
+    expect(section.getBoundingClientRect().height).toBeLessThan(200)
   })
 })
 
@@ -373,6 +400,15 @@ describe("the punch-card era", () => {
     expect(year1956.querySelectorAll("[data-month-square]")).toHaveLength(12)
     expect(litMonths(year1956)).toEqual(["June"])
     expect(litMonths(year1951)).toEqual([])
+  })
+
+  it("opens the deck with a line saying it is sorted newest first, as a picture rather than text to hear", () => {
+    const { section } = renderEra("punch-card")
+
+    const opening = within(section).getByText("DECK SORTED NEWEST FIRST")
+    const firstCard = within(section).getAllByRole("article")[0]
+    expect(opening.compareDocumentPosition(firstCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(opening.closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
   it("signs off the deck with an end-of-job line, as the printouts did", () => {
@@ -517,7 +553,7 @@ describe("the notebook era", () => {
   it("sets the white notebook on a dark desk, so it does not flash between the dark eras", () => {
     const { section } = renderEra("notebook")
 
-    const desk = section.firstElementChild!
+    const desk = section.querySelector("[data-era-backdrop]")!
     const page = desk.firstElementChild!
     expect(luminance(getComputedStyle(desk).backgroundColor)).toBeLessThan(0.02)
     expect(getComputedStyle(page).backgroundColor).toBe("rgb(255, 255, 255)")
@@ -535,13 +571,13 @@ describe("the notebook era", () => {
       })
   })
 
-  it("numbers the event cells down the page after the introduction's cell, the latest first", () => {
+  it("numbers the event cells down the page from the first, the latest event first", () => {
     const { section } = renderEra("notebook")
 
     const cells = within(section).getAllByRole("article")
-    expect(cells[0]).toHaveTextContent("In [2]:")
+    expect(cells[0]).toHaveTextContent("In [1]:")
     expect(cells[0]).toHaveTextContent("Attention Is All You Need")
-    expect(cells[1]).toHaveTextContent("In [3]:")
+    expect(cells[1]).toHaveTextContent("In [2]:")
   })
 
   it("heads each year like a markdown cell, with its count of cells", () => {
@@ -563,11 +599,10 @@ describe("the notebook era", () => {
     within(section)
       .getAllByRole("article")
       .forEach((cell, index) => {
-        const run = index + 2
+        const run = index + 1
         expect(shown(within(cell).getByText(`In [${run}]:`))).toBe(true)
         expect(shown(within(cell).getByText(`Out[${run}]:`))).toBe(false)
       })
-    expect(shown(within(section).getByText("Out[1]:"))).toBe(false)
   })
 
   describe("on a wide screen", () => {
@@ -585,7 +620,7 @@ describe("the notebook era", () => {
       within(section)
         .getAllByRole("article")
         .forEach((cell, index) => {
-          const run = index + 2
+          const run = index + 1
           for (const prompt of [within(cell).getByText(`In [${run}]:`), within(cell).getByText(`Out[${run}]:`)]) {
             expect(shown(prompt)).toBe(true)
             expect(prompt.getBoundingClientRect().right).toBeLessThanOrEqual(
@@ -647,29 +682,13 @@ describe("the chat era", () => {
     expect(drawnYear(year2024)).not.toHaveTextContent("landmark")
   })
 
-  it("hands the work to an agent at the top of the thread, the era's last moment, before its latest year", () => {
-    const { section } = renderEra("chat")
-
-    const handing = within(section).getByText("Handing the work to an agent")
-    const composer = section.querySelector("[data-composer]")!
-    const firstPrompt = section.querySelector("[data-year-prompt]")!
-    expect(composer.compareDocumentPosition(handing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(handing.compareDocumentPosition(firstPrompt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(handing.closest('[aria-hidden="true"]')).toBeNull()
-  })
-
-  it("says how recent its latest event is", () => {
-    const { section } = renderEra("chat")
-
-    expect(section).toHaveTextContent("3 events through May 2024")
-  })
-
-  it("opens the thread under the assistant's model picker, a picture rather than a control", () => {
+  it("opens the thread under the assistant's model picker, a picture rather than a control, straight onto the latest year", () => {
     const { section } = renderEra("chat")
 
     const picker = section.querySelector("[data-model-picker]")!
-    const heading = within(section).getByRole("heading", { level: 2 })
-    expect(picker.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const firstPrompt = section.querySelector("[data-year-prompt]")!
+    expect(picker.compareDocumentPosition(firstPrompt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(firstPrompt).toHaveTextContent("What happened in 2024?")
     expect(picker.closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
@@ -719,22 +738,6 @@ describe("the chat era", () => {
     expect(within(section).queryAllByRole("button")).toEqual([])
   })
 
-  // A thread read newest first takes its next message at the top, as a feed keeps its composer above the newest post
-  it("keeps the message box at the top of the thread, under the introduction, typing the task it hands the next era", () => {
-    const { era, section } = renderEra("chat")
-
-    const composer = section.querySelector("[data-composer]")!
-    expect(composer.querySelector("[data-composer-message]")).toHaveTextContent(
-      `Take it from here: research AI from ${era.range[1]} on, and keep going on your own.`,
-    )
-    expect(composer).toHaveTextContent("AI can make mistakes. Check important info.")
-    expect(composer.closest('[aria-hidden="true"]')).not.toBeNull()
-    const heading = within(section).getByRole("heading", { level: 2 })
-    const firstArticle = within(section).getAllByRole("article")[0]
-    expect(heading.compareDocumentPosition(composer) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(composer.compareDocumentPosition(firstArticle) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-  })
-
   it("writes the whole conversation in sans-serif, with no monospace anywhere", () => {
     const { section } = renderEra("chat", busyYearIn(2024))
 
@@ -762,15 +765,39 @@ describe("the chat era", () => {
 })
 
 describe("the agent era", () => {
-  it("opens with a plan of one step per year, the year still running first and every other year checked off", () => {
+  // The live edge of a timeline read newest first, as a thread shows someone typing above its newest message
+  it("keeps the agent at work just above its newest step, watching for what comes after it", () => {
     const { container } = renderEra("agent")
 
-    const steps = [...container.querySelectorAll<HTMLElement>("[data-plan-step]")]
-    expect(steps.map((step) => [step.textContent, step.dataset.status])).toEqual([
-      ["Research 2026", "running"],
-      ["Research 2025", "done"],
-    ])
-    expect(steps[0].closest('[aria-hidden="true"]')).not.toBeNull()
+    const frontiers = [...container.querySelectorAll("[data-frontier]")]
+    expect(frontiers).toHaveLength(1)
+    const status = frontiers[0].querySelector("[data-agent-status]")!
+    expect(status.textContent).toMatch(/^Watching for what comes after September 2026/)
+    const newest = container.querySelector("article")!
+    expect(newest).toHaveAttribute("data-year", "2026")
+    expect(container.querySelectorAll("[data-year-summary]")[0].compareDocumentPosition(frontiers[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(frontiers[0].compareDocumentPosition(newest) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(container.querySelector("[data-agent-spinner]")!.closest('[aria-hidden="true"]')).not.toBeNull()
+    expect(status.closest('[aria-hidden="true"]')).toBeNull()
+  })
+
+  it("says how long ago the newest step happened, to the month, by the reader's clock", () => {
+    const { container } = renderEra("agent")
+
+    // Computed from today's date, as the page computes it
+    const expected = relativeMonthLabel({ year: 2026, month: "September" }, monthCountOf(new Date()))
+    const label = container.querySelector("[data-frontier] [data-relative-time]")
+    if (expected) {
+      expect(label).toHaveTextContent(expected)
+    } else {
+      expect(label).toBeNull()
+    }
+  })
+
+  it("leaves the live edge out while the reader filters, since the newest match need not be the newest event", () => {
+    const { container } = renderEra("agent", eventsByInterface.agent, 10)
+
+    expect(container.querySelector("[data-frontier]")).toBeNull()
   })
 
   it("starts each year with its task before that year's first step, the year still running first", () => {
@@ -819,21 +846,16 @@ describe("the agent era", () => {
     expect(container.querySelector("[data-year-summary]")).toBeNull()
   })
 
-  it("notes how many pages it read for each year and from how many sites, after the year's task", () => {
-    const { container } = renderEra("agent", [
+  it("notes beside each year how many sites it read the year's events on", () => {
+    const { section } = renderEra("agent", [
       { ...makeEvent(2025, "March", "First Step", "AI Tools"), link: "https://www.openai.com/first" },
       { ...makeEvent(2025, "April", "Second Step", "AI Tools"), link: "https://openai.com/second" },
       { ...makeEvent(2025, "May", "Third Step", "Agents"), link: "https://arxiv.org/third" },
       makeEvent(2026, "January", "Fourth Step", "Agents"),
     ])
 
-    const notes = [...container.querySelectorAll("[data-year-activity]")]
-    expect(notes.map((note) => note.textContent)).toEqual(["Read 1 page from 1 site", "Read 3 pages from 2 sites"])
-    const task2025 = container.querySelectorAll("[data-year-task]")[1]
-    const firstOf2025 = container.querySelector('article[data-year="2025"]')!
-    expect(task2025.compareDocumentPosition(notes[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(notes[1].compareDocumentPosition(firstOf2025) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(notes[0].closest('[aria-hidden="true"]')).not.toBeNull()
+    const sites = yearColumns(section).map((column) => column.querySelector("[data-year-sites]")!.textContent)
+    expect(sites).toEqual(["from 1 site", "from 2 sites"])
   })
 
   it("draws each step in full as a call that fetches its source, ahead of the step's date", () => {
@@ -877,29 +899,22 @@ describe("the agent era", () => {
     }
   })
 
-  // The log reads newest first, so what the agent is doing now sits at its top, beside the newest work
-  it("frames the log in a console, under its title bar and its status bar", () => {
+  it("frames the log in a console under its title bar", () => {
     const { section } = renderEra("agent")
 
     const frame = section.querySelector("[data-console]")!
     const titleBar = frame.querySelector("[data-console-title]")!
-    const statusBar = frame.querySelector("[data-console-status]")!
-    const heading = within(section).getByRole("heading", { level: 2 })
-    expect(frame).toContainElement(heading)
-    expect(titleBar.compareDocumentPosition(statusBar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(statusBar.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     for (const article of within(section).getAllByRole("article")) {
-      expect(statusBar.compareDocumentPosition(article) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(frame).toContainElement(article)
+      expect(titleBar.compareDocumentPosition(article) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     }
     expect(titleBar.closest('[aria-hidden="true"]')).not.toBeNull()
-    expect(statusBar).toContainElement(section.querySelector<HTMLElement>("[data-agent-status]"))
-    expect(statusBar).toHaveTextContent("3 steps")
   })
 
   it("writes the whole console in monospace", () => {
     const { section } = renderEra("agent", busyYearIn(2025))
 
-    const proportional = [...section.querySelectorAll("*")].filter(
+    const proportional = [...section.querySelector("[data-console]")!.querySelectorAll("*")].filter(
       (element) =>
         element.children.length === 0 &&
         element.textContent!.trim() !== "" &&
@@ -975,37 +990,44 @@ describe("the agent era", () => {
     const firstOf2025 = container.querySelector('article[data-year="2025"]')!
     expect(lastOf2026.compareDocumentPosition(writes[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(task2025.compareDocumentPosition(writes[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(writes[0].compareDocumentPosition(container.querySelectorAll("[data-year-activity]")[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(writes[0].compareDocumentPosition(container.querySelectorAll("[data-year-summary]")[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(writes[0].compareDocumentPosition(firstOf2025) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(writes[0].closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
-  it("is still working on the story at the top of the log, and ends at the instruction it was given, its oldest line", () => {
+  it("ends at the instruction it was given, the oldest line of a log read newest first", () => {
     const { era, section } = renderEra("agent")
 
-    const status = section.querySelector("[data-agent-status]")!
     const instruction = section.querySelector("[data-instruction]")!
-    const articles = within(section).getAllByRole("article")
-    expect(status.compareDocumentPosition(articles[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(articles.at(-1)!.compareDocumentPosition(instruction) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(within(section).getAllByRole("article").at(-1)!.compareDocumentPosition(instruction) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(section.textContent).toMatch(
       new RegExp(`Take it from here: research AI from ${era.range[0]} on, and keep going on your own\\.$`),
     )
-    expect(section.querySelector("[data-agent-spinner]")!.closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
-  it("says how recent its latest event is", () => {
-    const { section } = renderEra("agent")
-
-    expect(section).toHaveTextContent("3 events through September 2026")
-  })
-
-  it("shimmers its closing status while motion is allowed, as agents do while they work", () => {
+  it("shimmers its live status while motion is allowed, as agents do while they work", () => {
     const { section } = renderEra("agent")
 
     const status = section.querySelector("[data-agent-status]")!
-    expect(status).toHaveTextContent("The story is still being written")
     expect(getComputedStyle(status).animationName).toBe("agent-shimmer")
+  })
+
+  it("says how long ago each step in full happened, while it is under a year old", () => {
+    const { section } = renderEra("agent")
+    const now = monthCountOf(new Date())
+
+    within(section)
+      .getAllByRole("article")
+      .forEach((article, index) => {
+        const expected = relativeMonthLabel(newestFirst(eventsByInterface.agent)[index], now)
+        const label = article.querySelector("[data-relative-time]")
+        if (expected) {
+          expect(label).toHaveTextContent(expected)
+          expect(article.querySelector("time")!.compareDocumentPosition(label!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+        } else {
+          expect(label).toBeNull()
+        }
+      })
   })
 })
 

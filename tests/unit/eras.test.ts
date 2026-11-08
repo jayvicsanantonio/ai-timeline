@@ -2,7 +2,7 @@
 // Covers era order, interfaces, ids, subtitles and colors, and which era each event lands in.
 import { describe, expect, it } from "vitest"
 import timelineData from "@/data/timeline-events.json"
-import { ERA_DEFINITIONS, getEraForYear, groupEventsByEra } from "@/lib/eras"
+import { ERA_DEFINITIONS, getEraForYear, groupEventsByEra, isCurrentEra } from "@/lib/eras"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 import type { TimelineEvent } from "@/types/timeline"
 
@@ -39,6 +39,12 @@ describe("ERA_DEFINITIONS", () => {
     const colors = ERA_DEFINITIONS.map((era) => era.color)
     expect(new Set(colors).size).toBe(ERA_DEFINITIONS.length)
     colors.forEach((color) => expect(color).toMatch(/^#[0-9a-f]{6}$/))
+  })
+})
+
+describe("isCurrentEra", () => {
+  it("names the era still under way, the one the timeline opens with, and no other", () => {
+    expect(ERA_DEFINITIONS.filter(isCurrentEra).map((era) => era.name)).toEqual(["The Agentic Era"])
   })
 })
 
@@ -82,16 +88,16 @@ describe("groupEventsByEra", () => {
     expect(eras.map((era) => era.events.length)).toEqual([0, 0, 0, 0, 1, 0])
   })
 
-  it("numbers the chapters and gives each era a section id, short label and subtitle of its decades or years", () => {
+  it("gives each era a section id, short label and subtitle of its decades or years, the current one running to now", () => {
     const eras = groupEventsByEra([])
 
-    expect(eras.map((era) => [era.id, era.label, era.chapter, era.number, era.subtitle])).toEqual([
-      ["the-foundation-era", "Foundation Era", "Chapter 1", "01", "1940s – 1960s"],
-      ["the-knowledge-era", "Knowledge Era", "Chapter 2", "02", "1970s – 1980s"],
-      ["the-learning-era", "Learning Era", "Chapter 3", "03", "1990s – 2000s"],
-      ["the-deep-learning-revolution", "Deep Learning Revolution", "Chapter 4", "04", "2010s"],
-      ["the-generative-ai-era", "Generative AI Era", "Chapter 5", "05", "2020 – 2024"],
-      ["the-agentic-era", "Agentic Era", "Chapter 6", "06", "2025 – Present"],
+    expect(eras.map((era) => [era.id, era.label, era.subtitle])).toEqual([
+      ["the-foundation-era", "Foundation Era", "1940s – 1960s"],
+      ["the-knowledge-era", "Knowledge Era", "1970s – 1980s"],
+      ["the-learning-era", "Learning Era", "1990s – 2000s"],
+      ["the-deep-learning-revolution", "Deep Learning Revolution", "2010s"],
+      ["the-generative-ai-era", "Generative AI Era", "2020 – 2024"],
+      ["the-agentic-era", "Agentic Era", "2025 – now"],
     ])
   })
 

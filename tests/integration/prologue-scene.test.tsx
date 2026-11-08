@@ -1,5 +1,5 @@
 // Integration tests for PrologueScene, the opening of the page, rendered with the real timeline data.
-// Covers the page title, the latest events, the events-per-year chart with its era axis, summary and table, and the six era tiles.
+// Covers the page title, the latest events, the links to the eras, and the events-per-year chart with its era axis, summary and table.
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 import { page, userEvent } from "vitest/browser"
@@ -27,29 +27,18 @@ describe("PrologueScene", () => {
     expect(screen.getByRole("heading", { level: 1, name: "The AI Timeline" })).toBeInTheDocument()
   })
 
-  it("links to every era from a tile naming its chapter, years, interface and event count, the latest era first", () => {
+  it("links to every era by its name and years, the latest era first, as the page runs", () => {
     renderPrologue()
 
-    const tiles = within(screen.getByRole("list", { name: "Eras" })).getAllByRole("link")
-    expect(tiles).toHaveLength(eras.length)
+    const links = within(screen.getByRole("list", { name: "Eras" })).getAllByRole("link")
+    expect(links).toHaveLength(eras.length)
     newestFirst(eras).forEach((era, index) => {
-      expect(tiles[index]).toHaveAttribute("href", `#${era.id}`)
-      expect(tiles[index]).toHaveTextContent(era.chapter)
-      expect(tiles[index]).toHaveTextContent(era.name)
-      expect(tiles[index]).toHaveTextContent(era.subtitle)
-      expect(tiles[index]).toHaveTextContent(era.interfaceName)
-      expect(tiles[index]).toHaveTextContent(`${era.events.length} events`)
+      expect(links[index]).toHaveAttribute("href", `#${era.id}`)
+      expect(links[index]).toHaveTextContent(`${era.label}${era.subtitle}`)
+      expect(getComputedStyle(links[index]).whiteSpace).toBe("nowrap")
     })
   })
 
-  it("keeps each tile's event count together on one line", () => {
-    renderPrologue()
-
-    const tiles = within(screen.getByRole("list", { name: "Eras" })).getAllByRole("link")
-    newestFirst(eras).forEach((era, index) => {
-      expect(getComputedStyle(within(tiles[index]).getByText(`${era.events.length} events`)).whiteSpace).toBe("nowrap")
-    })
-  })
 
   it("sums up how many events fall in the latest era under the chart", () => {
     renderPrologue()
@@ -81,16 +70,28 @@ describe("PrologueScene", () => {
     expect(rows.at(-1)).toHaveTextContent(`${yearsWithEvents[0].year}${yearsWithEvents[0].total}`)
   })
 
-  it("starts the story at the latest era", () => {
+  it("tells the reader that the timeline rewinds from the latest news to its first year", () => {
     renderPrologue()
 
-    expect(screen.getByRole("link", { name: "Start with the latest" })).toHaveAttribute("href", `#${eras.at(-1)!.id}`)
+    const first = activity[0].year
+    const last = activity.at(-1)!.year
+    expect(
+      screen.getByText(`${last - first} years of artificial intelligence, from the latest news back to ${first}`, { exact: false }),
+    ).toHaveTextContent("Scroll to rewind.")
+  })
+})
+
+describe("PrologueScene on a laptop screen", () => {
+  afterEach(async () => {
+    await page.viewport(414, 896)
   })
 
-  it("tells the reader that the story runs from the latest news back to its first spark", () => {
-    renderPrologue()
+  // The timeline should follow soon, so the opening stays within about a screen
+  it("keeps the opening to about a screen", async () => {
+    await page.viewport(1280, 800)
+    const { container } = renderPrologue()
 
-    expect(screen.getByText(/told from the latest news back to its first spark/)).toBeInTheDocument()
+    expect(container.querySelector("section")!.getBoundingClientRect().height).toBeLessThan(960)
   })
 })
 
