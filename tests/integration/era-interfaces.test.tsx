@@ -270,12 +270,13 @@ describe.each(INTERFACES)("the %s era", (eraInterface) => {
     expect(getComputedStyle(section.querySelector("[data-era-backdrop]")!).backgroundImage).toMatch(seam)
   })
 
-  // Filtering can empty several eras at once, and their full interfaces would push the results far down
+  // Filtering can empty several eras at once, and their full interfaces would push the results far down. On a phone the
+  // header's details and note wrap onto as many lines as the fonts need, so the bound leaves room for that.
   it("shrinks to its header alone when none of its events match the filters", () => {
     const { section } = renderEra(eraInterface, [], 12)
 
     expect(section.querySelector("[data-era-backdrop]")).toBeNull()
-    expect(section.getBoundingClientRect().height).toBeLessThan(200)
+    expect(section.getBoundingClientRect().height).toBeLessThan(300)
   })
 })
 
