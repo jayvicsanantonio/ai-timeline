@@ -1,16 +1,19 @@
 // Orchestrates the page, which rewinds from now: the prologue with the latest events, the six eras from the Agentic Era
 // back to the Foundation Era with their toolbar and navigation, the insights and the epilogue where it all began.
-// Holds the search and category filters, so every part of the timeline shows the same events.
+// Builds the AI Dex once from every event and holds the search and category filters, so every part of the timeline shows
+// the same events under the same numbers and creatures.
 'use client';
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { PrologueScene } from './prologue-scene';
 import { EpilogueScene } from './epilogue-scene';
+import { DexProvider } from '@/components/eras/dex-context';
 import { EraChapter } from '@/components/eras/era-chapter';
 import { TimelineInsights } from '@/components/interactive/timeline-insights';
 import { TimelineControls } from '@/components/timeline/timeline-controls';
 import { TimelineNavigation } from '@/components/timeline/timeline-navigation';
 import { useTimelineShortcuts } from '@/hooks/use-timeline-shortcuts';
+import { buildDex } from '@/lib/dex';
 import { groupEventsByEra } from '@/lib/eras';
 import { erasNewestFirst, latestEvents } from '@/lib/newest-first';
 import { describePace, type Pace } from '@/lib/pace';
@@ -54,6 +57,7 @@ export function StoryEngine({ events }: StoryEngineProps) {
   );
   const categoryCounts = useMemo(() => countEventsByCategory(events), [events]);
   const pace = useMemo(() => describePace(events, eras[eras.length - 1].range[0]), [events, eras]);
+  const dex = useMemo(() => buildDex(events), [events]);
 
   useTimelineShortcuts({ eraIds: pageEraIds, searchInputRef });
 
@@ -65,8 +69,9 @@ export function StoryEngine({ events }: StoryEngineProps) {
       return;
     }
 
+    // Measured to the fraction of a pixel, which offsetHeight would round away
     const observer = new ResizeObserver(() => {
-      timeline.style.setProperty('--timeline-sticky-offset', `${toolbar.offsetHeight}px`);
+      timeline.style.setProperty('--timeline-sticky-offset', `${toolbar.getBoundingClientRect().height}px`);
     });
     observer.observe(toolbar);
     return () => observer.disconnect();
@@ -86,11 +91,12 @@ export function StoryEngine({ events }: StoryEngineProps) {
   };
 
   return (
+    <DexProvider dex={dex}>
     <div className="relative">
       <PrologueScene eras={eras} activity={activity} latest={latest} totalEvents={events.length} />
 
       {/* The offset starts at the toolbar's height in one row, and is measured once the page runs */}
-      <div ref={timelineRef} className="relative [--timeline-sticky-offset:65px]">
+      <div ref={timelineRef} className="relative [--timeline-sticky-offset:66px]">
         <TimelineControls
           ref={toolbarRef}
           filters={filters}
@@ -116,23 +122,30 @@ export function StoryEngine({ events }: StoryEngineProps) {
 
       <EpilogueScene latestEraId={pageEras[0].id} firstEvent={events[0]} latestYear={events[events.length - 1].year} />
     </div>
+    </DexProvider>
   );
 }
 
-// A line in the black between two eras, like a film's intertitle, with its numbers picked out in white. It leads into the
-// header of the era below, so it shares that header's box and left edge.
+// A message box between two eras, as the games print news, with its numbers picked out. It leads into the header of the
+// era below, so it shares that header's box and left edge.
 function PaceLine({ pace }: { pace: Pace }) {
   return (
-    <div className="bg-[#0a0a0b] pt-8 sm:pt-10">
-      <p
-        data-pace-line=""
-        className="mx-auto max-w-4xl text-balance px-4 text-xl font-light leading-9 text-zinc-400 sm:px-6 sm:text-2xl sm:leading-10"
-      >
-        The last <span className="font-medium text-white">{pace.years} years</span> hold{' '}
-        <span className="font-medium text-white">{pace.events} events</span>,{' '}
-        <span className="font-medium text-white">{pace.multiple} times</span> the yearly pace of the{' '}
-        {pace.yearsBefore} years before them.
-      </p>
+    <div className="bg-background px-4 pt-10 sm:px-6 sm:pt-12">
+      <div className="dex-textbox mx-auto max-w-4xl px-5 py-4 sm:px-7 sm:py-5">
+        <p className="font-pixel text-[0.5625rem] uppercase text-[#48506b]">Evolution speed</p>
+        <p
+          data-pace-line=""
+          className="mt-2 text-balance text-lg leading-8 sm:text-xl sm:leading-9"
+        >
+          The last <strong className="font-semibold text-[#c2142e]">{pace.years} years</strong> hold{' '}
+          <strong className="font-semibold text-[#c2142e]">{pace.events} events</strong>,{' '}
+          <strong className="font-semibold text-[#c2142e]">{pace.multiple} times</strong> the yearly pace of the{' '}
+          {pace.yearsBefore} years before them.
+          <span aria-hidden="true" className="text-caret ml-1 text-sm text-[#e3263b]">
+            ▼
+          </span>
+        </p>
+      </div>
     </div>
   );
 }

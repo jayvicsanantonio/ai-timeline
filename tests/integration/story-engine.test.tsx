@@ -1,5 +1,5 @@
 // Integration tests for StoryEngine with the real timeline data in Chromium.
-// Covers the six era interfaces, the latest first, searching and filtering across every era, and the keyboard shortcuts.
+// Covers the six eras of the AI Dex, the latest first, searching and filtering across every era, and the keyboard shortcuts.
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 import { userEvent } from "vitest/browser"
@@ -23,11 +23,11 @@ afterEach(() => {
 })
 
 describe("StoryEngine", () => {
-  it("draws the eras from the latest to the first, each in its own interface", () => {
+  it("draws the eras from the latest to the first, each in its own generation's sprites", () => {
     const { container } = render(<StoryEngine events={events} />)
 
-    const sections = [...container.querySelectorAll<HTMLElement>("section[data-interface]")]
-    expect(sections.map((section) => section.dataset.interface)).toEqual(["agent", "chat", "notebook", "desktop", "terminal", "punch-card"])
+    const sections = [...container.querySelectorAll<HTMLElement>("section[data-generation]")]
+    expect(sections.map((section) => section.dataset.generation)).toEqual(["modern", "gen-5", "gen-4", "gen-3", "gen-2", "gen-1"])
     expect(sections.map((section) => section.id)).toEqual(newestFirst(ERA_DEFINITIONS).map((era) => era.id))
     expect(eventCards()).toHaveLength(events.length)
   })
@@ -41,7 +41,7 @@ describe("StoryEngine", () => {
   it("opens with the latest events, each linking to its card", () => {
     render(<StoryEngine events={events} />)
 
-    const latest = within(screen.getByRole("list", { name: "Latest" })).getAllByRole("link")
+    const latest = within(screen.getByRole("list", { name: "Latest sightings" })).getAllByRole("link")
     expect(latest.map((link) => link.getAttribute("href"))).toEqual(
       newestFirst(events.slice(-3)).map((event) => `#${eventAnchorId(event)}`),
     )
@@ -67,7 +67,7 @@ describe("StoryEngine", () => {
   it("shows only a picked category and tells each era without one", async () => {
     render(<StoryEngine events={events} />)
 
-    await userEvent.click(screen.getByRole("button", { name: /^Categories/ }))
+    await userEvent.click(screen.getByRole("button", { name: /^Types/ }))
     await userEvent.click(screen.getByRole("button", { name: /^Agents/ }))
 
     const agents = events.filter((event) => event.category === "Agents")

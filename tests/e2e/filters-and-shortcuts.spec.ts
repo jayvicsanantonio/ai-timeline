@@ -53,23 +53,23 @@ test.describe("search and category filters", () => {
     await openPage(page)
     const agents = events.filter((event) => event.category === "Agents")
 
-    await page.getByRole("button", { name: /^Categories/ }).click()
+    await page.getByRole("button", { name: /^Types/ }).click()
     await page.getByRole("group", { name: "Filter by category" }).getByRole("button", { name: /^Agents/ }).click()
 
     await expect(page.locator("article")).toHaveCount(agents.length)
     await expect(page.locator("#the-foundation-era")).toContainText(NO_MATCHES)
     await expect(page.locator("#the-generative-ai-era")).not.toContainText(NO_MATCHES)
-    await expect(page.getByRole("button", { name: "Categories, 1 picked" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Types, 1 picked" })).toBeVisible()
   })
 
   test("keeps eras without matches to a short row, so the results start near the top", async ({ page }) => {
     await openPage(page)
 
-    await page.getByRole("button", { name: /^Categories/ }).click()
+    await page.getByRole("button", { name: /^Types/ }).click()
     await page.getByRole("group", { name: "Filter by category" }).getByRole("button", { name: /^Agents/ }).click()
 
     const layout = await page.evaluate(() => {
-      const sections = [...document.querySelectorAll("section[data-interface]")]
+      const sections = [...document.querySelectorAll("section[data-generation]")]
       return {
         emptyEraHeights: sections
           .filter((section) => !section.querySelector("article"))

@@ -15,10 +15,12 @@ This project presents the complete history of artificial intelligence through an
 
 - **Comprehensive Dataset**: 340 meticulously researched AI milestones with verified sources
 - **Latest First**: The page opens on the newest events, each saying how long ago it happened, and rewinds from now back to 1943, every era its latest year and its latest event first under a header that says where the rewind has reached
-- **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook, a chat thread and an agent's task log
+- **The AI Dex**: The timeline is a Pokémon-style field guide. Every event is a numbered entry (No. 001 is the 1943 McCulloch-Pitts neuron) spotted as a creature of its category's type: research is Psychic, models are Dragon, policy is Fairy (super effective against Dragons), hardware is Electric, companies are Steel, tools are Bug, bombshells are Fire and agents are Ghost
+- **Sprites Through Time**: Each era is drawn in the sprites of one generation of handheld games, as AI's own fidelity grew: Generation I's four greens for the Foundation Era, then Generation II's color, Generation III's brighter panels, Generation IV's two screens, Generation V's animated sprites, and today's animated 3D for the Agentic Era
+- **Legendary Landmarks**: Each of the twenty-six turning points is a legendary encounter picked by hand, with a line on why: Mew for the first neuron, Articuno for the first AI winter, Metagross for Deep Blue, Arceus for the Transformer
 - **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–6 and /
-- **Landmarks and Sources**: Twenty-six turning points stand out across the eras, and each card names the site its link opens
-- **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread and the agent's task log sum up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
+- **Sources**: Each entry names the site its link opens
+- **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and each year of the Generative AI and Agentic Eras opens on its field notes, a one-sentence summary. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
 - **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
 - **Accessibility First**: A skip link, full keyboard access, visible focus rings and reduced motion support
 - **Performance Optimized**: Scroll-driven CSS animations instead of a JavaScript observer per card, and one scroll measurement per frame for the navigation
@@ -38,19 +40,16 @@ This project presents the complete history of artificial intelligence through an
 components/
 ├── storytelling/            # Narrative-driven components
 │   ├── story-engine.tsx     # Main orchestrator, holds the search and category filters and orders the eras newest first
-│   ├── prologue-scene.tsx   # Opening: title, latest events, era links and a slim events-per-year chart
-│   └── epilogue-scene.tsx   # Closing: where the rewind ends, at the first event
-├── eras/                    # One interface per era
-│   ├── era-chapter.tsx      # The era's section: its shared header, then its interface
-│   ├── era-header.tsx       # The header every era shares, marked Now or Before {year}
-│   ├── punch-card-era.tsx   # Foundation Era: 80-column punch cards
-│   ├── terminal-era.tsx     # Knowledge Era: green-phosphor terminal
-│   ├── desktop-era.tsx      # Learning Era: beveled desktop windows
-│   ├── notebook-era.tsx     # Deep Learning Revolution: research notebook cells
-│   ├── chat-era.tsx         # Generative AI Era: chat thread
-│   └── agent-era.tsx        # Agentic Era: an agent's task log
+│   ├── prologue-scene.tsx   # Opening: title, Porygon's evolution line, latest sightings, era links and a slim chart
+│   └── epilogue-scene.tsx   # Closing: Mew over the first entry, the badge case and the sprite credits
+├── eras/                    # The AI Dex, one generation of sprites per era
+│   ├── era-chapter.tsx      # The era's section: its shared header, then its entries
+│   ├── era-header.tsx       # The header every era shares, with its badge, marked Now or Before {year}
+│   ├── dex-era.tsx          # An era's entries in its generation's style (data-gen), the latest first
+│   ├── dex-context.tsx      # Hands every part of the page the dex built once from all events
+│   └── era-parts.tsx        # Pieces every era shares: card attributes, titles, year columns, brief listings
 ├── timeline/                # Timeline-wide UI
-│   ├── timeline-controls.tsx    # Search box and category filters
+│   ├── timeline-controls.tsx    # Search box and the type filters
 │   ├── timeline-navigation.tsx  # Chapter rail and phone bar
 │   └── activity-chart.tsx       # Events-per-year chart
 ├── interactive/             # User interaction features
@@ -63,7 +62,18 @@ components/
 
 - **Structured Timeline Events**: TypeScript interfaces for type safety
 - **Era-based Grouping**: Foundation, Knowledge, Learning, Deep Learning Revolution, Generative AI and Agentic eras
-- **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents
+- **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents, each drawn as a type (`CATEGORY_TYPES` in `lib/dex.ts`)
+
+### Sprites
+
+The sprites come from [jayvicsanantonio/sprites](https://github.com/jayvicsanantonio/sprites), a fork of PokéAPI's sprite collection, and ship in `public/sprites` so the page never depends on another host. `scripts/sync-sprites.mjs` copies exactly the files the page shows (`requiredSprites` in `lib/dex.ts`) and removes the rest, so run it after adding events or changing creatures. A blobless clone downloads only what the script asks for:
+
+```bash
+git clone --depth 1 --filter=blob:none --no-checkout https://github.com/jayvicsanantonio/sprites ../sprites
+node scripts/sync-sprites.mjs ../sprites
+```
+
+A unit test fails if any sprite the page shows is missing. Pokémon and its characters are trademarks of Nintendo, Creatures Inc. and GAME FREAK inc.; this is an unofficial fan project, and the epilogue says so.
 
 ## Getting Started
 
@@ -156,8 +166,8 @@ interface TimelineEvent {
     | 'Bombshell News'
     | 'Agents';
   link: string;
-  landmark?: boolean; // One of the turning points every era sets apart
-  highlight?: boolean; // Kept in full in a busy year of the chat thread or the agent's log
+  landmark?: boolean; // One of the turning points, each a legendary encounter (LEGENDS in lib/dex.ts)
+  highlight?: boolean; // Kept in full in a busy year, whose other entries are listed in brief
 }
 ```
 
@@ -168,14 +178,14 @@ interface TimelineEvent {
 ### Animation System
 
 - **Scroll-driven Reveals**: Event cards rise into place as they scroll into view
-- **Era Details**: A blinking terminal caret, a filling progress bar, chat typing dots and the agent's spinner
+- **Dex Details**: Today's 3D sprites bob, legendary entries catch a holographic sheen, a Poké Ball wobbles while it watches for the next entry, and the hero's lens glows
 - **Reduced Motion**: Every animation is off when the reader prefers reduced motion
 
 ### Custom Hooks
 
 ```typescript
 useTimelinePosition(); // The era, event date and era progress at the reading line
-useTimelineShortcuts(); // J, K, 1–5 and / keyboard shortcuts
+useTimelineShortcuts(); // J, K, 1–6 and / keyboard shortcuts
 ```
 
 ## Standout Engineering Practices

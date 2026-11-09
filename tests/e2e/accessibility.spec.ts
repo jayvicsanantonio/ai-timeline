@@ -130,7 +130,7 @@ test.describe("event links", () => {
     await page.goto("/")
     await waitForHydration(page)
 
-    for (const section of await page.locator("section[data-interface]").all()) {
+    for (const section of await page.locator("section[data-generation]").all()) {
       const card = section.locator("article").first()
       await card.evaluate((element) => element.scrollIntoView({ block: "center", behavior: "instant" as ScrollBehavior }))
 
@@ -150,7 +150,7 @@ test.describe("event links", () => {
             .map(([name]) => name)
         })
 
-      await expect.poll(missedPoints, { message: await section.getAttribute("data-interface") ?? "" }).toEqual([])
+      await expect.poll(missedPoints, { message: await section.getAttribute("data-generation") ?? "" }).toEqual([])
     }
   })
 })

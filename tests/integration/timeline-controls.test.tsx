@@ -36,7 +36,7 @@ function currentFilters() {
 }
 
 function categoriesToggle() {
-  return screen.getByRole("button", { name: /^Categories/ })
+  return screen.getByRole("button", { name: /^Types/ })
 }
 
 describe("TimelineControls", () => {
@@ -90,7 +90,7 @@ describe("TimelineControls", () => {
 
     expect(currentFilters().categories).toEqual(["Agents", "Ethics & Policy"])
     expect(within(panel).getByRole("button", { name: /^Agents/ })).toHaveAttribute("aria-pressed", "true")
-    expect(categoriesToggle()).toHaveAccessibleName("Categories, 2 picked")
+    expect(categoriesToggle()).toHaveAccessibleName("Types, 2 picked")
 
     await userEvent.click(within(panel).getByRole("button", { name: /^Agents/ }))
 

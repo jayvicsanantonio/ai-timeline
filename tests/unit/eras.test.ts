@@ -18,15 +18,20 @@ function makeEvent(year: number, title = `Event in ${year}`): TimelineEvent {
 }
 
 describe("ERA_DEFINITIONS", () => {
-  it("lists the six eras in order, each drawn in the computer interface of its day", () => {
-    expect(ERA_DEFINITIONS.map((era) => [era.name, era.interface, era.interfaceName])).toEqual([
-      ["The Foundation Era", "punch-card", "Punch cards"],
-      ["The Knowledge Era", "terminal", "Green-screen terminal"],
-      ["The Learning Era", "desktop", "Desktop windows"],
-      ["The Deep Learning Revolution", "notebook", "Research notebook"],
-      ["The Generative AI Era", "chat", "Chat thread"],
-      ["The Agentic Era", "agent", "Agent task log"],
+  it("lists the six eras in order, each drawn in the sprites of one generation, from the first to today's", () => {
+    expect(ERA_DEFINITIONS.map((era) => [era.name, era.generation, era.generationName])).toEqual([
+      ["The Foundation Era", "gen-1", "Generation I sprites"],
+      ["The Knowledge Era", "gen-2", "Generation II sprites"],
+      ["The Learning Era", "gen-3", "Generation III sprites"],
+      ["The Deep Learning Revolution", "gen-4", "Generation IV sprites"],
+      ["The Generative AI Era", "gen-5", "Generation V animated sprites"],
+      ["The Agentic Era", "modern", "Animated 3D sprites"],
     ])
+  })
+
+  it("gives every era its own badge", () => {
+    const badges = ERA_DEFINITIONS.map((era) => era.badge)
+    expect(new Set(badges).size).toBe(ERA_DEFINITIONS.length)
   })
 
   it("covers back-to-back year ranges with no gaps between eras", () => {

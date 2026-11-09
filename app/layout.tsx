@@ -1,4 +1,4 @@
-// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts and the global styles, and sets the
+// Root layout for the AI Timeline: loads the Work Sans, Open Sans and Press Start 2P fonts and the global styles, and sets the
 // metadata search engines and link previews read. Wraps every page with the skip link and main landmark.
 import type React from 'react';
 import type { Metadata } from 'next';
@@ -24,6 +24,14 @@ const openSans = localFont({
   weight: '300 700',
 });
 
+// The pixel font the AI Dex prints its numbers and labels in, from the handheld games' screens
+const pressStart = localFont({
+  src: './fonts/PressStart2P-Latin.woff2',
+  display: 'swap',
+  variable: '--font-press-start',
+  weight: '400',
+});
+
 export const metadata: Metadata = siteMetadata(parseTimelineEvents(timelineData));
 
 export default function RootLayout({
@@ -34,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${workSans.variable} ${openSans.variable} antialiased`}
+      className={`${workSans.variable} ${openSans.variable} ${pressStart.variable} antialiased`}
     >
       <body className="overflow-x-clip">
         <SkipToContent />

@@ -30,18 +30,18 @@ export default function OpenGraphImage() {
           display: 'flex',
           flexDirection: 'column',
           padding: '64px 72px',
-          backgroundColor: '#0a0a0b',
+          backgroundColor: '#0b0d1a',
           color: '#ffffff',
         }}
       >
         <div style={{ display: 'flex', fontSize: 24, letterSpacing: 6, color: '#a1a1aa' }}>
           {`${firstYear} – ${lastYear} · ${events.length} EVENTS · ${ERA_DEFINITIONS.length} ERAS`}
         </div>
-        <div style={{ display: 'flex', marginTop: 28, fontSize: 128, lineHeight: 1, letterSpacing: -5 }}>
+        <div style={{ display: 'flex', marginTop: 28, fontSize: 128, lineHeight: 1, letterSpacing: -5, color: '#ffcb05' }}>
           {SITE_NAME}
         </div>
         <div style={{ display: 'flex', marginTop: 28, maxWidth: 900, fontSize: 34, lineHeight: 1.35, color: '#d4d4d8' }}>
-          A history of artificial intelligence, each era drawn in the interface of its day.
+          A history of artificial intelligence as a field guide, each era drawn in the sprites of its generation.
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 150, marginTop: 'auto' }}>
           {activity.map((year) => (

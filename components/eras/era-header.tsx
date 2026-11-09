@@ -1,9 +1,12 @@
-// The header every era shares, set in the page's black between two interfaces like a film's intertitle. The timeline rewinds
-// from the top, so the current era is marked "Now" and every other one "Before" the year the era above it began. Below the
-// marker come the era's name, its years, its count and its interface, and a sentence on what it was.
+// The header every era shares, set in the page's color between two generations like a film's intertitle, with the badge
+// the reader earns for the era. The timeline rewinds from the top, so the current era is marked "Now" and every other one
+// "Before" the year the era above it began. Below the marker come the era's name, its years, its count and its sprites,
+// and a sentence on what it was.
 'use client';
 
 import { Rewind } from 'lucide-react';
+import { Sprite } from '@/components/ui/sprite';
+import { badgePath } from '@/lib/dex';
 import { formatEventDate } from '@/lib/event-format';
 import { isCurrentEra, type Era } from '@/lib/eras';
 import { cn } from '@/lib/utils';
@@ -26,45 +29,55 @@ export function EraHeader({ era, totalEvents }: EraHeaderProps) {
     <header
       data-era-header=""
       className={cn(
-        'mx-auto max-w-4xl px-4 sm:px-6',
+        'mx-auto flex max-w-4xl gap-4 px-4 sm:gap-6 sm:px-6',
         // The era at the top sits just under the toolbar, and the others just under the era before them
         empty ? 'pb-8 pt-10' : current ? 'pb-2 pt-10 sm:pt-12' : 'pb-2 pt-12 sm:pt-16'
       )}
     >
-      <p
-        data-era-marker=""
-        className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.22em] text-zinc-400"
+      <div
+        aria-hidden="true"
+        data-era-badge=""
+        className="relative mt-1 grid size-14 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] sm:size-20"
       >
-        {current ? (
-          <span
-            aria-hidden="true"
-            className="size-2 rounded-full motion-safe:animate-pulse"
-            style={{ backgroundColor: era.color }}
-          />
-        ) : (
-          <Rewind aria-hidden="true" className="size-3.5" style={{ color: era.color }} />
-        )}
-        {current ? 'Now' : `Before ${era.range[1]}`}
-      </p>
-      <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <h2
-          id={eraHeadingId(era)}
-          tabIndex={-1}
-          className="text-2xl font-semibold tracking-tight text-white focus:outline-none sm:text-3xl"
-        >
-          {era.name}
-        </h2>
-        <p className="text-sm text-zinc-400">
-          {era.subtitle} <span aria-hidden="true">·</span> {eraEventCount(era, totalEvents)}
-          {latestEvent ? ` through ${formatEventDate(latestEvent)}` : null} <span aria-hidden="true">·</span>{' '}
-          {era.interfaceName}
-        </p>
+        <Sprite src={badgePath(era.badge)} className="size-10 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] sm:size-14" />
       </div>
-      {empty ? (
-        <p className="mt-2 text-sm text-zinc-300">{NO_MATCHING_EVENTS}</p>
-      ) : (
-        <p className="mt-2 max-w-2xl text-pretty text-sm leading-6 text-zinc-400 sm:text-[15px]">{era.description}</p>
-      )}
+
+      <div className="min-w-0">
+        <p
+          data-era-marker=""
+          className="flex items-center gap-2 font-pixel text-[0.625rem] uppercase leading-none text-[#c9cde6]"
+        >
+          {current ? (
+            <span
+              aria-hidden="true"
+              className="size-2 rounded-full motion-safe:animate-pulse"
+              style={{ backgroundColor: era.color }}
+            />
+          ) : (
+            <Rewind aria-hidden="true" className="size-3.5" style={{ color: era.color }} />
+          )}
+          {current ? 'Now' : `Before ${era.range[1]}`}
+        </p>
+        <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <h2
+            id={eraHeadingId(era)}
+            tabIndex={-1}
+            className="text-2xl font-semibold tracking-tight text-white focus:outline-none sm:text-3xl"
+          >
+            {era.name}
+          </h2>
+          <p className="text-sm text-[#a7acc8]">
+            {era.subtitle} <span aria-hidden="true">·</span> {eraEventCount(era, totalEvents)}
+            {latestEvent ? ` through ${formatEventDate(latestEvent)}` : null} <span aria-hidden="true">·</span>{' '}
+            {era.generationName}
+          </p>
+        </div>
+        {empty ? (
+          <p className="mt-2 text-sm text-[#d9dcef]">{NO_MATCHING_EVENTS}</p>
+        ) : (
+          <p className="mt-2 max-w-2xl text-pretty text-sm leading-6 text-[#a7acc8] sm:text-[15px]">{era.description}</p>
+        )}
+      </div>
     </header>
   );
 }

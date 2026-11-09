@@ -34,8 +34,8 @@ const events = [
 const eras = erasNewestFirst(groupEventsByEra(events))
 const activity = countEventsByYear(events)
 
-function eraOf(eraInterface: string) {
-  return eras.find((era) => era.interface === eraInterface)!
+function eraOf(generation: string) {
+  return eras.find((era) => era.generation === generation)!
 }
 
 function renderNavigation({ spacerBefore = false } = {}) {
@@ -139,7 +139,7 @@ describe("TimelineNavigation on a wide screen", () => {
   it("shows the era's latest year while its introduction is being read", async () => {
     renderNavigation()
 
-    const learningEra = document.getElementById(eraOf("desktop").id)!
+    const learningEra = document.getElementById(eraOf("gen-3").id)!
     window.scrollTo({
       top: window.scrollY + learningEra.getBoundingClientRect().top - window.innerHeight / 2 + 4,
       behavior: "instant" as ScrollBehavior,
@@ -177,7 +177,7 @@ describe("TimelineNavigation on a wide screen", () => {
     renderNavigation()
     const progress = () => parseFloat(rail().querySelector<HTMLElement>("[data-era-progress]")!.style.width)
 
-    const learningEra = document.getElementById(eraOf("desktop").id)!
+    const learningEra = document.getElementById(eraOf("gen-3").id)!
     window.scrollTo({
       top: window.scrollY + learningEra.getBoundingClientRect().top + learningEra.offsetHeight / 2 - window.innerHeight / 2,
       behavior: "instant" as ScrollBehavior,

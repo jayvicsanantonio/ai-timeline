@@ -1,10 +1,14 @@
-// Integration tests for PrologueScene, the opening of the page, rendered with the real timeline data.
-// Covers the page title, the latest events, the links to the eras, and the events-per-year chart with its era axis, summary and table.
+// Integration tests for PrologueScene, the opening of the page, rendered with the real timeline data inside the AI Dex.
+// Covers the page title, the dex showing Porygon's line, the latest entries, the links to the eras, and the events-per-year
+// chart with its era axis, summary and table.
 import { render, screen, within } from "@testing-library/react"
+import type { ReactNode } from "react"
 import { afterEach, describe, expect, it } from "vitest"
 import { page, userEvent } from "vitest/browser"
+import { DexProvider } from "@/components/eras/dex-context"
 import { PrologueScene } from "@/components/storytelling/prologue-scene"
 import timelineData from "@/data/timeline-events.json"
+import { buildDex, formatDexNumber } from "@/lib/dex"
 import { groupEventsByEra } from "@/lib/eras"
 import { eventAnchorId, eventDateTime, formatEventDate } from "@/lib/event-format"
 import { latestEvents, newestFirst } from "@/lib/newest-first"
@@ -15,9 +19,19 @@ const events = parseTimelineEvents(timelineData)
 const eras = groupEventsByEra(events)
 const activity = countEventsByYear(events)
 const latest = latestEvents(events, 3)
+const dex = buildDex(events)
+
+function wrapper({ children }: { children: ReactNode }) {
+  return <DexProvider dex={dex}>{children}</DexProvider>
+}
+
+// The figure of the events-per-year chart, with its era axis
+function chartFigure() {
+  return screen.getAllByRole("figure").find((figure) => figure.querySelector("[data-era-axis]"))!
+}
 
 function renderPrologue() {
-  return render(<PrologueScene eras={eras} activity={activity} latest={latest} totalEvents={events.length} />)
+  return render(<PrologueScene eras={eras} activity={activity} latest={latest} totalEvents={events.length} />, { wrapper })
 }
 
 describe("PrologueScene", () => {
@@ -35,6 +49,8 @@ describe("PrologueScene", () => {
     newestFirst(eras).forEach((era, index) => {
       expect(links[index]).toHaveAttribute("href", `#${era.id}`)
       expect(links[index]).toHaveTextContent(`${era.label}${era.subtitle}`)
+      expect(links[index].querySelector("img")).toHaveAttribute("src", `/sprites/badges/${era.badge}.png`)
+      expect(links[index].querySelector("img")).toHaveAttribute("alt", "")
       expect(getComputedStyle(links[index]).whiteSpace).toBe("nowrap")
     })
   })
@@ -44,7 +60,7 @@ describe("PrologueScene", () => {
     renderPrologue()
 
     const latest = eras.at(-1)!
-    expect(screen.getByRole("figure")).toHaveTextContent(
+    expect(chartFigure()).toHaveTextContent(
       `${latest.events.length} of the ${events.length} events happened since ${latest.range[0]}`,
     )
   })
@@ -52,7 +68,7 @@ describe("PrologueScene", () => {
   it("tells pointer users that a bar in the chart jumps to its year", () => {
     renderPrologue()
 
-    const hint = within(screen.getByRole("figure")).getByText("Click a bar to jump to that year.")
+    const hint = within(chartFigure()).getByText("Click a bar to jump to that year.")
     // The bars answer only the pointer, so assistive technology skips the hint along with the chart
     expect(hint).toHaveAttribute("aria-hidden", "true")
   })
@@ -75,9 +91,22 @@ describe("PrologueScene", () => {
 
     const first = activity[0].year
     const last = activity.at(-1)!.year
-    expect(
-      screen.getByText(`${last - first} years of artificial intelligence, from the latest news back to ${first}`, { exact: false }),
-    ).toHaveTextContent("Scroll to rewind.")
+    const intro = screen.getByText(`${last - first} years of artificial intelligence as a field guide.`, { exact: false })
+    expect(intro).toHaveTextContent(`Scroll to rewind, from the latest news back to ${first}.`)
+  })
+
+  it("shows Porygon's line on the dex beside the title, the creatures made of code", () => {
+    renderPrologue()
+
+    const line = screen.getByRole("list", { name: "Porygon's evolution line" })
+    const creatures = within(line).getAllByRole("listitem")
+    expect(creatures.map((creature) => creature.textContent)).toEqual(["Porygon", "Porygon2", "Porygon-Z"])
+    for (const creature of creatures) {
+      expect(creature.querySelector("img")).toHaveAttribute("alt", "")
+      expect(creature.querySelector("img")!.getAttribute("src")).toMatch(/^\/sprites\/modern\/\d+\.gif$/)
+    }
+    const dexFigure = line.closest("figure")!
+    expect(dexFigure.querySelector("figcaption")).toHaveTextContent("Porygon was the first Pokémon made entirely of computer code.")
   })
 })
 
@@ -97,27 +126,30 @@ describe("PrologueScene on a laptop screen", () => {
 
 describe("the latest events at the top of the page", () => {
   function latestList() {
-    return screen.getByRole("list", { name: "Latest" })
+    return screen.getByRole("list", { name: "Latest sightings" })
   }
 
   it("heads the newest events, and says how recent the timeline is", () => {
     renderPrologue()
 
-    const heading = screen.getByRole("heading", { level: 2, name: "Latest" })
+    const heading = screen.getByRole("heading", { level: 2, name: "Latest sightings" })
     const through = heading.parentElement!.querySelector("p")!
     expect(through).toHaveTextContent(`Through ${formatEventDate(events.at(-1)!)}`)
     expect(through.querySelector("time")).toHaveAttribute("datetime", eventDateTime(events.at(-1)!))
   })
 
-  it("lists the newest events, the latest first, each with its date, category and title", () => {
+  it("lists the newest events, the latest first, each with its number, creature, date, category and title", () => {
     renderPrologue()
 
     const items = within(latestList()).getAllByRole("link")
     expect(items).toHaveLength(3)
     items.forEach((item, index) => {
       const event = latest[index]
+      const entry = dex.get(eventAnchorId(event))!
       expect(item).toHaveTextContent(event.title)
       expect(item).toHaveTextContent(event.category)
+      expect(item).toHaveTextContent(formatDexNumber(entry.number))
+      expect(item.querySelector("img")).toHaveAttribute("src", entry.sprite)
       expect(item.querySelector("time")).toHaveAttribute("datetime", eventDateTime(event))
     })
     expect(items[0]).toHaveTextContent(events.at(-1)!.title)
@@ -126,7 +158,10 @@ describe("the latest events at the top of the page", () => {
   it("comes before the chart, so the latest news is the first thing under the title", () => {
     renderPrologue()
 
-    expect(latestList().compareDocumentPosition(screen.getByRole("figure")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(
+      latestList().compareDocumentPosition(chartFigure()) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
   })
 
   it("links each event to its card in the timeline rather than off the site", () => {
@@ -170,9 +205,9 @@ describe("the latest events at the top of the page", () => {
   })
 
   it("leaves out the list when there are no events", () => {
-    render(<PrologueScene eras={eras} activity={activity} latest={[]} totalEvents={events.length} />)
+    render(<PrologueScene eras={eras} activity={activity} latest={[]} totalEvents={events.length} />, { wrapper })
 
-    expect(screen.queryByRole("heading", { name: "Latest" })).toBeNull()
+    expect(screen.queryByRole("heading", { name: "Latest sightings" })).toBeNull()
   })
 })
 

@@ -1,9 +1,11 @@
-// Integration tests for TimelineInsights: every stat on its tiles is computed from
-// the events it is given, so the numbers always match the timeline data.
-import { render, screen } from "@testing-library/react"
+// Integration tests for TimelineInsights: every stat on its tiles and every bar of its type chart is computed from the
+// events it is given, so the numbers always match the timeline data. Beside them sits the case of the eras' badges.
+import { render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { page } from "vitest/browser"
 import { TimelineInsights } from "@/components/interactive/timeline-insights"
+import { CATEGORY_TYPES } from "@/lib/dex"
+import { ERA_DEFINITIONS } from "@/lib/eras"
 import type { TimelineCategory, TimelineEvent } from "@/types/timeline"
 
 function makeEvent(year: number, category: TimelineCategory): TimelineEvent {
@@ -31,15 +33,19 @@ const events = [
   makeEvent(2026, "Companies & Investments"),
 ]
 
+function tiles() {
+  return within(document.querySelector<HTMLElement>("[data-insight-tiles]")!)
+}
+
 function labelFor(stat: string) {
-  return screen.getByText(stat).nextElementSibling
+  return tiles().getByText(stat).nextElementSibling
 }
 
 describe("TimelineInsights", () => {
   it("shows one tile for each insight in order", () => {
     render(<TimelineInsights events={events} />)
 
-    const titles = screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent)
+    const titles = tiles().getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent)
     expect(titles).toEqual(["Era Over Era", "Most Common Milestone", "Industry Momentum", "Societal Impact"])
   })
 
@@ -87,6 +93,27 @@ describe("TimelineInsights", () => {
     expect(labelFor("2")).toHaveTextContent("Ethics & Policy events")
   })
 
+  it("draws a bar for every type, the commonest first, with its count and type for screen readers", () => {
+    const { container } = render(<TimelineInsights events={events} />)
+
+    const chart = container.querySelector<HTMLElement>("[data-type-chart]")!
+    const rows = within(chart).getAllByRole("listitem")
+    expect(rows).toHaveLength(9)
+    expect(rows[0]).toHaveTextContent("Research Breakthroughs")
+    expect(rows[0]).toHaveTextContent(`4 events, ${CATEGORY_TYPES["Research Breakthroughs"].name} type`)
+    expect(rows[1]).toHaveTextContent("Companies & Investments")
+    expect(rows.at(-1)).toHaveTextContent("0 events")
+  })
+
+  it("lines up every era's badge in the badge case", () => {
+    const { container } = render(<TimelineInsights events={events} />)
+
+    const badgeCase = within(container.querySelector<HTMLElement>("[data-badge-case]")!)
+    expect(badgeCase.getAllByRole("listitem").map((item) => item.textContent)).toEqual(
+      ERA_DEFINITIONS.map((era) => era.label),
+    )
+  })
+
   describe("on a wide screen", () => {
     beforeEach(async () => {
       await page.viewport(1280, 800)
@@ -100,7 +127,7 @@ describe("TimelineInsights", () => {
     it("lines up the tiles' titles and descriptions across the row", () => {
       render(<TimelineInsights events={events} />)
 
-      const titles = screen.getAllByRole("heading", { level: 3 })
+      const titles = tiles().getAllByRole("heading", { level: 3 })
       const tops = (elements: Element[]) => new Set(elements.map((element) => Math.round(element.getBoundingClientRect().top)))
       expect(tops(titles).size).toBe(1)
       expect(tops(titles.map((title) => title.nextElementSibling!)).size).toBe(1)

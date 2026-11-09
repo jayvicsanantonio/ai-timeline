@@ -1,5 +1,5 @@
-// Era navigation: a rail on wide screens with the current year, an events-per-year chart and a button per era marking the
-// year it began, and a phone bar that names the current era and opens a list of eras. Both follow the page, which rewinds
+// Era navigation, drawn as a small dex: a rail on wide screens with the current year, an events-per-year chart and a button
+// per era marking the year it began, and a phone bar that names the current era and opens a list of eras with their badges. Both follow the page, which rewinds
 // from now at the top, and stay hidden until the timeline starts.
 'use client';
 
@@ -7,8 +7,10 @@ import { motion } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { useId, useMemo, useRef, useState } from 'react';
 import { ActivityChart } from '@/components/timeline/activity-chart';
+import { Sprite } from '@/components/ui/sprite';
 import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { useTimelinePosition } from '@/hooks/use-timeline-position';
+import { badgePath } from '@/lib/dex';
 import type { Era } from '@/lib/eras';
 import type { YearActivity } from '@/lib/timeline-activity';
 import { scrollToEra, scrollToYear } from '@/lib/timeline-scroll';
@@ -93,19 +95,25 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
           position.inTimeline ? SHOWN : cn(HIDDEN, 'translate-x-4')
         )}
       >
-        <div className="w-[8.75rem] rounded-2xl border border-white/10 bg-[#111114]/85 p-3 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
+        <div className="w-[8.75rem] overflow-hidden rounded-2xl border border-white/10 bg-[#11142a]/90 p-3 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
+          {/* The dex's red cap, its lens and lights */}
+          <div
+            aria-hidden="true"
+            className="-mx-3 -mt-3 mb-3 flex items-center gap-1.5 bg-gradient-to-b from-[#e3263b] to-[#b3152b] px-3 py-2.5"
+          >
+            <span className="size-4 rounded-full bg-[radial-gradient(circle_at_35%_30%,#c8f1ff_0_15%,#34b7f1_16%_50%,#0b5fa8)] ring-2 ring-white/90" />
+            <span className="ml-1 size-1.5 rounded-full bg-[#ff9aa6]" />
+            <span className="size-1.5 rounded-full bg-[#ffcb05]" />
+            <span className="size-1.5 rounded-full bg-[#4ade80]" />
+          </div>
           <p className="px-1">
             {/* The month keeps its line even when unknown, so the year never jumps up and down */}
-            <span className="block h-4 text-[11px] font-medium uppercase leading-4 tracking-[0.18em] text-zinc-400">
+            <span className="block h-4 text-[11px] font-medium uppercase leading-4 tracking-[0.18em] text-[#a7acc8]">
               {position.month}
             </span>
-            <span className="block text-[1.75rem] font-semibold leading-none tabular-nums">{year}</span>
-            <span className="mt-2 flex items-start gap-1.5 text-xs leading-tight text-zinc-300">
-              <span
-                aria-hidden="true"
-                className="mt-1 size-2 shrink-0 rounded-full"
-                style={{ backgroundColor: activeEra.color }}
-              />
+            <span className="mt-1 block font-pixel text-xl leading-none tabular-nums">{year}</span>
+            <span className="mt-2.5 flex items-start gap-1.5 text-xs leading-tight text-[#d9dcef]">
+              <Sprite src={badgePath(activeEra.badge)} className="size-4 shrink-0 object-contain" />
               {activeEra.label}
             </span>
           </p>
@@ -130,10 +138,10 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                   aria-current={isActive ? 'location' : undefined}
                   onClick={() => scrollToEra(era.id)}
                   className={cn(
-                    'group absolute left-0 flex h-7 w-10 items-center justify-center gap-1 rounded-lg border font-mono text-[11px] tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
+                    'group absolute left-0 flex h-7 w-10 items-center justify-center gap-1 rounded-lg border font-mono text-[11px] tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffcb05]/60',
                     isActive
                       ? 'border-white/30 bg-white/[0.12] text-white'
-                      : 'border-transparent text-zinc-400 hover:bg-white/[0.08] hover:text-white'
+                      : 'border-transparent text-[#a7acc8] hover:bg-white/[0.08] hover:text-white'
                   )}
                   // Centered on the row for the year its era began, like a tick on the chart's axis, but never above the
                   // bottom of the button before it, since the short eras of the 2020s take up only a few rows at the top
@@ -149,7 +157,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                   {startYear(era)}
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-md border border-white/10 bg-[#18181b] px-2 py-1 font-sans text-xs text-white shadow-lg group-hover:block group-focus-visible:block"
+                    className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-md border border-white/10 bg-[#1a1f3a] px-2 py-1 font-sans text-xs text-white shadow-lg group-hover:block group-focus-visible:block"
                   >
                     {era.label} · {era.subtitle}
                   </span>
@@ -158,7 +166,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
             })}
           </div>
 
-          <p className="mt-3 px-1 text-[11px] leading-snug text-zinc-500">
+          <p className="mt-3 px-1 text-[11px] leading-snug text-[#7d84a6]">
             Events per year, now back to {firstYear}
           </p>
         </div>
@@ -174,34 +182,30 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
       >
         {/* The toggle comes first in DOM order so Tab moves from it into the open list,
             and flex-col-reverse draws the chart and the list above it */}
-        <div className="mx-auto flex max-w-lg flex-col-reverse overflow-hidden rounded-2xl border border-white/10 bg-[#111114]/90 text-white shadow-[0_26px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
+        <div className="mx-auto flex max-w-lg flex-col-reverse overflow-hidden rounded-2xl border border-white/10 border-b-[#e3263b] border-b-2 bg-[#11142a]/95 text-white shadow-[0_26px_80px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
           <button
             ref={phoneToggleRef}
             type="button"
             onClick={() => setIsPhoneListOpen((isOpen) => !isOpen)}
             aria-expanded={isPhoneListOpen}
             aria-controls={isPhoneListOpen ? phoneListId : undefined}
-            className="relative flex w-full items-center gap-3 px-4 pb-2.5 pt-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/40"
+            className="relative flex w-full items-center gap-3 px-4 pb-2.5 pt-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ffcb05]/50"
           >
             <EraProgress
               progress={position.eraProgress}
               color={activeEra.color}
               className="absolute inset-x-4 bottom-1"
             />
-            <span
-              aria-hidden="true"
-              className="size-2.5 shrink-0 rounded-full"
-              style={{ backgroundColor: activeEra.color }}
-            />
+            <Sprite src={badgePath(activeEra.badge)} className="size-5 shrink-0 object-contain" />
             <span className="min-w-0 flex-1 truncate text-sm font-medium">
               <span className="sr-only">Current era: </span>
               {activeEra.label}
             </span>
-            <span className="text-sm font-semibold tabular-nums">{year}</span>
+            <span className="font-pixel text-xs tabular-nums">{year}</span>
             <ChevronUp
               aria-hidden="true"
               className={cn(
-                'size-4 shrink-0 text-zinc-400 motion-safe:transition-transform',
+                'size-4 shrink-0 text-[#a7acc8] motion-safe:transition-transform',
                 isPhoneListOpen && 'rotate-180'
               )}
             />
@@ -233,17 +237,13 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                     onClick={() => handlePhoneNavigate(era.id)}
                     aria-current={isActive ? 'location' : undefined}
                     className={cn(
-                      'flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40',
-                      isActive ? 'bg-white/[0.1] text-white' : 'text-zinc-300 hover:bg-white/[0.06]'
+                      'flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffcb05]/50',
+                      isActive ? 'bg-white/[0.1] text-white' : 'text-[#d9dcef] hover:bg-white/[0.06]'
                     )}
                   >
-                    <span
-                      aria-hidden="true"
-                      className="size-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: era.color }}
-                    />
+                    <Sprite src={badgePath(era.badge)} className="size-6 shrink-0 object-contain" />
                     <span className="min-w-0 flex-1 truncate text-sm font-medium">{era.label}</span>
-                    <span className="shrink-0 text-xs text-zinc-400">{era.subtitle}</span>
+                    <span className="shrink-0 text-xs text-[#a7acc8]">{era.subtitle}</span>
                   </button>
                 );
               })}

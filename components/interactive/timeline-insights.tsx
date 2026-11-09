@@ -1,9 +1,13 @@
-// Timeline Insights section: four stat tiles with numbers computed from the timeline events.
-// Each tile leads with its number, then names what the number says about AI's history.
+// Timeline Insights section, drawn as the dex's stats: four stat tiles with numbers computed from the timeline events, each
+// leading with its number and then naming what it says about AI's history, beside a bar for every type, how many entries
+// it holds and why its category is that type, and the case of badges the reader has earned by rewinding every era.
 "use client"
 
 import { Lightbulb, TrendingUp, Users, Zap } from "lucide-react"
-import { groupEventsByEra, type Era } from "@/lib/eras"
+import { CategoryIcon } from "@/components/ui/category-icon"
+import { Sprite } from "@/components/ui/sprite"
+import { badgePath, CATEGORY_TYPES } from "@/lib/dex"
+import { ERA_DEFINITIONS, groupEventsByEra, type Era } from "@/lib/eras"
 import { countEventsByCategory } from "@/lib/timeline-filter"
 import { TIMELINE_CATEGORIES, type TimelineEvent } from "@/types/timeline"
 
@@ -87,37 +91,93 @@ function getInsights(events: TimelineEvent[]) {
 
 export function TimelineInsights({ events }: TimelineInsightsProps) {
   const insights = getInsights(events)
+  const counts = countEventsByCategory(events)
+  const byCount = [...TIMELINE_CATEGORIES].sort((a, b) => counts[b] - counts[a])
+  const most = counts[byCount[0]]
 
   return (
-    <section aria-labelledby="insights-title" className="bg-[#0a0a0b] px-4 py-24 text-white sm:px-6 sm:py-32">
+    <section aria-labelledby="insights-title" className="bg-background px-4 py-24 text-white sm:px-6 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">By the numbers</p>
+        <p className="font-pixel text-[0.625rem] uppercase text-[#7d84a6]">By the numbers</p>
         <h2 id="insights-title" className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
           Timeline Insights
         </h2>
-        <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-400">
+        <p className="mt-4 max-w-2xl text-lg leading-8 text-[#a7acc8]">
           Discover the patterns and trends that emerge from decades of AI development
         </p>
 
         {/* Each tile's five rows share the row's tracks, so titles and descriptions line up across a row
             however long the label above them runs */}
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div data-insight-tiles="" className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {insights.map((insight) => {
             const Icon = insight.icon
 
             return (
               <div
                 key={insight.id}
-                className="row-span-5 grid grid-rows-subgrid gap-y-0 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25 hover:bg-white/[0.05]"
+                className="row-span-5 grid grid-rows-subgrid gap-y-0 rounded-2xl border border-white/10 bg-white/[0.04] p-6 transition-colors hover:border-white/25 hover:bg-white/[0.06]"
               >
-                <Icon aria-hidden="true" className="size-5 text-zinc-400" />
-                <div className="mt-8 text-5xl font-semibold tracking-tight text-white">{insight.stat}</div>
-                <div className="mt-2 text-sm leading-6 text-zinc-400">{insight.statLabel}</div>
+                <Icon aria-hidden="true" className="size-5 text-[#ffcb05]" />
+                <div className="mt-8 font-pixel text-4xl leading-none text-white">{insight.stat}</div>
+                <div className="mt-3 text-sm leading-6 text-[#a7acc8]">{insight.statLabel}</div>
                 <h3 className="mt-8 text-base font-semibold text-white">{insight.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">{insight.description}</p>
+                <p className="mt-2 text-sm leading-6 text-[#a7acc8]">{insight.description}</p>
               </div>
             )
           })}
+        </div>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+          <figure data-type-chart="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+            <figcaption>
+              <h3 className="text-base font-semibold text-white">Entries by type</h3>
+              <p className="mt-1 text-sm leading-6 text-[#a7acc8]">
+                Every category is a type. Policy is Fairy, which beats Dragon, the type of models.
+              </p>
+            </figcaption>
+            <ol className="mt-6 grid gap-3">
+              {byCount.map((category) => {
+                const type = CATEGORY_TYPES[category]
+
+                return (
+                  <li key={category} className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)_2.5rem] items-center gap-3 text-sm">
+                    <span className="flex min-w-0 items-center gap-2">
+                      <CategoryIcon category={category} className="size-5" />
+                      <span className="truncate text-[#e4e6f5]">{category}</span>
+                    </span>
+                    <span aria-hidden="true" className="h-3 overflow-hidden rounded-full bg-white/[0.06]">
+                      <span
+                        className="block h-full rounded-full"
+                        style={{ width: `${(counts[category] / most) * 100}%`, backgroundColor: type.color }}
+                      />
+                    </span>
+                    <span className="text-right font-pixel text-[0.625rem] tabular-nums text-white">
+                      {counts[category]}
+                      <span className="sr-only"> events, {type.name} type</span>
+                    </span>
+                  </li>
+                )
+              })}
+            </ol>
+          </figure>
+
+          <div data-badge-case="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+            <h3 className="text-base font-semibold text-white">Badge case</h3>
+            <p className="mt-1 text-sm leading-6 text-[#a7acc8]">
+              One badge for each era you have rewound through, {ERA_DEFINITIONS.length} in all.
+            </p>
+            <ol className="mt-6 grid grid-cols-3 gap-3">
+              {ERA_DEFINITIONS.map((era) => (
+                <li
+                  key={era.id}
+                  className="flex flex-col items-center gap-2 rounded-xl bg-black/20 px-2 py-3 text-center"
+                >
+                  <Sprite src={badgePath(era.badge)} className="size-10 object-contain" />
+                  <span className="text-xs leading-tight text-[#d9dcef]">{era.label}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
     </section>

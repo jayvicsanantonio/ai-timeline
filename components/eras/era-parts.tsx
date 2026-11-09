@@ -1,4 +1,4 @@
-// Pieces every era interface shares: its props, the heading id, the event count, card attributes, the event title, the year column
+// Pieces every era shares: its props, the heading id, the event count, card attributes, the event title, the year column
 // and a busy year's brief listing. Each era's header is drawn once for all of them, in era-header.
 // The title's link stretches over its whole event card, so a click anywhere on the card opens the source.
 'use client';
@@ -12,7 +12,7 @@ import type { TimelineEvent } from '@/types/timeline';
 import { cn } from '@/lib/utils';
 
 export interface EraInterfaceProps {
-  // The era with its events newest first, the order every interface draws them in (`erasNewestFirst`). It has at least
+  // The era with its events newest first, the order every era draws them in (`erasNewestFirst`). It has at least
   // one event: an era the filters empty shows only its header.
   era: Era;
   // How many events the era has before filters are applied
@@ -97,9 +97,9 @@ export function EventSource({ event, className }: { event: TimelineEvent; classN
   );
 }
 
-// A count and its noun, such as "1 record" or "2 records"
-export function countOf(count: number, noun: string) {
-  return `${count} ${noun}${count === 1 ? '' : 's'}`;
+// A count and its noun, such as "1 entry" or "2 entries"
+export function countOf(count: number, noun: string, plural = `${noun}s`) {
+  return `${count} ${count === 1 ? noun : plural}`;
 }
 
 interface YearGapProps {

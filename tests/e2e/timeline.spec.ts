@@ -87,7 +87,7 @@ test("charts every year from the first event to the last, and labels the busiest
 
   await page.goto("/")
 
-  const chart = page.getByRole("figure")
+  const chart = page.getByRole("figure").filter({ has: page.locator("[data-era-axis]") })
   await expect(chart.locator("[data-year-bar]")).toHaveCount(lastYear - firstYear + 1)
   await expect(chart).toContainText(`${busiestCount} events in ${busiestYear}`)
 })
@@ -102,7 +102,7 @@ test("jumps to a year's first event on the page, its latest, from its bar in the
 
   await page.goto("/")
 
-  const chart = page.getByRole("figure")
+  const chart = page.getByRole("figure").filter({ has: page.locator("[data-era-axis]") })
   await expect(chart).toContainText("Click a bar to jump to that year.")
   // The bars answer clicks once the page hydrates, so the first click repeats until it lands
   await expect(async () => {

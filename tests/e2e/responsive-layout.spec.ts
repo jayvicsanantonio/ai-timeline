@@ -60,7 +60,7 @@ for (const [device, viewport] of Object.entries({ phone: PHONE, tablet: TABLET, 
       const toolbarTops = await page.evaluate(async () => {
         const toolbar = document.querySelector('[role="search"]')!.parentElement!
         const tops: number[] = []
-        for (const section of document.querySelectorAll("section[data-interface]")) {
+        for (const section of document.querySelectorAll("section[data-generation]")) {
           const middle = section.getBoundingClientRect().top + window.scrollY + section.clientHeight / 2
           window.scrollTo({ top: middle, behavior: "instant" as ScrollBehavior })
           await new Promise((resolve) => requestAnimationFrame(resolve))
@@ -112,7 +112,7 @@ test.describe(`desktop layout at ${DESKTOP.width}x${DESKTOP.height}`, () => {
       const rail = [...document.querySelectorAll(eraNav)]
         .map((nav) => nav.getBoundingClientRect())
         .find((box) => box.width > 0)!
-      return [...document.querySelectorAll("section[data-interface] article, [data-year-column]")]
+      return [...document.querySelectorAll("section[data-generation] article, [data-year-column]")]
         .filter((element) => element.getBoundingClientRect().right > rail.left)
         .map((element) => element.id || `year ${element.getAttribute("data-year-column")}`)
     }, ERA_NAV)

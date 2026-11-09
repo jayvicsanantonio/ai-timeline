@@ -122,7 +122,7 @@ export function ActivityChart({
       {hovered ? (
         <p
           className={cn(
-            'pointer-events-none absolute z-10 whitespace-nowrap rounded-md border border-white/10 bg-[#18181b] px-2 py-1 text-xs font-medium text-white shadow-lg',
+            'pointer-events-none absolute z-10 whitespace-nowrap rounded-md border border-white/10 bg-[#1a1f3a] px-2 py-1 text-xs font-medium text-white shadow-lg',
             isHorizontal
               ? cn(
                   'bottom-full mb-2',
