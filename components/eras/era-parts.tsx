@@ -6,13 +6,13 @@
 import { useId, useState, type ReactNode } from 'react';
 import type { Era } from '@/lib/eras';
 import { eventAnchorId, eventSource } from '@/lib/event-format';
-import { yearsEarlierThanPrevious } from '@/lib/year-gaps';
+import { yearsLaterThanPrevious } from '@/lib/year-gaps';
 import { isBusyYear, type YearGroup } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import { cn } from '@/lib/utils';
 
 export interface EraInterfaceProps {
-  // The era with its events newest first, the order every era draws them in (`erasNewestFirst`). It has at least
+  // The era with its events oldest first, the order every era draws them in. It has at least
   // one event: an era the filters empty shows only its header.
   era: Era;
   // How many events the era has before filters are applied
@@ -103,22 +103,22 @@ export function countOf(count: number, noun: string, plural = `${noun}s`) {
 }
 
 interface YearGapProps {
-  // Events, or years of events, newest first
+  // Events, or years of events, oldest first
   events: Pick<TimelineEvent, 'year'>[];
   index: number;
   className?: string;
 }
 
-// Says how many years earlier the entry at `index` came than the one above it when more than one
+// Says how many years later the entry at `index` came than the one above it when more than one
 // year lies between them, so an era's quiet stretches show between its cards. It goes ahead of the
 // cards, outside them.
 export function YearGap({ events, index, className }: YearGapProps) {
-  const years = yearsEarlierThanPrevious(events, index);
+  const years = yearsLaterThanPrevious(events, index);
   if (years === null) {
     return null;
   }
 
-  return <p className={className}>{years} years earlier</p>;
+  return <p className={className}>{years} years later</p>;
 }
 
 interface YearColumnProps {

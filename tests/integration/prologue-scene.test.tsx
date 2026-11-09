@@ -1,6 +1,6 @@
 // Integration tests for PrologueScene, the opening of the page, rendered with the real timeline data inside the AI Dex.
-// Covers the page title, the dex showing Porygon's line, the latest entries, the links to the eras, and the events-per-year
-// chart with its era axis, summary and table.
+// Covers the page title and the way into the journey, the dex showing MEW and the first of every line, the latest entries,
+// the links to the eras, and the events-per-year chart with its era axis, summary and table.
 import { render, screen, within } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it } from "vitest"
@@ -8,10 +8,10 @@ import { page, userEvent } from "vitest/browser"
 import { DexProvider } from "@/components/eras/dex-context"
 import { PrologueScene } from "@/components/storytelling/prologue-scene"
 import timelineData from "@/data/timeline-events.json"
-import { buildDex, formatDexNumber } from "@/lib/dex"
+import { buildDex, formatDexNumber, LINES } from "@/lib/dex"
 import { groupEventsByEra } from "@/lib/eras"
 import { eventAnchorId, eventDateTime, formatEventDate } from "@/lib/event-format"
-import { latestEvents, newestFirst } from "@/lib/newest-first"
+import { latestEvents } from "@/lib/newest-first"
 import { countEventsByYear } from "@/lib/timeline-activity"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 
@@ -22,7 +22,11 @@ const latest = latestEvents(events, 3)
 const dex = buildDex(events)
 
 function wrapper({ children }: { children: ReactNode }) {
-  return <DexProvider dex={dex}>{children}</DexProvider>
+  return (
+    <DexProvider dex={dex} events={events}>
+      {children}
+    </DexProvider>
+  )
 }
 
 // The figure of the events-per-year chart, with its era axis
@@ -41,12 +45,12 @@ describe("PrologueScene", () => {
     expect(screen.getByRole("heading", { level: 1, name: "The AI Timeline" })).toBeInTheDocument()
   })
 
-  it("links to every era by its name and years, the latest era first, as the page runs", () => {
+  it("links to every era by its name and years, the first era first, as the page runs", () => {
     renderPrologue()
 
     const links = within(screen.getByRole("list", { name: "Eras" })).getAllByRole("link")
     expect(links).toHaveLength(eras.length)
-    newestFirst(eras).forEach((era, index) => {
+    eras.forEach((era, index) => {
       expect(links[index]).toHaveAttribute("href", `#${era.id}`)
       expect(links[index]).toHaveTextContent(`${era.label}${era.subtitle}`)
       expect(links[index].querySelector("img")).toHaveAttribute("src", `/sprites/badges/${era.badge}.png`)
@@ -73,7 +77,7 @@ describe("PrologueScene", () => {
     expect(hint).toHaveAttribute("aria-hidden", "true")
   })
 
-  it("offers the chart's numbers as a table of every year that has events, the latest year first", async () => {
+  it("offers the chart's numbers as a table of every year that has events, the first year first", async () => {
     renderPrologue()
 
     await userEvent.click(screen.getByText("Show the numbers"))
@@ -82,31 +86,39 @@ describe("PrologueScene", () => {
     const rows = within(table).getAllByRole("row").slice(1)
     const yearsWithEvents = activity.filter((year) => year.total > 0)
     expect(rows).toHaveLength(yearsWithEvents.length)
-    expect(rows[0]).toHaveTextContent(`${yearsWithEvents.at(-1)!.year}${yearsWithEvents.at(-1)!.total}`)
-    expect(rows.at(-1)).toHaveTextContent(`${yearsWithEvents[0].year}${yearsWithEvents[0].total}`)
+    expect(rows[0]).toHaveTextContent(`${yearsWithEvents[0].year}${yearsWithEvents[0].total}`)
+    expect(rows.at(-1)).toHaveTextContent(`${yearsWithEvents.at(-1)!.year}${yearsWithEvents.at(-1)!.total}`)
   })
 
-  it("tells the reader that the timeline rewinds from the latest news to its first year", () => {
+  it("tells the story's premise: AI history as evolution lines", () => {
     renderPrologue()
 
     const first = activity[0].year
     const last = activity.at(-1)!.year
-    const intro = screen.getByText(`${last - first} years of artificial intelligence as a field guide.`, { exact: false })
-    expect(intro).toHaveTextContent(`Scroll to rewind, from the latest news back to ${first}.`)
+    const intro = screen.getByText(`${last - first} years of artificial intelligence as ${LINES.length} evolution lines.`, {
+      exact: false,
+    })
+    expect(intro).toHaveTextContent("MAGIKARP")
   })
 
-  it("shows Porygon's line on the dex beside the title, the creatures made of code", () => {
+  it("starts the journey at the first era, and offers the map of the lines", () => {
     renderPrologue()
 
-    const line = screen.getByRole("list", { name: "Porygon's evolution line" })
-    const creatures = within(line).getAllByRole("listitem")
-    expect(creatures.map((creature) => creature.textContent)).toEqual(["Porygon", "Porygon2", "Porygon-Z"])
-    for (const creature of creatures) {
-      expect(creature.querySelector("img")).toHaveAttribute("alt", "")
-      expect(creature.querySelector("img")!.getAttribute("src")).toMatch(/^\/sprites\/modern\/\d+\.gif$/)
-    }
-    const dexFigure = line.closest("figure")!
-    expect(dexFigure.querySelector("figcaption")).toHaveTextContent("Porygon was the first Pokémon made entirely of computer code.")
+    expect(screen.getByRole("link", { name: `Start the journey in ${activity[0].year}` })).toHaveAttribute(
+      "href",
+      `#${eras[0].id}`,
+    )
+    expect(screen.getByRole("link", { name: `Meet the ${LINES.length} lines` })).toHaveAttribute("href", "#party-title")
+  })
+
+  it("shows MEW on the dex beside the title, above the first creature of every line", () => {
+    const { container } = renderPrologue()
+
+    const dexFigure = [...container.querySelectorAll("figure")].find((figure) => figure.querySelector(".dex-screen"))!
+    expect(dexFigure.querySelector('img[src="/sprites/modern/151.gif"]')).not.toBeNull()
+    expect(dexFigure.querySelectorAll(".dex-screen li img")).toHaveLength(LINES.length)
+    expect(dexFigure.querySelector(".dex-screen")).toHaveAttribute("aria-hidden", "true")
+    expect(dexFigure.querySelector("figcaption")).toHaveTextContent("Every Pokémon is said to descend from MEW.")
   })
 })
 

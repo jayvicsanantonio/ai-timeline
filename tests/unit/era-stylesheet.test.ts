@@ -51,6 +51,21 @@ describe("the AI Dex in the global stylesheet", () => {
     expect(styleOf(".font-pixel")?.fontFamily).toMatch(/^var\(--font-press-start, "Press Start 2P"\), ui-monospace, monospace$/)
   })
 
+  it("plays each evolution and battle on its scene's own scroll timeline, and only while motion is allowed", () => {
+    const motion = "(prefers-reduced-motion: no-preference)"
+    const scrolling = (selector: string) =>
+      rules.find(
+        (placed) => placed.rule.selectorText === selector && placed.media === motion && placed.rule.style.getPropertyValue("animation-timeline"),
+      )?.rule.style
+
+    expect(scrolling(".dex-scene")).toBeUndefined()
+    expect(rules.find((placed) => placed.rule.selectorText === ".dex-scene" && placed.rule.style.getPropertyValue("view-timeline-name"))?.media).toBe(motion)
+    for (const selector of [".evo-from,\n      .evo-to,\n      .evo-done", ".hp-fill"]) {
+      const style = rules.find((placed) => placed.rule.selectorText.replace(/\s+/g, " ") === selector.replace(/\s+/g, " ") && placed.media === motion)?.rule.style
+      expect(style?.getPropertyValue("animation-timeline"), selector).toBe("--scene")
+    }
+  })
+
   it("moves the sprites, the Poké Ball and the legends' sheen only while motion is allowed", () => {
     const motion = "(prefers-reduced-motion: no-preference)"
 

@@ -4,7 +4,7 @@ import { render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { page } from "vitest/browser"
 import { TimelineInsights } from "@/components/interactive/timeline-insights"
-import { CATEGORY_TYPES } from "@/lib/dex"
+import { LINES } from "@/lib/dex"
 import { ERA_DEFINITIONS } from "@/lib/eras"
 import type { TimelineCategory, TimelineEvent } from "@/types/timeline"
 
@@ -93,15 +93,15 @@ describe("TimelineInsights", () => {
     expect(labelFor("2")).toHaveTextContent("Ethics & Policy events")
   })
 
-  it("draws a bar for every type, the commonest first, with its count and type for screen readers", () => {
+  it("draws a bar for every line, the busiest first, with its count and stage for screen readers", () => {
     const { container } = render(<TimelineInsights events={events} />)
 
-    const chart = container.querySelector<HTMLElement>("[data-type-chart]")!
+    const chart = container.querySelector<HTMLElement>("[data-line-chart]")!
     const rows = within(chart).getAllByRole("listitem")
-    expect(rows).toHaveLength(9)
-    expect(rows[0]).toHaveTextContent("Research Breakthroughs")
-    expect(rows[0]).toHaveTextContent(`4 events, ${CATEGORY_TYPES["Research Breakthroughs"].name} type`)
-    expect(rows[1]).toHaveTextContent("Companies & Investments")
+    expect(rows).toHaveLength(LINES.length)
+    // The four research events have no keyword that files them elsewhere, so they are neural networks
+    expect(rows[0]).toHaveTextContent("Neural networks")
+    expect(rows[0]).toHaveTextContent("4 events, now Magikarp")
     expect(rows.at(-1)).toHaveTextContent("0 events")
   })
 

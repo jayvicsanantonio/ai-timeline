@@ -1,6 +1,8 @@
-// Era navigation, drawn as a small dex: a rail on wide screens with the current year, an events-per-year chart and a button
-// per era marking the year it began, and a phone bar that names the current era and opens a list of eras with their badges. Both follow the page, which rewinds
-// from now at the top, and stay hidden until the timeline starts.
+// Era navigation, drawn as a small dex: a rail on wide screens with the current year, the party as every line stands at the
+// reading position (each creature evolving as the reader scrolls past its evolution), an events-per-year chart and a button
+// per era marking the year it began; and a phone bar that names the current era and opens a list of eras with their
+// badges and the party. Both follow the page, which runs from 1943 at the top to now, and stay hidden until the timeline
+// starts.
 'use client';
 
 import { motion } from 'framer-motion';
@@ -10,14 +12,15 @@ import { ActivityChart } from '@/components/timeline/activity-chart';
 import { Sprite } from '@/components/ui/sprite';
 import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { useTimelinePosition } from '@/hooks/use-timeline-position';
-import { badgePath } from '@/lib/dex';
+import { useDexStory } from '@/components/eras/dex-context';
+import { badgePath, iconPath, partyAfter, type PartyMember } from '@/lib/dex';
 import type { Era } from '@/lib/eras';
 import type { YearActivity } from '@/lib/timeline-activity';
 import { scrollToEra, scrollToYear } from '@/lib/timeline-scroll';
 import { cn } from '@/lib/utils';
 
 interface TimelineNavigationProps {
-  // Every era with all of its events, so the eras keep their counts while filtering, in the page's order, the latest first
+  // Every era with all of its events, so the eras keep their counts while filtering, in the page's order, the first first
   eras: Era[];
   activity: YearActivity[];
   // Changes whenever the shown events change, so the reading position is measured again
@@ -58,6 +61,11 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
   const [isPhoneListOpen, setIsPhoneListOpen] = useState(false);
   const phoneListId = useId();
   const phoneToggleRef = useRef<HTMLButtonElement>(null);
+  const story = useDexStory();
+  const party = useMemo(
+    () => (story ? partyAfter(story.dex, story.events, position.eventId) : []),
+    [story, position.eventId]
+  );
 
   if (eras.length === 0) {
     return null;
@@ -67,14 +75,14 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
   const activeEra = eras[activeIndex];
   const firstYear = activity[0]?.year ?? activeEra.range[0];
   const lastYear = activity.at(-1)?.year ?? firstYear;
-  // While an era's header is being read, the clock shows the latest year of the era the chart reaches, where its events start
-  const year = position.year ?? Math.min(activeEra.range[1] - 1, lastYear);
+  // While an era's header is being read, the clock shows the first year of the era the chart reaches, where its events start
+  const year = position.year ?? Math.max(activeEra.range[0], firstYear);
   // The year an era began, or the first year the chart reaches
   const startYear = (era: Era) => Math.max(era.range[0], firstYear);
 
-  // How far down the chart, which runs the latest year at the top, the middle of the row for the year an era began sits
+  // How far down the chart, which runs the first year at the top, the middle of the row for the year an era began sits
   const startShare = (era: Era) => {
-    const row = Math.min(Math.max(lastYear - startYear(era), 0), activity.length - 1);
+    const row = Math.min(Math.max(startYear(era) - firstYear, 0), activity.length - 1);
     return activity.length > 0 ? (row + 0.5) / activity.length : 0;
   };
 
@@ -111,7 +119,9 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
             <span className="block h-4 text-[11px] font-medium uppercase leading-4 tracking-[0.18em] text-[#a7acc8]">
               {position.month}
             </span>
-            <span className="mt-1 block font-pixel text-xl leading-none tabular-nums">{year}</span>
+            <span data-rail-year="" className="mt-1 block font-pixel text-xl leading-none tabular-nums">
+              {year}
+            </span>
             <span className="mt-2.5 flex items-start gap-1.5 text-xs leading-tight text-[#d9dcef]">
               <Sprite src={badgePath(activeEra.badge)} className="size-4 shrink-0 object-contain" />
               {activeEra.label}
@@ -119,7 +129,9 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
           </p>
           <EraProgress progress={position.eraProgress} color={activeEra.color} className="mx-1 mt-2" />
 
-          <div className="relative mt-4 h-[min(48vh,28rem)]">
+          <Party party={party} className="mt-3" />
+
+          <div className="relative mt-4 h-[min(34vh,20rem)]">
             <ActivityChart
               activity={activity}
               orientation="vertical"
@@ -146,7 +158,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
                   // Centered on the row for the year its era began, like a tick on the chart's axis, but never above the
                   // bottom of the button before it, since the short eras of the 2020s take up only a few rows at the top
                   style={{
-                    top: `clamp(${index} * 1.75rem, calc(${startShare(era) * 100}% - 0.875rem), calc(100% - 1.75rem))`,
+                    top: `clamp(${index} * 1.75rem, calc(${startShare(era) * 100}% - 0.875rem), calc(100% - ${eras.length - index} * 1.75rem))`,
                   }}
                 >
                   <span
@@ -167,7 +179,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
           </div>
 
           <p className="mt-3 px-1 text-[11px] leading-snug text-[#7d84a6]">
-            Events per year, now back to {firstYear}
+            Events per year, {firstYear} to now
           </p>
         </div>
       </nav>
@@ -227,6 +239,7 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
             >
+              <Party party={party} className="mb-1 rounded-xl bg-white/[0.04] p-2" columns="grid-cols-9" />
               {eras.map((era) => {
                 const isActive = era.id === activeEra.id;
 
@@ -252,5 +265,40 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
         </div>
       </nav>
     </>
+  );
+}
+
+// The party at the reading position: each line's creature as it stands there, or an empty slot before the line appears.
+// Screen readers hear each line, its creature and level.
+function Party({ party, className, columns = 'grid-cols-3' }: { party: PartyMember[]; className?: string; columns?: string }) {
+  if (party.length === 0) {
+    return null;
+  }
+
+  return (
+    <ol aria-label="Your party here" data-party="" className={cn('grid gap-1', columns, className)}>
+      {party.map((member) => (
+        <li
+          key={member.line.id}
+          data-party-member={member.line.id}
+          data-species={member.species?.id}
+          className="grid aspect-square place-items-center rounded-lg bg-white/[0.05]"
+        >
+          {member.species ? (
+            <>
+              <Sprite src={iconPath(member.species.id)} pixelated className="size-8 object-contain" />
+              <span className="sr-only">
+                {member.line.name}: {member.species.name}, level {member.level}
+              </span>
+            </>
+          ) : (
+            <>
+              <span aria-hidden="true" className="size-2 rounded-full bg-white/15" />
+              <span className="sr-only">{member.line.name}: not yet appeared</span>
+            </>
+          )}
+        </li>
+      ))}
+    </ol>
   );
 }

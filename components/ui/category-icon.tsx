@@ -1,7 +1,8 @@
-// Draws the icon of the type that stands for a timeline category (CATEGORY_TYPES in lib/dex.ts) in the dex entries and the
-// category filters. The icon is decorative, because the category's name is always shown beside it.
+// Draws the item from the bag that stands for a timeline category (CATEGORY_ITEMS in lib/dex.ts) in the entries and the
+// category filters: a Rare Candy for research, a Nugget for money. The icon is decorative, because the category's name is
+// always shown beside it.
 import { Sprite } from '@/components/ui/sprite';
-import { CATEGORY_TYPES, typeIconPath } from '@/lib/dex';
+import { CATEGORY_ITEMS, itemPath } from '@/lib/dex';
 import { cn } from '@/lib/utils';
 import type { TimelineCategory } from '@/types/timeline';
 
@@ -11,11 +12,11 @@ interface CategoryIconProps {
 }
 
 export function CategoryIcon({ category, className }: CategoryIconProps) {
-  const type = CATEGORY_TYPES[category];
+  const { item } = CATEGORY_ITEMS[category];
 
   return (
-    <span aria-hidden="true" data-type-icon={type.name} className={cn('inline-block shrink-0', className)}>
-      <Sprite src={typeIconPath(type)} eager className="size-full rounded-full" />
+    <span aria-hidden="true" data-category-item={item} className={cn('inline-block shrink-0', className)}>
+      <Sprite src={itemPath(item)} eager pixelated className="size-full object-contain" />
     </span>
   );
 }

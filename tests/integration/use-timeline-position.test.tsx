@@ -50,7 +50,9 @@ describe("useTimelinePosition", () => {
   it("reports the reader as outside the timeline while above the first era", async () => {
     renderTimeline()
 
-    await expect.poll(position).toEqual({ eraId: "era-one", year: null, month: null, inTimeline: false, eraProgress: 0 })
+    await expect
+      .poll(position)
+      .toEqual({ eraId: "era-one", year: null, month: null, eventId: null, inTimeline: false, eraProgress: 0 })
   })
 
   it("follows the era and the year of the event at the reading line", async () => {

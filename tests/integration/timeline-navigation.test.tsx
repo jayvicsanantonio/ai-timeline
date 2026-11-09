@@ -1,13 +1,14 @@
 // Integration tests for TimelineNavigation in real Chromium: the wide-screen rail with a button per era at the year it began,
-// its year readout and activity chart, and the phone bar that names the current era and opens a list of eras. Both follow the
-// page, which reads newest first, the latest era at the top.
+// its year readout, the party at the reading position and the activity chart, and the phone bar that names the current era
+// and opens a list of eras. Both follow the page, which runs from the first era at the top to the latest.
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { page, userEvent } from "vitest/browser"
+import { DexProvider } from "@/components/eras/dex-context"
 import { TimelineNavigation } from "@/components/timeline/timeline-navigation"
+import { buildDex } from "@/lib/dex"
 import { groupEventsByEra } from "@/lib/eras"
 import { eventAnchorId } from "@/lib/event-format"
-import { erasNewestFirst } from "@/lib/newest-first"
 import { countEventsByYear } from "@/lib/timeline-activity"
 import type { TimelineEvent } from "@/types/timeline"
 
@@ -30,8 +31,9 @@ const events = [
   makeEvent(2012, "ImageNet Breakthrough"),
   makeEvent(2023, "OpenAI Releases GPT-4"),
 ]
-// In the page's order, the latest era first, each with its events newest first
-const eras = erasNewestFirst(groupEventsByEra(events))
+// In the page's order, the first era first, each with its events oldest first
+const eras = groupEventsByEra(events)
+const dex = buildDex(events)
 const activity = countEventsByYear(events)
 
 function eraOf(generation: string) {
@@ -40,7 +42,7 @@ function eraOf(generation: string) {
 
 function renderNavigation({ spacerBefore = false } = {}) {
   render(
-    <>
+    <DexProvider dex={dex} events={events}>
       <TimelineNavigation eras={eras} activity={activity} />
       {spacerBefore ? <div style={{ height: "150vh" }} /> : null}
       {eras.map((era) => (
@@ -63,7 +65,7 @@ function renderNavigation({ spacerBefore = false } = {}) {
           ))}
         </section>
       ))}
-    </>,
+    </DexProvider>,
   )
 }
 
@@ -90,17 +92,17 @@ describe("TimelineNavigation on a wide screen", () => {
     return within(rail()).getAllByRole("button", { name: / Era|Revolution/ })
   }
 
-  it("shows a button for every era in the page's order, the latest first, named by its years, and marks the current one", () => {
+  it("shows a button for every era in the page's order, the first first, named by its years, and marks the current one", () => {
     renderNavigation()
 
     const buttons = eraButtons()
     expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual([
-      "Agentic Era, 2025 – now",
-      "Generative AI Era, 2020 – 2024",
-      "Deep Learning Revolution, 2010s",
-      "Learning Era, 1990s – 2000s",
-      "Knowledge Era, 1970s – 1980s",
       "Foundation Era, 1940s – 1960s",
+      "Knowledge Era, 1970s – 1980s",
+      "Learning Era, 1990s – 2000s",
+      "Deep Learning Revolution, 2010s",
+      "Generative AI Era, 2020 – 2024",
+      "Agentic Era, 2025 – now",
     ])
     expect(buttons[0]).toHaveAttribute("aria-current", "location")
   })
@@ -110,23 +112,23 @@ describe("TimelineNavigation on a wide screen", () => {
     renderNavigation()
 
     const buttons = eraButtons()
-    expect(buttons.map((button) => button.textContent!.slice(0, 4))).toEqual(["2025", "2020", "2010", "1990", "1970", "1956"])
-    const learning = buttons[3].getBoundingClientRect()
+    expect(buttons.map((button) => button.textContent!.slice(0, 4))).toEqual(["1956", "1970", "1990", "2010", "2020", "2025"])
+    const learning = buttons[2].getBoundingClientRect()
     const row1990 = rail().querySelector('[data-year-bar][data-year="1990"]')!.getBoundingClientRect()
     expect(Math.abs((learning.top + learning.bottom) / 2 - (row1990.top + row1990.bottom) / 2)).toBeLessThan(4)
   })
 
-  it("runs its chart from the latest year at the top down to the first, as the page does", () => {
+  it("runs its chart from the first year at the top down to the latest, as the page does", () => {
     renderNavigation()
 
     const top = (year: number) =>
       rail().querySelector(`[data-year-bar][data-year="${year}"]`)!.getBoundingClientRect().top
-    expect(top(2023)).toBeLessThan(top(1997))
-    expect(top(1997)).toBeLessThan(top(1956))
-    expect(rail()).toHaveTextContent("Events per year, now back to 1956")
+    expect(top(1956)).toBeLessThan(top(1997))
+    expect(top(1997)).toBeLessThan(top(2023))
+    expect(rail()).toHaveTextContent("Events per year, 1956 to now")
   })
 
-  // The short eras of the 2020s take up only a few rows at the top of the chart
+  // The short eras of the 2020s take up only a few rows at the bottom of the chart
   it("stacks the era buttons down the chart without letting them overlap", () => {
     renderNavigation()
 
@@ -136,7 +138,7 @@ describe("TimelineNavigation on a wide screen", () => {
     })
   })
 
-  it("shows the era's latest year while its introduction is being read", async () => {
+  it("shows the era's first year while its introduction is being read", async () => {
     renderNavigation()
 
     const learningEra = document.getElementById(eraOf("gen-3").id)!
@@ -148,7 +150,7 @@ describe("TimelineNavigation on a wide screen", () => {
     await expect
       .poll(() => within(rail()).getByRole("button", { name: "Learning Era, 1990s – 2000s" }).getAttribute("aria-current"))
       .toBe("location")
-    expect(within(rail()).getByText("2009")).toBeVisible()
+    expect(rail().querySelector("[data-rail-year]")).toHaveTextContent("1990")
   })
 
   it("jumps to an era and moves focus to its title", async () => {
@@ -187,6 +189,21 @@ describe("TimelineNavigation on a wide screen", () => {
     expect(progress()).toBeLessThan(65)
   })
 
+  it("shows the party as every line stands at the reading position, evolving past its turning points", async () => {
+    renderNavigation()
+    const neural = () => rail().querySelector('[data-party-member="neural"]')!
+
+    expect(rail().querySelectorAll("[data-party-member]")).toHaveLength(9)
+    expect(neural()).toHaveTextContent("Neural networks: not yet appeared")
+
+    document.getElementById(eventAnchorId(events[1]))!.scrollIntoView({ block: "start", behavior: "instant" as ScrollBehavior })
+    await expect.poll(() => neural().getAttribute("data-species")).toBe("129")
+
+    document.getElementById(eventAnchorId(events[4]))!.scrollIntoView({ block: "start", behavior: "instant" as ScrollBehavior })
+    await expect.poll(() => neural().getAttribute("data-species")).toBe("130")
+    expect(neural()).toHaveTextContent("Neural networks: Gyarados, level")
+  })
+
   it("jumps to the first event of a year picked on the activity chart", async () => {
     renderNavigation()
 
@@ -217,7 +234,7 @@ describe("TimelineNavigation on a phone", () => {
 
     const phoneNav = toggle().closest("nav")!
     expect(toggle()).toHaveAttribute("aria-expanded", "false")
-    expect(toggle()).toHaveTextContent("Agentic Era")
+    expect(toggle()).toHaveTextContent("Foundation Era")
     expect(toggle().textContent).not.toMatch(/\d+ \/ \d+/)
     expect(within(phoneNav).getAllByRole("button")).toEqual([toggle()])
   })

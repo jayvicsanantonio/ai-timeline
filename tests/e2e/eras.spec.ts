@@ -1,15 +1,15 @@
 // End-to-end tests for the six eras of the AI Dex on the real page in Chromium.
-// Each era is drawn in the sprites of its generation, the latest era first and every era newest first, every event an
-// entry numbered in the order the events happened, and every landmark a legendary encounter.
+// Each era is drawn in the sprites of its generation, from the first era forward, every event an entry numbered in the order
+// the events happened and showing its line at the stage it had reached, with the story's scenes after the events that set
+// them off.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 import yearSummaryData from "../../data/year-summaries.json"
-import { buildDex, formatDexNumber, LEGENDS } from "../../lib/dex"
+import { buildDex, formatDexNumber, LINES } from "../../lib/dex"
 import { groupEventsByEra } from "../../lib/eras"
 import { eventAnchorId } from "../../lib/event-format"
-import { newestFirst } from "../../lib/newest-first"
 import { describePace } from "../../lib/pace"
-import { yearsEarlierThanPrevious } from "../../lib/year-gaps"
+import { yearsLaterThanPrevious } from "../../lib/year-gaps"
 import { groupEventsByYear, isBusyYear } from "../../lib/year-groups"
 import type { TimelineEvent } from "../../types/timeline"
 
@@ -28,7 +28,7 @@ async function waitForHydration(page: Page) {
   })
 }
 
-test("draws the eras from the latest to the first, each in its own generation on a backdrop of its own", async ({ page }) => {
+test("draws the eras from the first to the latest, each in its own generation on a backdrop of its own", async ({ page }) => {
   await page.goto("/")
 
   const eras = await page.locator("section[data-generation]").evaluateAll((sections) =>
@@ -38,25 +38,25 @@ test("draws the eras from the latest to the first, each in its own generation on
     })),
   )
 
-  expect(eras.map((era) => era.generation)).toEqual(newestFirst(GENERATIONS))
+  expect(eras.map((era) => era.generation)).toEqual(GENERATIONS)
   expect(new Set(eras.map((era) => era.backdrop)).size).toBe(GENERATIONS.length)
 })
 
-test("lists every event newest first, from the latest at the top of the timeline down to the first", async ({ page }) => {
+test("lists every event in the order it happened, from the first at the top of the timeline to the latest", async ({ page }) => {
   await page.goto("/")
 
   const ids = await page.locator("section[data-generation] article").evaluateAll((articles) => articles.map((article) => article.id))
-  expect(ids).toEqual(newestFirst(events).map(eventAnchorId))
+  expect(ids).toEqual(events.map(eventAnchorId))
 })
 
-test("numbers every entry in the order the events happened, from the latest down to No. 001", async ({ page }) => {
+test("numbers every entry in the order the events happened, from No. 001 forward", async ({ page }) => {
   await page.goto("/")
 
   const numbers = await page
     .locator("section[data-generation] article")
     .evaluateAll((articles) => articles.map((article) => article.textContent!.match(/No\. \d{3}/)![0]))
-  expect(numbers).toEqual(newestFirst(events).map((event) => formatDexNumber(dex.get(eventAnchorId(event))!.number)))
-  expect(numbers.at(-1)).toBe("No. 001")
+  expect(numbers).toEqual(events.map((event) => formatDexNumber(dex.get(eventAnchorId(event))!.number)))
+  expect(numbers[0]).toBe("No. 001")
 })
 
 test("draws every entry's creature in its era's generation, and every sprite it draws loads", async ({ page }) => {
@@ -82,7 +82,7 @@ test("draws every entry's creature in its era's generation, and every sprite it 
   }
 })
 
-test("marks every approved landmark as a legendary encounter with its lore, in every era", async ({ page }) => {
+test("marks every approved landmark, in every era", async ({ page }) => {
   await page.goto("/")
   const landmarks = events.filter((event) => event.landmark)
 
@@ -93,20 +93,50 @@ test("marks every approved landmark as a legendary encounter with its lore, in e
   expect(perEra.reduce((sum, count) => sum + count, 0)).toBe(landmarks.length)
   expect(perEra.every((count) => count > 0)).toBe(true)
   await expect(page.locator("article[data-landmark]").getByText("★ Landmark", { exact: true })).toHaveCount(landmarks.length)
-  for (const event of landmarks) {
-    await expect(page.locator(`#${eventAnchorId(event)} [data-legend-lore]`)).toHaveText(LEGENDS[event.title].lore)
-  }
 })
 
-test("marks each stretch of more than a year between events, ahead of the earlier year below it", async ({ page }) => {
+test("plays every scene of the story right after its event, every evolution among them", async ({ page }) => {
+  await page.goto("/")
+
+  const expected = events.flatMap((event) => dex.get(eventAnchorId(event))!.scenes.map((played) => `${eventAnchorId(event)}|${played.id}`))
+  const shown = await page.locator("[data-scene]").evaluateAll((scenes) =>
+    scenes.map((scene) => `${scene.closest("li")!.querySelector("article")!.id}|${scene.id}`),
+  )
+  expect(shown).toEqual(expected)
+  await expect(page.locator('[data-scene="evolution"]')).toHaveCount(
+    LINES.reduce((sum, line) => sum + line.stages.length - 1, 0),
+  )
+})
+
+test("shows each line evolving at its turning point: MAGIKARP before AlexNet, GYARADOS after", async ({ page }) => {
+  await page.goto("/")
+
+  // Entries in full name their creature; a busy year's brief entries show only its icon
+  const neural = await page.locator('article[data-line="neural"][data-dex-card]').evaluateAll((cards) =>
+    cards.map((card) => [card.id, card.querySelector(".line-chip")!.textContent!.split(",")[0].replace(/ Lv\.\d+.*/, "")]),
+  )
+  const turningPoint = neural.findIndex(([id]) => id === "event-2012-imagenet-breakthrough")
+  expect(neural.slice(0, turningPoint + 1).every(([, name]) => name.startsWith("Magikarp"))).toBe(true)
+  expect(neural.slice(turningPoint + 1).every(([, name]) => name.startsWith("Gyarados"))).toBe(true)
+})
+
+test("freezes every entry of the AI winters", async ({ page }) => {
+  await page.goto("/")
+
+  const frozen = await page.locator("article[data-frozen]").evaluateAll((cards) => cards.map((card) => Number(card.getAttribute("data-year"))))
+  const winterYears = events.filter((event) => (event.year >= 1974 && event.year <= 1979) || (event.year >= 1987 && event.year <= 1993))
+  expect(frozen).toEqual(winterYears.map((event) => event.year))
+})
+
+test("marks each stretch of more than a year between events, ahead of the later year below it", async ({ page }) => {
   await page.goto("/")
   const erasWithGaps = erasOfData.filter((era) => ["gen-1", "gen-2", "gen-3"].includes(era.generation))
 
   for (const era of erasWithGaps) {
-    const years = groupEventsByYear(newestFirst(era.events))
+    const years = groupEventsByYear(era.events)
     const expected = years.flatMap((group, index) => {
-      const gap = yearsEarlierThanPrevious(years, index)
-      return gap === null ? [] : [`${gap} years earlier, then ${group.year}`]
+      const gap = yearsLaterThanPrevious(years, index)
+      return gap === null ? [] : [`${gap} years later, then ${group.year}`]
     })
     const marked = await page.locator(`#${era.id} .dex-gap`).evaluateAll((markers) =>
       markers.map((marker) => `${marker.textContent}, then ${marker.parentElement!.querySelector("[data-year-column]")!.getAttribute("data-year-column")}`),
@@ -117,40 +147,40 @@ test("marks each stretch of more than a year between events, ahead of the earlie
   }
 })
 
-test("heads the timeline with the current era, marked now, and each era below with the year the rewind passes", async ({ page }) => {
+test("marks every era with its place in the journey, and the current one as now", async ({ page }) => {
   await page.goto("/")
 
   await expect(page.locator("[data-era-marker]")).toHaveText([
-    "Now",
-    "Before 2025",
-    "Before 2020",
-    "Before 2010",
-    "Before 1990",
-    "Before 1970",
+    "Era 1 of 6",
+    "Era 2 of 6",
+    "Era 3 of 6",
+    "Era 4 of 6",
+    "Era 5 of 6",
+    "Era 6 of 6 · Now",
   ])
 })
 
-test("keeps a Poké Ball just above the newest entry, watching for what comes after it", async ({ page }) => {
+test("ends the journey on a Poké Ball just after the newest entry, watching for what comes after it", async ({ page }) => {
   const newest = events[events.length - 1]
   await page.goto("/")
 
   const frontier = page.locator("#the-agentic-era [data-frontier]")
   await expect(frontier).toHaveCount(1)
   await expect(frontier).toContainText(`Watching for what comes after ${newest.month} ${newest.year}`)
-  const above = await frontier.evaluate((row) => {
-    const first = document.querySelector("#the-agentic-era article")!
-    return Boolean(row.compareDocumentPosition(first) & Node.DOCUMENT_POSITION_FOLLOWING)
+  const below = await frontier.evaluate((row) => {
+    const cards = document.querySelectorAll("#the-agentic-era article")
+    return Boolean(cards[cards.length - 1].compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING)
   })
-  expect(above).toBe(true)
+  expect(below).toBe(true)
 })
 
-test("opens each year of the Generative AI and Agentic Eras with its field notes from the data, the latest year first", async ({
+test("opens each year of the Generative AI and Agentic Eras with its field notes from the data, the first year first", async ({
   page,
 }) => {
   await page.goto("/")
 
   await expect(page.locator("[data-year-summary]")).toHaveText(
-    newestFirst(yearSummaryData).map(({ year, summary }) => new RegExp(`Field notes · ${year}${summary.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`)),
+    yearSummaryData.map(({ year, summary }) => new RegExp(`Field notes · ${year}${summary.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`)),
   )
 })
 
@@ -200,13 +230,14 @@ test("dissolves each era into the next through the page's color", async ({ page 
 
 const busyYears = groupEventsByYear(events).filter((group) => isBusyYear(group.events))
 
-test("keeps only each busy year's landmarks and highlights in full, and lists the rest in brief", async ({ page }) => {
+test("keeps only each busy year's landmarks, highlights and story moments in full, and lists the rest in brief", async ({ page }) => {
   await page.goto("/")
 
   expect(busyYears.map((group) => group.year)).toEqual([2022, 2023, 2024, 2025, 2026])
   await expect(page.locator("article")).toHaveCount(events.length)
   for (const group of busyYears) {
-    const fullSize = newestFirst(group.events.filter((event) => event.landmark || event.highlight).map((event) => event.title))
+    const withScenes = (event: TimelineEvent) => dex.get(eventAnchorId(event))!.scenes.length > 0
+    const fullSize = group.events.filter((event) => event.landmark || event.highlight || withScenes(event)).map((event) => event.title)
     const shown = await page
       .locator(`article[data-year="${group.year}"]:not([data-brief])`)
       .evaluateAll((cards) => cards.map((card) => card.querySelector("a[data-event-link]")!.textContent))
@@ -257,7 +288,7 @@ test("lists the busy years in brief in under half the length of showing them in 
   expect(inBrief).toBeLessThan(inFull / 2)
 })
 
-test("closes the Agentic Era with how much faster its events came than those below it", async ({ page }) => {
+test("leads into the Agentic Era with how much faster its events came than those before it", async ({ page }) => {
   const pace = describePace(events, 2025)!
   await page.goto("/")
 
@@ -269,8 +300,8 @@ test("closes the Agentic Era with how much faster its events came than those bel
     const generative = document.getElementById("the-generative-ai-era")!
     const agentic = document.getElementById("the-agentic-era")!
     return [
-      Boolean(agentic.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
-      Boolean(line.compareDocumentPosition(generative) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(generative.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(line.compareDocumentPosition(agentic) & Node.DOCUMENT_POSITION_FOLLOWING),
     ]
   })
   expect(order).toEqual([true, true])

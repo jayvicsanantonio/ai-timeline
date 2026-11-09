@@ -74,7 +74,7 @@ export function scrollToEra(eraId: string) {
   section.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
 }
 
-// Lands on the year's first event on the page, which is its latest, since the timeline reads newest first
+// Lands on the year's first event on the page, its earliest, since the timeline runs forward through time
 export function scrollToYear(year: number) {
   const link = document.querySelector<HTMLAnchorElement>(
     `article[data-year="${year}"] a[data-event-link]`

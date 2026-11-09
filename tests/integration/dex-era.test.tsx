@@ -1,7 +1,7 @@
 // Integration tests for the six eras of the AI Dex rendered by EraChapter in real Chromium.
-// Every era opens with the same header in the page's color, and draws its events newest first, as the page rewinds, as dex
-// entries in the sprites of its generation. Each must give its entries the same accessible structure, plus the details
-// that make its generation its own.
+// Every era opens with the same header in the page's color, and draws its events from the first forward, as the journey
+// runs, as dex entries showing each event's line in the sprites of the era's generation, followed by the scenes they set
+// off. Each must give its entries the same accessible structure, plus the details that make its generation its own.
 import { render, screen, within } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
@@ -9,10 +9,9 @@ import { page, userEvent } from "vitest/browser"
 import { DexProvider } from "@/components/eras/dex-context"
 import { EraChapter } from "@/components/eras/era-chapter"
 import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
-import { buildDex, CATEGORY_TYPES, formatDexNumber, LEGENDS } from "@/lib/dex"
+import { buildDex, CATEGORY_ITEMS, formatDexNumber } from "@/lib/dex"
 import { ERA_DEFINITIONS, groupEventsByEra, isCurrentEra, type GenerationId } from "@/lib/eras"
 import { eventAnchorId, eventDateTime, eventSource, formatEventDate } from "@/lib/event-format"
-import { erasNewestFirst, newestFirst } from "@/lib/newest-first"
 import { monthCountOf, relativeMonthLabel } from "@/lib/relative-time"
 import { yearSummary } from "@/lib/year-summaries"
 import type { TimelineCategory, TimelineEvent } from "@/types/timeline"
@@ -68,7 +67,7 @@ const eventsByGeneration: Record<GenerationId, TimelineEvent[]> = {
 
 const GENERATIONS = ERA_DEFINITIONS.map((era) => era.generation)
 
-// Renders the era as the page does, with its events newest first, inside a dex built from every event given
+// Renders the era as the page does, with its events oldest first, inside a dex built from every event given
 function renderEra(
   generation: GenerationId,
   events = eventsByGeneration[generation],
@@ -76,8 +75,12 @@ function renderEra(
   dexEvents: TimelineEvent[] = events,
 ) {
   const dex = buildDex(dexEvents)
-  const era = erasNewestFirst(groupEventsByEra(events)).find((candidate) => candidate.generation === generation)!
-  const wrapper = ({ children }: { children: ReactNode }) => <DexProvider dex={dex}>{children}</DexProvider>
+  const era = groupEventsByEra(events).find((candidate) => candidate.generation === generation)!
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <DexProvider dex={dex} events={dexEvents}>
+      {children}
+    </DexProvider>
+  )
   const view = render(<EraChapter era={era} totalEvents={totalEvents} />, { wrapper })
   const section = screen.getByRole("region", { name: era.name })
   return { era, section, dex, ...view }
@@ -86,7 +89,7 @@ function renderEra(
 describe.each(GENERATIONS)("the %s era", (generation) => {
   const events = eventsByGeneration[generation]
   // The order the era draws them in
-  const shown = newestFirst(events)
+  const shown = events
 
   it("is a section named by its era title, a level-2 heading that can take focus", () => {
     const { era, section } = renderEra(generation)
@@ -113,12 +116,12 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
     expect(header.contains(backdrop)).toBe(false)
   })
 
-  // The timeline rewinds from now, so each header says where the reader has got to
-  it("marks the current era as now, and any other as before the year the era above it began", () => {
+  // The journey runs forward, so each header says how far along it the era is
+  it("marks its place in the journey, and the current era as now", () => {
     const { era, section } = renderEra(generation)
 
     const marker = section.querySelector("[data-era-marker]")!
-    expect(marker.textContent).toBe(isCurrentEra(era) ? "Now" : `Before ${era.range[1]}`)
+    expect(marker.textContent).toBe(`Era ${era.index + 1} of ${ERA_DEFINITIONS.length}${isCurrentEra(era) ? " · Now" : ""}`)
   })
 
   it("says how recent its latest event is only while the era is still under way", () => {
@@ -126,7 +129,7 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
 
     const header = section.querySelector("[data-era-header]")!
     if (isCurrentEra(era)) {
-      expect(header).toHaveTextContent(`${events.length} events through ${formatEventDate(shown[0])}`)
+      expect(header).toHaveTextContent(`${events.length} events through ${formatEventDate(shown.at(-1)!)}`)
     } else {
       expect(header.textContent).not.toMatch(/\bthrough\b/)
     }
@@ -153,7 +156,7 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
     expect(section.querySelector(".dex-era")).toHaveAttribute("data-gen", generation)
   })
 
-  it("renders every event as an article whose level-3 title links to its source in a new tab, the latest first", () => {
+  it("renders every event as an article whose level-3 title links to its source in a new tab, the first first", () => {
     const { section } = renderEra(generation)
 
     const articles = within(section).getAllByRole("article")
@@ -195,22 +198,22 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
     expect(within(section).queryByText(/Unknown/)).not.toBeInTheDocument()
   })
 
-  it("names each event's category beside its type, and describes what happened", () => {
+  it("names each event's category beside its item from the bag, and describes what happened", () => {
     const { section } = renderEra(generation)
 
     within(section)
       .getAllByRole("article")
       .forEach((article, index) => {
         const event = shown[index]
-        expect(within(article).getByText(event.category)).toBeInTheDocument()
+        expect(article.querySelector("[data-category]")).toHaveTextContent(event.category)
         expect(within(article).getByText(event.description)).toBeInTheDocument()
-        const chip = article.querySelector(`[data-type-chip="${CATEGORY_TYPES[event.category].name}"]`)!
-        expect(chip).toHaveAttribute("aria-hidden", "true")
-        expect(chip.querySelector("img")).toHaveAttribute("src", `/sprites/types/${CATEGORY_TYPES[event.category].id}.png`)
+        const item = article.querySelector(`[data-category-item="${CATEGORY_ITEMS[event.category].item}"]`)!
+        expect(item).toHaveAttribute("aria-hidden", "true")
+        expect(item.querySelector("img")).toHaveAttribute("src", `/sprites/items/${CATEGORY_ITEMS[event.category].item}.png`)
       })
   })
 
-  it("numbers each entry in the order the events happened, and names the creature it was spotted as", () => {
+  it("numbers each entry in the order the events happened, and names its line, creature and level", () => {
     const { section, dex } = renderEra(generation)
 
     within(section)
@@ -218,7 +221,10 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
       .forEach((article, index) => {
         const entry = dex.get(eventAnchorId(shown[index]))!
         expect(article).toHaveTextContent(formatDexNumber(entry.number))
-        expect(article.querySelector("[data-species]")).toHaveTextContent(`Spotted as ${entry.species.name}`)
+        expect(article).toHaveAttribute("data-line", entry.line.id)
+        expect(article.querySelector(".line-chip")).toHaveTextContent(
+          `${entry.species.name}, level ${entry.level}, of the ${entry.line.name} line`,
+        )
       })
     expect(within(section).getAllByRole("article").map((article) => article.textContent!.match(/No\. (\d{3})/)![1])).toEqual(
       shown.map((event) => String(events.indexOf(event) + 1).padStart(3, "0")),
@@ -275,28 +281,39 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
       })
   })
 
-  it("marks landmarks as legendary encounters with their lore, and only those", () => {
+  it("marks landmarks, and only those", () => {
     const { section } = renderEra(generation)
 
     within(section)
       .getAllByRole("article")
       .forEach((article, index) => {
-        const event = shown[index]
-        if (event.landmark) {
+        if (shown[index].landmark) {
           expect(article).toHaveAttribute("data-landmark")
           expect(within(article).getByText("★ Landmark")).toBeInTheDocument()
-          const legend = LEGENDS[event.title]
-          if (legend) {
-            expect(article.querySelector("[data-legend-lore]")).toHaveTextContent(legend.lore)
-          } else {
-            expect(article.querySelector("[data-legend-lore]")).toBeNull()
-          }
         } else {
           expect(article).not.toHaveAttribute("data-landmark")
           expect(within(article).queryByText(/Landmark/)).not.toBeInTheDocument()
-          expect(article.querySelector("[data-legend-lore]")).toBeNull()
         }
       })
+  })
+
+  it("plays each entry's scenes right after it, in the screen of the era's generation", () => {
+    const { section, dex } = renderEra(generation)
+
+    for (const event of shown) {
+      const entry = dex.get(eventAnchorId(event))!
+      const card = section.querySelector(`#${eventAnchorId(event)}`)!
+      const scenes = entry.scenes.map((played) => section.querySelector(`#${played.id}`)!)
+      scenes.forEach((scene, index) => {
+        expect(scene).toHaveAttribute("data-scene", entry.scenes[index].scene.kind)
+        expect(card.compareDocumentPosition(scene) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+        expect(scene.closest("li")).toBe(card.closest("li"))
+        expect(scene.querySelector('[aria-hidden="true"]')).not.toBeNull()
+        expect([...scene.querySelectorAll("[data-scene-line]")].map((line) => line.textContent)).toEqual(
+          entry.scenes[index].lines,
+        )
+      })
+    }
   })
 
   it("exposes no decorative controls as buttons", () => {
@@ -346,18 +363,18 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
 describe.each(["gen-1", "gen-2", "gen-3", "gen-4"] as const)("the %s era's year gaps", (generation) => {
   const [earlier, later] = eventsByGeneration[generation]
 
-  it("says how many years earlier a year came than the one above it, when more than one year lies between", () => {
+  it("says how many years later a year came than the one above it, when more than one year lies between", () => {
     const { section } = renderEra(generation)
 
-    const markers = within(section).getAllByText(/^\d+ years earlier$/)
-    expect(markers.map((marker) => marker.textContent)).toEqual([`${later.year - earlier.year} years earlier`])
+    const markers = within(section).getAllByText(/^\d+ years later$/)
+    expect(markers.map((marker) => marker.textContent)).toEqual([`${later.year - earlier.year} years later`])
   })
 
-  it("sits ahead of the earlier year, outside its entries, where assistive technology reads it too", () => {
+  it("sits ahead of the later year, outside its entries, where assistive technology reads it too", () => {
     const { section } = renderEra(generation)
 
-    const marker = within(section).getByText(/^\d+ years earlier$/)
-    const column = section.querySelector(`[data-year-column="${earlier.year}"]`)!
+    const marker = within(section).getByText(/^\d+ years later$/)
+    const column = section.querySelector(`[data-year-column="${later.year}"]`)!
     expect(marker.compareDocumentPosition(column) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(marker.closest("article")).toBeNull()
     expect(marker.closest('[aria-hidden="true"]')).toBeNull()
@@ -366,7 +383,7 @@ describe.each(["gen-1", "gen-2", "gen-3", "gen-4"] as const)("the %s era's year 
   it("leaves events a year apart unmarked", () => {
     const { section } = renderEra(generation, [earlier, makeEvent(earlier.year + 1, "June", "The Next Year", "AI Tools")])
 
-    expect(within(section).queryByText(/years earlier/)).toBeNull()
+    expect(within(section).queryByText(/years later/)).toBeNull()
   })
 })
 
@@ -382,10 +399,10 @@ function drawnYear(column: HTMLElement) {
 // Every era groups its events by year, beside a column that names the year in the era's own style
 describe.each(GENERATIONS)("the %s era's year column", (generation) => {
   const events = eventsByGeneration[generation]
-  const shown = newestFirst(events)
+  const shown = events
   const years = [...new Set(shown.map((event) => event.year))]
 
-  it("names each year ahead of its events, the latest year first, in plain words for assistive technology", () => {
+  it("names each year ahead of its events, the first year first, in plain words for assistive technology", () => {
     const { section } = renderEra(generation)
 
     const columns = yearColumns(section)
@@ -401,15 +418,15 @@ describe.each(GENERATIONS)("the %s era's year column", (generation) => {
     })
   })
 
-  it("counts the legends of each year that has them", () => {
+  it("counts the landmarks of each year that has them", () => {
     const { section } = renderEra(generation)
 
     yearColumns(section).forEach((column) => {
       const landmarks = events.filter((event) => event.year === Number(column.dataset.yearColumn) && event.landmark).length
       if (landmarks > 0) {
-        expect(drawnYear(column)).toHaveTextContent(`★ ${landmarks} legend`)
+        expect(drawnYear(column)).toHaveTextContent(`★ ${landmarks} landmark`)
       } else {
-        expect(drawnYear(column)).not.toHaveTextContent("legend")
+        expect(drawnYear(column)).not.toHaveTextContent("landmark")
       }
     })
   })
@@ -514,14 +531,14 @@ describe("the eras drawn with animated landmarks", () => {
 })
 
 describe("the current era", () => {
-  it("opens on a Poké Ball watching for what comes after its latest event", () => {
+  it("ends on a Poké Ball watching for what comes after its latest event", () => {
     const { container } = renderEra("modern")
 
     const frontier = container.querySelector("[data-frontier]")!
     expect(frontier).toHaveTextContent("Watching for what comes after September 2026")
     expect(frontier.querySelector("img")).toHaveAttribute("src", "/sprites/items/poke-ball.png")
-    const firstCard = container.querySelector("article")!
-    expect(frontier.compareDocumentPosition(firstCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const cards = container.querySelectorAll("article")
+    expect(cards[cards.length - 1].compareDocumentPosition(frontier) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it("says how long ago the latest event was, while it is under a year old", () => {
@@ -550,7 +567,7 @@ describe("the current era", () => {
     within(section)
       .getAllByRole("article")
       .forEach((article, index) => {
-        const expected = relativeMonthLabel(newestFirst(eventsByGeneration.modern)[index], now)
+        const expected = relativeMonthLabel(eventsByGeneration.modern[index], now)
         const label = article.querySelector("[data-relative-time]")
         if (expected) {
           expect(label).toHaveTextContent(expected)
@@ -570,7 +587,7 @@ describe("the current era", () => {
 
 describe.each(["gen-5", "modern"] as const)("the %s era's field notes", (generation) => {
   const events = eventsByGeneration[generation]
-  const years = [...new Set(newestFirst(events).map((event) => event.year))]
+  const years = [...new Set(events.map((event) => event.year))]
 
   it("opens each year with its summary, ahead of its first entry, for every reader", () => {
     const { container } = renderEra(generation)
@@ -624,8 +641,8 @@ describe.each([
   ["modern", 2025],
 ] as const)("the %s era's busy years", (generation, year) => {
   const busyYear = busyYearIn(year)
-  // Newest first
-  const fullSizeTitles = ["Release 4", "Release 1"]
+  // Oldest first
+  const fullSizeTitles = ["Release 1", "Release 4"]
 
   function cards(section: HTMLElement) {
     return within(section).getAllByRole("article")
@@ -746,5 +763,72 @@ describe.each([
         expect(date.right).toBeLessThanOrEqual(within(card).getByRole("heading", { level: 3 }).getBoundingClientRect().left)
       }
     })
+  })
+})
+
+describe("the story told through the entries", () => {
+  it("announces the first entry of each line as the line's arrival", () => {
+    const { section, dex } = renderEra("gen-2")
+
+    for (const article of within(section).getAllByRole("article")) {
+      const entry = dex.get(article.id)!
+      const tag = article.querySelector("[data-new-line]")
+      if (entry.firstOfLine) {
+        expect(tag).toHaveTextContent(`The ${entry.line.name.toLowerCase()} line begins with ${entry.species.name}`)
+      } else {
+        expect(tag).toBeNull()
+      }
+    }
+  })
+
+  it("freezes the entries of an AI winter, and says so to screen readers", () => {
+    const { section } = renderEra("gen-2")
+
+    const mycin = section.querySelector(`#${eventAnchorId(eventsByGeneration["gen-2"][0])}`)!
+    const xcon = section.querySelector(`#${eventAnchorId(eventsByGeneration["gen-2"][1])}`)!
+    expect(mycin).toHaveAttribute("data-frozen")
+    expect(mycin.querySelector(".frz-badge")).toHaveTextContent("FRZ")
+    expect(mycin).toHaveTextContent("during an AI winter")
+    expect(xcon).not.toHaveAttribute("data-frozen")
+  })
+
+  it("thaws the field with clear weather when the first winter ends", () => {
+    const { section } = renderEra("gen-2")
+
+    const weather = section.querySelector('[data-scene="weather"]')!
+    expect(weather).toHaveTextContent("The hail stopped.")
+  })
+
+  it("plays a human-versus-machine match as a battle, with each side's HP bar at its share of the match", () => {
+    const { section } = renderEra("gen-3")
+
+    const battle = section.querySelector('[data-scene="battle"]')!
+    expect(battle).toHaveTextContent("World chess champion GARRY KASPAROV wants to battle!")
+    expect(battle.querySelector('[data-battle-side="ai"] [data-hp]')).toHaveAttribute("data-hp", (3.5 / 6).toFixed(2))
+    expect(battle.querySelector('[data-battle-side="foe"] [data-hp]')).toHaveAttribute("data-hp", (2.5 / 6).toFixed(2))
+    expect(battle.querySelector(".battle-back")!.getAttribute("src")).toMatch(/^\/sprites\/gen-3\/back\/\d+\.png$/)
+  })
+
+  it("evolves a line in its own scene, saying why the evolution fits", () => {
+    const { section } = renderEra("gen-3")
+
+    const evolution = section.querySelector('[data-scene="evolution"]')!
+    expect(evolution).toHaveTextContent("is evolving!")
+    expect(evolution).toHaveTextContent("evolved into ALAKAZAM!")
+    expect(evolution.querySelector("[data-evolution-why]")).toHaveTextContent("Deep Blue was the supercomputer.")
+    expect(evolution.querySelectorAll("img")).toHaveLength(2)
+  })
+
+  it("keeps an event's scenes in full however busy its year, and leaves them out while filtering", () => {
+    const busy = busyYearIn(2025).map((event, index) => (index === 6 ? { ...event, title: "OpenAI Rolls Back a Sycophantic GPT-4o" } : event))
+    const { section, unmount } = renderEra("modern", busy)
+
+    const sceneCard = section.querySelector(`#${eventAnchorId(busy[6])}`)!
+    expect(sceneCard).not.toHaveAttribute("data-brief")
+    expect(section.querySelector('[data-scene="move"]')).toHaveTextContent("used CHARM!")
+    unmount()
+
+    const { section: filtered } = renderEra("modern", busy, 40)
+    expect(filtered.querySelector("[data-scene]")).toBeNull()
   })
 })

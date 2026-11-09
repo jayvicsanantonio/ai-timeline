@@ -3,7 +3,7 @@
 import { describe, expect, it } from "vitest"
 import timelineData from "@/data/timeline-events.json"
 import { groupEventsByEra } from "@/lib/eras"
-import { erasNewestFirst, latestEvents, newestFirst } from "@/lib/newest-first"
+import { latestEvents, newestFirst } from "@/lib/newest-first"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 import { groupEventsByYear } from "@/lib/year-groups"
 import type { TimelineEvent } from "@/types/timeline"
@@ -32,45 +32,6 @@ describe("newestFirst", () => {
   })
 })
 
-describe("erasNewestFirst", () => {
-  const dartmouth = makeEvent(1956, "June", "Dartmouth AI Conference")
-  const perceptron = makeEvent(1958, "July", "Rosenblatt's Perceptron")
-  const gpt4 = makeEvent(2023, "March", "OpenAI Releases GPT-4")
-  const gpt4o = makeEvent(2024, "May", "OpenAI Releases GPT-4o")
-
-  it("puts the latest era first and each era's latest event first", () => {
-    const eras = erasNewestFirst(groupEventsByEra([dartmouth, perceptron, gpt4, gpt4o]))
-
-    expect(eras.map((era) => era.label)).toEqual([
-      "Agentic Era",
-      "Generative AI Era",
-      "Deep Learning Revolution",
-      "Learning Era",
-      "Knowledge Era",
-      "Foundation Era",
-    ])
-    expect(eras[1].events).toEqual([gpt4o, gpt4])
-    expect(eras[5].events).toEqual([perceptron, dartmouth])
-  })
-
-  it("orders every era of the real data from its latest event to its first, the latest month of each year first", () => {
-    const eras = erasNewestFirst(groupEventsByEra(events))
-
-    expect(eras[0].events[0]).toEqual(events.at(-1))
-    expect(eras.at(-1)!.events.at(-1)).toEqual(events[0])
-    for (const era of eras) {
-      const years = era.events.map((event) => event.year)
-      expect(years, era.name).toEqual([...years].sort((a, b) => b - a))
-      for (const group of groupEventsByYear(era.events)) {
-        // Events dated by their year alone, which the data sorts after December, come ahead of December
-        const ranks = group.events.map((event) =>
-          event.month === "Unknown" ? MONTH_ORDER.length : MONTH_ORDER.indexOf(event.month),
-        )
-        expect(ranks, `${group.year}`).toEqual([...ranks].sort((a, b) => b - a))
-      }
-    }
-  })
-})
 
 describe("latestEvents", () => {
   it("lists the most recent events of the timeline, newest first", () => {

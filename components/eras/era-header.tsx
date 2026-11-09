@@ -1,19 +1,18 @@
 // The header every era shares, set in the page's color between two generations like a film's intertitle, with the badge
-// the reader earns for the era. The timeline rewinds from the top, so the current era is marked "Now" and every other one
-// "Before" the year the era above it began. Below the marker come the era's name, its years, its count and its sprites,
-// and a sentence on what it was.
+// the reader earns for the era. The journey runs forward from 1943, so each era is marked with its place in it and the
+// current one also as "Now". Below the marker come the era's name, its years, its count and its sprites, and a sentence on
+// what it was.
 'use client';
 
-import { Rewind } from 'lucide-react';
 import { Sprite } from '@/components/ui/sprite';
 import { badgePath } from '@/lib/dex';
 import { formatEventDate } from '@/lib/event-format';
-import { isCurrentEra, type Era } from '@/lib/eras';
+import { ERA_DEFINITIONS, isCurrentEra, type Era } from '@/lib/eras';
 import { cn } from '@/lib/utils';
 import { NO_MATCHING_EVENTS, eraEventCount, eraHeadingId } from './era-parts';
 
 interface EraHeaderProps {
-  // The era with its events newest first
+  // The era with its events oldest first
   era: Era;
   // How many events the era has before filters are applied
   totalEvents: number;
@@ -23,15 +22,15 @@ export function EraHeader({ era, totalEvents }: EraHeaderProps) {
   const current = isCurrentEra(era);
   const empty = era.events.length === 0;
   // Only the era still under way says how recent its latest event is
-  const latestEvent = current ? era.events[0] : undefined;
+  const latestEvent = current ? era.events[era.events.length - 1] : undefined;
 
   return (
     <header
       data-era-header=""
       className={cn(
         'mx-auto flex max-w-4xl gap-4 px-4 sm:gap-6 sm:px-6',
-        // The era at the top sits just under the toolbar, and the others just under the era before them
-        empty ? 'pb-8 pt-10' : current ? 'pb-2 pt-10 sm:pt-12' : 'pb-2 pt-12 sm:pt-16'
+        // The first era sits just under the toolbar, and the others just under the era before them
+        empty ? 'pb-8 pt-10' : era.index === 0 ? 'pb-2 pt-10 sm:pt-12' : 'pb-2 pt-12 sm:pt-16'
       )}
     >
       <div
@@ -47,16 +46,13 @@ export function EraHeader({ era, totalEvents }: EraHeaderProps) {
           data-era-marker=""
           className="flex items-center gap-2 font-pixel text-[0.625rem] uppercase leading-none text-[#c9cde6]"
         >
-          {current ? (
-            <span
-              aria-hidden="true"
-              className="size-2 rounded-full motion-safe:animate-pulse"
-              style={{ backgroundColor: era.color }}
-            />
-          ) : (
-            <Rewind aria-hidden="true" className="size-3.5" style={{ color: era.color }} />
-          )}
-          {current ? 'Now' : `Before ${era.range[1]}`}
+          <span
+            aria-hidden="true"
+            className={cn('size-2 rounded-full', current && 'motion-safe:animate-pulse')}
+            style={{ backgroundColor: era.color }}
+          />
+          Era {era.index + 1} of {ERA_DEFINITIONS.length}
+          {current ? ' · Now' : null}
         </p>
         <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
           <h2

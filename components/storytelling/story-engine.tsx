@@ -1,10 +1,11 @@
-// Orchestrates the page, which rewinds from now: the prologue with the latest events, the six eras from the Agentic Era
-// back to the Foundation Era with their toolbar and navigation, the insights and the epilogue where it all began.
-// Builds the AI Dex once from every event and holds the search and category filters, so every part of the timeline shows
-// the same events under the same numbers and creatures.
+// Orchestrates the page, a journey forward through AI history: the prologue with the latest news, the nine lines the story
+// follows, the six eras from the Foundation Era to the Agentic Era with their toolbar and navigation, the insights and the
+// epilogue with the party as it stands today. Builds the AI Dex once from every event and holds the search and category
+// filters, so every part of the timeline shows the same events under the same numbers, lines and scenes.
 'use client';
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { PartyScene } from './party-scene';
 import { PrologueScene } from './prologue-scene';
 import { EpilogueScene } from './epilogue-scene';
 import { DexProvider } from '@/components/eras/dex-context';
@@ -15,7 +16,7 @@ import { TimelineNavigation } from '@/components/timeline/timeline-navigation';
 import { useTimelineShortcuts } from '@/hooks/use-timeline-shortcuts';
 import { buildDex } from '@/lib/dex';
 import { groupEventsByEra } from '@/lib/eras';
-import { erasNewestFirst, latestEvents } from '@/lib/newest-first';
+import { latestEvents } from '@/lib/newest-first';
 import { describePace, type Pace } from '@/lib/pace';
 import { countEventsByYear } from '@/lib/timeline-activity';
 import {
@@ -41,14 +42,12 @@ export function StoryEngine({ events }: StoryEngineProps) {
   const toolbarRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // The eras in time order, as the opening's chart runs
+  // The eras in time order, as the page runs, each with its events oldest first
   const eras = useMemo(() => groupEventsByEra(events), [events]);
-  // The eras in the page's order, the latest first, each with its events newest first
-  const pageEras = useMemo(() => erasNewestFirst(eras), [eras]);
-  // The number keys follow the page, so 1 is the era at the top
-  const pageEraIds = useMemo(() => pageEras.map((era) => era.id), [pageEras]);
+  // The number keys follow the page, so 1 is the Foundation Era at the top
+  const eraIds = useMemo(() => eras.map((era) => era.id), [eras]);
   const shownEvents = useMemo(() => filterEvents(events, filters), [events, filters]);
-  const shownEras = useMemo(() => erasNewestFirst(groupEventsByEra(shownEvents)), [shownEvents]);
+  const shownEras = useMemo(() => groupEventsByEra(shownEvents), [shownEvents]);
   const latest = useMemo(() => latestEvents(events, LATEST_COUNT), [events]);
   const activity = useMemo(() => countEventsByYear(events), [events]);
   const shownActivity = useMemo(
@@ -59,7 +58,7 @@ export function StoryEngine({ events }: StoryEngineProps) {
   const pace = useMemo(() => describePace(events, eras[eras.length - 1].range[0]), [events, eras]);
   const dex = useMemo(() => buildDex(events), [events]);
 
-  useTimelineShortcuts({ eraIds: pageEraIds, searchInputRef });
+  useTimelineShortcuts({ eraIds, searchInputRef });
 
   // Sticky parts of the eras, like the chat's month dividers, sit just below the toolbar
   useEffect(() => {
@@ -91,9 +90,11 @@ export function StoryEngine({ events }: StoryEngineProps) {
   };
 
   return (
-    <DexProvider dex={dex}>
+    <DexProvider dex={dex} events={events}>
     <div className="relative">
       <PrologueScene eras={eras} activity={activity} latest={latest} totalEvents={events.length} />
+
+      <PartyScene />
 
       {/* The offset starts at the toolbar's height in one row, and is measured once the page runs */}
       <div ref={timelineRef} className="relative [--timeline-sticky-offset:66px]">
@@ -108,26 +109,26 @@ export function StoryEngine({ events }: StoryEngineProps) {
         />
         {shownEras.map((era, index) => (
           <Fragment key={era.id}>
-            <EraChapter era={era} totalEvents={pageEras[index].events.length} />
-            {/* The turn out of the latest era says how much faster its events came than those of the years below
-                it, ahead of the next era's header, unless the reader is filtering */}
-            {index === 0 && pace && !isFiltering(filters) ? <PaceLine pace={pace} /> : null}
+            {/* The turn into the latest era says how much faster its events came than those of all the years before
+                it, ahead of its header, unless the reader is filtering */}
+            {index === shownEras.length - 1 && pace && !isFiltering(filters) ? <PaceLine pace={pace} /> : null}
+            <EraChapter era={era} totalEvents={eras[index].events.length} />
           </Fragment>
         ))}
       </div>
 
-      <TimelineNavigation eras={pageEras} activity={shownActivity} contentKey={shownEvents} />
+      <TimelineNavigation eras={eras} activity={shownActivity} contentKey={shownEvents} />
 
       <TimelineInsights events={events} />
 
-      <EpilogueScene latestEraId={pageEras[0].id} firstEvent={events[0]} latestYear={events[events.length - 1].year} />
+      <EpilogueScene firstEraId={eras[0].id} firstEvent={events[0]} latestEvent={events[events.length - 1]} />
     </div>
     </DexProvider>
   );
 }
 
-// A message box between two eras, as the games print news, with its numbers picked out. It leads into the header of the
-// era below, so it shares that header's box and left edge.
+// A message box between the last two eras, as the games print news, with its numbers picked out. It leads into the header
+// of the latest era, so it shares that header's box and left edge.
 function PaceLine({ pace }: { pace: Pace }) {
   return (
     <div className="bg-background px-4 pt-10 sm:px-6 sm:pt-12">

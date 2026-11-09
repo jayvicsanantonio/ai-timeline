@@ -1,6 +1,6 @@
 // End-to-end tests for searching, filtering and the keyboard shortcuts on the real page in Chromium.
 // Filters narrow every era and the activity rail at once, and J, K, the era numbers and / move the reader around a timeline
-// that reads newest first.
+// that runs from the first event forward.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 import { groupEventsByEra } from "../../lib/eras"
@@ -53,19 +53,19 @@ test.describe("search and category filters", () => {
     await openPage(page)
     const agents = events.filter((event) => event.category === "Agents")
 
-    await page.getByRole("button", { name: /^Types/ }).click()
+    await page.getByRole("button", { name: /^Categories/ }).click()
     await page.getByRole("group", { name: "Filter by category" }).getByRole("button", { name: /^Agents/ }).click()
 
     await expect(page.locator("article")).toHaveCount(agents.length)
     await expect(page.locator("#the-foundation-era")).toContainText(NO_MATCHES)
     await expect(page.locator("#the-generative-ai-era")).not.toContainText(NO_MATCHES)
-    await expect(page.getByRole("button", { name: "Types, 1 picked" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Categories, 1 picked" })).toBeVisible()
   })
 
   test("keeps eras without matches to a short row, so the results start near the top", async ({ page }) => {
     await openPage(page)
 
-    await page.getByRole("button", { name: /^Types/ }).click()
+    await page.getByRole("button", { name: /^Categories/ }).click()
     await page.getByRole("group", { name: "Filter by category" }).getByRole("button", { name: /^Agents/ }).click()
 
     const layout = await page.evaluate(() => {
@@ -100,8 +100,8 @@ test.describe("search and category filters", () => {
     await pressUntil(page, "/", () => expect(search).toBeFocused({ timeout: 1000 }))
     await page.keyboard.type("turing")
 
-    // The timeline starts at its latest era
-    await expect.poll(() => page.locator("#the-agentic-era").evaluate((era) => Math.round(era.getBoundingClientRect().top))).toBeLessThan(120)
+    // The timeline starts at its first era
+    await expect.poll(() => page.locator("#the-foundation-era").evaluate((era) => Math.round(era.getBoundingClientRect().top))).toBeLessThan(120)
     await expect(search).toBeFocused()
   })
 
@@ -112,8 +112,8 @@ test.describe("search and category filters", () => {
       await openPage(page)
 
       await page.getByRole("searchbox", { name: "Search events" }).fill("agent")
-      // Enters the timeline at its top, the latest era, which the rail shows from
-      await page.locator("#the-agentic-era").evaluate((era) => era.scrollIntoView({ behavior: "instant" as ScrollBehavior }))
+      // Enters the timeline at its top, the first era, which the rail shows from
+      await page.locator("#the-foundation-era").evaluate((era) => era.scrollIntoView({ behavior: "instant" as ScrollBehavior }))
 
       const rail = page.locator('nav[aria-label="Timeline navigation"]').filter({ visible: true })
       const bar1956 = rail.locator('[data-year-bar][data-year="1956"]')
@@ -130,13 +130,13 @@ test.describe("keyboard shortcuts", () => {
     return page.getByRole("link", { name: new RegExp(`^${escaped}$`, "i") })
   }
 
-  test("steps down the page through the events with J, the latest first, and back up with K", async ({ page }) => {
+  test("steps down the page through the events with J, the first first, and back up with K", async ({ page }) => {
     await openPage(page)
 
-    await pressUntil(page, "j", () => expect(eventLink(page, events.at(-1)!.title)).toBeFocused({ timeout: 1000 }))
+    await pressUntil(page, "j", () => expect(eventLink(page, events[0].title)).toBeFocused({ timeout: 1000 }))
 
     await page.keyboard.press("j")
-    const second = eventLink(page, events.at(-2)!.title)
+    const second = eventLink(page, events[1].title)
     await expect(second).toBeFocused()
     await expect
       .poll(() =>
@@ -148,19 +148,19 @@ test.describe("keyboard shortcuts", () => {
       .toBe(true)
 
     await page.keyboard.press("k")
-    await expect(eventLink(page, events.at(-1)!.title)).toBeFocused()
+    await expect(eventLink(page, events[0].title)).toBeFocused()
   })
 
   test("jumps to an era's title with its number key, just below the toolbar", async ({ page }) => {
     await openPage(page)
 
-    // The keys count down the page from the era at the top, so the fourth is the Learning Era
-    const title = page.getByRole("heading", { level: 2, name: "The Learning Era" })
+    // The keys count down the page from the era at the top, so the fourth is the Deep Learning Revolution
+    const title = page.getByRole("heading", { level: 2, name: "The Deep Learning Revolution" })
     await pressUntil(page, "4", () => expect(title).toBeFocused({ timeout: 1000 }))
 
     const toolbarHeight = await page.getByRole("search").evaluate((search) => search.parentElement!.getBoundingClientRect().height)
     await expect
-      .poll(() => page.locator("#the-learning-era").evaluate((era) => Math.round(era.getBoundingClientRect().top)))
+      .poll(() => page.locator("#the-deep-learning-revolution").evaluate((era) => Math.round(era.getBoundingClientRect().top)))
       .toBe(Math.round(toolbarHeight))
   })
 

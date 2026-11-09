@@ -1,65 +1,87 @@
-// Integration tests for EpilogueScene, the close of the page below the oldest events, in real Chromium.
-// The rewind ends where the timeline began: Mew over a level-2 heading, how far the reader has come, the eras' badges up to
-// an egg for the next one, a way back up to now and the credits for the sprites.
+// Integration tests for EpilogueScene, the close of the page after the latest entry, in real Chromium.
+// The journey reaches now: the party as every line stands today, how far the reader has travelled, an egg for the next era,
+// the badges of every era, a way back to the start and the credits for the sprites.
 import { render, screen, within } from "@testing-library/react"
+import type { ReactNode } from "react"
 import { describe, expect, it } from "vitest"
+import { DexProvider } from "@/components/eras/dex-context"
 import { EpilogueScene } from "@/components/storytelling/epilogue-scene"
 import timelineData from "@/data/timeline-events.json"
+import { buildDex, LINES, speciesOf } from "@/lib/dex"
 import { ERA_DEFINITIONS } from "@/lib/eras"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 
 const events = parseTimelineEvents(timelineData)
+const dex = buildDex(events)
+
+function wrapper({ children }: { children: ReactNode }) {
+  return (
+    <DexProvider dex={dex} events={events}>
+      {children}
+    </DexProvider>
+  )
+}
 
 function renderEpilogue() {
-  return render(<EpilogueScene latestEraId="the-agentic-era" firstEvent={events[0]} latestYear={events.at(-1)!.year} />)
+  return render(<EpilogueScene firstEraId="the-foundation-era" firstEvent={events[0]} latestEvent={events.at(-1)!} />, {
+    wrapper,
+  })
 }
 
 describe("EpilogueScene", () => {
-  it("ends the rewind where the timeline began, under a level-2 heading and the first event's year", () => {
+  it("reaches now under a level-2 heading, numbered as the latest entry", () => {
     renderEpilogue()
 
-    expect(screen.getByRole("heading", { level: 2, name: "Where It Began" })).toBeInTheDocument()
-    expect(screen.getByText(/^No\. 001/)).toHaveTextContent(`No. 001 · ${events[0].year}`)
+    expect(screen.getByRole("heading", { level: 2, name: "The Journey So Far" })).toBeInTheDocument()
+    const latest = events.at(-1)!
+    expect(screen.getByText(/^No\. \d{3}/)).toHaveTextContent(`No. ${events.length} · ${latest.month} ${latest.year}`)
   })
 
-  it("floats Mew, the ancestor of every Pokémon, over the first entry, as a picture assistive technology skips", () => {
-    const { container } = renderEpilogue()
-
-    const mew = container.querySelector('img[src="/sprites/modern/151.gif"]')!
-    expect(mew).toHaveAttribute("alt", "")
-    expect(mew.closest('[aria-hidden="true"]')).not.toBeNull()
-    expect(screen.getByText(/Mew is said to carry the genes of every Pokémon/)).toBeInTheDocument()
-  })
-
-  it("says how many years the reader has rewound, and to which event", () => {
+  it("says how far the reader has travelled, from the first event to now", () => {
     renderEpilogue()
 
     expect(
-      screen.getByText(
-        `You have rewound ${events.at(-1)!.year - events[0].year} years, from agents at work back to the ${events[0].title} in ${events[0].year}.`,
-        { exact: false },
-      ),
+      screen.getByText(`You have travelled ${events.at(-1)!.year - events[0].year} years, from the ${events[0].title} in ${events[0].year}`, {
+        exact: false,
+      }),
     ).toBeInTheDocument()
   })
 
-  it("leaves the next era unhatched", () => {
+  it("shows the party today, every line at its latest stage with its level", () => {
     renderEpilogue()
 
-    expect(screen.getByText(/The next era hasn’t hatched yet\./)).toBeInTheDocument()
+    const party = within(screen.getByRole("list", { name: "The party today" })).getAllByRole("listitem")
+    expect(party).toHaveLength(LINES.length)
+    party.forEach((member, index) => {
+      const line = LINES[index]
+      expect(member).toHaveTextContent(speciesOf(line.stages.at(-1)!.species).name)
+      expect(member).toHaveTextContent(line.name)
+      expect(member.textContent).toMatch(/Lv\. \d+/)
+    })
   })
 
-  it("lines up every era's badge in order, up to an egg in the open slot for the next one", () => {
+  it("leaves the next era an egg that has not hatched yet", () => {
+    const { container } = renderEpilogue()
+
+    expect(screen.getByText("Oh? The EGG is moving!")).toBeInTheDocument()
+    expect(screen.getByText(/The next era hasn’t hatched yet\./)).toBeInTheDocument()
+    expect(container.querySelector('[data-next-era] img[src="/sprites/items/mystery-egg.png"]')).not.toBeNull()
+  })
+
+  it("lines up every era's badge in order", () => {
     renderEpilogue()
 
-    const trail = screen.getByRole("list", { name: "Badges earned" })
-    const badges = within(trail).getAllByRole("img")
-    expect(badges.map((badge) => badge.getAttribute("alt"))).toEqual([
-      ...ERA_DEFINITIONS.map((era) => `${era.label} badge`),
-      "The next era, not hatched yet",
-    ])
-    const openSlot = trail.querySelector("[data-next-era]")!
-    expect(getComputedStyle(openSlot).borderTopStyle).toBe("dashed")
-    expect(openSlot.querySelector("img")).toHaveAttribute("src", "/sprites/items/mystery-egg.png")
+    const badges = within(screen.getByRole("list", { name: "Badges earned" })).getAllByRole("img")
+    expect(badges.map((badge) => badge.getAttribute("alt"))).toEqual(ERA_DEFINITIONS.map((era) => `${era.label} badge`))
+  })
+
+  it("links back to the start of the journey", () => {
+    renderEpilogue()
+
+    expect(screen.getByRole("link", { name: `Start again from ${events[0].year}` })).toHaveAttribute(
+      "href",
+      "#the-foundation-era",
+    )
   })
 
   it("credits the sprites and says the site is an unofficial fan project", () => {
@@ -70,11 +92,5 @@ describe("EpilogueScene", () => {
       "https://github.com/jayvicsanantonio/sprites",
     )
     expect(screen.getByText(/unofficial fan project/)).toBeInTheDocument()
-  })
-
-  it("links back up to now, the latest era at the top of the timeline", () => {
-    renderEpilogue()
-
-    expect(screen.getByRole("link", { name: "Back to now" })).toHaveAttribute("href", "#the-agentic-era")
   })
 })

@@ -21,11 +21,11 @@ async function waitForHydration(page: Page) {
   })
 }
 
-// The era navigation stays out of the way over the opening, so tests that use it start in the latest era, at the top of the timeline.
+// The era navigation stays out of the way over the opening, so tests that use it start in the first era, at the top of the timeline.
 async function enterTimeline(page: Page) {
   await page.goto("/")
   await waitForHydration(page)
-  await page.locator("#the-agentic-era").evaluate((section) =>
+  await page.locator("#the-foundation-era").evaluate((section) =>
     section.scrollIntoView({ behavior: "instant" as ScrollBehavior }),
   )
   await expect(page.locator(ERA_NAV).filter({ visible: true })).toHaveCount(1)
@@ -132,8 +132,8 @@ test.describe(`era navigation on a phone (${PHONE.width}x${PHONE.height})`, () =
 
     const toggle = nav.getByRole("button", { name: /current era/i })
     await expect(toggle).toHaveAttribute("aria-expanded", "false")
-    await expect(toggle).toContainText("Agentic Era")
-    await expect(toggle).toContainText("2026")
+    await expect(toggle).toContainText("Foundation Era")
+    await expect(toggle).toContainText("1943")
   })
 
   test("opens the list of eras from the bar and closes it on a second tap", async ({ page }) => {

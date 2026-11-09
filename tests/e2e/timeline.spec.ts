@@ -92,11 +92,11 @@ test("charts every year from the first event to the last, and labels the busiest
   await expect(chart).toContainText(`${busiestCount} events in ${busiestYear}`)
 })
 
-test("jumps to a year's first event on the page, its latest, from its bar in the opening chart, as the chart's hint says", async ({
+test("jumps to a year's first event on the page, its earliest, from its bar in the opening chart, as the chart's hint says", async ({
   page,
 }) => {
   const year = 1956
-  const firstOfYear = [...timelineData].reverse().find((event) => event.year === year)!
+  const firstOfYear = timelineData.find((event) => event.year === year)!
   // Some eras set titles in capitals, so the link is matched by its whole title in any case
   const escapedTitle = firstOfYear.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 
@@ -116,7 +116,7 @@ test("opens with the latest events, each jumping to its card in the timeline", a
 
   await page.goto("/")
 
-  const latest = page.getByRole("list", { name: "Latest" }).getByRole("link")
+  const latest = page.getByRole("list", { name: "Latest sightings" }).getByRole("link")
   await expect(latest).toHaveCount(3)
   for (const [index, event] of newest.entries()) {
     await expect(latest.nth(index)).toContainText(event.title)

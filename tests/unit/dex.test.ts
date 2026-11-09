@@ -1,35 +1,81 @@
-// Unit tests for the AI Dex: every event numbered in the order the events happened and spotted as a creature of its
-// category's type, in the sprites of its era's generation, with a legend picked by hand for every landmark.
+// Unit tests for the AI Dex: AI history as nine evolution lines. Every event is numbered in the order the events happened
+// and filed under its line at the stage the line had reached, lines evolve at their turning points, the winters freeze them,
+// and scripted scenes play after the events that set them off.
 import { describe, expect, it } from "vitest"
 import timelineData from "@/data/timeline-events.json"
 import {
-  ART,
   buildDex,
-  CATEGORY_TYPES,
+  CATEGORY_ITEMS,
   formatDexNumber,
   GENERATION_SPRITES,
-  introducedIn,
-  LEGENDS,
+  isWinterYear,
+  LINE_OVERRIDES,
+  lineOf,
+  LINES,
+  LINES_BY_ID,
+  partyAfter,
   requiredSprites,
-  SPOTLIGHTS,
+  SCENES,
+  speciesOf,
 } from "@/lib/dex"
-import { ERA_DEFINITIONS, getEraForYear } from "@/lib/eras"
+import { getEraForYear } from "@/lib/eras"
 import { eventAnchorId } from "@/lib/event-format"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 import { TIMELINE_CATEGORIES } from "@/types/timeline"
 
 const events = parseTimelineEvents(timelineData)
 const dex = buildDex(events)
+const entryOf = (title: string) => dex.get(eventAnchorId(events.find((event) => event.title === title)!))!
 
-describe("CATEGORY_TYPES", () => {
-  it("makes every category its own type", () => {
-    const types = TIMELINE_CATEGORIES.map((category) => CATEGORY_TYPES[category].name)
-    expect(new Set(types).size).toBe(TIMELINE_CATEGORIES.length)
+describe("LINES", () => {
+  it("tells AI history as nine lines, each a real evolution line", () => {
+    expect(LINES.map((line) => line.stages.map((stage) => speciesOf(stage.species).name))).toEqual([
+      ["Magikarp", "Gyarados"],
+      ["Abra", "Kadabra", "Alakazam"],
+      ["Porygon", "Porygon2", "Porygon-Z"],
+      ["Machop", "Machoke", "Machamp"],
+      ["Magnemite", "Magneton", "Magnezone"],
+      ["Smeargle"],
+      ["Meowth", "Persian"],
+      ["Chansey", "Blissey"],
+      ["Gastly", "Haunter", "Gengar"],
+    ])
   })
 
-  it("has policy beat models, as Fairy beats Dragon", () => {
-    expect(CATEGORY_TYPES["Ethics & Policy"].name).toBe("Fairy")
-    expect(CATEGORY_TYPES["Models & Architectures"].name).toBe("Dragon")
+  it("evolves every line at an event in the timeline, in time order, with a reason", () => {
+    for (const line of LINES) {
+      const at = line.stages.slice(1).map((stage) => events.findIndex((event) => event.title === stage.evolvesAt))
+      expect(at.every((index) => index >= 0), line.name).toBe(true)
+      expect([...at].sort((a, b) => a - b), line.name).toEqual(at)
+      for (const stage of line.stages.slice(1)) {
+        expect(stage.why, line.name).toMatch(/\.$/)
+      }
+    }
+  })
+
+  it("evolves neural networks from MAGIKARP to GYARADOS when AlexNet wins ImageNet", () => {
+    expect(LINES_BY_ID.neural.stages[1].evolvesAt).toBe("ImageNet Breakthrough")
+  })
+})
+
+describe("lineOf", () => {
+  it("files every event under one of the lines", () => {
+    const ids = new Set(LINES.map((line) => line.id))
+    for (const event of events) {
+      expect(ids.has(lineOf(event)), event.title).toBe(true)
+    }
+  })
+
+  it("files the turning points under the lines they changed", () => {
+    expect(lineOf(events.find((event) => event.title === "ChatGPT Takes the World by Storm")!)).toBe("language")
+    expect(lineOf(events.find((event) => event.title === "IBM Deep Blue Defeats Garry Kasparov")!)).toBe("logic")
+    expect(lineOf(events.find((event) => event.title === "AlphaGo Defeats Lee Sedol")!)).toBe("games")
+    expect(lineOf(events.find((event) => event.title === "Anthropic Releases Computer Use")!)).toBe("agents")
+  })
+
+  it("names only events in the timeline among its hand-picked lines", () => {
+    const titles = new Set(events.map((event) => event.title))
+    expect(Object.keys(LINE_OVERRIDES).filter((title) => !titles.has(title))).toEqual([])
   })
 })
 
@@ -41,50 +87,72 @@ describe("buildDex", () => {
     })
   })
 
-  it("spots each event as a creature its era's generation knew, in that generation's sprites", () => {
+  it("shows each event's line at the stage it had reached, before the event's own evolution", () => {
+    expect(entryOf("Rosenblatt's Perceptron").species.name).toBe("Magikarp")
+    expect(entryOf("ImageNet Breakthrough").species.name).toBe("Magikarp")
+    expect(entryOf("Deep Learning Takes Over Speech Recognition").species.name).toBe("Gyarados")
+    expect(entryOf("OpenAI Releases GPT-2").species.name).toBe("Porygon2")
+    expect(entryOf("OpenAI Releases GPT-5").species.name).toBe("Porygon-Z")
+  })
+
+  it("levels a line up by one with each of its events", () => {
+    for (const line of LINES) {
+      const levels = events.map((event) => dex.get(eventAnchorId(event))!).filter((entry) => entry.line.id === line.id).map((entry) => entry.level)
+      expect(levels, line.name).toEqual(levels.map((_, index) => index + 1))
+    }
+  })
+
+  it("marks the first event of each line, and only that one", () => {
+    const firsts = [...dex.values()].filter((entry) => entry.firstOfLine)
+    expect(firsts.map((entry) => entry.line.id).sort()).toEqual(LINES.map((line) => line.id).sort())
+  })
+
+  it("draws each creature in its era's generation, which must already know it", () => {
     for (const event of events) {
       const entry = dex.get(eventAnchorId(event))!
       const era = getEraForYear(event.year)!
       expect(entry.generation, event.title).toBe(era.generation)
       expect(entry.species.id, event.title).toBeLessThanOrEqual(GENERATION_SPRITES[era.generation].lastSpecies)
       expect(entry.sprite, event.title).toMatch(new RegExp(`^/sprites/${era.generation}/`))
-      expect(entry.icon).toBe(`/sprites/icons/${entry.species.id}.png`)
-    }
-  })
-
-  it("gives each event its category's type", () => {
-    for (const event of events) {
-      expect(dex.get(eventAnchorId(event))!.type).toBe(CATEGORY_TYPES[event.category])
-    }
-  })
-
-  it("never spots the same creature twice in a row within an era and type, unless picked by hand", () => {
-    for (const era of ERA_DEFINITIONS) {
-      for (const category of TIMELINE_CATEGORIES) {
-        const ofType = events.filter(
-          (event) =>
-            getEraForYear(event.year)?.id === era.id &&
-            event.category === category &&
-            !event.landmark &&
-            SPOTLIGHTS[event.title] === undefined,
-        )
-        const species = ofType.map((event) => dex.get(eventAnchorId(event))!.species.id)
-        species.slice(1).forEach((id, index) => {
-          // A generation with fewer creatures of a type than the era has events comes round again
-          if (ofType.length > 1 && new Set(species).size > 1) {
-            expect(id, `${era.label} ${category}`).not.toBe(species[index])
-          }
-        })
+      for (const played of entry.scenes) {
+        for (const id of [played.species?.id, played.from?.id, played.to?.id]) {
+          if (id !== undefined) expect(id, event.title).toBeLessThanOrEqual(GENERATION_SPRITES[era.generation].lastSpecies)
+        }
       }
     }
   })
 
-  it("shows an era's own generation's creatures before older ones", () => {
-    const learning = events.filter((event) => getEraForYear(event.year)?.generation === "gen-3")
-    const firstResearch = learning.find(
-      (event) => event.category === "Research Breakthroughs" && !event.landmark && !SPOTLIGHTS[event.title],
-    )!
-    expect(introducedIn(dex.get(eventAnchorId(firstResearch))!.species.id)).toBe(3)
+  it("freezes every entry of the AI winters, and only those", () => {
+    for (const event of events) {
+      expect(dex.get(eventAnchorId(event))!.frozen, event.title).toBe(isWinterYear(event.year))
+    }
+    expect(entryOf("MYCIN Medical Expert System").frozen).toBe(true)
+    expect(entryOf("XCON Brings Expert Systems to Business").frozen).toBe(false)
+  })
+
+  it("plays an evolution at every turning point, before the event's scripted scenes", () => {
+    const deepBlue = entryOf("IBM Deep Blue Defeats Garry Kasparov").scenes
+    expect(deepBlue.map((played) => played.scene.kind)).toEqual(["evolution", "battle"])
+    expect(deepBlue[0].lines).toEqual(["What? KADABRA is evolving!", "Congratulations! KADABRA evolved into ALAKAZAM!"])
+    expect(deepBlue[1].species?.name).toBe("Alakazam")
+    expect(deepBlue[1].backSprite).toBe("/sprites/gen-3/back/65.png")
+
+    const evolutions = [...dex.values()].flatMap((entry) => entry.scenes).filter((played) => played.scene.kind === "evolution")
+    expect(evolutions).toHaveLength(LINES.reduce((sum, line) => sum + line.stages.length - 1, 0))
+  })
+
+  it("names the creature in a scene's lines as it stands at that point in the story", () => {
+    expect(entryOf("Perceptrons Exposes the Limits of Neural Networks").scenes[0].lines.slice(0, 2)).toEqual([
+      "MAGIKARP used SPLASH!",
+      "But nothing happened!",
+    ])
+    expect(entryOf("AlphaGo Defeats Lee Sedol").scenes[0].lines[1]).toBe("MACHAMP used MOVE 37! No human would have played it.")
+    expect(entryOf("OpenAI Releases o1").scenes[0].lines[0]).toBe("ALAKAZAM used CALM MIND!")
+  })
+
+  it("gives every scene an id of its own on the page", () => {
+    const ids = [...dex.values()].flatMap((entry) => entry.scenes.map((played) => played.id))
+    expect(new Set(ids).size).toBe(ids.length)
   })
 
   it("keeps an event's entry the same however many times the dex is built", () => {
@@ -95,41 +163,53 @@ describe("buildDex", () => {
   })
 })
 
-describe("LEGENDS", () => {
-  const landmarks = events.filter((event) => event.landmark)
-
-  it("picks a legend for every landmark, and for nothing else", () => {
-    expect(Object.keys(LEGENDS).sort()).toEqual(landmarks.map((event) => event.title).sort())
+describe("SCENES", () => {
+  it("plays only after events in the timeline", () => {
+    const titles = new Set(events.map((event) => event.title))
+    expect(Object.keys(SCENES).filter((title) => !titles.has(title))).toEqual([])
   })
 
-  it("spots each landmark as its legend, with its lore", () => {
-    for (const event of landmarks) {
-      const entry = dex.get(eventAnchorId(event))!
-      expect(entry.species.id, event.title).toBe(LEGENDS[event.title].species)
-      expect(entry.legend).toBe(LEGENDS[event.title])
-    }
+  it("plays a scene after most landmarks", () => {
+    const landmarks = events.filter((event) => event.landmark)
+    const withScenes = landmarks.filter((event) => dex.get(eventAnchorId(event))!.scenes.length > 0)
+    expect(withScenes.length).toBeGreaterThanOrEqual(landmarks.length - 3)
   })
 
-  it("never uses one legend twice", () => {
-    const species = Object.values(LEGENDS).map((legend) => legend.species)
-    expect(new Set(species).size).toBe(species.length)
-  })
-
-  it("tells each lore in a sentence or two", () => {
-    for (const [title, { lore }] of Object.entries(LEGENDS)) {
-      expect(lore, title).toMatch(/\.$/)
-      expect(lore.length, title).toBeLessThanOrEqual(140)
+  it("gives each battle a winner, and the AI side the larger share", () => {
+    for (const [title, scenes] of Object.entries(SCENES)) {
+      for (const scene of scenes) {
+        if (scene.kind === "battle") {
+          expect(scene.ai.share, title).toBeGreaterThan(scene.foe.share)
+          expect(scene.ai.share + scene.foe.share, title).toBeLessThanOrEqual(1)
+        }
+      }
     }
   })
 })
 
-describe("SPOTLIGHTS", () => {
-  it("names only events in the timeline, none of them landmarks", () => {
-    for (const title of Object.keys(SPOTLIGHTS)) {
-      const event = events.find((candidate) => candidate.title === title)
-      expect(event, title).toBeDefined()
-      expect(event!.landmark, title).toBeUndefined()
-    }
+describe("partyAfter", () => {
+  it("has no line before the first event, and every line at its latest stage after the last", () => {
+    expect(partyAfter(dex, events, null).every((member) => member.species === undefined)).toBe(true)
+    const today = partyAfter(dex, events, eventAnchorId(events.at(-1)!))
+    expect(today.map((member) => member.species?.name)).toEqual(
+      LINES.map((line) => speciesOf(line.stages.at(-1)!.species).name),
+    )
+  })
+
+  it("evolves a line once its turning point has played", () => {
+    const at = (title: string) =>
+      partyAfter(dex, events, eventAnchorId(events.find((event) => event.title === title)!)).find(
+        (member) => member.line.id === "neural",
+      )!.species!.name
+    expect(at("Deep Belief Networks")).toBe("Magikarp")
+    expect(at("ImageNet Breakthrough")).toBe("Gyarados")
+  })
+})
+
+describe("CATEGORY_ITEMS", () => {
+  it("gives every category its own item from the bag", () => {
+    const items = TIMELINE_CATEGORIES.map((category) => CATEGORY_ITEMS[category].item)
+    expect(new Set(items).size).toBe(TIMELINE_CATEGORIES.length)
   })
 })
 
@@ -138,12 +218,6 @@ describe("formatDexNumber", () => {
     expect(formatDexNumber(1)).toBe("No. 001")
     expect(formatDexNumber(42)).toBe("No. 042")
     expect(formatDexNumber(340)).toBe("No. 340")
-  })
-})
-
-describe("ART", () => {
-  it("draws Porygon's line, the creatures made of code, in today's sprites", () => {
-    expect(ART.evolutionLine.map(({ species }) => species.name)).toEqual(["Porygon", "Porygon2", "Porygon-Z"])
   })
 })
 
@@ -161,26 +235,5 @@ describe("the sprites in public/sprites", () => {
       }),
     )
     expect(missing, "Run node scripts/sync-sprites.mjs <sprites checkout>").toEqual([])
-  })
-})
-
-// Relative luminance and contrast as WCAG 2 defines them
-function luminance(hex: string) {
-  const [red, green, blue] = [1, 3, 5].map((start) => {
-    const channel = parseInt(hex.slice(start, start + 2), 16) / 255
-    return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
-  })
-  return 0.2126 * red + 0.7152 * green + 0.0722 * blue
-}
-
-function contrast(a: string, b: string) {
-  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x)
-  return (light + 0.05) / (dark + 0.05)
-}
-
-describe("the types' chips", () => {
-  it.each(TIMELINE_CATEGORIES)("print the %s type's name legibly on its color", (category) => {
-    const { color, ink } = CATEGORY_TYPES[category]
-    expect(contrast(color, ink)).toBeGreaterThanOrEqual(4.5)
   })
 })

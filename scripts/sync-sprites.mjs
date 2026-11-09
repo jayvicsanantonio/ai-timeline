@@ -21,6 +21,12 @@ if (!spritesRepo) {
 // Where each published folder's files come from in the sprites repository, tried in order
 const SOURCES = [
   [/^gen-1\/(\d+)\.png$/, ['sprites/pokemon/versions/generation-i/red-blue/transparent/gray/$1.png']],
+  [/^gen-1\/back\/(\d+)\.png$/, ['sprites/pokemon/versions/generation-i/red-blue/transparent/back/gray/$1.png']],
+  [/^gen-2\/back\/(\d+)\.png$/, ['sprites/pokemon/versions/generation-ii/crystal/transparent/back/$1.png']],
+  [/^gen-3\/back\/(\d+)\.png$/, ['sprites/pokemon/versions/generation-iii/emerald/back/$1.png']],
+  [/^gen-4\/back\/(\d+)\.png$/, ['sprites/pokemon/versions/generation-iv/platinum/back/$1.png']],
+  [/^gen-5\/back\/(\d+)\.gif$/, ['sprites/pokemon/versions/generation-v/black-white/animated/back/$1.gif']],
+  [/^modern\/back\/(\d+)\.gif$/, ['sprites/pokemon/other/showdown/back/$1.gif']],
   [/^gen-2\/(\d+)\.png$/, ['sprites/pokemon/versions/generation-ii/crystal/transparent/$1.png']],
   [/^gen-2\/animated\/(\d+)\.gif$/, ['sprites/pokemon/versions/generation-ii/crystal/animated/$1.gif']],
   [/^gen-3\/(\d+)\.png$/, ['sprites/pokemon/versions/generation-iii/emerald/$1.png']],

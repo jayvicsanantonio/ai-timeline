@@ -14,10 +14,11 @@ This project presents the complete history of artificial intelligence through an
 ### Key Features
 
 - **Comprehensive Dataset**: 340 meticulously researched AI milestones with verified sources
-- **Latest First**: The page opens on the newest events, each saying how long ago it happened, and rewinds from now back to 1943, every era its latest year and its latest event first under a header that says where the rewind has reached
-- **The AI Dex**: The timeline is a Pokémon-style field guide. Every event is a numbered entry (No. 001 is the 1943 McCulloch-Pitts neuron) spotted as a creature of its category's type: research is Psychic, models are Dragon, policy is Fairy (super effective against Dragons), hardware is Electric, companies are Steel, tools are Bug, bombshells are Fire and agents are Ghost
+- **Latest News, Then the Journey**: The page opens on the newest events, each saying how long ago it happened, then the journey runs forward from 1943 to now, so every line evolves in the order it did
+- **Nine Evolution Lines**: AI history told as Pokémon evolution lines. Neural networks are a MAGIKARP that uses SPLASH to no effect for fifty years, learns TACKLE with backpropagation and evolves into GYARADOS when AlexNet wins ImageNet. Language runs PORYGON, PORYGON2 at the Transformer and PORYGON-Z at ChatGPT; reasoning runs ABRA to ALAKAZAM at Deep Blue; games run MACHOP to MACHAMP, traded to Google with DeepMind; chips run MAGNEMITE to MAGNEZONE at the TPU; agents are the GASTLY line, the ghost in the machine. Every event is a numbered entry showing its line at the stage and level it had reached
+- **The Story in Scenes**: Evolutions play out as you scroll at the real turning points; human-versus-machine matches are battles (Deep Blue against Kasparov, AlphaGo's MOVE 37 against Lee Sedol, a gold medal at the Math Olympiad) with HP bars at the final score; the AI winters bring hail and freeze every line; MEW opens the story and legendaries mark a few singular moments
+- **Your Party**: A map of the nine lines links each stage to the moment it evolved, the navigation rail shows the party as it stands wherever you are reading, and the journey ends on the party today and an egg for the next era
 - **Sprites Through Time**: Each era is drawn in the sprites of one generation of handheld games, as AI's own fidelity grew: Generation I's four greens for the Foundation Era, then Generation II's color, Generation III's brighter panels, Generation IV's two screens, Generation V's animated sprites, and today's animated 3D for the Agentic Era
-- **Legendary Landmarks**: Each of the twenty-six turning points is a legendary encounter picked by hand, with a line on why: Mew for the first neuron, Articuno for the first AI winter, Metagross for Deep Blue, Arceus for the Transformer
 - **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–6 and /
 - **Sources**: Each entry names the site its link opens
 - **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and each year of the Generative AI and Agentic Eras opens on its field notes, a one-sentence summary. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
@@ -39,17 +40,19 @@ This project presents the complete history of artificial intelligence through an
 ```
 components/
 ├── storytelling/            # Narrative-driven components
-│   ├── story-engine.tsx     # Main orchestrator, holds the search and category filters and orders the eras newest first
-│   ├── prologue-scene.tsx   # Opening: title, Porygon's evolution line, latest sightings, era links and a slim chart
-│   └── epilogue-scene.tsx   # Closing: Mew over the first entry, the badge case and the sprite credits
+│   ├── story-engine.tsx     # Main orchestrator: builds the dex, holds the search and category filters, runs the eras from 1943
+│   ├── prologue-scene.tsx   # Opening: title, MEW and the premise, latest sightings, era links and a slim chart
+│   ├── party-scene.tsx      # The nine lines, each stage linking to where it evolves
+│   └── epilogue-scene.tsx   # Closing: the party today, the egg for the next era and the sprite credits
 ├── eras/                    # The AI Dex, one generation of sprites per era
 │   ├── era-chapter.tsx      # The era's section: its shared header, then its entries
 │   ├── era-header.tsx       # The header every era shares, with its badge, marked Now or Before {year}
-│   ├── dex-era.tsx          # An era's entries in its generation's style (data-gen), the latest first
+│   ├── dex-era.tsx          # An era's entries in its generation's style (data-gen), from the first forward
+│   ├── scenes.tsx           # Evolutions, battles, moves, encounters, weather and dialog
 │   ├── dex-context.tsx      # Hands every part of the page the dex built once from all events
 │   └── era-parts.tsx        # Pieces every era shares: card attributes, titles, year columns, brief listings
 ├── timeline/                # Timeline-wide UI
-│   ├── timeline-controls.tsx    # Search box and the type filters
+│   ├── timeline-controls.tsx    # Search box and the category filters
 │   ├── timeline-navigation.tsx  # Chapter rail and phone bar
 │   └── activity-chart.tsx       # Events-per-year chart
 ├── interactive/             # User interaction features
@@ -62,7 +65,7 @@ components/
 
 - **Structured Timeline Events**: TypeScript interfaces for type safety
 - **Era-based Grouping**: Foundation, Knowledge, Learning, Deep Learning Revolution, Generative AI and Agentic eras
-- **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents, each drawn as a type (`CATEGORY_TYPES` in `lib/dex.ts`)
+- **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents, each drawn as an item from the bag (`CATEGORY_ITEMS` in `lib/dex.ts`)
 
 ### Sprites
 
@@ -166,7 +169,7 @@ interface TimelineEvent {
     | 'Bombshell News'
     | 'Agents';
   link: string;
-  landmark?: boolean; // One of the turning points, each a legendary encounter (LEGENDS in lib/dex.ts)
+  landmark?: boolean; // One of the turning points every era sets apart
   highlight?: boolean; // Kept in full in a busy year, whose other entries are listed in brief
 }
 ```
@@ -178,7 +181,8 @@ interface TimelineEvent {
 ### Animation System
 
 - **Scroll-driven Reveals**: Event cards rise into place as they scroll into view
-- **Dex Details**: Today's 3D sprites bob, legendary entries catch a holographic sheen, a Poké Ball wobbles while it watches for the next entry, and the hero's lens glows
+- **Scroll-driven Scenes**: Evolutions flicker in white silhouettes and HP bars drain as each scene scrolls through the screen, with both stages side by side when motion is reduced
+- **Dex Details**: Today's 3D sprites bob, hail falls in the AI winters, a Poké Ball wobbles while it watches for the next entry, and the hero's lens glows
 - **Reduced Motion**: Every animation is off when the reader prefers reduced motion
 
 ### Custom Hooks

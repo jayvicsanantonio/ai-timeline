@@ -1,12 +1,11 @@
 // Timeline Insights section, drawn as the dex's stats: four stat tiles with numbers computed from the timeline events, each
-// leading with its number and then naming what it says about AI's history, beside a bar for every type, how many entries
-// it holds and why its category is that type, and the case of badges the reader has earned by rewinding every era.
+// leading with its number and then naming what it says about AI's history, beside a bar for every line with how many
+// entries it holds and the stage it has reached, and the case of badges the reader has earned through every era.
 "use client"
 
 import { Lightbulb, TrendingUp, Users, Zap } from "lucide-react"
-import { CategoryIcon } from "@/components/ui/category-icon"
 import { Sprite } from "@/components/ui/sprite"
-import { badgePath, CATEGORY_TYPES } from "@/lib/dex"
+import { badgePath, iconPath, lineOf, LINES, speciesOf } from "@/lib/dex"
 import { ERA_DEFINITIONS, groupEventsByEra, type Era } from "@/lib/eras"
 import { countEventsByCategory } from "@/lib/timeline-filter"
 import { TIMELINE_CATEGORIES, type TimelineEvent } from "@/types/timeline"
@@ -91,9 +90,13 @@ function getInsights(events: TimelineEvent[]) {
 
 export function TimelineInsights({ events }: TimelineInsightsProps) {
   const insights = getInsights(events)
-  const counts = countEventsByCategory(events)
-  const byCount = [...TIMELINE_CATEGORIES].sort((a, b) => counts[b] - counts[a])
-  const most = counts[byCount[0]]
+  // Each line with its events and its last stage among them, the busiest first
+  const byLine = LINES.map((line) => {
+    const count = events.filter((event) => lineOf(event) === line.id).length
+    const stage = line.stages.filter((stage) => !stage.evolvesAt || events.some((event) => event.title === stage.evolvesAt)).at(-1)!
+    return { line, count, species: stage.species }
+  }).sort((a, b) => b.count - a.count)
+  const mostInLine = Math.max(1, ...byLine.map(({ count }) => count))
 
   return (
     <section aria-labelledby="insights-title" className="bg-background px-4 py-24 text-white sm:px-6 sm:py-32">
@@ -128,43 +131,39 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-          <figure data-type-chart="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+          <figure data-line-chart="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
             <figcaption>
-              <h3 className="text-base font-semibold text-white">Entries by type</h3>
+              <h3 className="text-base font-semibold text-white">Entries by line</h3>
               <p className="mt-1 text-sm leading-6 text-[#a7acc8]">
-                Every category is a type. Policy is Fairy, which beats Dragon, the type of models.
+                How many of the timeline&rsquo;s entries each line holds, and the stage it has reached today.
               </p>
             </figcaption>
             <ol className="mt-6 grid gap-3">
-              {byCount.map((category) => {
-                const type = CATEGORY_TYPES[category]
-
-                return (
-                  <li key={category} className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)_2.5rem] items-center gap-3 text-sm">
-                    <span className="flex min-w-0 items-center gap-2">
-                      <CategoryIcon category={category} className="size-5" />
-                      <span className="truncate text-[#e4e6f5]">{category}</span>
-                    </span>
-                    <span aria-hidden="true" className="h-3 overflow-hidden rounded-full bg-white/[0.06]">
-                      <span
-                        className="block h-full rounded-full"
-                        style={{ width: `${(counts[category] / most) * 100}%`, backgroundColor: type.color }}
-                      />
-                    </span>
-                    <span className="text-right font-pixel text-[0.625rem] tabular-nums text-white">
-                      {counts[category]}
-                      <span className="sr-only"> events, {type.name} type</span>
-                    </span>
-                  </li>
-                )
-              })}
+              {byLine.map(({ line, count, species }) => (
+                <li key={line.id} className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)_2.5rem] items-center gap-3 text-sm">
+                  <span className="flex min-w-0 items-center gap-2">
+                    <Sprite src={iconPath(species)} pixelated className="size-7 shrink-0 object-contain" />
+                    <span className="truncate text-[#e4e6f5]">{line.name}</span>
+                  </span>
+                  <span aria-hidden="true" className="h-3 overflow-hidden rounded-full bg-white/[0.06]">
+                    <span
+                      className="block h-full rounded-full"
+                      style={{ width: `${(count / mostInLine) * 100}%`, backgroundColor: line.color }}
+                    />
+                  </span>
+                  <span className="text-right font-pixel text-[0.625rem] tabular-nums text-white">
+                    {count}
+                    <span className="sr-only"> events, now {speciesOf(species).name}</span>
+                  </span>
+                </li>
+              ))}
             </ol>
           </figure>
 
           <div data-badge-case="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
             <h3 className="text-base font-semibold text-white">Badge case</h3>
             <p className="mt-1 text-sm leading-6 text-[#a7acc8]">
-              One badge for each era you have rewound through, {ERA_DEFINITIONS.length} in all.
+              One badge for each era you have travelled through, {ERA_DEFINITIONS.length} in all.
             </p>
             <ol className="mt-6 grid grid-cols-3 gap-3">
               {ERA_DEFINITIONS.map((era) => (

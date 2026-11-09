@@ -1,16 +1,18 @@
 // An era of the AI Dex, drawn in the sprites and screens of its generation (`data-gen`, styled in app/globals.css): four
-// shades of green for the Foundation Era up to today's animated 3D for the Agentic Era. Its years run newest first beside a
-// year column, each event an entry with its number, its creature, its type and its source; a landmark is a legendary
-// encounter with the creature's lore. A busy year lists its other entries in brief until its Show all button, the current
-// era opens on a Poké Ball watching for the next entry, and the years that have them open on their field notes.
+// shades of green for the Foundation Era up to today's animated 3D for the Agentic Era. Its years run from the first
+// forward beside a year column. Each event is an entry showing its line at the stage and level that line had reached, with
+// its number, title, description, category and source; an AI winter freezes it, and the first event of a line says the line
+// has appeared. After an entry come the scenes it sets off: evolutions, battles, moves, encounters and weather. A busy year
+// lists its quieter entries in brief until its Show all button, the years that have them open on their field notes, and the
+// current era ends on a Poké Ball watching for the next entry.
 'use client';
 
 import { ChevronsUpDown } from 'lucide-react';
 import type { CSSProperties } from 'react';
-import { Sprite } from '@/components/ui/sprite';
+import { CategoryBadge } from '@/components/ui/category-badge';
 import { RelativeTime } from '@/components/ui/relative-time';
-import { TypeBadge } from '@/components/ui/type-badge';
-import { ART, formatDexNumber } from '@/lib/dex';
+import { Sprite } from '@/components/ui/sprite';
+import { ART, formatDexNumber, type DexEntry } from '@/lib/dex';
 import { isCurrentEra, type GenerationId } from '@/lib/eras';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { groupEventsByYear, type YearGroup } from '@/lib/year-groups';
@@ -29,6 +31,7 @@ import {
   useBriefListing,
   type EraInterfaceProps,
 } from './era-parts';
+import { Scene } from './scenes';
 
 const BACKDROPS: Record<GenerationId, string> = {
   'gen-1': 'gen-1-backdrop',
@@ -49,17 +52,13 @@ export function DexEra({ era, totalEvents }: EraInterfaceProps) {
     <div data-era-backdrop="" className={cn('pb-16 pt-6 sm:pb-24', BACKDROPS[era.generation])}>
       {era.generation === 'gen-1' ? <GameBoyPalette /> : null}
       <div data-gen={era.generation} className="dex-era mx-auto max-w-4xl px-4 sm:px-6">
-        {current && !filtering ? <Frontier latestEvent={era.events[0]} /> : null}
         {groups.map((group, index) => (
           <div key={group.year}>
-            <YearGap
-              events={groups}
-              index={index}
-              className="dex-gap my-8 flex items-center gap-4 font-pixel text-[0.625rem] uppercase"
-            />
+            <YearGap events={groups} index={index} className="dex-gap my-8 flex items-center gap-4 font-pixel text-[0.625rem] uppercase" />
             <DexYear group={group} filtering={filtering} first={index === 0} />
           </div>
         ))}
+        {current && !filtering ? <Frontier latestEvent={era.events[era.events.length - 1]} /> : null}
       </div>
     </div>
   );
@@ -84,12 +83,12 @@ function GameBoyPalette() {
   );
 }
 
-// A Poké Ball wobbling at the top of the current era, waiting on what comes after the latest entry
+// A Poké Ball wobbling after the latest entry, waiting on what comes next
 function Frontier({ latestEvent }: { latestEvent: TimelineEvent }) {
   return (
     <p
       data-frontier=""
-      className="mb-2 flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] py-2 pl-2 pr-4 text-sm text-[#c9cde6]"
+      className="mt-12 flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] py-2 pl-2 pr-4 text-sm text-[#c9cde6]"
     >
       <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-white/[0.06]">
         <Sprite src={ART.pokeBall} pixelated className="ball-wobble size-6" />
@@ -102,7 +101,8 @@ function Frontier({ latestEvent }: { latestEvent: TimelineEvent }) {
   );
 }
 
-// A year beside its column: its field notes, the Show all button of a busy year, and its entries in full or in brief
+// A year beside its column: its field notes, the Show all button of a busy year, and its entries with their scenes.
+// An entry that sets off a scene always shows in full.
 function DexYear({ group, filtering, first }: { group: YearGroup; filtering: boolean; first: boolean }) {
   const { offersShowAll, showAll, toggleShowAll, inBrief } = useBriefListing(group, filtering);
   const summary = filtering ? undefined : yearSummary(group.year);
@@ -123,12 +123,7 @@ function DexYear({ group, filtering, first }: { group: YearGroup; filtering: boo
         {summary ? (
           <div data-year-summary="" className="dex-textbox mb-6 px-5 py-4">
             <p className="font-pixel text-[0.5625rem] uppercase text-[#48506b]">Field notes · {group.year}</p>
-            <p className="mt-2 text-pretty text-[15px] leading-7">
-              {summary}
-              <span aria-hidden="true" className="text-caret ml-1 text-[#e3263b]">
-                ▼
-              </span>
-            </p>
+            <p className="mt-2 text-pretty text-[15px] leading-7">{summary}</p>
           </div>
         ) : null}
 
@@ -150,20 +145,33 @@ function DexYear({ group, filtering, first }: { group: YearGroup; filtering: boo
             </button>
           </p>
         ) : null}
+
         <ol className="grid grid-cols-[minmax(0,1fr)] gap-5">
           {group.events.map((event) => (
-            <li key={eventAnchorId(event)}>
-              {inBrief(event) ? <DexBrief event={event} /> : <DexCard event={event} />}
-            </li>
+            <DexListItem key={eventAnchorId(event)} event={event} inBrief={inBrief(event)} filtering={filtering} />
           ))}
         </ol>
-
       </div>
     </div>
   );
 }
 
-// The year as the era's screen prints it, how many entries it holds and how many are legendary
+function DexListItem({ event, inBrief, filtering }: { event: TimelineEvent; inBrief: boolean; filtering: boolean }) {
+  const entry = useDexEntry(event);
+  // Scenes tell the story in order, so they stay out of filtered results
+  const scenes = filtering ? [] : entry.scenes;
+
+  return (
+    <li className="grid grid-cols-[minmax(0,1fr)] gap-5">
+      {inBrief && scenes.length === 0 ? <DexBrief event={event} entry={entry} /> : <DexCard event={event} entry={entry} />}
+      {scenes.map((played) => (
+        <Scene key={played.id} played={played} pixelated={entry.pixelated} />
+      ))}
+    </li>
+  );
+}
+
+// The year as the era's screen prints it, how many entries it holds and how many are landmarks
 function DexYearLabel({ group }: { group: YearGroup }) {
   const landmarks = group.events.filter((event) => event.landmark).length;
 
@@ -172,24 +180,41 @@ function DexYearLabel({ group }: { group: YearGroup }) {
       <p className="dex-year font-pixel text-lg leading-none md:text-xl">{group.year}</p>
       <p className="dex-year-meta text-xs md:mt-3">{countOf(group.events.length, 'entry', 'entries')}</p>
       {landmarks > 0 ? (
-        <p className="text-xs text-[var(--legend-gold)] md:mt-1">★ {countOf(landmarks, 'legend')}</p>
+        <p className="text-xs text-[var(--legend-gold)] md:mt-1">★ {countOf(landmarks, 'landmark')}</p>
       ) : null}
     </div>
   );
 }
 
-// An entry in full: the creature on its screen, then the entry's number and date, its title linking to the source, what
-// happened, and its type, creature and source. A landmark adds its tag and the legend's lore.
-export function DexCard({ event }: { event: TimelineEvent }) {
-  const entry = useDexEntry(event);
+// The line's creature, with its level, and whether an AI winter has frozen it
+function LineChip({ entry }: { entry: DexEntry }) {
+  return (
+    <span data-line={entry.line.id} className="line-chip inline-flex min-w-0 items-center gap-2">
+      <span aria-hidden="true" className="line-chip-name font-pixel text-[0.5625rem] uppercase leading-none">
+        {entry.species.name} <span className="opacity-70">Lv.{entry.level}</span>
+      </span>
+      <span className="truncate">
+        <span className="sr-only">
+          {entry.species.name}, level {entry.level}, of the{' '}
+        </span>
+        {entry.line.name}
+        <span className="sr-only"> line</span>
+      </span>
+    </span>
+  );
+}
 
+// An entry in full: the line's creature on its screen, then the entry's number and date, its title linking to the source,
+// what happened, and its line, category and source
+export function DexCard({ event, entry }: { event: TimelineEvent; entry: DexEntry }) {
   return (
     <article
       {...eventCardAttributes(event)}
       data-dex-card=""
-      data-type={entry.type.name}
-      style={{ '--type-color': entry.type.color } as CSSProperties}
-      className="dex-card reveal-on-scroll scroll-mt-[calc(var(--timeline-sticky-offset,0px)+1.5rem)] has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-[#ffcb05]"
+      data-line={entry.line.id}
+      data-frozen={entry.frozen ? '' : undefined}
+      style={{ '--line-color': entry.line.color } as CSSProperties}
+      className="dex-card reveal-on-scroll scroll-mt-[calc(var(--timeline-sticky-offset,0px)+1.5rem)] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-[#ffcb05]"
     >
       <div aria-hidden="true" className="dex-stage">
         <Sprite
@@ -197,11 +222,18 @@ export function DexCard({ event }: { event: TimelineEvent }) {
           pixelated={entry.pixelated}
           className={entry.generation === 'modern' ? 'sprite-bob' : undefined}
         />
+        {entry.frozen ? <span className="frz-badge font-pixel">FRZ</span> : null}
       </div>
 
       <div className="dex-body">
+        {entry.firstOfLine ? (
+          <p data-new-line="" className="new-line-tag mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium">
+            <span className="font-pixel text-[0.5rem] uppercase">New line</span>
+            The {entry.line.name.toLowerCase()} line begins with {entry.species.name}
+          </p>
+        ) : null}
         {event.landmark ? (
-          <p className="legend-tag mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-pixel text-[0.5625rem] uppercase leading-none">
+          <p className="legend-tag mb-2 ml-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-pixel text-[0.5625rem] uppercase leading-none">
             ★ {LANDMARK_LABEL}
           </p>
         ) : null}
@@ -211,25 +243,14 @@ export function DexCard({ event }: { event: TimelineEvent }) {
           <time dateTime={eventDateTime(event)} className="font-medium">
             {formatEventDate(event)}
           </time>
-          <RelativeTime event={event} before="· " className="font-medium text-[var(--type-color)]" />
+          <RelativeTime event={event} before="· " className="font-medium text-[var(--line-color)]" />
+          {entry.frozen ? <span className="sr-only">, during an AI winter</span> : null}
         </p>
-        <EventHeading
-          event={event}
-          className="dex-title mt-2 text-pretty"
-          linkClassName="underline-offset-4 hover:underline"
-        />
+        <EventHeading event={event} className="dex-title mt-2 text-pretty" linkClassName="underline-offset-4 hover:underline" />
         <p className="dex-description mt-2 text-pretty text-[15px] leading-7">{event.description}</p>
-        {entry.legend ? (
-          <p data-legend-lore="" className="dex-lore mt-3 pl-3 text-sm italic leading-6">
-            {entry.legend.lore}
-          </p>
-        ) : null}
         <p className="dex-footer mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 text-xs">
-          <TypeBadge category={event.category} className="max-w-full" />
-          <span data-species="">
-            <span className="sr-only">Spotted as </span>
-            {entry.species.name}
-          </span>
+          <LineChip entry={entry} />
+          <CategoryBadge category={event.category} className="max-w-full" />
           <EventSource event={event} className="ml-auto max-w-full" />
         </p>
       </div>
@@ -238,13 +259,12 @@ export function DexCard({ event }: { event: TimelineEvent }) {
 }
 
 // An entry in brief, for the rest of a busy year: the creature's icon, the number and date, and the title
-function DexBrief({ event }: { event: TimelineEvent }) {
-  const entry = useDexEntry(event);
-
+function DexBrief({ event, entry }: { event: TimelineEvent; entry: DexEntry }) {
   return (
     <article
       {...eventCardAttributes(event)}
       data-brief=""
+      data-line={entry.line.id}
       className="dex-brief relative flex items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-white/[0.06] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-[#ffcb05]"
     >
       <Sprite src={entry.icon} pixelated className="size-9 shrink-0 object-contain" />
