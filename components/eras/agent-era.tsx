@@ -1,23 +1,23 @@
 // Draws the Agentic Era as an agent working in a console, the interface the era made familiar, with each year's progress beside its part of the log.
-// A plan checks off the years; each year's task traces what the agent read, fetched in parallel and wrote up, landmarks raised as checkpoints. The log ends still working.
+// The log reads newest first: the year still running comes first, the agent still at work just above its newest step, and the instruction
+// the agent was given waits at the bottom. Each year's task traces what the agent wrote up and fetched in parallel, its latest step first,
+// landmarks raised as checkpoints.
 'use client';
 
-import { Check, ChevronsUpDown, Flag, Globe } from 'lucide-react';
+import { Check, ChevronsUpDown, Flag } from 'lucide-react';
 import { CategoryIcon } from '@/components/ui/category-icon';
+import { RelativeTime } from '@/components/ui/relative-time';
 import { MONTHS, eventAnchorId, eventDateTime, eventSource, formatEventDate } from '@/lib/event-format';
 import { cn } from '@/lib/utils';
 import { groupEventsByYear, latestMonth, type YearGroup } from '@/lib/year-groups';
 import { yearSummary } from '@/lib/year-summaries';
 import type { TimelineEvent } from '@/types/timeline';
 import {
-  CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
   YearColumn,
   countOf,
-  eraEventCount,
-  eraHeadingId,
   eventCardAttributes,
   useBriefListing,
   type EraInterfaceProps,
@@ -67,73 +67,22 @@ function ConsoleTitleBar() {
   );
 }
 
-// The console's status bar, still working: the spinner and what the agent is doing, then how many steps it has taken.
-// The shimmer sets its own color, so the muted color sits on the line around it.
-function ConsoleStatusBar({ steps }: { steps: number }) {
+// The live edge of the timeline, just above its newest event: the agent still at work, watching for what comes after the
+// latest event and saying how long ago that was. A log read newest first shows what is happening now at its top, as a
+// thread shows someone typing. The shimmer sets its own color, so the muted color sits on the line around it.
+function Frontier({ latestEvent }: { latestEvent: TimelineEvent }) {
   return (
-    <div
-      data-console-status=""
-      className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-[#2a2a30] px-4 py-2.5 text-sm text-[#8b8b96] sm:px-6"
-    >
-      <span aria-hidden="true" className="order-2 ml-auto text-xs">
-        {countOf(steps, 'step')} <span className="text-[#4a4a55]">·</span> esc to interrupt
+    <p data-frontier="" className="relative mt-5 pl-6 text-sm leading-6 text-[#8b8b96]">
+      <span aria-hidden="true" className={cn(TRACE_MARKER_CLASS, CONSOLE_BACKGROUND, 'top-[5px]')}>
+        <span data-agent-spinner="" className="agent-spinner text-[13px] leading-none text-[#e77fb8]">
+          ✻
+        </span>
       </span>
-      <p className="order-1 flex items-center gap-2">
-        <span aria-hidden="true">
-          <span data-agent-spinner="" className="agent-spinner text-[#e77fb8]">
-            ✻
-          </span>
-        </span>
-        <span data-agent-status="" className="agent-shimmer">
-          The story is still being written
-        </span>
-      </p>
-    </div>
-  );
-}
-
-// The agent's to-do list, folded under its call: one box per year, every year but the one still running checked off
-function AgentPlan({ groups }: { groups: YearGroup[] }) {
-  return (
-    <div aria-hidden="true" className="mt-8 text-sm">
-      <p className="flex items-center gap-3">
-        <span className="size-2 rounded-full bg-[#e77fb8]" />
-        <ToolName>Plan</ToolName>
-      </p>
-      <div className="mt-1.5 flex gap-2.5 pl-[3px]">
-        <ResultElbow className="mt-0.5" />
-        <ul className="space-y-1.5">
-          {groups.map((group, index) => {
-            const running = index === groups.length - 1;
-
-            return (
-              <li key={group.year} className="flex items-center gap-2.5">
-                <span
-                  className={cn(
-                    'grid size-3.5 shrink-0 place-items-center border',
-                    running ? 'border-[#e77fb8]' : 'border-[#5fd39b]/60 bg-[#5fd39b]/15 text-[#5fd39b]'
-                  )}
-                >
-                  {running ? (
-                    <span className="size-1.5 bg-[#e77fb8] motion-safe:animate-pulse" />
-                  ) : (
-                    <Check className="size-2.5" strokeWidth={3} />
-                  )}
-                </span>
-                <span
-                  data-plan-step={group.year}
-                  data-status={running ? 'running' : 'done'}
-                  className={running ? 'text-[#f2f2f5]' : 'text-[#8b8b96] line-through decoration-[#4a4a55]'}
-                >
-                  Research {group.year}
-                </span>
-                <span className="text-[#8b8b96]">{countOf(group.events.length, 'event')}</span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </div>
+      <span data-agent-status="" className="agent-shimmer">
+        Watching for what comes after {formatEventDate(latestEvent)}
+        <RelativeTime event={latestEvent} before=" · " />
+      </span>
+    </p>
   );
 }
 
@@ -164,14 +113,19 @@ function YearProgress({ group, running }: { group: YearGroup; running: boolean }
   );
 }
 
-// The year in the column beside its log, with its count of events and of landmarks, its progress, and whether it is done
+// The year in the column beside its log, with its count of events, the sites the agent read them on and its landmarks,
+// its progress, and whether it is done
 function AgentYearLabel({ group, running }: { group: YearGroup; running: boolean }) {
   const landmarks = group.events.filter((event) => event.landmark).length;
+  const sites = new Set(group.events.map(eventSource)).size;
 
   return (
     <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:block">
       <p className="text-lg font-bold tracking-tight text-[#f2f2f5] md:text-2xl">{group.year}</p>
       <p className="text-xs text-[#8b8b96] md:mt-1">{countOf(group.events.length, 'event')}</p>
+      <p data-year-sites="" className="hidden text-xs text-[#8b8b96] md:mt-1 md:block">
+        from {countOf(sites, 'site')}
+      </p>
       {landmarks > 0 ? (
         <p className="text-xs text-[#e8c14a] md:mt-1">★ {countOf(landmarks, 'landmark')}</p>
       ) : null}
@@ -193,22 +147,6 @@ function AgentYearLabel({ group, running }: { group: YearGroup; running: boolean
   );
 }
 
-// What the agent read for the year, as its research tools tally it: one page per event, from the sites those pages are on
-function YearActivity({ group }: { group: YearGroup }) {
-  const sites = new Set(group.events.map(eventSource)).size;
-
-  return (
-    <p aria-hidden="true" className="relative pl-6 text-xs leading-5 text-[#8b8b96]">
-      <span className={cn(TRACE_MARKER_CLASS, CONSOLE_BACKGROUND, 'top-[3px] border border-[#4a4a55]')}>
-        <Globe className="size-2.5" />
-      </span>
-      <span data-year-activity="">
-        Read {countOf(group.events.length, 'page')} from {countOf(sites, 'site')}
-      </span>
-    </p>
-  );
-}
-
 // The agent's one-sentence report on the year, kept in the data beside the events
 function YearReport({ year }: { year: number }) {
   const summary = yearSummary(year);
@@ -217,7 +155,7 @@ function YearReport({ year }: { year: number }) {
   }
 
   return (
-    <div className="relative mt-4 pl-6">
+    <div className="relative pl-6">
       <span aria-hidden="true" className={cn(TRACE_MARKER_CLASS, 'top-[5px] sm:top-[6px]')}>
         <span className="size-2 rounded-full bg-[#e77fb8]" />
       </span>
@@ -228,12 +166,13 @@ function YearReport({ year }: { year: number }) {
   );
 }
 
-// Closes a finished year by writing up what the agent found: the year's file, and the events and landmarks it added
+// A finished year's last step, writing up what the agent found: the year's file, and the events and landmarks it added.
+// The log reads newest first, so it opens the year's trace.
 function YearWrite({ group }: { group: YearGroup }) {
   const landmarks = group.events.filter((event) => event.landmark).length;
 
   return (
-    <div aria-hidden="true" data-year-write="" className="relative mt-4 pl-6 text-xs leading-5">
+    <div aria-hidden="true" data-year-write="" className="relative mb-4 pl-6 text-xs leading-5">
       <span className={cn(TRACE_MARKER_CLASS, 'top-[3px]')}>
         <span className="size-2 rounded-full bg-[#e77fb8]" />
       </span>
@@ -252,69 +191,39 @@ function YearWrite({ group }: { group: YearGroup }) {
 }
 
 export function AgentEra({ era, totalEvents }: EraInterfaceProps) {
-  if (era.events.length === 0) {
-    return (
-      <div className="agent-backdrop px-4 py-6 font-mono text-[#c8c8d0] sm:px-6">
-        <div className="mx-auto flex max-w-3xl gap-3 sm:gap-4">
-          <TaskMark />
-          <div className="min-w-0">
-            <CompactEraText
-              era={era}
-              totalEvents={totalEvents}
-              metaClassName="text-xs text-[#8b8b96]"
-              headingClassName="mt-0.5 text-xl font-bold tracking-tight text-[#f2f2f5]"
-              messageClassName="mt-0.5 text-sm text-[#c8c8d0]"
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const lastEvent = era.events.at(-1);
+  // The events come newest first, so the first year is the one still running
   const groups = groupEventsByYear(era.events);
-  // While the reader filters, every match shows in full
+  // While the reader filters, every match shows in full, and the live edge waits for the whole timeline
   const filtering = era.events.length < totalEvents;
 
   return (
-    <div className="agent-backdrop px-3 py-24 font-mono text-[#c8c8d0] sm:px-6 sm:py-32">
-      {/* The console the agent works in: square, framed, between its title bar and its status bar */}
+    <div data-era-backdrop="" className="agent-backdrop px-3 pb-16 pt-6 font-mono text-[#c8c8d0] sm:px-6 sm:pb-24 sm:pt-8">
+      {/* The console the agent works in: square and framed under its title bar */}
       <div data-console="" className={cn('mx-auto max-w-4xl rounded-[2px] border border-[#2a2a30]', CONSOLE_BACKGROUND)}>
         <ConsoleTitleBar />
-        <div className="px-4 py-8 sm:px-6 sm:py-10">
-          {/* The introduction sits in line with the log, past the years' column */}
-          <header className="md:pl-40">
-            {/* The reader's instruction, echoed on its own row as consoles echo what a person types */}
+        <div className="space-y-16 px-4 py-8 sm:px-6 sm:py-10">
+          {groups.map((group, index) => (
+            <AgentYear
+              key={group.year}
+              group={group}
+              running={index === 0}
+              filtering={filtering}
+              frontier={index === 0 && !filtering ? era.events[0] : undefined}
+            />
+          ))}
+
+          {/* The reader's instruction, the session's first prompt, so the oldest line of a log read newest first, where the
+              chat thread below handed the work over. It sits in line with the log, echoed on its own row as consoles echo
+              what a person types. */}
+          <div className="md:pl-40">
             <p className="flex gap-3 bg-white/[0.05] px-3 py-2 text-sm leading-6 text-[#f2f2f5]">
               <TaskMark />
               <span data-instruction="">
                 Take it from here: research AI from {era.range[0]} on, and keep going on your own.
               </span>
             </p>
-            <p className="mt-8 text-sm text-[#8b8b96]">
-              {era.chapter} <span aria-hidden="true">·</span> {era.subtitle}
-            </p>
-            <h2
-              id={eraHeadingId(era)}
-              tabIndex={-1}
-              className="mt-2 text-3xl font-bold tracking-tight text-[#f2f2f5] focus:outline-none sm:text-4xl"
-            >
-              {era.name}
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-[#c8c8d0] sm:text-[15px]">{era.description}</p>
-            <p className="mt-4 text-sm text-[#8b8b96]">
-              {eraEventCount(era, totalEvents)}
-              {lastEvent ? ` through ${formatEventDate(lastEvent)}` : null}{' '}
-              <span aria-hidden="true">·</span> {era.interfaceName}
-            </p>
-            <AgentPlan groups={groups} />
-          </header>
-
-          {groups.map((group, index) => (
-            <AgentYear key={group.year} group={group} running={index === groups.length - 1} filtering={filtering} />
-          ))}
+          </div>
         </div>
-        <ConsoleStatusBar steps={era.events.length} />
       </div>
     </div>
   );
@@ -324,12 +233,14 @@ interface AgentYearProps {
   group: YearGroup;
   running: boolean;
   filtering: boolean;
+  // The latest event in the timeline, when this year holds the live edge above it
+  frontier?: TimelineEvent;
 }
 
 // One year of the log. A busy year collapses its steps to one line each, apart from its landmarks and highlights,
 // gathering each run of them under one task that fetches them in parallel, and its Show all button expands every
 // collapsed step and back.
-function AgentYear({ group, running, filtering }: AgentYearProps) {
+function AgentYear({ group, running, filtering, frontier }: AgentYearProps) {
   const { offersShowAll, showAll, toggleShowAll, inBrief } = useBriefListing(group, filtering);
 
   // How many collapsed steps run on from each one, counted where a run starts
@@ -347,7 +258,7 @@ function AgentYear({ group, running, filtering }: AgentYearProps) {
   }
 
   return (
-    <div data-year-group={group.year} className="mt-16 md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8">
+    <div data-year-group={group.year} className="md:grid md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8">
       <YearColumn
         group={group}
         className="mb-6 border-b border-[#2a2a30] pb-2 md:mb-0 md:border-b-0 md:border-r md:pb-0 md:pr-5"
@@ -355,7 +266,7 @@ function AgentYear({ group, running, filtering }: AgentYearProps) {
         <AgentYearLabel group={group} running={running} />
       </YearColumn>
       <div className="min-w-0">
-        {/* The task the agent takes up from its plan, ruled across the log. Its box sits over the trace line below */}
+        {/* The task the agent takes up, ruled across the log. Its box sits over the trace line below */}
         <p className="relative flex items-center gap-3 pl-[31.5px] text-sm">
           <span
             aria-hidden="true"
@@ -369,9 +280,10 @@ function AgentYear({ group, running, filtering }: AgentYearProps) {
           <span aria-hidden="true" className="h-px min-w-6 flex-1 bg-[#2a2a30]" />
         </p>
 
-        {/* The year's trace: what the agent read, its report, then its steps, each with a node on the line down its left */}
+        {/* The year's trace, newest first: what the agent wrote up once the year was done, its report, the live edge while
+            the year runs, then its steps, the latest first, each with a node on the line down its left */}
         <div data-trace="" className="ml-[6.5px] border-l border-[#2a2a30] pt-3">
-          <YearActivity group={group} />
+          {running ? null : <YearWrite group={group} />}
           <YearReport year={group.year} />
 
           {/* Sits in line with the report, like the toggle an agent offers to expand its collapsed steps */}
@@ -394,8 +306,10 @@ function AgentYear({ group, running, filtering }: AgentYearProps) {
             </p>
           ) : null}
 
+          {frontier ? <Frontier latestEvent={frontier} /> : null}
+
           {/* Collapsed steps sit close together, and full steps keep their room */}
-          <ol className="mt-5">
+          <ol className={frontier ? 'mt-3' : 'mt-5'}>
             {group.events.map((event) => {
               const brief = inBrief(event);
               const runLength = runLengths.get(event);
@@ -412,8 +326,6 @@ function AgentYear({ group, running, filtering }: AgentYearProps) {
               );
             })}
           </ol>
-
-          {running ? null : <YearWrite group={group} />}
         </div>
       </div>
     </div>
@@ -527,6 +439,7 @@ function AgentStep({ event }: { event: TimelineEvent }) {
             <time dateTime={eventDateTime(event)} className="text-[#c8c8d0]">
               {formatEventDate(event)}
             </time>
+            <RelativeTime event={event} before="· " className="text-[#e77fb8]" />
             <span aria-hidden="true">·</span>
             <span className="inline-flex items-center gap-1.5">
               <CategoryIcon category={event.category} className="size-3.5 text-[#5cc8d8]" />

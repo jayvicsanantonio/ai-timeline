@@ -1,24 +1,32 @@
 // End-to-end tests for the six era interfaces on the real page in Chromium.
-// Each era is drawn in its own interface, and each interface answers the pointer the way its original did.
+// Each era is drawn in its own interface, the latest era first and every era newest first, and each interface answers the
+// pointer the way its original did.
 import { expect, test, type Locator, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 import yearSummaryData from "../../data/year-summaries.json"
 import { groupEventsByEra } from "../../lib/eras"
-import { eventSource } from "../../lib/event-format"
+import { eventAnchorId, eventSource } from "../../lib/event-format"
 import { encodeHollerith } from "../../lib/hollerith"
+import { newestFirst } from "../../lib/newest-first"
 import { describePace } from "../../lib/pace"
-import { yearsSincePreviousEvent } from "../../lib/year-gaps"
+import { yearsEarlierThanPrevious } from "../../lib/year-gaps"
 import { groupEventsByYear, isBusyYear, latestMonth } from "../../lib/year-groups"
 import type { TimelineEvent } from "../../types/timeline"
 
+// In time order; the page draws them the other way round
 const INTERFACES = ["punch-card", "terminal", "desktop", "notebook", "chat", "agent"]
 
 const erasOfData = groupEventsByEra(timelineData as TimelineEvent[])
 
-// The years an era holds events in, in order
+// The years an era holds events in, the latest first, as the page shows them
 function yearsOf(eraInterface: string) {
   const era = erasOfData.find((candidate) => candidate.interface === eraInterface)!
-  return [...new Set(era.events.map((event) => event.year))]
+  return newestFirst([...new Set(era.events.map((event) => event.year))])
+}
+
+// An era's years and their events, the latest first, as the page shows them
+function yearGroupsOf(eraInterface: string) {
+  return groupEventsByYear(newestFirst(erasOfData.find((candidate) => candidate.interface === eraInterface)!.events))
 }
 
 // React marks hydrated DOM nodes with a fiber key; checks that depend on client
@@ -43,18 +51,25 @@ function styleOf(locator: Locator, property: string) {
   return locator.evaluate((element, name) => getComputedStyle(element).getPropertyValue(name), property)
 }
 
-test("draws the eras in order, each on a backdrop of its own", async ({ page }) => {
+test("draws the eras from the latest to the first, each on a backdrop of its own", async ({ page }) => {
   await page.goto("/")
 
   const eras = await page.locator("section[data-interface]").evaluateAll((sections) =>
     sections.map((section) => ({
       interface: (section as HTMLElement).dataset.interface,
-      backdrop: getComputedStyle(section.firstElementChild!).backgroundColor,
+      backdrop: getComputedStyle(section.querySelector("[data-era-backdrop]")!).backgroundColor,
     })),
   )
 
-  expect(eras.map((era) => era.interface)).toEqual(INTERFACES)
+  expect(eras.map((era) => era.interface)).toEqual(newestFirst(INTERFACES))
   expect(new Set(eras.map((era) => era.backdrop)).size).toBe(INTERFACES.length)
+})
+
+test("lists every event newest first, from the latest at the top of the timeline down to the first", async ({ page }) => {
+  await page.goto("/")
+
+  const ids = await page.locator("section[data-interface] article").evaluateAll((articles) => articles.map((article) => article.id))
+  expect(ids).toEqual(newestFirst(timelineData as TimelineEvent[]).map(eventAnchorId))
 })
 
 test("punches every card in the punch-card era with its title in Hollerith code", async ({ page }) => {
@@ -96,20 +111,21 @@ test("steps the window cascade only slightly, so the dates in the title bars sta
   expect(Math.max(...leftEdges) - Math.min(...leftEdges)).toBeLessThanOrEqual(32)
 })
 
-test("marks each stretch of more than a year between events, ahead of the event that ends it", async ({ page }) => {
+test("marks each stretch of more than a year between events, ahead of the earlier event below it", async ({ page }) => {
   await page.goto("/")
   const erasWithGaps = groupEventsByEra(timelineData as TimelineEvent[]).filter((era) =>
     ["punch-card", "terminal", "desktop"].includes(era.interface),
   )
 
   for (const era of erasWithGaps) {
-    const expected = era.events.flatMap((event, index) => {
-      const years = yearsSincePreviousEvent(era.events, index)
-      return years === null ? [] : [`${years} years later, then ${event.title}`]
+    const shown = newestFirst(era.events)
+    const expected = shown.flatMap((event, index) => {
+      const years = yearsEarlierThanPrevious(shown, index)
+      return years === null ? [] : [`${years} years earlier, then ${event.title}`]
     })
     const marked = await page.locator(`#${era.id} li`).evaluateAll((items) =>
       items.flatMap((item) => {
-        const marker = [...item.children].find((child) => /^\d+ years later$/.test(child.textContent ?? ""))
+        const marker = [...item.children].find((child) => /^\d+ years earlier$/.test(child.textContent ?? ""))
         return marker ? [`${marker.textContent}, then ${item.querySelector("a[data-event-link]")!.textContent}`] : []
       }),
     )
@@ -119,26 +135,50 @@ test("marks each stretch of more than a year between events, ahead of the event 
   }
 })
 
-test("opens each year of the chat thread with the reader's question", async ({ page }) => {
+test("opens each year of the chat thread with the reader's question, the latest year first", async ({ page }) => {
   await page.goto("/")
 
   await expect(page.locator("[data-year-prompt]")).toHaveText(yearsOf("chat").map((year) => `What happened in ${year}?`))
 })
 
-test("starts each year of the agent's log with its task", async ({ page }) => {
+test("starts each year of the agent's log with its task, the year still running first", async ({ page }) => {
   await page.goto("/")
 
   await expect(page.locator("[data-year-task]")).toHaveText(yearsOf("agent").map((year) => `Research ${year}`))
 })
 
-test("notes for each year of the agent's log how many pages it read and from how many sites", async ({ page }) => {
+test("notes beside each year of the agent's log how many sites it read the year's events on", async ({ page }) => {
   await page.goto("/")
 
-  const agentEra = erasOfData.find((candidate) => candidate.interface === "agent")!
-  const notes = groupEventsByYear(agentEra.events).map(
-    ({ events }) => `Read ${events.length} pages from ${new Set(events.map(eventSource)).size} sites`,
-  )
-  await expect(page.locator("[data-year-activity]")).toHaveText(notes)
+  const notes = yearGroupsOf("agent").map(({ events }) => `from ${new Set(events.map(eventSource)).size} sites`)
+  await expect(page.locator("#the-agentic-era [data-year-sites]")).toHaveText(notes)
+})
+
+test("heads the timeline with the current era, marked now, and each era below with the year the rewind passes", async ({ page }) => {
+  await page.goto("/")
+
+  await expect(page.locator("[data-era-marker]")).toHaveText([
+    "Now",
+    "Before 2025",
+    "Before 2020",
+    "Before 2010",
+    "Before 1990",
+    "Before 1970",
+  ])
+})
+
+test("keeps the agent at work just above the newest event, watching for what comes after it", async ({ page }) => {
+  const newest = timelineData[timelineData.length - 1]
+  await page.goto("/")
+
+  const frontier = page.locator("#the-agentic-era [data-frontier]")
+  await expect(frontier).toHaveCount(1)
+  await expect(frontier).toContainText(`Watching for what comes after ${newest.month} ${newest.year}`)
+  const above = await frontier.evaluate((row) => {
+    const first = document.querySelector("#the-agentic-era article")!
+    return Boolean(row.compareDocumentPosition(first) & Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+  expect(above).toBe(true)
 })
 
 test("draws each full step of the agent's log as a call that fetches its source", async ({ page }) => {
@@ -161,12 +201,13 @@ test("draws each full step of the agent's log as a call that fetches its source"
   expect(calls).toEqual(sources.map((source) => `Fetch(${source})`))
 })
 
-test("writes the Generative AI Era in sans-serif and the Agentic Era in monospace", async ({ page }) => {
+test("writes the Generative AI Era's thread in sans-serif and the Agentic Era's console in monospace", async ({ page }) => {
   await page.goto("/")
 
+  // The eras' headers share the page's type, so only what each interface draws is compared
   const monospaced = (eraId: string) =>
     page
-      .locator(`#${eraId} h2, #${eraId} h3, #${eraId} [data-year-summary]`)
+      .locator(`#${eraId} [data-era-backdrop] h3, #${eraId} [data-era-backdrop] [data-year-summary]`)
       .evaluateAll((elements) => [...new Set(elements.map((element) => getComputedStyle(element).fontFamily.includes("monospace")))])
   expect(await monospaced("the-generative-ai-era")).toEqual([false])
   expect(await monospaced("the-agentic-era")).toEqual([true])
@@ -175,24 +216,28 @@ test("writes the Generative AI Era in sans-serif and the Agentic Era in monospac
 test("fills each year's progress bar in the agent's console, to its latest month while the year is still running", async ({ page }) => {
   await page.goto("/")
 
-  const agentYears = groupEventsByYear(erasOfData.find((candidate) => candidate.interface === "agent")!.events)
-  const expected = agentYears.map(({ events }, index) =>
-    index === agentYears.length - 1 ? `${latestMonth(events)}/12 mo` : "12/12 mo",
-  )
+  const expected = yearGroupsOf("agent").map(({ events }, index) => (index === 0 ? `${latestMonth(events)}/12 mo` : "12/12 mo"))
   await expect(page.locator("#the-agentic-era [data-year-progress] [data-progress-label]")).toHaveText(expected)
 })
 
-test("ends the chat thread by typing into its message box the task the agent's console opens with", async ({ page }) => {
+test("ends the agent's console at the instruction it was given, just above the chat thread that handed it over", async ({ page }) => {
   await page.goto("/")
 
-  const typed = await page.locator("#the-generative-ai-era [data-composer-message]").textContent()
-  await expect(page.locator("#the-agentic-era [data-instruction]")).toHaveText(typed!)
+  const instruction = page.locator("#the-agentic-era [data-instruction]")
+  await expect(instruction).toHaveText("Take it from here: research AI from 2025 on, and keep going on your own.")
+  const last = await instruction.evaluate((row) => {
+    const articles = document.querySelectorAll("#the-agentic-era article")
+    return Boolean(articles[articles.length - 1].compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+  expect(last).toBe(true)
 })
 
-test("sums up each year of the chat thread and the agent's log with its summary from the data", async ({ page }) => {
+test("sums up each year of the agent's log and the chat thread with its summary from the data, the latest year first", async ({
+  page,
+}) => {
   await page.goto("/")
 
-  await expect(page.locator("[data-year-summary]")).toHaveText(yearSummaryData.map(({ summary }) => summary))
+  await expect(page.locator("[data-year-summary]")).toHaveText(newestFirst(yearSummaryData).map(({ summary }) => summary))
 })
 
 test("inverts a terminal record's title while the pointer is over it", async ({ page }) => {
@@ -294,7 +339,9 @@ test("dissolves each era into the next through the page's black", async ({ page 
 
   const backdrops = await page
     .locator("section[data-interface]")
-    .evaluateAll((sections) => sections.map((section) => getComputedStyle(section.firstElementChild!).backgroundImage))
+    .evaluateAll((sections) =>
+      sections.map((section) => getComputedStyle(section.querySelector("[data-era-backdrop]")!).backgroundImage),
+    )
 
   expect(backdrops).toHaveLength(INTERFACES.length)
   // The seam comes first, whether other layers follow it or it is the only one
@@ -311,7 +358,7 @@ test("keeps only each busy year's landmarks and highlights in full, and lists th
   expect(busyYears.map((group) => group.year)).toEqual([2022, 2023, 2024, 2025, 2026])
   await expect(page.locator("article")).toHaveCount(timelineData.length)
   for (const group of busyYears) {
-    const fullSize = group.events.filter((event) => event.landmark || event.highlight).map((event) => event.title)
+    const fullSize = newestFirst(group.events.filter((event) => event.landmark || event.highlight).map((event) => event.title))
     const shown = await page
       .locator(`article[data-year="${group.year}"]:not([data-brief])`)
       .evaluateAll((cards) => cards.map((card) => card.querySelector("a[data-event-link]")!.textContent))
@@ -342,10 +389,11 @@ test("shows a busy year in full from its Show all button", async ({ page }) => {
 test("lists the busy years in brief in under half the length of showing them in full", async ({ page }) => {
   await page.goto("/")
   await waitForHydration(page)
-  // The busy years run through the chat thread and the agent's log
-  const busyEras = page.locator("#the-generative-ai-era, #the-agentic-era")
+  // The busy years run through the chat thread and the agent's log. Only the years are measured, since the eras'
+  // introductions and closing lines keep their length either way.
+  const busyGroups = page.locator(busyYears.map((group) => `[data-year-group="${group.year}"]`).join(", "))
   const height = () =>
-    busyEras.evaluateAll((sections) => sections.reduce((sum, section) => sum + section.getBoundingClientRect().height, 0))
+    busyGroups.evaluateAll((groups) => groups.reduce((sum, group) => sum + group.getBoundingClientRect().height, 0))
   const inBrief = await height()
 
   for (const group of busyYears) {
@@ -363,20 +411,20 @@ test("lists the busy years in brief in under half the length of showing them in 
   expect(inBrief).toBeLessThan(inFull / 2)
 })
 
-test("opens the Agentic Era with how much faster the events come", async ({ page }) => {
+test("closes the Agentic Era with how much faster its events came than those below it", async ({ page }) => {
   const pace = describePace(timelineData as TimelineEvent[], 2025)!
   await page.goto("/")
 
   const paceLine = page.locator("[data-pace-line]")
   await expect(paceLine).toHaveText(
-    `The next ${pace.years} years hold ${pace.events} events, ${pace.multiple} times the yearly pace of the ${pace.yearsBefore} years before them.`,
+    `The last ${pace.years} years hold ${pace.events} events, ${pace.multiple} times the yearly pace of the ${pace.yearsBefore} years before them.`,
   )
   const order = await paceLine.evaluate((line) => {
     const chat = document.getElementById("the-generative-ai-era")!
     const agent = document.getElementById("the-agentic-era")!
     return [
-      Boolean(chat.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
-      Boolean(line.compareDocumentPosition(agent) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(agent.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING),
+      Boolean(line.compareDocumentPosition(chat) & Node.DOCUMENT_POSITION_FOLLOWING),
     ]
   })
   expect(order).toEqual([true, true])
@@ -385,7 +433,7 @@ test("opens the Agentic Era with how much faster the events come", async ({ page
 const PHONE = { width: 390, height: 844 }
 const TABLET = { width: 900, height: 1000 }
 
-const foundationCards = groupEventsByEra(timelineData as TimelineEvent[])[0].events.map((event) => ({
+const foundationCards = newestFirst(groupEventsByEra(timelineData as TimelineEvent[])[0].events).map((event) => ({
   description: event.description,
   fields: [event.category, eventSource(event)],
 }))
@@ -460,7 +508,7 @@ async function notebookPrompts(page: Page) {
 test("prompts each notebook code cell and its output with In [n]: and Out[n]:", async ({ page }) => {
   const prompts = await notebookPrompts(page)
 
-  expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 2}]: shown`, `Out[${index + 2}]: shown`]))
+  expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 1}]: shown`, `Out[${index + 1}]: shown`]))
 })
 
 test("shows each brief event's date before its title on a wide screen", async ({ page }) => {
@@ -518,7 +566,7 @@ test.describe(`on a phone (${PHONE.width}x${PHONE.height})`, () => {
   test("follows each notebook code cell with its output, keeping only the In [n]: prompt", async ({ page }) => {
     const prompts = await notebookPrompts(page)
 
-    expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 2}]: shown`, `Out[${index + 2}]: left out`]))
+    expect(prompts).toEqual(prompts.map((_, index) => [`In [${index + 1}]: shown`, `Out[${index + 1}]: left out`]))
   })
 
   test("leaves each brief event's date to its month's divider, still in the text screen readers hear", async ({ page }) => {

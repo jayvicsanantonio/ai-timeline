@@ -1,4 +1,5 @@
-// Draws the Knowledge Era as a session on a green-phosphor terminal, the screen of the expert-system years, its records grouped by year.
+// Draws the Knowledge Era as a session on a green-phosphor terminal, the screen of the expert-system years, listing its records
+// newest first, grouped by year.
 // Each event is recalled at a command prompt that prints its date, with its title, category, description and source.
 'use client';
 
@@ -6,73 +7,34 @@ import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-forma
 import { groupEventsByYear } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import {
-  CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
   YearColumn,
   YearGap,
-  eraEventCount,
-  eraHeadingId,
   eventCardAttributes,
   type EraInterfaceProps,
 } from './era-parts';
 
-export function TerminalEra({ era, totalEvents }: EraInterfaceProps) {
-  if (era.events.length === 0) {
-    return (
-      <div className="terminal-room px-3 py-6 sm:px-6">
-        <div className="crt-scanlines mx-auto max-w-4xl rounded-2xl border border-[#173b26] bg-[#04100a] px-5 py-4 font-mono text-[#5cf09a] shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] sm:px-8">
-          <CompactEraText
-            era={era}
-            totalEvents={totalEvents}
-            metaClassName="text-[11px] uppercase tracking-[0.2em] text-[#38b874]"
-            headingClassName="crt-glow mt-1 text-xl font-bold uppercase tracking-[0.04em] text-[#9dffc4]"
-            messageClassName="mt-1 text-xs uppercase tracking-[0.12em]"
-          />
-        </div>
-      </div>
-    );
-  }
-
+export function TerminalEra({ era }: EraInterfaceProps) {
   const years = groupEventsByYear(era.events);
 
   return (
-    <div className="terminal-room px-3 py-24 sm:px-6 sm:py-32">
-      <div className="crt-screen crt-scanlines mx-auto max-w-4xl rounded-[1.75rem] border border-[#173b26] bg-[#04100a] px-5 py-8 font-mono text-[#5cf09a] sm:rounded-[2.5rem] sm:px-12 sm:py-14">
-        <header>
-          <p
-            aria-hidden="true"
-            className="flex flex-wrap justify-between gap-x-4 border-b border-[#1d5236] pb-3 text-[11px] uppercase tracking-[0.25em] text-[#38b874]"
-          >
+    <div data-era-backdrop="" className="terminal-room px-3 pb-16 pt-6 sm:px-6 sm:pb-24 sm:pt-8">
+      <div className="crt-screen crt-scanlines mx-auto max-w-4xl rounded-[1.75rem] border border-[#173b26] bg-[#04100a] px-5 py-8 font-mono text-[#5cf09a] sm:rounded-[2.5rem] sm:px-12 sm:py-12">
+        <div aria-hidden="true">
+          <p className="flex flex-wrap justify-between gap-x-4 border-b border-[#1d5236] pb-3 text-[11px] uppercase tracking-[0.25em] text-[#38b874]">
             <span>Knowledge base terminal</span>
             <span>Mem 64K OK</span>
           </p>
-          <p className="mt-6 text-sm uppercase tracking-[0.2em] text-[#38b874]">
-            {era.chapter} <span aria-hidden="true">·</span> {era.subtitle}
-          </p>
-          <p aria-hidden="true" className="mt-2 text-sm text-[#38b874]">
+          <p className="mt-4 text-sm text-[#38b874]">
             READY.
             <br />
-            &gt; RUN {era.label.toUpperCase().replace(/\s+/g, '.')}
+            &gt; LIST {era.label.toUpperCase().replace(/\s+/g, '.')}, NEWEST FIRST
           </p>
-          <h2
-            id={eraHeadingId(era)}
-            tabIndex={-1}
-            className="crt-glow mt-6 text-3xl font-bold uppercase leading-tight tracking-[0.04em] text-[#9dffc4] focus:outline-none sm:text-5xl"
-          >
-            {era.name}
-          </h2>
-          <p className="mt-6 max-w-3xl text-sm leading-7 text-[#5cf09a] sm:text-base sm:leading-8">
-            {era.description}
-          </p>
-          <p className="mt-6 text-xs uppercase tracking-[0.25em] text-[#38b874]">
-            {eraEventCount(era, totalEvents)} found <span aria-hidden="true">·</span>{' '}
-            {era.interfaceName}
-          </p>
-        </header>
+        </div>
 
-        <ol className="mt-10 border-b border-dashed border-[#1d5236]">
+        <ol className="mt-6 border-b border-dashed border-[#1d5236]">
           {years.map((group, index) => (
             <li key={group.year} className="border-t border-dashed border-[#1d5236]">
               <YearGap

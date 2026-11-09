@@ -14,8 +14,9 @@ This project presents the complete history of artificial intelligence through an
 ### Key Features
 
 - **Comprehensive Dataset**: 340 meticulously researched AI milestones with verified sources
+- **Latest First**: The page opens on the newest events, each saying how long ago it happened, and rewinds from now back to 1943, every era its latest year and its latest event first under a header that says where the rewind has reached
 - **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook, a chat thread and an agent's task log
-- **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–5 and /
+- **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–6 and /
 - **Landmarks and Sources**: Twenty-six turning points stand out across the eras, and each card names the site its link opens
 - **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread and the agent's task log sum up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
 - **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
@@ -36,11 +37,12 @@ This project presents the complete history of artificial intelligence through an
 ```
 components/
 ├── storytelling/            # Narrative-driven components
-│   ├── story-engine.tsx     # Main orchestrator, holds the search and category filters
-│   ├── prologue-scene.tsx   # Opening: title, events-per-year chart and era tiles
-│   └── epilogue-scene.tsx   # Closing sequence
+│   ├── story-engine.tsx     # Main orchestrator, holds the search and category filters and orders the eras newest first
+│   ├── prologue-scene.tsx   # Opening: title, latest events, era links and a slim events-per-year chart
+│   └── epilogue-scene.tsx   # Closing: where the rewind ends, at the first event
 ├── eras/                    # One interface per era
-│   ├── era-chapter.tsx      # The era's section, drawn in its interface
+│   ├── era-chapter.tsx      # The era's section: its shared header, then its interface
+│   ├── era-header.tsx       # The header every era shares, marked Now or Before {year}
 │   ├── punch-card-era.tsx   # Foundation Era: 80-column punch cards
 │   ├── terminal-era.tsx     # Knowledge Era: green-phosphor terminal
 │   ├── desktop-era.tsx      # Learning Era: beveled desktop windows

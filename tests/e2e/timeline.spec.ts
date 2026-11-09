@@ -1,5 +1,5 @@
 // End-to-end tests for the timeline page in a real Next.js server: error-free loading with and without reduced
-// motion, cards that settle in place, card dates, the opening's events-per-year chart and an insight stat.
+// motion, cards that settle in place, card dates, the opening's latest events and events-per-year chart and an insight stat.
 import { expect, test, type Page } from "@playwright/test"
 import timelineData from "../../data/timeline-events.json"
 
@@ -92,9 +92,11 @@ test("charts every year from the first event to the last, and labels the busiest
   await expect(chart).toContainText(`${busiestCount} events in ${busiestYear}`)
 })
 
-test("jumps to a year's first event from its bar in the opening chart, as the chart's hint says", async ({ page }) => {
+test("jumps to a year's first event on the page, its latest, from its bar in the opening chart, as the chart's hint says", async ({
+  page,
+}) => {
   const year = 1956
-  const firstOfYear = timelineData.find((event) => event.year === year)!
+  const firstOfYear = [...timelineData].reverse().find((event) => event.year === year)!
   // Some eras set titles in capitals, so the link is matched by its whole title in any case
   const escapedTitle = firstOfYear.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 
@@ -107,6 +109,28 @@ test("jumps to a year's first event from its bar in the opening chart, as the ch
     await chart.locator(`[data-year-bar][data-year="${year}"]`).click()
     await expect(page.getByRole("link", { name: new RegExp(`^${escapedTitle}$`, "i") })).toBeFocused({ timeout: 1000 })
   }).toPass({ timeout: 15_000 })
+})
+
+test("opens with the latest events, each jumping to its card in the timeline", async ({ page }) => {
+  const newest = timelineData.slice(-3).reverse()
+
+  await page.goto("/")
+
+  const latest = page.getByRole("list", { name: "Latest" }).getByRole("link")
+  await expect(latest).toHaveCount(3)
+  for (const [index, event] of newest.entries()) {
+    await expect(latest.nth(index)).toContainText(event.title)
+  }
+  await expect(latest.first()).toBeInViewport()
+
+  // The links answer clicks once the page hydrates, so the first click repeats until it lands
+  const escapedTitle = newest[1].title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  const card = page.getByRole("link", { name: new RegExp(`^${escapedTitle}$`, "i") })
+  await expect(async () => {
+    await latest.nth(1).click()
+    await expect(card).toBeFocused({ timeout: 1000 })
+  }).toPass({ timeout: 15_000 })
+  await expect(card).toBeInViewport()
 })
 
 test("compares the Agentic Era's events a year with the Generative AI Era's in Timeline Insights, from the real events", async ({ page }) => {

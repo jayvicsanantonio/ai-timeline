@@ -67,7 +67,15 @@ describe.each(["horizontal", "vertical"] as const)("ActivityChart drawn %s", (or
     expect(bars(container).map((bar) => bar.dataset.current)).toEqual(["false", "false", "true", "false"])
   })
 
-  it("is hidden from assistive technology, which reaches the same places through the chapter buttons", () => {
+  it("draws the years from the start of its axis, left to right when horizontal and from the latest at the top when vertical", () => {
+    const { container } = render(<ActivityChart activity={activity} orientation={orientation} className="h-40 w-40" />)
+
+    const starts = bars(container).map((bar) => bar.getBoundingClientRect()[orientation === "horizontal" ? "left" : "top"])
+    const ordered = orientation === "horizontal" ? [...starts].sort((a, b) => a - b) : [...starts].sort((a, b) => b - a)
+    expect(starts).toEqual(ordered)
+  })
+
+  it("is hidden from assistive technology, which reaches the same places through the era buttons", () => {
     const { container } = render(<ActivityChart activity={activity} orientation={orientation} />)
 
     expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true")
@@ -107,6 +115,16 @@ describe("ActivityChart interaction", () => {
 
     await userEvent.hover(bars(container)[2])
     expect(getByText("1970 · 1 of 4 events")).toBeVisible()
+  })
+
+  it("reads out the year beside its bar on a vertical chart, which runs the latest year at the top", async () => {
+    const { container, getByText } = render(<ActivityChart activity={activity} orientation="vertical" className="h-80 w-40" />)
+
+    await userEvent.hover(bars(container)[3])
+    const readout = getByText("1971 · 0 of 1 event").getBoundingClientRect()
+    const bar = bars(container)[3].getBoundingClientRect()
+    expect(readout.top).toBeLessThanOrEqual(bar.top + bar.height / 2)
+    expect(readout.bottom).toBeGreaterThanOrEqual(bar.top)
   })
 
   it("picks a year that has events to show", async () => {

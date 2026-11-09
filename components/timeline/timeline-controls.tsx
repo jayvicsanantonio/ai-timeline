@@ -1,10 +1,12 @@
-// The timeline's toolbar: a search box, a panel of category toggles and a live count of the events shown.
-// The filters narrow every era at once, and the panel closes on Escape, on a click outside or from its toggle.
+// The timeline's toolbar: a search box, a panel of category toggles, a live count of the events shown and a reminder that
+// the timeline reads newest first. The filters narrow every era at once, and the panel closes on Escape, on a click
+// outside or from its toggle.
 'use client';
 
-import { ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowDownWideNarrow, ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type Ref } from 'react';
 import { CategoryIcon } from '@/components/ui/category-icon';
+import { ERA_DEFINITIONS } from '@/lib/eras';
 import { isFiltering, NO_FILTERS, type TimelineFilters } from '@/lib/timeline-filter';
 import { cn } from '@/lib/utils';
 import { TIMELINE_CATEGORIES, type TimelineCategory } from '@/types/timeline';
@@ -179,6 +181,13 @@ export function TimelineControls({
           ) : null}
         </div>
 
+        {/* The toolbar stays in view, so the order is never in doubt deep in the timeline. Phones have no room
+            for it, but screen readers hear it there too. */}
+        <p data-timeline-order="" className="sr-only text-sm text-zinc-400 sm:not-sr-only sm:inline-flex sm:items-center sm:gap-1.5">
+          <ArrowDownWideNarrow aria-hidden="true" className="size-4 shrink-0" />
+          Newest first
+        </p>
+
         <p
           aria-hidden="true"
           className="ml-auto hidden items-center gap-1.5 text-xs text-zinc-500 xl:flex"
@@ -189,7 +198,9 @@ export function TimelineControls({
           <span className="px-1">·</span>
           <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">1</kbd>
           –
-          <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">5</kbd>
+          <kbd className="rounded border border-white/15 px-1.5 font-mono text-[11px] text-zinc-300">
+            {ERA_DEFINITIONS.length}
+          </kbd>
           eras
         </p>
 

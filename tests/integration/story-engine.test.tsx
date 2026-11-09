@@ -1,5 +1,5 @@
 // Integration tests for StoryEngine with the real timeline data in Chromium.
-// Covers the six era interfaces in order, searching and filtering across every era, and the keyboard shortcuts.
+// Covers the six era interfaces, the latest first, searching and filtering across every era, and the keyboard shortcuts.
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 import { userEvent } from "vitest/browser"
@@ -7,6 +7,8 @@ import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
 import { StoryEngine } from "@/components/storytelling/story-engine"
 import timelineData from "@/data/timeline-events.json"
 import { ERA_DEFINITIONS, groupEventsByEra } from "@/lib/eras"
+import { eventAnchorId } from "@/lib/event-format"
+import { newestFirst } from "@/lib/newest-first"
 import { filterEvents } from "@/lib/timeline-filter"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 
@@ -21,14 +23,31 @@ afterEach(() => {
 })
 
 describe("StoryEngine", () => {
-  it("draws the eras in order, each in its own interface", () => {
+  it("draws the eras from the latest to the first, each in its own interface", () => {
+    const { container } = render(<StoryEngine events={events} />)
+
+    const sections = [...container.querySelectorAll<HTMLElement>("section[data-interface]")]
+    expect(sections.map((section) => section.dataset.interface)).toEqual(["agent", "chat", "notebook", "desktop", "terminal", "punch-card"])
+    expect(sections.map((section) => section.id)).toEqual(newestFirst(ERA_DEFINITIONS).map((era) => era.id))
+    expect(eventCards()).toHaveLength(events.length)
+  })
+
+  it("lists every event newest first, from the latest at the top of the timeline down to the first", () => {
     render(<StoryEngine events={events} />)
 
-    const interfaces = ERA_DEFINITIONS.map(
-      (era) => screen.getByRole("region", { name: era.name }).dataset.interface,
+    expect(eventCards().map((card) => card.id)).toEqual(newestFirst(events).map(eventAnchorId))
+  })
+
+  it("opens with the latest events, each linking to its card", () => {
+    render(<StoryEngine events={events} />)
+
+    const latest = within(screen.getByRole("list", { name: "Latest" })).getAllByRole("link")
+    expect(latest.map((link) => link.getAttribute("href"))).toEqual(
+      newestFirst(events.slice(-3)).map((event) => `#${eventAnchorId(event)}`),
     )
-    expect(interfaces).toEqual(["punch-card", "terminal", "desktop", "notebook", "chat", "agent"])
-    expect(eventCards()).toHaveLength(events.length)
+    for (const link of latest) {
+      expect(document.getElementById(link.getAttribute("href")!.slice(1))).toBeInstanceOf(HTMLElement)
+    }
   })
 
   it("narrows every era to the events that match a search", async () => {
@@ -36,7 +55,7 @@ describe("StoryEngine", () => {
 
     await userEvent.type(screen.getByRole("searchbox", { name: "Search events" }), "chess")
 
-    const matches = filterEvents(events, { categories: [], query: "chess" })
+    const matches = newestFirst(filterEvents(events, { categories: [], query: "chess" }))
     expect(matches.length).toBeGreaterThan(0)
     await expect.poll(() => eventCards().length).toBe(matches.length)
     expect(eventCards().map((card) => within(card).getByRole("link").textContent)).toEqual(
@@ -63,20 +82,22 @@ describe("StoryEngine", () => {
     }
   })
 
-  it("moves focus to the first event with J", async () => {
+  it("moves focus to the latest event with J, the first on the page", async () => {
     render(<StoryEngine events={events} />)
 
     await userEvent.keyboard("j")
 
-    expect(screen.getByRole("link", { name: events[0].title })).toHaveFocus()
+    expect(screen.getByRole("link", { name: events.at(-1)!.title })).toHaveFocus()
   })
 
-  it("jumps to an era's title with its number key", async () => {
+  it("jumps to an era's title with its number key, counting down the page from the era at the top", async () => {
     render(<StoryEngine events={events} />)
 
-    await userEvent.keyboard("4")
+    await userEvent.keyboard("1")
+    expect(screen.getByRole("heading", { level: 2, name: "The Agentic Era" })).toHaveFocus()
 
-    expect(screen.getByRole("heading", { level: 2, name: "The Deep Learning Revolution" })).toHaveFocus()
+    await userEvent.keyboard("4")
+    expect(screen.getByRole("heading", { level: 2, name: "The Learning Era" })).toHaveFocus()
   })
 
   it("focuses the search box with /", async () => {
@@ -87,17 +108,37 @@ describe("StoryEngine", () => {
     expect(screen.getByRole("searchbox", { name: "Search events" })).toHaveFocus()
   })
 
-  it("opens the final era with how much faster its events come, between it and the era before", () => {
+  it("closes the latest era with how much faster its events came, between it and the era before", () => {
     const { container } = render(<StoryEngine events={events} />)
 
     const paceLine = container.querySelector("[data-pace-line]")!
     expect(paceLine).toHaveTextContent(
-      "The next 2 years hold 80 events, 13 times the yearly pace of the 82 years before them.",
+      "The last 2 years hold 80 events, 13 times the yearly pace of the 82 years before them.",
     )
-    const generative = screen.getByRole("region", { name: "The Generative AI Era" })
     const agentic = screen.getByRole("region", { name: "The Agentic Era" })
-    expect(generative.compareDocumentPosition(paceLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(paceLine.compareDocumentPosition(agentic) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const generative = screen.getByRole("region", { name: "The Generative AI Era" })
+    expect(agentic.compareDocumentPosition(paceLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(paceLine.compareDocumentPosition(generative) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it("ends the page where the timeline began, and links back up to now", () => {
+    render(<StoryEngine events={events} />)
+
+    expect(screen.getByRole("heading", { level: 2, name: "Where It Began" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Back to now" })).toHaveAttribute("href", "#the-agentic-era")
+  })
+
+  it("heads the timeline with the current era, marked now, and every era below it with the year it rewinds past", () => {
+    const { container } = render(<StoryEngine events={events} />)
+
+    expect([...container.querySelectorAll("[data-era-marker]")].map((marker) => marker.textContent)).toEqual([
+      "Now",
+      "Before 2025",
+      "Before 2020",
+      "Before 2010",
+      "Before 1990",
+      "Before 1970",
+    ])
   })
 
   it("leaves the pace line out while the reader filters", async () => {

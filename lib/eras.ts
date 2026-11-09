@@ -20,8 +20,6 @@ export interface EraDefinition {
 
 export interface Era extends EraDefinition {
   index: number;
-  chapter: string;
-  number: string;
   subtitle: string;
   events: TimelineEvent[];
 }
@@ -95,20 +93,26 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
   },
 ];
 
-// An era of whole decades is named by its decades, and one that starts or ends mid-decade by its years
+// An era of whole decades is named by its decades, and one that starts or ends mid-decade by its years.
+// The current era runs to now, the top of the timeline.
 function formatSubtitle(range: EraDefinition['range'], isCurrentEra: boolean) {
   const [start, end] = range;
   if (start % 10 !== 0 || end % 10 !== 0) {
-    return `${start} – ${isCurrentEra ? 'Present' : end - 1}`;
+    return `${start} – ${isCurrentEra ? 'now' : end - 1}`;
   }
 
   const firstDecade = `${start}s`;
   if (isCurrentEra) {
-    return `${firstDecade} – Present`;
+    return `${firstDecade} – now`;
   }
 
   const lastDecade = `${end - 10}s`;
   return firstDecade === lastDecade ? firstDecade : `${firstDecade} – ${lastDecade}`;
+}
+
+// The era still under way, which the timeline opens with
+export function isCurrentEra(era: Pick<EraDefinition, 'id'>) {
+  return era.id === ERA_DEFINITIONS[ERA_DEFINITIONS.length - 1].id;
 }
 
 export function getEraForYear(year: number) {
@@ -119,8 +123,6 @@ export function groupEventsByEra(events: TimelineEvent[]): Era[] {
   return ERA_DEFINITIONS.map((era, index) => ({
     ...era,
     index,
-    chapter: `Chapter ${index + 1}`,
-    number: String(index + 1).padStart(2, '0'),
     subtitle: formatSubtitle(era.range, index === ERA_DEFINITIONS.length - 1),
     events: events.filter((event) => getEraForYear(event.year)?.id === era.id),
   }));

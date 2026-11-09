@@ -1,4 +1,5 @@
-// Draws the Deep Learning Revolution as a research notebook open on a dark desk, the tool of the 2010s neural network boom, with a heading for each year.
+// Draws the Deep Learning Revolution as a research notebook open on a dark desk, the tool of the 2010s neural network boom, with a
+// heading for each year and the latest cells first.
 // Each event is a code cell that records the milestone's date and title, followed by an output cell that describes it.
 'use client';
 
@@ -7,47 +8,21 @@ import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-forma
 import { groupEventsByYear } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import {
-  CompactEraText,
   EventHeading,
   EventSource,
   LANDMARK_LABEL,
   YearColumn,
   countOf,
-  eraEventCount,
-  eraHeadingId,
   eventCardAttributes,
   type EraInterfaceProps,
 } from './era-parts';
 
-// The introduction runs the notebook's first cell, so the events start at cell 2
-const FIRST_EVENT_CELL = 2;
+// The events fill the notebook's cells from the first
+const FIRST_EVENT_CELL = 1;
 
-export function NotebookEra({ era, totalEvents }: EraInterfaceProps) {
-  if (era.events.length === 0) {
-    return (
-      <div className="notebook-desk px-3 py-6 text-[#1f1f1f] sm:px-6">
-        <div className="mx-auto max-w-4xl rounded-lg bg-white px-3 py-4 ring-1 ring-black/10 sm:px-6">
-          <div className="notebook-cell">
-            <span aria-hidden="true" className="notebook-prompt text-[#303f9f]">
-              In [1]:
-            </span>
-            <div className="min-w-0 py-1">
-              <CompactEraText
-                era={era}
-                totalEvents={totalEvents}
-                metaClassName="text-[13px] text-[#5f5f5f]"
-                headingClassName="mt-0.5 text-xl font-bold tracking-tight"
-                messageClassName="mt-0.5 font-mono text-[13px] text-[#a31515]"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+export function NotebookEra({ era }: EraInterfaceProps) {
   return (
-    <div className="notebook-desk px-3 py-24 text-[#1f1f1f] sm:px-6 sm:py-32">
+    <div data-era-backdrop="" className="notebook-desk px-3 pb-16 pt-6 text-[#1f1f1f] sm:px-6 sm:pb-24 sm:pt-8">
       <div className="mx-auto max-w-4xl overflow-hidden rounded-lg bg-white shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] ring-1 ring-black/10">
         <div
           aria-hidden="true"
@@ -59,43 +34,8 @@ export function NotebookEra({ era, totalEvents }: EraInterfaceProps) {
           </span>
         </div>
 
-        <div className="px-3 py-8 sm:px-6 sm:py-10">
-          <header className="notebook-cell">
-            <span aria-hidden="true" />
-            <div className="min-w-0">
-              <p className="text-sm text-[#5f5f5f]">
-                {era.chapter} <span aria-hidden="true">·</span> {era.subtitle}
-              </p>
-              <h2
-                id={eraHeadingId(era)}
-                tabIndex={-1}
-                className="mt-2 text-3xl font-bold tracking-tight focus:outline-none sm:text-5xl"
-              >
-                {era.name}
-              </h2>
-              <p className="mt-4 text-base leading-7 text-[#333]">{era.description}</p>
-              <p className="mt-3 text-sm text-[#5f5f5f]">{era.interfaceName}</p>
-            </div>
-          </header>
-
-          <div className="notebook-cell mt-6">
-            <span aria-hidden="true" className="notebook-prompt text-[#303f9f]">
-              In [1]:
-            </span>
-            <p className="notebook-code">
-              <span aria-hidden="true">len(</span>
-              <span aria-hidden="true" className="text-[#008000]">
-                events
-              </span>
-              <span aria-hidden="true">)</span>
-            </p>
-            <span aria-hidden="true" className="notebook-prompt text-[#d84315]">
-              Out[1]:
-            </span>
-            <p className="notebook-output font-mono text-sm">{eraEventCount(era, totalEvents)}</p>
-          </div>
-
-          <ol className="mt-2">
+        <div className="px-3 py-6 sm:px-6 sm:py-8">
+          <ol>
             {groupEventsByYear(era.events).map((group) => (
               <li
                 key={group.year}

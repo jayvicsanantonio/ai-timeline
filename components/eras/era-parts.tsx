@@ -1,17 +1,19 @@
 // Pieces every era interface shares: its props, the heading id, the event count, card attributes, the event title, the year column
-// and a busy year's brief listing.
+// and a busy year's brief listing. Each era's header is drawn once for all of them, in era-header.
 // The title's link stretches over its whole event card, so a click anywhere on the card opens the source.
 'use client';
 
 import { useId, useState, type ReactNode } from 'react';
 import type { Era } from '@/lib/eras';
 import { eventAnchorId, eventSource } from '@/lib/event-format';
-import { yearsSincePreviousEvent } from '@/lib/year-gaps';
+import { yearsEarlierThanPrevious } from '@/lib/year-gaps';
 import { isBusyYear, type YearGroup } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import { cn } from '@/lib/utils';
 
 export interface EraInterfaceProps {
+  // The era with its events newest first, the order every interface draws them in (`erasNewestFirst`). It has at least
+  // one event: an era the filters empty shows only its header.
   era: Era;
   // How many events the era has before filters are applied
   totalEvents: number;
@@ -101,21 +103,22 @@ export function countOf(count: number, noun: string) {
 }
 
 interface YearGapProps {
-  // Events, or years of events, in order
+  // Events, or years of events, newest first
   events: Pick<TimelineEvent, 'year'>[];
   index: number;
   className?: string;
 }
 
-// Says how many years passed before the entry at `index` when more than one did, so an era's
-// quiet stretches show between its cards. It goes ahead of the cards, outside them.
+// Says how many years earlier the entry at `index` came than the one above it when more than one
+// year lies between them, so an era's quiet stretches show between its cards. It goes ahead of the
+// cards, outside them.
 export function YearGap({ events, index, className }: YearGapProps) {
-  const years = yearsSincePreviousEvent(events, index);
+  const years = yearsEarlierThanPrevious(events, index);
   if (years === null) {
     return null;
   }
 
-  return <p className={className}>{years} years later</p>;
+  return <p className={className}>{years} years earlier</p>;
 }
 
 interface YearColumnProps {
@@ -153,37 +156,4 @@ export function useBriefListing(group: YearGroup, filtering: boolean) {
     toggleShowAll: () => setShowAll((shown) => !shown),
     inBrief: (event: TimelineEvent) => offersShowAll && !showAll && !event.landmark && !event.highlight,
   };
-}
-
-interface CompactEraTextProps extends EraInterfaceProps {
-  metaClassName?: string;
-  headingClassName?: string;
-  messageClassName?: string;
-}
-
-// An era that the filters have emptied shrinks to its title, chapter, count and a note, so the
-// matching events below come into view sooner
-export function CompactEraText({
-  era,
-  totalEvents,
-  metaClassName,
-  headingClassName,
-  messageClassName,
-}: CompactEraTextProps) {
-  return (
-    <>
-      <p className={metaClassName}>
-        {era.chapter} <span aria-hidden="true">·</span> {era.subtitle} <span aria-hidden="true">·</span>{' '}
-        {eraEventCount(era, totalEvents)}
-      </p>
-      <h2
-        id={eraHeadingId(era)}
-        tabIndex={-1}
-        className={cn('focus:outline-none', headingClassName)}
-      >
-        {era.name}
-      </h2>
-      <p className={messageClassName}>{NO_MATCHING_EVENTS}</p>
-    </>
-  );
 }

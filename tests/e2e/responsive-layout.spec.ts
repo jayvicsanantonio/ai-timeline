@@ -1,5 +1,5 @@
 // End-to-end layout tests at phone, tablet and desktop widths: nothing runs off the side of the screen, the toolbar
-// sticks while reading, and the chapter nav fits each width as a rail on wide screens and a compact bar on phones.
+// sticks while reading, and the era navigation fits each width as a rail on wide screens and a compact bar on phones.
 import { expect, test, type Page } from "@playwright/test"
 
 const PHONE = { width: 375, height: 812 }
@@ -7,10 +7,10 @@ const PHONE_LANDSCAPE = { width: 812, height: 320 }
 const TABLET = { width: 900, height: 1000 }
 const DESKTOP = { width: 1280, height: 800 }
 
-// Height budget for the collapsed phone chapter nav, about 7% of an 812px screen.
+// Height budget for the collapsed phone era navigation, about 7% of an 812px screen.
 const MAX_PHONE_NAV_HEIGHT = 56
 
-const CHAPTER_NAV = 'nav[aria-label="Timeline chapter navigation"]'
+const ERA_NAV = 'nav[aria-label="Timeline navigation"]'
 
 // React marks hydrated DOM nodes with a fiber key; checks that depend on client
 // effects wait for it so they cannot pass against the server-rendered HTML alone.
@@ -21,14 +21,14 @@ async function waitForHydration(page: Page) {
   })
 }
 
-// The chapter nav stays out of the way over the opening, so tests that use it start in the first era.
+// The era navigation stays out of the way over the opening, so tests that use it start in the latest era, at the top of the timeline.
 async function enterTimeline(page: Page) {
   await page.goto("/")
   await waitForHydration(page)
-  await page.locator("#the-foundation-era").evaluate((section) =>
+  await page.locator("#the-agentic-era").evaluate((section) =>
     section.scrollIntoView({ behavior: "instant" as ScrollBehavior }),
   )
-  await expect(page.locator(CHAPTER_NAV).filter({ visible: true })).toHaveCount(1)
+  await expect(page.locator(ERA_NAV).filter({ visible: true })).toHaveCount(1)
 }
 
 for (const [device, viewport] of Object.entries({ phone: PHONE, tablet: TABLET, desktop: DESKTOP })) {
@@ -77,18 +77,18 @@ for (const [device, viewport] of Object.entries({ phone: PHONE, tablet: TABLET, 
 test.describe(`desktop layout at ${DESKTOP.width}x${DESKTOP.height}`, () => {
   test.use({ viewport: DESKTOP })
 
-  test("keeps the chapter nav out of the way over the opening", async ({ page }) => {
+  test("keeps the era navigation out of the way over the opening", async ({ page }) => {
     await page.goto("/")
     await waitForHydration(page)
 
-    await expect(page.locator(CHAPTER_NAV).filter({ visible: true })).toHaveCount(0)
+    await expect(page.locator(ERA_NAV).filter({ visible: true })).toHaveCount(0)
   })
 
   test("shows the side rail in the timeline instead of the phone bar", async ({ page }) => {
     await enterTimeline(page)
 
-    const rail = page.locator(CHAPTER_NAV).filter({ visible: true })
-    await expect(rail.getByRole("button", { name: "Chapter 1: Foundation Era" })).toBeVisible()
+    const rail = page.locator(ERA_NAV).filter({ visible: true })
+    await expect(rail.getByRole("button", { name: "Foundation Era, 1940s – 1960s" })).toBeVisible()
     await expect(page.getByRole("button", { name: /current era/i })).toBeHidden()
   })
 
@@ -99,8 +99,8 @@ test.describe(`desktop layout at ${DESKTOP.width}x${DESKTOP.height}`, () => {
       .getByRole("heading", { level: 3, name: "IBM Deep Blue Defeats Garry Kasparov" })
       .evaluate((heading) => heading.closest("article")!.scrollIntoView({ block: "center", behavior: "instant" as ScrollBehavior }))
 
-    const rail = page.locator(CHAPTER_NAV).filter({ visible: true })
-    await expect(rail.getByRole("button", { name: "Chapter 3: Learning Era" })).toHaveAttribute("aria-current", "location")
+    const rail = page.locator(ERA_NAV).filter({ visible: true })
+    await expect(rail.getByRole("button", { name: "Learning Era, 1990s – 2000s" })).toHaveAttribute("aria-current", "location")
     await expect(rail.getByText("1997", { exact: true })).toBeVisible()
     await expect(rail.getByText("May", { exact: true })).toBeVisible()
   })
@@ -108,54 +108,54 @@ test.describe(`desktop layout at ${DESKTOP.width}x${DESKTOP.height}`, () => {
   test("keeps every era's events and year columns clear of the rail", async ({ page }) => {
     await enterTimeline(page)
 
-    const underRail = await page.evaluate((chapterNav) => {
-      const rail = [...document.querySelectorAll(chapterNav)]
+    const underRail = await page.evaluate((eraNav) => {
+      const rail = [...document.querySelectorAll(eraNav)]
         .map((nav) => nav.getBoundingClientRect())
         .find((box) => box.width > 0)!
       return [...document.querySelectorAll("section[data-interface] article, [data-year-column]")]
         .filter((element) => element.getBoundingClientRect().right > rail.left)
         .map((element) => element.id || `year ${element.getAttribute("data-year-column")}`)
-    }, CHAPTER_NAV)
+    }, ERA_NAV)
 
     expect(underRail).toEqual([])
   })
 })
 
-test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
+test.describe(`era navigation on a phone (${PHONE.width}x${PHONE.height})`, () => {
   test.use({ viewport: PHONE })
 
   test("collapses to a single bar that names the current era", async ({ page }) => {
     await enterTimeline(page)
 
-    const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
+    const nav = page.locator(ERA_NAV).filter({ visible: true })
     expect((await nav.boundingBox())!.height).toBeLessThanOrEqual(MAX_PHONE_NAV_HEIGHT)
 
     const toggle = nav.getByRole("button", { name: /current era/i })
     await expect(toggle).toHaveAttribute("aria-expanded", "false")
-    await expect(toggle).toContainText("Foundation Era")
-    await expect(toggle).toContainText("01 / 06")
+    await expect(toggle).toContainText("Agentic Era")
+    await expect(toggle).toContainText("2026")
   })
 
-  test("opens the chapter list from the bar and closes it on a second tap", async ({ page }) => {
+  test("opens the list of eras from the bar and closes it on a second tap", async ({ page }) => {
     await enterTimeline(page)
 
-    const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
+    const nav = page.locator(ERA_NAV).filter({ visible: true })
     const toggle = nav.getByRole("button", { name: /current era/i })
 
     await toggle.click()
     await expect(toggle).toHaveAttribute("aria-expanded", "true")
-    const chapterList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
-    await expect(chapterList.getByRole("button")).toHaveCount(6)
+    const eraList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
+    await expect(eraList.getByRole("button")).toHaveCount(6)
 
     await toggle.click()
     await expect(toggle).toHaveAttribute("aria-expanded", "false")
-    await expect(chapterList).toHaveCount(0)
+    await expect(eraList).toHaveCount(0)
   })
 
-  test("jumps to a chapter picked from the list and closes the list", async ({ page }) => {
+  test("jumps to an era picked from the list and closes the list", async ({ page }) => {
     await enterTimeline(page)
 
-    const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
+    const nav = page.locator(ERA_NAV).filter({ visible: true })
     const toggle = nav.getByRole("button", { name: /current era/i })
 
     await toggle.click()
@@ -167,7 +167,6 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
     await expect.poll(learningEraTop).toBeLessThan(150)
     expect(await learningEraTop()).toBeGreaterThanOrEqual(0)
     await expect(toggle).toContainText("Learning Era")
-    await expect(toggle).toContainText("03 / 06")
     expect((await nav.boundingBox())!.height).toBeLessThanOrEqual(MAX_PHONE_NAV_HEIGHT)
   })
 
@@ -187,15 +186,15 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
   test.describe(`in a short landscape viewport (${PHONE_LANDSCAPE.width}x${PHONE_LANDSCAPE.height})`, () => {
     test.use({ viewport: PHONE_LANDSCAPE })
 
-    test("keeps the open chapter list on screen", async ({ page }) => {
+    test("keeps the open list of eras on screen", async ({ page }) => {
       await enterTimeline(page)
 
-      const nav = page.locator(CHAPTER_NAV).filter({ visible: true })
+      const nav = page.locator(ERA_NAV).filter({ visible: true })
       const toggle = nav.getByRole("button", { name: /current era/i })
       await toggle.click()
 
-      const chapterList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
-      await expect(chapterList.getByRole("button").first()).toBeInViewport({ ratio: 1 })
+      const eraList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
+      await expect(eraList.getByRole("button").first()).toBeInViewport({ ratio: 1 })
       expect((await nav.boundingBox())!.y).toBeGreaterThanOrEqual(0)
     })
   })
@@ -203,14 +202,14 @@ test.describe(`chapter nav on a phone (${PHONE.width}x${PHONE.height})`, () => {
   test.describe("with reduced motion", () => {
     test.use({ reducedMotion: "reduce" })
 
-    test("shows the chapter list at once without fading it in", async ({ page }) => {
+    test("shows the list of eras at once without fading it in", async ({ page }) => {
       await enterTimeline(page)
 
       const toggle = page.getByRole("button", { name: /current era/i })
       await toggle.click()
 
-      const chapterList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
-      expect(await chapterList.evaluate((list) => getComputedStyle(list).opacity)).toBe("1")
+      const eraList = page.locator(`[id="${await toggle.getAttribute("aria-controls")}"]`)
+      expect(await eraList.evaluate((list) => getComputedStyle(list).opacity)).toBe("1")
     })
   })
 })
