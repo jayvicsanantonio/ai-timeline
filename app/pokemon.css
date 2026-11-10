@@ -251,6 +251,84 @@
     line-height: 1;
   }
 
+  /* What the event did to its line, in the games' battle text: an arrow in the line's color, then the creature's turn */
+  .dex-action {
+    display: flex;
+    gap: 0.625rem;
+    align-items: baseline;
+    border-radius: 0.375rem;
+    padding: 0.625rem 0.75rem;
+    background: color-mix(in srgb, var(--card-ink) 6%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-ink) 18%, transparent);
+    color: var(--card-ink);
+    font-size: 0.625rem;
+    line-height: 1.9;
+  }
+
+  .dex-action::before {
+    content: "▶";
+    flex: none;
+    color: var(--line-color);
+  }
+
+  .dex-era[data-gen="gen-1"] .dex-action::before {
+    color: currentColor;
+  }
+
+  .dex-brief .dex-brief-action {
+    color: var(--year-muted);
+  }
+
+  /* A status condition the event left on its line, in the games' colors for it */
+  .status-badge {
+    border-radius: 4px;
+    padding: 2px 4px;
+    color: #ffffff;
+    font-size: 0.5rem;
+    line-height: 1;
+  }
+
+  .status-on-stage {
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    z-index: 1;
+  }
+
+  .status-inline {
+    flex: none;
+  }
+
+  .status-badge[data-status="PSN"] {
+    background: #a040a0;
+  }
+
+  .status-badge[data-status="BRN"] {
+    background: #e0602a;
+  }
+
+  .status-badge[data-status="PAR"] {
+    background: #e8c018;
+    color: #2a2410;
+  }
+
+  .status-badge[data-status="SLP"] {
+    background: #7b7f8e;
+  }
+
+  .status-badge[data-status="FNT"] {
+    background: #c42a3a;
+  }
+
+  .status-badge[data-status="CNF"] {
+    background: #e0508a;
+  }
+
+  /* A creature that fainted loses its color */
+  .dex-card[data-status="FNT"] .dex-stage > img {
+    filter: grayscale(1) opacity(0.7);
+  }
+
   .dex-era[data-gen="gen-1"] .dex-card[data-frozen] .dex-stage::before {
     background: rgb(155 188 15 / 0.35);
     box-shadow: inset 0 0 0 2px var(--gb-0);

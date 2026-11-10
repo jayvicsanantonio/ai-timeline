@@ -13,6 +13,7 @@ import { CategoryBadge } from '@/components/pokemon/ui/category-badge';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Sprite } from '@/components/pokemon/ui/sprite';
 import { ART, formatDexNumber, type DexEntry } from '@/lib/dex';
+import { STATUS_CONDITIONS } from '@/lib/dex-actions';
 import { isCurrentEra } from '@/lib/eras';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { groupEventsByYear, type YearGroup } from '@/lib/year-groups';
@@ -216,8 +217,30 @@ function LineChip({ entry }: { entry: DexEntry }) {
   );
 }
 
+// What the event did to its line, as the games' battle text: a move learned or used, a stat that rose or fell, or a
+// status condition, which the brief entry shows as a chip beside the text and the full entry on the creature's screen
+function ActionLine({ entry, brief = false }: { entry: DexEntry; brief?: boolean }) {
+  const { text, status } = entry.action;
+
+  return (
+    <p
+      data-action=""
+      data-status={status}
+      className={brief ? 'dex-brief-action flex min-w-0 items-center gap-2 text-xs' : 'dex-action mt-3 font-pixel'}
+    >
+      {brief && status ? (
+        <span aria-hidden="true" data-status={status} className="status-badge status-inline font-pixel">
+          {status}
+        </span>
+      ) : null}
+      <span className={brief ? 'truncate' : undefined}>{text}</span>
+      {status ? <span className="sr-only"> Status: {STATUS_CONDITIONS[status].name}.</span> : null}
+    </p>
+  );
+}
+
 // An entry in full: the line's creature on its screen, then the entry's number and date, its title linking to the source,
-// what happened, and its line, category and source
+// what it did to its line, what happened, and its line, category and source
 export function DexCard({ event, entry }: { event: TimelineEvent; entry: DexEntry }) {
   return (
     <article
@@ -225,6 +248,7 @@ export function DexCard({ event, entry }: { event: TimelineEvent; entry: DexEntr
       data-dex-card=""
       data-line={entry.line.id}
       data-frozen={entry.frozen ? '' : undefined}
+      data-status={entry.action.status}
       style={{ '--line-color': entry.line.color } as CSSProperties}
       className="dex-card reveal-on-scroll scroll-mt-[calc(var(--timeline-sticky-offset,0px)+1.5rem)] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-[#ffcb05]"
     >
@@ -235,6 +259,11 @@ export function DexCard({ event, entry }: { event: TimelineEvent; entry: DexEntr
           className={entry.generation === 'modern' ? 'sprite-bob' : undefined}
         />
         {entry.frozen ? <span className="frz-badge font-pixel">FRZ</span> : null}
+        {entry.action.status ? (
+          <span data-status={entry.action.status} className="status-badge status-on-stage font-pixel">
+            {entry.action.status}
+          </span>
+        ) : null}
       </div>
 
       <div className="dex-body">
@@ -259,7 +288,8 @@ export function DexCard({ event, entry }: { event: TimelineEvent; entry: DexEntr
           {entry.frozen ? <span className="sr-only">, during an AI winter</span> : null}
         </p>
         <EventHeading event={event} className="dex-title mt-2 text-pretty" linkClassName="underline-offset-4 hover:underline" />
-        <p className="dex-description mt-2 text-pretty text-[15px] leading-7">{event.description}</p>
+        <ActionLine entry={entry} />
+        <p className="dex-description mt-3 text-pretty text-[15px] leading-7">{event.description}</p>
         <p className="dex-footer mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 text-xs">
           <LineChip entry={entry} />
           <CategoryBadge category={event.category} className="max-w-full" />
@@ -270,7 +300,8 @@ export function DexCard({ event, entry }: { event: TimelineEvent; entry: DexEntr
   );
 }
 
-// An entry in brief, for the rest of a busy year: the creature's icon, the number and date, and the title
+// An entry in brief, for the rest of a busy year: the creature's icon, the number and date, the title, and what the event
+// did to its line
 function DexBrief({ event, entry }: { event: TimelineEvent; entry: DexEntry }) {
   return (
     <article
@@ -280,14 +311,17 @@ function DexBrief({ event, entry }: { event: TimelineEvent; entry: DexEntry }) {
       className="dex-brief relative flex items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-white/[0.06] has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-[#ffcb05]"
     >
       <Sprite src={entry.icon} pixelated className="size-9 shrink-0 object-contain" />
-      <div className="min-w-0 flex-1 sm:flex sm:items-baseline sm:gap-3">
-        <p className="dex-brief-meta flex shrink-0 items-center gap-2 text-xs">
-          <span className="font-pixel text-[0.5625rem]">{formatDexNumber(entry.number)}</span>
-          <time dateTime={eventDateTime(event)} className="sm:w-[6.75rem]">
-            {formatEventDate(event)}
-          </time>
-        </p>
-        <EventHeading event={event} className="min-w-0 truncate text-sm font-medium" linkClassName="hover:underline" />
+      <div className="min-w-0 flex-1">
+        <div className="sm:flex sm:items-baseline sm:gap-3">
+          <p className="dex-brief-meta flex shrink-0 items-center gap-2 text-xs">
+            <span className="font-pixel text-[0.5625rem]">{formatDexNumber(entry.number)}</span>
+            <time dateTime={eventDateTime(event)} className="sm:w-[6.75rem]">
+              {formatEventDate(event)}
+            </time>
+          </p>
+          <EventHeading event={event} className="min-w-0 truncate text-sm font-medium" linkClassName="hover:underline" />
+        </div>
+        <ActionLine entry={entry} brief />
       </div>
       <EventSource event={event} className="dex-brief-meta hidden shrink-0 text-xs sm:inline-flex" />
     </article>

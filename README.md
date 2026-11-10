@@ -64,7 +64,7 @@ components/
     └── skip-to-content.tsx
 ```
 
-The Pokémon theme's story is data in `lib/dex.ts` (the nine evolution lines, their scenes and the AI winters) and `lib/journey.ts` (each region's signpost and gym challenge), and its styles are in `app/pokemon.css`, which download with its code. The switch and the Poké Ball are styled in `app/theme-switch.css`. Its sprites come from [jayvicsanantonio/sprites](https://github.com/jayvicsanantonio/sprites): `scripts/sync-sprites.mjs` copies only the ones the page shows into `public/sprites`. Pokémon and its creatures are trademarks of Nintendo, Creatures Inc. and GAME FREAK inc.; this is an unofficial fan project.
+The Pokémon theme's story is data in `lib/dex.ts` (the nine evolution lines, their scenes and the AI winters), `lib/dex-actions.ts` (what every event did to its line, in the games' battle text) and `lib/journey.ts` (each region's signpost and gym challenge), and its styles are in `app/pokemon.css`, which download with its code. The switch and the Poké Ball are styled in `app/theme-switch.css`. Its sprites come from [jayvicsanantonio/sprites](https://github.com/jayvicsanantonio/sprites): `scripts/sync-sprites.mjs` copies only the ones the page shows into `public/sprites`. Pokémon and its creatures are trademarks of Nintendo, Creatures Inc. and GAME FREAK inc.; this is an unofficial fan project.
 
 ### Data Management
 

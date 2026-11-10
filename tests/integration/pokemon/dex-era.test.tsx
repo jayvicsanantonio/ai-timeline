@@ -235,6 +235,23 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
     )
   })
 
+  it("says under each title what the event did to its line, in battle text naming the creature, before what happened", () => {
+    const { section, dex } = renderEra(generation)
+
+    within(section)
+      .getAllByRole("article")
+      .forEach((article, index) => {
+        const entry = dex.get(eventAnchorId(shown[index]))!
+        const action = article.querySelector<HTMLElement>("[data-action]")!
+        expect(action.textContent).toContain(entry.action.text)
+        expect(action.textContent).toContain(entry.species.name.toUpperCase())
+        const heading = within(article).getByRole("heading", { level: 3 })
+        const description = within(article).getByText(shown[index].description)
+        expect(heading.compareDocumentPosition(action) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+        expect(action.compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      })
+  })
+
   it("draws each creature in its generation's sprite, as a picture that assistive technology skips", () => {
     const { section, dex } = renderEra(generation)
 
@@ -501,6 +518,31 @@ describe.each(GENERATIONS)("the %s era's year column", (generation) => {
   })
 })
 
+describe("an event that left its line a status condition", () => {
+  const deepfakes = makeEvent(2017, "December", "Deepfakes Appear on Reddit", "Bombshell News")
+  const italy = makeEvent(2023, "March", "Italy Temporarily Bans ChatGPT", "Ethics & Policy")
+
+  it("shows the status on the creature's screen and says it in words for assistive technology", () => {
+    const { section } = renderEra("gen-4", [deepfakes])
+    const card = within(section).getByRole("article")
+
+    expect(card).toHaveAttribute("data-status", "PSN")
+    const badge = card.querySelector<HTMLElement>(".dex-stage [data-status]")!
+    expect(badge).toHaveTextContent("PSN")
+    expect(badge.closest("[aria-hidden]")).not.toBeNull()
+    expect(card.querySelector("[data-action]")).toHaveTextContent("MIME JR. was poisoned by DEEPFAKES! Status: poisoned.")
+    expect(getComputedStyle(badge).backgroundColor).toBe("rgb(160, 64, 160)")
+  })
+
+  it("files a harm under the line that caused it, not under safety", () => {
+    const { section } = renderEra("gen-5", [italy])
+    const card = within(section).getByRole("article")
+
+    expect(card).toHaveAttribute("data-line", "language")
+    expect(card.querySelector("[data-action]")).toHaveTextContent("PORYGON was blocked in ITALY! It can't move! Status: paralyzed.")
+  })
+})
+
 describe("the Generation I era", () => {
   it("maps its gray sprites onto the four greens of its screen", () => {
     const { section } = renderEra("gen-1")
@@ -695,6 +737,7 @@ describe.each([
       expect(within(card).getByRole("link")).toHaveAttribute("href", event.link)
       expect(card).toHaveTextContent(eventSource(event))
       expect(card).not.toHaveTextContent(event.description)
+      expect(card.querySelector("[data-action]")).toHaveTextContent(entry.action.text)
     }
   })
 
