@@ -1,5 +1,6 @@
-// One era of the timeline: its shared header in the page's color, then its entries drawn in its generation's sprites.
-// The section is named by the header's title, which the navigation jumps to. An era the filters empty shows only its header.
+// One era of the timeline, a region of the journey: its signpost, then its entries and scenes drawn in its generation's
+// sprites along the route through its scenery, ending at its gym challenge. The section is named by the header's title,
+// which the navigation jumps to. An era the filters empty shows only its header.
 'use client';
 
 import type { Era } from '@/lib/eras';
@@ -8,7 +9,7 @@ import { EraHeader } from './era-header';
 import { eraHeadingId } from './era-parts';
 
 interface EraChapterProps {
-  // The era with its events newest first
+  // The era with its events oldest first
   era: Era;
   totalEvents: number;
 }

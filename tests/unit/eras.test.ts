@@ -29,6 +29,17 @@ describe("ERA_DEFINITIONS", () => {
     ])
   })
 
+  it("draws every era as a place of its own on the journey's route, in its own biome", () => {
+    expect(ERA_DEFINITIONS.map((era) => [era.place, era.biome])).toEqual([
+      ["Origin Meadow", "meadow"],
+      ["Frostbite Pass", "snow"],
+      ["Learning Woods", "forest"],
+      ["Deep Cavern", "cave"],
+      ["Prompt City", "city"],
+      ["Frontier Peak", "summit"],
+    ])
+  })
+
   it("gives every era its own badge", () => {
     const badges = ERA_DEFINITIONS.map((era) => era.badge)
     expect(new Set(badges).size).toBe(ERA_DEFINITIONS.length)

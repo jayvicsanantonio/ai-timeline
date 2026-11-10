@@ -101,13 +101,17 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
   return (
     <section aria-labelledby="insights-title" className="bg-background px-4 py-24 text-white sm:px-6 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <p className="font-pixel text-[0.625rem] uppercase text-[#7d84a6]">By the numbers</p>
-        <h2 id="insights-title" className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-          Timeline Insights
-        </h2>
-        <p className="mt-4 max-w-2xl text-lg leading-8 text-[#a7acc8]">
-          Discover the patterns and trends that emerge from decades of AI development
-        </p>
+        <div className="trainer-card-head flex flex-wrap items-end justify-between gap-4 rounded-2xl px-5 py-4 sm:px-6">
+          <div>
+            <p className="font-pixel text-[0.625rem] uppercase text-[#3b2a00]">Trainer card</p>
+            <h2 id="insights-title" className="mt-2 text-3xl font-semibold tracking-tight text-[#1f2433] sm:text-4xl">
+              Timeline Insights
+            </h2>
+          </div>
+          <p className="max-w-md text-sm leading-6 text-[#3b3f52]">
+            Your journey by the numbers: the patterns that emerge from decades of AI development.
+          </p>
+        </div>
 
         {/* Each tile's five rows share the row's tracks, so titles and descriptions line up across a row
             however long the label above them runs */}

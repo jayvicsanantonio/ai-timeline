@@ -14,11 +14,11 @@ import {
   LINES,
   LINES_BY_ID,
   partyAfter,
-  requiredSprites,
   SCENES,
   speciesOf,
 } from "@/lib/dex"
 import { getEraForYear } from "@/lib/eras"
+import { pageSprites } from "@/lib/journey"
 import { eventAnchorId } from "@/lib/event-format"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 import { TIMELINE_CATEGORIES } from "@/types/timeline"
@@ -226,7 +226,7 @@ describe("the sprites in public/sprites", () => {
   it("include every sprite the page shows", async () => {
     const missing: string[] = []
     await Promise.all(
-      requiredSprites(events).map(async (path) => {
+      pageSprites(events).map(async (path) => {
         const response = await fetch(path, { method: "HEAD" })
         const type = response.headers.get("content-type") ?? ""
         if (!response.ok || !type.startsWith("image/")) {

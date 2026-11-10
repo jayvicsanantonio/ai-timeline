@@ -1,5 +1,5 @@
-// The timeline's toolbar: a search box, a panel of category toggles drawn as items from the bag, a live count of the events
-// shown and a reminder that the timeline runs from the first event to now. The filters narrow every era at once, and the panel closes on
+// The timeline's toolbar: a search box, the bag, whose items are the category toggles, a live count of the events shown
+// and a reminder that the route runs from the first event to now. The filters narrow every era at once, and the panel closes on
 // Escape, on a click outside or from its toggle.
 'use client';
 
@@ -138,7 +138,7 @@ export function TimelineControls({
           type="button"
           aria-expanded={isPanelOpen}
           aria-controls={isPanelOpen ? panelId : undefined}
-          aria-label={pickedCount > 0 ? `Categories, ${pickedCount} picked` : 'Categories'}
+          aria-label={pickedCount > 0 ? `Bag: filter by category, ${pickedCount} picked` : 'Bag: filter by category'}
           onClick={() => setIsPanelOpen((isOpen) => !isOpen)}
           className={cn(
             'inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffcb05]/50',
@@ -148,7 +148,7 @@ export function TimelineControls({
           )}
         >
           <SlidersHorizontal aria-hidden="true" className="size-4" />
-          <span className="hidden sm:inline">Categories</span>
+          <span className="font-pixel text-[0.625rem] uppercase">Bag</span>
           {pickedCount > 0 ? (
             <span className="grid min-w-5 place-items-center rounded-full bg-[#ffcb05] px-1.5 text-xs font-semibold text-black">
               {pickedCount}
@@ -186,7 +186,7 @@ export function TimelineControls({
             for it, but screen readers hear it there too. */}
         <p data-timeline-order="" className="sr-only text-sm text-[#a7acc8] sm:not-sr-only sm:inline-flex sm:items-center sm:gap-1.5">
           <ArrowDownNarrowWide aria-hidden="true" className="size-4 shrink-0" />
-          From 1943 to now
+          Route: 1943 → now
         </p>
 
         <p

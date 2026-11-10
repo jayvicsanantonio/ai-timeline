@@ -17,6 +17,8 @@ This project presents the complete history of artificial intelligence through an
 - **Latest News, Then the Journey**: The page opens on the newest events, each saying how long ago it happened, then the journey runs forward from 1943 to now, so every line evolves in the order it did
 - **Nine Evolution Lines**: AI history told as Pokémon evolution lines. Neural networks are a MAGIKARP that uses SPLASH to no effect for fifty years, learns TACKLE with backpropagation and evolves into GYARADOS when AlexNet wins ImageNet. Language runs PORYGON, PORYGON2 at the Transformer and PORYGON-Z at ChatGPT; reasoning runs ABRA to ALAKAZAM at Deep Blue; games run MACHOP to MACHAMP, traded to Google with DeepMind; chips run MAGNEMITE to MAGNEZONE at the TPU; agents are the GASTLY line, the ghost in the machine. Every event is a numbered entry showing its line at the stage and level it had reached
 - **The Story in Scenes**: Evolutions play out as you scroll at the real turning points; human-versus-machine matches are battles (Deep Blue against Kasparov, AlphaGo's MOVE 37 against Lee Sedol, a gold medal at the Math Olympiad) with HP bars at the final score; the AI winters bring hail and freeze every line; MEW opens the story and legendaries mark a few singular moments
+- **An Adventure**: The page opens on a game's title screen with a start menu (NEW GAME, CONTINUE, POKéDEX). Each era is a region on one route with its own night-time scenery: Origin Meadow, Frostbite Pass (where the AI winters hit), Learning Woods, Deep Cavern, Prompt City and Frontier Peak
+- **Learn as You Go**: The professor's briefing teaches how to read the journey; each region opens on a signpost previewing the lines you'll meet and its turning points, and ends in a gym challenge, one question on what you just read, whose right answer explains itself and earns the region's badge
 - **Your Party**: A map of the nine lines links each stage to the moment it evolved, the navigation rail shows the party as it stands wherever you are reading, and the journey ends on the party today and an egg for the next era
 - **Sprites Through Time**: Each era is drawn in the sprites of one generation of handheld games, as AI's own fidelity grew: Generation I's four greens for the Foundation Era, then Generation II's color, Generation III's brighter panels, Generation IV's two screens, Generation V's animated sprites, and today's animated 3D for the Agentic Era
 - **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–6 and /
@@ -41,14 +43,16 @@ This project presents the complete history of artificial intelligence through an
 components/
 ├── storytelling/            # Narrative-driven components
 │   ├── story-engine.tsx     # Main orchestrator: builds the dex, holds the search and category filters, runs the eras from 1943
-│   ├── prologue-scene.tsx   # Opening: title, MEW and the premise, latest sightings, era links and a slim chart
-│   ├── party-scene.tsx      # The nine lines, each stage linking to where it evolves
-│   └── epilogue-scene.tsx   # Closing: the party today, the egg for the next era and the sprite credits
+│   ├── prologue-scene.tsx   # Title screen: the premise, MEW over the lines, the start menu, latest sightings
+│   ├── world-map.tsx        # The six regions along the route, and a slim events-per-year chart
+│   ├── party-scene.tsx      # The professor's briefing, then the nine lines, each stage linking to where it evolves
+│   └── epilogue-scene.tsx   # Hall of Fame: the party today, the egg for the next era and the sprite credits
 ├── eras/                    # The AI Dex, one generation of sprites per era
 │   ├── era-chapter.tsx      # The era's section: its shared header, then its entries
-│   ├── era-header.tsx       # The header every era shares, with its badge, marked Now or Before {year}
+│   ├── era-header.tsx       # The signpost at each region's entrance, with its badge and what the region holds
 │   ├── dex-era.tsx          # An era's entries in its generation's style (data-gen), from the first forward
 │   ├── scenes.tsx           # Evolutions, battles, moves, encounters, weather and dialog
+│   ├── gym-challenge.tsx    # The question at each region's end that earns its badge
 │   ├── dex-context.tsx      # Hands every part of the page the dex built once from all events
 │   └── era-parts.tsx        # Pieces every era shares: card attributes, titles, year columns, brief listings
 ├── timeline/                # Timeline-wide UI

@@ -5,6 +5,9 @@ import type { TimelineEvent } from '@/types/timeline';
 
 export type GenerationId = 'gen-1' | 'gen-2' | 'gen-3' | 'gen-4' | 'gen-5' | 'modern';
 
+// The scenery an era's stretch of the route runs through
+export type Biome = 'meadow' | 'snow' | 'forest' | 'cave' | 'city' | 'summit';
+
 export interface EraDefinition {
   id: string;
   name: string;
@@ -17,6 +20,9 @@ export interface EraDefinition {
   generationName: string;
   // The gym badge the reader earns for the era, by its number in public/sprites/badges
   badge: number;
+  // The place on the journey's map the era is, and the scenery its stretch of the route runs through
+  place: string;
+  biome: Biome;
   // Marks the era in charts and swatches. The six were validated together as a
   // categorical palette on the dark chrome, so neighboring eras stay distinct.
   color: string;
@@ -39,6 +45,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     generation: 'gen-1',
     generationName: 'Generation I sprites',
     badge: 1,
+    place: 'Origin Meadow',
+    biome: 'meadow',
     color: '#c98500',
   },
   {
@@ -51,6 +59,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     generation: 'gen-2',
     generationName: 'Generation II sprites',
     badge: 9,
+    place: 'Frostbite Pass',
+    biome: 'snow',
     color: '#199e70',
   },
   {
@@ -63,6 +73,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     generation: 'gen-3',
     generationName: 'Generation III sprites',
     badge: 17,
+    place: 'Learning Woods',
+    biome: 'forest',
     color: '#3987e5',
   },
   {
@@ -75,6 +87,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     generation: 'gen-4',
     generationName: 'Generation IV sprites',
     badge: 25,
+    place: 'Deep Cavern',
+    biome: 'cave',
     color: '#d95926',
   },
   {
@@ -87,6 +101,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     generation: 'gen-5',
     generationName: 'Generation V animated sprites',
     badge: 33,
+    place: 'Prompt City',
+    biome: 'city',
     color: '#9085e9',
   },
   {
@@ -99,6 +115,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     generation: 'modern',
     generationName: 'Animated 3D sprites',
     badge: 70,
+    place: 'Frontier Peak',
+    biome: 'summit',
     color: '#cf4f9a',
   },
 ];

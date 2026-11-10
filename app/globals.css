@@ -798,14 +798,6 @@
     --year-rule: rgb(196 224 90 / 0.25);
   }
 
-  .gen-1-backdrop {
-    background-color: #142012;
-    background-image:
-      var(--era-seam),
-      radial-gradient(64rem 36rem at 50% 0%, rgb(139 172 15 / 0.16), transparent 70%),
-      repeating-linear-gradient(to right, rgb(196 224 90 / 0.05) 0 1px, transparent 1px 4px),
-      repeating-linear-gradient(to bottom, rgb(196 224 90 / 0.05) 0 1px, transparent 1px 4px);
-  }
 
   .dex-era[data-gen="gen-1"] .dex-card {
     box-shadow:
@@ -861,13 +853,6 @@
     --year-rule: rgb(255 232 163 / 0.22);
   }
 
-  .gen-2-backdrop {
-    background-color: #17163a;
-    background-image:
-      var(--era-seam),
-      radial-gradient(64rem 36rem at 50% 10%, rgb(25 158 112 / 0.18), transparent 70%),
-      repeating-linear-gradient(45deg, rgb(255 255 255 / 0.035) 0 8px, transparent 8px 16px);
-  }
 
   .dex-era[data-gen="gen-2"] .dex-card {
     border-radius: 0.5rem;
@@ -897,13 +882,6 @@
     --year-rule: rgb(185 245 216 / 0.22);
   }
 
-  .gen-3-backdrop {
-    background-color: #08342b;
-    background-image:
-      var(--era-seam),
-      radial-gradient(64rem 36rem at 50% 0%, rgb(57 135 229 / 0.18), transparent 70%),
-      repeating-linear-gradient(135deg, rgb(255 255 255 / 0.04) 0 18px, transparent 18px 36px);
-  }
 
   .dex-era[data-gen="gen-3"] .dex-card {
     border-radius: 1rem;
@@ -934,14 +912,6 @@
     --year-rule: rgb(223 229 245 / 0.2);
   }
 
-  .gen-4-backdrop {
-    background-color: #15161d;
-    background-image:
-      var(--era-seam),
-      radial-gradient(72rem 36rem at 50% calc(100% - 6rem), rgb(217 89 38 / 0.18), transparent 70%),
-      repeating-linear-gradient(to right, rgb(223 229 245 / 0.045) 0 1px, transparent 1px 2rem),
-      repeating-linear-gradient(to bottom, rgb(223 229 245 / 0.045) 0 1px, transparent 1px 2rem);
-  }
 
   /* The handheld's silver shell holds both screens, with a hinge between them */
   .dex-era[data-gen="gen-4"] .dex-card {
@@ -1016,13 +986,6 @@
     --year-rule: rgb(255 255 255 / 0.2);
   }
 
-  .gen-5-backdrop {
-    background-color: #0b0b0e;
-    background-image:
-      var(--era-seam),
-      radial-gradient(60rem 30rem at 15% 0%, rgb(144 133 233 / 0.16), transparent 70%),
-      repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.035) 0 2px, transparent 2px 14px);
-  }
 
   .dex-era[data-gen="gen-5"] .dex-card {
     border-radius: 0.375rem;
@@ -1062,14 +1025,6 @@
     --year-rule: rgb(220 224 255 / 0.16);
   }
 
-  .modern-backdrop {
-    background-color: #0a0c1d;
-    background-image:
-      var(--era-seam),
-      radial-gradient(60rem 30rem at 85% 0%, rgb(207 79 154 / 0.2), transparent 70%),
-      radial-gradient(50rem 26rem at 10% 12%, rgb(52 183 241 / 0.14), transparent 70%),
-      radial-gradient(44rem 30rem at 100% 55%, rgb(207 79 154 / 0.08), transparent 70%);
-  }
 
   .dex-era[data-gen="modern"] .dex-card {
     border-radius: 1.5rem;
@@ -1100,5 +1055,329 @@
 
   .dex-era[data-gen="modern"] .dex-card[data-landmark] .dex-stage {
     box-shadow: none;
+  }
+
+  /* ----- The world the journey walks through: one biome for each region, drawn at night ----- */
+
+  [class*="biome-"][data-era-backdrop] {
+    position: relative;
+  }
+
+  /* The route's entries ride above the scenery and the falling snow */
+  .dex-era {
+    position: relative;
+    z-index: 1;
+  }
+
+  .biome-meadow {
+    background-color: #0f2218;
+    background-image: var(--era-seam), radial-gradient(60rem 30rem at 50% 0%, rgb(255 214 120 / 0.1), transparent 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='48' viewBox='0 0 64 48'%3E%3Cpath d='M8 30 l3 -8 l3 8 M40 14 l3 -8 l3 8 M24 44 l3 -7 l3 7' stroke='%232c5a37' stroke-width='2' fill='none' opacity='.55'/%3E%3C/svg%3E");
+  }
+
+  .biome-snow {
+    background-color: #142033;
+    background-image: var(--era-seam), radial-gradient(60rem 30rem at 50% 0%, rgb(190 225 255 / 0.12), transparent 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23ffffff' opacity='.5'%3E%3Ccircle cx='10' cy='20' r='1.6'/%3E%3Ccircle cx='70' cy='8' r='1.2'/%3E%3Ccircle cx='40' cy='60' r='1.8'/%3E%3Ccircle cx='100' cy='50' r='1.3'/%3E%3Ccircle cx='20' cy='100' r='1.2'/%3E%3Ccircle cx='85' cy='95' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .biome-forest {
+    background-color: #0b1f19;
+    background-image: var(--era-seam), radial-gradient(60rem 30rem at 50% 10%, rgb(123 224 160 / 0.1), transparent 70%);
+  }
+
+  .biome-cave {
+    background-color: #141019;
+    background-image: var(--era-seam), radial-gradient(50rem 26rem at 50% 30%, rgb(92 225 230 / 0.08), transparent 70%), radial-gradient(40rem 22rem at 50% 80%, rgb(179 136 255 / 0.08), transparent 70%);
+  }
+
+  .biome-city {
+    background-color: #120f26;
+    background-image: var(--era-seam), radial-gradient(60rem 30rem at 15% 0%, rgb(255 95 162 / 0.16), transparent 70%), radial-gradient(50rem 26rem at 90% 8%, rgb(57 135 229 / 0.14), transparent 70%);
+  }
+
+  .biome-summit {
+    background-color: #0b0d22;
+    background-image: var(--era-seam), radial-gradient(60rem 30rem at 85% 0%, rgb(207 79 154 / 0.18), transparent 70%), radial-gradient(50rem 26rem at 10% 12%, rgb(92 225 180 / 0.12), transparent 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='12' cy='18' r='1.1' opacity='.8'/%3E%3Ccircle cx='80' cy='40' r='.9' opacity='.6'/%3E%3Ccircle cx='140' cy='12' r='1.3' opacity='.9'/%3E%3Ccircle cx='50' cy='110' r='1' opacity='.7'/%3E%3Ccircle cx='120' cy='130' r='.8' opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* The scenery at either side of the route, where a wide screen has room for it. The right strip mirrors the left, so
+     the route runs between two edges of the same world. */
+  .biome-scenery {
+    position: absolute;
+    top: 8rem;
+    bottom: 8rem;
+    width: 200px;
+    pointer-events: none;
+    display: none;
+    background-repeat: repeat-y;
+    background-position: left top;
+  }
+
+  .biome-scenery-right {
+    right: 0;
+    transform: scaleX(-1);
+  }
+
+  .biome-scenery-left {
+    left: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .biome-scenery {
+      display: block;
+    }
+  }
+
+  .biome-meadow .biome-scenery {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='240' viewBox='0 0 180 240'%3E%3Cg fill='%2316351f'%3E%3Ccircle cx='60' cy='70' r='42'/%3E%3Ccircle cx='95' cy='55' r='34'/%3E%3Ccircle cx='120' cy='85' r='30'/%3E%3Crect x='82' y='95' width='12' height='40' fill='%230f2416'/%3E%3C/g%3E%3Cg fill='%231d4428'%3E%3Ccircle cx='40' cy='190' r='26'/%3E%3Ccircle cx='68' cy='182' r='22'/%3E%3C/g%3E%3Cg fill='%23f6d26a' opacity='.55'%3E%3Ccircle cx='130' cy='200' r='2.5'/%3E%3Ccircle cx='150' cy='170' r='2'/%3E%3Ccircle cx='20' cy='130' r='2'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 180px 240px;
+  }
+
+  .biome-snow .biome-scenery {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='260' viewBox='0 0 180 260'%3E%3Cg fill='%231b2a3d'%3E%3Cpath d='M70 20 L110 110 L30 110Z'/%3E%3Cpath d='M70 60 L120 160 L20 160Z'/%3E%3Crect x='62' y='160' width='16' height='26'/%3E%3C/g%3E%3Cg fill='%23dfeaf6' opacity='.85'%3E%3Cpath d='M70 20 L84 52 L56 52Z'/%3E%3Cpath d='M70 60 L88 98 L52 98Z'/%3E%3C/g%3E%3Cg fill='%2322344b'%3E%3Cpath d='M150 140 L178 210 L122 210Z'/%3E%3C/g%3E%3Cpath d='M150 140 L160 162 L140 162Z' fill='%23dfeaf6' opacity='.8'/%3E%3C/svg%3E");
+    background-size: 180px 260px;
+  }
+
+  .biome-forest .biome-scenery {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='220' viewBox='0 0 160 220'%3E%3Cg fill='%230e2a22'%3E%3Cpath d='M40 0 L78 120 L2 120Z'/%3E%3Cpath d='M40 50 L84 180 L-4 180Z'/%3E%3Crect x='34' y='180' width='12' height='40'/%3E%3C/g%3E%3Cg fill='%23123629'%3E%3Cpath d='M120 40 L156 160 L84 160Z'/%3E%3Cpath d='M120 90 L162 220 L78 220Z'/%3E%3C/g%3E%3Cg fill='%237be0a0' opacity='.35'%3E%3Ccircle cx='96' cy='30' r='2'/%3E%3Ccircle cx='140' cy='20' r='1.6'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 160px 220px;
+  }
+
+  .biome-cave .biome-scenery {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='240' viewBox='0 0 170 240'%3E%3Cpath d='M0 0 H120 L95 30 L130 70 L90 110 L125 150 L85 200 L115 240 H0Z' fill='%23231d2b'/%3E%3Cpath d='M0 0 H70 L55 40 L80 90 L50 140 L75 190 L45 240 H0Z' fill='%232c2436'/%3E%3Cg fill='%235ce1e6'%3E%3Cpath d='M100 120 l6 -18 l6 18 l-6 8Z' opacity='.85'/%3E%3Cpath d='M60 60 l4 -12 l4 12 l-4 6Z' opacity='.7'/%3E%3C/g%3E%3Cg fill='%23b388ff'%3E%3Cpath d='M110 205 l5 -14 l5 14 l-5 6Z' opacity='.75'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 170px 240px;
+  }
+
+  .biome-city .biome-scenery {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='260' viewBox='0 0 170 260'%3E%3Cg fill='%231c1638'%3E%3Crect x='10' y='40' width='70' height='220'/%3E%3Crect x='88' y='100' width='60' height='160'/%3E%3C/g%3E%3Cg fill='%23ffcf6b' opacity='.7'%3E%3Crect x='32' y='56' width='6' height='8'/%3E%3Crect x='44' y='56' width='6' height='8'/%3E%3Crect x='56' y='56' width='6' height='8'/%3E%3Crect x='20' y='72' width='6' height='8'/%3E%3Crect x='32' y='72' width='6' height='8'/%3E%3Crect x='44' y='72' width='6' height='8'/%3E%3Crect x='68' y='72' width='6' height='8'/%3E%3Crect x='20' y='88' width='6' height='8'/%3E%3Crect x='32' y='88' width='6' height='8'/%3E%3Crect x='56' y='88' width='6' height='8'/%3E%3Crect x='68' y='88' width='6' height='8'/%3E%3Crect x='20' y='104' width='6' height='8'/%3E%3Crect x='44' y='104' width='6' height='8'/%3E%3Crect x='56' y='104' width='6' height='8'/%3E%3Crect x='68' y='104' width='6' height='8'/%3E%3Crect x='32' y='120' width='6' height='8'/%3E%3Crect x='44' y='120' width='6' height='8'/%3E%3Crect x='56' y='120' width='6' height='8'/%3E%3Crect x='20' y='136' width='6' height='8'/%3E%3Crect x='32' y='136' width='6' height='8'/%3E%3Crect x='44' y='136' width='6' height='8'/%3E%3Crect x='68' y='136' width='6' height='8'/%3E%3Crect x='20' y='152' width='6' height='8'/%3E%3Crect x='32' y='152' width='6' height='8'/%3E%3Crect x='56' y='152' width='6' height='8'/%3E%3Crect x='68' y='152' width='6' height='8'/%3E%3Crect x='20' y='168' width='6' height='8'/%3E%3Crect x='44' y='168' width='6' height='8'/%3E%3Crect x='56' y='168' width='6' height='8'/%3E%3Crect x='68' y='168' width='6' height='8'/%3E%3Crect x='32' y='184' width='6' height='8'/%3E%3Crect x='44' y='184' width='6' height='8'/%3E%3Crect x='56' y='184' width='6' height='8'/%3E%3Crect x='20' y='200' width='6' height='8'/%3E%3Crect x='32' y='200' width='6' height='8'/%3E%3Crect x='44' y='200' width='6' height='8'/%3E%3Crect x='68' y='200' width='6' height='8'/%3E%3Crect x='20' y='216' width='6' height='8'/%3E%3Crect x='32' y='216' width='6' height='8'/%3E%3Crect x='56' y='216' width='6' height='8'/%3E%3Crect x='68' y='216' width='6' height='8'/%3E%3Crect x='20' y='232' width='6' height='8'/%3E%3Crect x='44' y='232' width='6' height='8'/%3E%3Crect x='56' y='232' width='6' height='8'/%3E%3Crect x='68' y='232' width='6' height='8'/%3E%3Crect x='108' y='116' width='6' height='8'/%3E%3Crect x='120' y='116' width='6' height='8'/%3E%3Crect x='132' y='116' width='6' height='8'/%3E%3Crect x='96' y='132' width='6' height='8'/%3E%3Crect x='108' y='132' width='6' height='8'/%3E%3Crect x='120' y='132' width='6' height='8'/%3E%3Crect x='96' y='148' width='6' height='8'/%3E%3Crect x='108' y='148' width='6' height='8'/%3E%3Crect x='132' y='148' width='6' height='8'/%3E%3Crect x='96' y='164' width='6' height='8'/%3E%3Crect x='120' y='164' width='6' height='8'/%3E%3Crect x='132' y='164' width='6' height='8'/%3E%3Crect x='108' y='180' width='6' height='8'/%3E%3Crect x='120' y='180' width='6' height='8'/%3E%3Crect x='132' y='180' width='6' height='8'/%3E%3Crect x='96' y='196' width='6' height='8'/%3E%3Crect x='108' y='196' width='6' height='8'/%3E%3Crect x='120' y='196' width='6' height='8'/%3E%3Crect x='96' y='212' width='6' height='8'/%3E%3Crect x='108' y='212' width='6' height='8'/%3E%3Crect x='132' y='212' width='6' height='8'/%3E%3Crect x='96' y='228' width='6' height='8'/%3E%3Crect x='120' y='228' width='6' height='8'/%3E%3Crect x='132' y='228' width='6' height='8'/%3E%3Crect x='108' y='244' width='6' height='8'/%3E%3Crect x='120' y='244' width='6' height='8'/%3E%3Crect x='132' y='244' width='6' height='8'/%3E%3C/g%3E%3Cg fill='%23ff5fa2' opacity='.6'%3E%3Crect x='10' y='34' width='70' height='4'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 170px 260px;
+  }
+
+  .biome-summit .biome-scenery {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='260' viewBox='0 0 200 260'%3E%3Cpath d='M0 260 L70 90 L110 160 L150 70 L200 260Z' fill='%231a1d3a'/%3E%3Cpath d='M150 70 L165 105 L140 100Z M70 90 L82 118 L58 116Z' fill='%23e7ecff' opacity='.8'/%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='30' cy='20' r='1.4'/%3E%3Ccircle cx='120' cy='30' r='1.1'/%3E%3Ccircle cx='180' cy='12' r='1.5'/%3E%3Ccircle cx='60' cy='50' r='1'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 200px 260px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .biome-snow::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23ffffff' opacity='.5'%3E%3Ccircle cx='10' cy='20' r='1.6'/%3E%3Ccircle cx='70' cy='8' r='1.2'/%3E%3Ccircle cx='40' cy='60' r='1.8'/%3E%3Ccircle cx='100' cy='50' r='1.3'/%3E%3Ccircle cx='20' cy='100' r='1.2'/%3E%3Ccircle cx='85' cy='95' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+      animation: snow-fall 9s linear infinite;
+    }
+  }
+
+  @keyframes snow-fall {
+    from { background-position: 0 0; }
+    to { background-position: 30px 120px; }
+  }
+
+  /* The route: the dirt path the year column runs along, and a stop on it beside every entry */
+  @media (min-width: 768px) {
+    .dex-year-column {
+      border-right: 6px dashed rgb(214 180 120 / 0.45);
+    }
+
+    .dex-route-stop {
+      position: relative;
+    }
+
+    .dex-route-stop::before {
+      content: "";
+      position: absolute;
+      top: 1.75rem;
+      left: calc(-2rem - 10px);
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #f4e3b5;
+      box-shadow: 0 0 0 3px #7a5a2c, 0 0 12px rgb(244 227 181 / 0.5);
+    }
+  }
+
+  /* The hero's night sky, with a ridge of mountains along its foot */
+  .title-sky {
+    background-color: #0b0d22;
+    background-image:
+      linear-gradient(transparent 60%, #0b0d1a),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='160' viewBox='0 0 1200 160'%3E%3Cpath d='M0 160 L120 70 L220 120 L340 40 L470 120 L600 60 L720 130 L860 50 L980 120 L1100 70 L1200 110 V160Z' fill='%23141838'/%3E%3Cpath d='M0 160 L160 110 L300 140 L460 95 L620 145 L780 100 L940 140 L1080 105 L1200 135 V160Z' fill='%230f1230'/%3E%3C/svg%3E"),
+      radial-gradient(40rem 20rem at 80% 10%, rgb(255 214 120 / 0.12), transparent 70%),
+      radial-gradient(50rem 26rem at 15% 0%, rgb(92 140 255 / 0.18), transparent 70%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='12' cy='18' r='1.1' opacity='.8'/%3E%3Ccircle cx='80' cy='40' r='.9' opacity='.6'/%3E%3Ccircle cx='140' cy='12' r='1.3' opacity='.9'/%3E%3Ccircle cx='50' cy='110' r='1' opacity='.7'/%3E%3Ccircle cx='120' cy='130' r='.8' opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat, repeat-x, no-repeat, no-repeat, repeat;
+    background-position: 0 0, center bottom 6rem, 0 0, 0 0, 0 0;
+    background-size: auto, 1200px 160px, auto, auto, 160px 160px;
+  }
+
+  /* ----- The signpost at each region's entrance, and what the region holds ----- */
+
+  .signpost {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .signpost-board {
+    position: relative;
+    min-width: 11rem;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem 0.875rem;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 0.9rem, rgb(0 0 0 / 0.18) 0.9rem 1rem),
+      linear-gradient(180deg, #b07a3c, #8a5a28);
+    color: #fff4dc;
+    text-align: center;
+    text-shadow: 0 2px 0 rgb(0 0 0 / 0.35);
+    box-shadow:
+      inset 0 0 0 3px #5e3b16,
+      inset 0 3px 0 3px rgb(255 255 255 / 0.15),
+      0 10px 24px -10px rgb(0 0 0 / 0.8);
+  }
+
+  .signpost-post {
+    width: 0.75rem;
+    height: 1.25rem;
+    background: linear-gradient(90deg, #5e3b16, #7a4d1f);
+  }
+
+  .region-ahead {
+    border: 2px dashed rgb(244 227 181 / 0.25);
+    background: rgb(255 255 255 / 0.03);
+  }
+
+  /* ----- The gym challenge at each region's end ----- */
+
+  .gym-challenge {
+    position: relative;
+    z-index: 1;
+  }
+
+  .gym-card {
+    border: 3px solid #f4c542;
+    background:
+      radial-gradient(40rem 14rem at 0% 0%, rgb(244 197 66 / 0.12), transparent 70%),
+      rgb(14 16 34 / 0.92);
+    box-shadow: 0 0 0 3px #11142a, 0 30px 80px -30px rgb(0 0 0 / 0.9);
+  }
+
+  .gym-choice {
+    border: 2px solid rgb(255 255 255 / 0.14);
+    background: rgb(255 255 255 / 0.05);
+    color: #e4e6f5;
+  }
+
+  .gym-choice:not(:disabled):hover {
+    border-color: #ffcb05;
+    background: rgb(255 203 5 / 0.08);
+  }
+
+  .gym-choice-letter {
+    color: #ffcb05;
+  }
+
+  .gym-choice.is-right {
+    border-color: #3ecf6e;
+    background: rgb(62 207 110 / 0.16);
+    color: #ffffff;
+  }
+
+  .gym-choice.is-wrong {
+    border-color: #ef4b3f;
+    background: rgb(239 75 63 / 0.12);
+    color: #ffd2cf;
+  }
+
+  .gym-choice:disabled:not(.is-right) {
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .badge-pop {
+      animation: badge-pop 700ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
+    }
+  }
+
+  @keyframes badge-pop {
+    from {
+      transform: scale(0.2) rotate(-30deg);
+      opacity: 0;
+    }
+  }
+
+  /* ----- The title screen's start menu and the grass ledge its creatures stand on ----- */
+
+  .start-menu {
+    background: #f8f8f8;
+    color: #1f2433;
+    box-shadow:
+      inset 0 0 0 3px #f8f8f8,
+      inset 0 0 0 6px #48506b,
+      0 12px 0 -3px rgb(0 0 0 / 0.35);
+  }
+
+  .start-menu-item:hover,
+  .start-menu-item:focus-visible {
+    background: #e9edf8;
+  }
+
+  .start-menu-cursor {
+    color: #e3263b;
+    opacity: 0;
+  }
+
+  .start-menu-item:hover .start-menu-cursor,
+  .start-menu-item:focus-visible .start-menu-cursor,
+  .start-menu li:first-child .start-menu-cursor {
+    opacity: 1;
+  }
+
+  .start-menu:has(.start-menu-item:hover, .start-menu-item:focus-visible) li:first-child .start-menu-item:not(:hover, :focus-visible) .start-menu-cursor {
+    opacity: 0;
+  }
+
+  .title-ledge {
+    background:
+      radial-gradient(ellipse 50% 60% at 50% 100%, rgb(0 0 0 / 0.35), transparent 70%),
+      linear-gradient(180deg, transparent 55%, #2f6a3a 55%, #23522d);
+  }
+
+  /* ----- The world map's route through the six regions ----- */
+
+  .world-stop-link {
+    border: 2px solid rgb(255 255 255 / 0.1);
+    background: rgb(255 255 255 / 0.04);
+  }
+
+  .world-stop-link:hover {
+    border-color: rgb(244 227 181 / 0.5);
+    background: rgb(244 227 181 / 0.06);
+  }
+
+  .world-stop-link[data-biome="meadow"] { border-bottom-color: #3f8f52; }
+  .world-stop-link[data-biome="snow"] { border-bottom-color: #9fd3ff; }
+  .world-stop-link[data-biome="forest"] { border-bottom-color: #2f7a5a; }
+  .world-stop-link[data-biome="cave"] { border-bottom-color: #5ce1e6; }
+  .world-stop-link[data-biome="city"] { border-bottom-color: #ff5fa2; }
+  .world-stop-link[data-biome="summit"] { border-bottom-color: #e7ecff; }
+
+  /* The dashed route joining one region to the next on a wide screen */
+  @media (min-width: 1024px) {
+    .world-stop:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 2.25rem;
+      right: -0.5rem;
+      width: 0.5rem;
+      border-top: 4px dashed rgb(214 180 120 / 0.6);
+    }
+  }
+
+  /* The trainer card that heads the insights */
+  .trainer-card-head {
+    background:
+      repeating-linear-gradient(135deg, rgb(255 255 255 / 0.18) 0 12px, transparent 12px 24px),
+      linear-gradient(135deg, #ffd85c, #f4b73a);
+    box-shadow: inset 0 0 0 3px #b98a1f, 0 10px 0 -3px rgb(0 0 0 / 0.35);
   }
 }

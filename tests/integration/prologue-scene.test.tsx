@@ -1,6 +1,6 @@
-// Integration tests for PrologueScene, the opening of the page, rendered with the real timeline data inside the AI Dex.
-// Covers the page title and the way into the journey, the dex showing MEW and the first of every line, the latest entries,
-// the links to the eras, and the events-per-year chart with its era axis, summary and table.
+// Integration tests for PrologueScene, the opening of the page drawn as a game's title screen, rendered with the real
+// timeline data inside the AI Dex. Covers the title and the premise, MEW above the first creature of every line, the start
+// menu and the latest entries.
 import { render, screen, within } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it } from "vitest"
@@ -29,13 +29,17 @@ function wrapper({ children }: { children: ReactNode }) {
   )
 }
 
-// The figure of the events-per-year chart, with its era axis
-function chartFigure() {
-  return screen.getAllByRole("figure").find((figure) => figure.querySelector("[data-era-axis]"))!
-}
-
 function renderPrologue() {
-  return render(<PrologueScene eras={eras} activity={activity} latest={latest} totalEvents={events.length} />, { wrapper })
+  return render(
+    <PrologueScene
+      eras={eras}
+      latest={latest}
+      totalEvents={events.length}
+      firstYear={activity[0].year}
+      lastYear={activity.at(-1)!.year}
+    />,
+    { wrapper },
+  )
 }
 
 describe("PrologueScene", () => {
@@ -45,52 +49,7 @@ describe("PrologueScene", () => {
     expect(screen.getByRole("heading", { level: 1, name: "The AI Timeline" })).toBeInTheDocument()
   })
 
-  it("links to every era by its name and years, the first era first, as the page runs", () => {
-    renderPrologue()
-
-    const links = within(screen.getByRole("list", { name: "Eras" })).getAllByRole("link")
-    expect(links).toHaveLength(eras.length)
-    eras.forEach((era, index) => {
-      expect(links[index]).toHaveAttribute("href", `#${era.id}`)
-      expect(links[index]).toHaveTextContent(`${era.label}${era.subtitle}`)
-      expect(links[index].querySelector("img")).toHaveAttribute("src", `/sprites/badges/${era.badge}.png`)
-      expect(links[index].querySelector("img")).toHaveAttribute("alt", "")
-      expect(getComputedStyle(links[index]).whiteSpace).toBe("nowrap")
-    })
-  })
-
-
-  it("sums up how many events fall in the latest era under the chart", () => {
-    renderPrologue()
-
-    const latest = eras.at(-1)!
-    expect(chartFigure()).toHaveTextContent(
-      `${latest.events.length} of the ${events.length} events happened since ${latest.range[0]}`,
-    )
-  })
-
-  it("tells pointer users that a bar in the chart jumps to its year", () => {
-    renderPrologue()
-
-    const hint = within(chartFigure()).getByText("Click a bar to jump to that year.")
-    // The bars answer only the pointer, so assistive technology skips the hint along with the chart
-    expect(hint).toHaveAttribute("aria-hidden", "true")
-  })
-
-  it("offers the chart's numbers as a table of every year that has events, the first year first", async () => {
-    renderPrologue()
-
-    await userEvent.click(screen.getByText("Show the numbers"))
-
-    const table = screen.getByRole("table", { name: "Events per year" })
-    const rows = within(table).getAllByRole("row").slice(1)
-    const yearsWithEvents = activity.filter((year) => year.total > 0)
-    expect(rows).toHaveLength(yearsWithEvents.length)
-    expect(rows[0]).toHaveTextContent(`${yearsWithEvents[0].year}${yearsWithEvents[0].total}`)
-    expect(rows.at(-1)).toHaveTextContent(`${yearsWithEvents.at(-1)!.year}${yearsWithEvents.at(-1)!.total}`)
-  })
-
-  it("tells the story's premise: AI history as evolution lines", () => {
+  it("tells the story's premise: AI history as evolution lines on a route", () => {
     renderPrologue()
 
     const first = activity[0].year
@@ -99,26 +58,36 @@ describe("PrologueScene", () => {
       exact: false,
     })
     expect(intro).toHaveTextContent("MAGIKARP")
+    expect(intro).toHaveTextContent(`Walk the route from ${first}`)
   })
 
-  it("starts the journey at the first era, and offers the map of the lines", () => {
+  it("offers a start menu: a new game in the first era, continuing at the latest entry, and the Pokédex", () => {
     renderPrologue()
 
-    expect(screen.getByRole("link", { name: `Start the journey in ${activity[0].year}` })).toHaveAttribute(
-      "href",
+    const menu = within(screen.getByRole("navigation", { name: "Start menu" })).getAllByRole("link")
+    expect(menu.map((item) => item.textContent)).toEqual([
+      `▶New gameStart the journey in ${activity[0].year}`,
+      `▶ContinueJump to the latest, ${formatEventDate(events.at(-1)!)}`,
+      `▶PokédexMeet the ${LINES.length} lines`,
+    ])
+    expect(menu.map((item) => item.getAttribute("href"))).toEqual([
       `#${eras[0].id}`,
-    )
-    expect(screen.getByRole("link", { name: `Meet the ${LINES.length} lines` })).toHaveAttribute("href", "#party-title")
+      `#${eventAnchorId(events.at(-1)!)}`,
+      "#party-title",
+    ])
+    for (const item of menu) {
+      expect(item.querySelector(".start-menu-cursor")).toHaveAttribute("aria-hidden", "true")
+    }
   })
 
-  it("shows MEW on the dex beside the title, above the first creature of every line", () => {
+  it("floats MEW above the first creature of every line, as pictures assistive technology skips", () => {
     const { container } = renderPrologue()
 
-    const dexFigure = [...container.querySelectorAll("figure")].find((figure) => figure.querySelector(".dex-screen"))!
-    expect(dexFigure.querySelector('img[src="/sprites/modern/151.gif"]')).not.toBeNull()
-    expect(dexFigure.querySelectorAll(".dex-screen li img")).toHaveLength(LINES.length)
-    expect(dexFigure.querySelector(".dex-screen")).toHaveAttribute("aria-hidden", "true")
-    expect(dexFigure.querySelector("figcaption")).toHaveTextContent("Every Pokémon is said to descend from MEW.")
+    expect(container.querySelector('img[src="/sprites/modern/151.gif"]')!.closest('[aria-hidden="true"]')).not.toBeNull()
+    const lineup = container.querySelector(".title-ledge")!
+    expect([...lineup.querySelectorAll("img")].map((sprite) => sprite.getAttribute("src"))).toEqual(
+      LINES.map((line) => `/sprites/modern/${line.stages[0].species}.gif`),
+    )
   })
 })
 
@@ -127,12 +96,14 @@ describe("PrologueScene on a laptop screen", () => {
     await page.viewport(414, 896)
   })
 
-  // The timeline should follow soon, so the opening stays within about a screen
+  // The journey should follow soon, so the title screen stays within about a screen. The test renders without the
+  // page's fonts, whose fallbacks differ from machine to machine, so the bound leaves room for wider ones.
   it("keeps the opening to about a screen", async () => {
     await page.viewport(1280, 800)
     const { container } = renderPrologue()
 
-    expect(container.querySelector("section")!.getBoundingClientRect().height).toBeLessThan(960)
+    const height = container.querySelector("section")!.getBoundingClientRect().height
+    expect(height).toBeLessThan(960)
   })
 })
 
@@ -167,13 +138,11 @@ describe("the latest events at the top of the page", () => {
     expect(items[0]).toHaveTextContent(events.at(-1)!.title)
   })
 
-  it("comes before the chart, so the latest news is the first thing under the title", () => {
+  it("follows the start menu, so the latest news is right under the way into the journey", () => {
     renderPrologue()
 
-    expect(
-      latestList().compareDocumentPosition(chartFigure()) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy()
+    const menu = screen.getByRole("navigation", { name: "Start menu" })
+    expect(menu.compareDocumentPosition(latestList()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it("links each event to its card in the timeline rather than off the site", () => {
@@ -217,34 +186,12 @@ describe("the latest events at the top of the page", () => {
   })
 
   it("leaves out the list when there are no events", () => {
-    render(<PrologueScene eras={eras} activity={activity} latest={[]} totalEvents={events.length} />, { wrapper })
+    render(
+      <PrologueScene eras={eras} latest={[]} totalEvents={events.length} firstYear={1943} lastYear={2026} />,
+      { wrapper },
+    )
 
     expect(screen.queryByRole("heading", { name: "Latest sightings" })).toBeNull()
   })
 })
 
-// The axis under the chart names each era at its first year, and the short eras of the 2020s leave little room
-describe.each([
-  [375, 812],
-  [768, 1024],
-  [1024, 768],
-  [1280, 800],
-])("the era axis at %ipx wide", (width, height) => {
-  afterEach(async () => {
-    await page.viewport(414, 896)
-  })
-
-  it("keeps the years and era names under the chart from running into each other", async () => {
-    await page.viewport(width, height)
-    const { container } = renderPrologue()
-
-    const labels = [...container.querySelectorAll<HTMLElement>("[data-era-axis] span")]
-      .filter((label) => label.textContent && label.getBoundingClientRect().width > 0)
-      .map((label) => ({ text: label.textContent, box: label.getBoundingClientRect() }))
-      .sort((a, b) => a.box.left - b.box.left)
-    expect(labels.map((label) => label.text)).toContain("2026")
-    labels.slice(1).forEach((label, index) => {
-      expect(label.box.left, `${labels[index].text} / ${label.text}`).toBeGreaterThanOrEqual(labels[index].box.right)
-    })
-  })
-})

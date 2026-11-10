@@ -84,7 +84,7 @@ describe("StoryEngine", () => {
   it("shows only a picked category and tells each era without one", async () => {
     render(<StoryEngine events={events} />)
 
-    await userEvent.click(screen.getByRole("button", { name: /^Categories/ }))
+    await userEvent.click(screen.getByRole("button", { name: /^Bag/ }))
     await userEvent.click(screen.getByRole("button", { name: /^Agents/ }))
 
     const agents = events.filter((event) => event.category === "Agents")
@@ -138,10 +138,10 @@ describe("StoryEngine", () => {
     expect(paceLine.compareDocumentPosition(agentic) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
-  it("ends the page with the journey so far, and links back to the start", () => {
+  it("ends the page in the Hall of Fame, and links back to the start", () => {
     render(<StoryEngine events={events} />)
 
-    expect(screen.getByRole("heading", { level: 2, name: "The Journey So Far" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 2, name: "Hall of Fame" })).toBeInTheDocument()
     expect(screen.getByRole("link", { name: `Start again from ${events[0].year}` })).toHaveAttribute(
       "href",
       "#the-foundation-era",

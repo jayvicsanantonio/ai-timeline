@@ -36,7 +36,7 @@ function currentFilters() {
 }
 
 function categoriesToggle() {
-  return screen.getByRole("button", { name: /^Categories/ })
+  return screen.getByRole("button", { name: /^Bag/ })
 }
 
 describe("TimelineControls", () => {
@@ -90,7 +90,7 @@ describe("TimelineControls", () => {
 
     expect(currentFilters().categories).toEqual(["Agents", "Ethics & Policy"])
     expect(within(panel).getByRole("button", { name: /^Agents/ })).toHaveAttribute("aria-pressed", "true")
-    expect(categoriesToggle()).toHaveAccessibleName("Categories, 2 picked")
+    expect(categoriesToggle()).toHaveAccessibleName("Bag: filter by category, 2 picked")
 
     await userEvent.click(within(panel).getByRole("button", { name: /^Agents/ }))
 
@@ -127,7 +127,7 @@ describe("TimelineControls", () => {
     render(<ControlledControls />)
 
     const order = document.querySelector<HTMLElement>("[data-timeline-order]")!
-    expect(order).toHaveTextContent("From 1943 to now")
+    expect(order).toHaveTextContent("Route: 1943 → now")
     expect(order).toHaveClass("sr-only")
     expect(order.closest('[aria-hidden="true"]')).toBeNull()
   })
@@ -142,7 +142,7 @@ describe("TimelineControls", () => {
       render(<ControlledControls />)
 
       const order = document.querySelector<HTMLElement>("[data-timeline-order]")!
-      expect(order).toHaveTextContent("From 1943 to now")
+      expect(order).toHaveTextContent("Route: 1943 → now")
       expect(order.getBoundingClientRect().width).toBeGreaterThan(40)
       expect(order.getBoundingClientRect().left).toBeGreaterThan(screen.getByRole("status").getBoundingClientRect().right)
     })

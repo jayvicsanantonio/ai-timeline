@@ -357,3 +357,31 @@ test.describe(`on a phone (${PHONE.width}x${PHONE.height})`, () => {
     expect(misplaced).toEqual([])
   })
 })
+
+test("ends every region with a gym challenge whose right answer earns the region's badge", async ({ page }) => {
+  await page.goto("/")
+  await waitForHydration(page)
+
+  await expect(page.locator("[data-gym-challenge]")).toHaveCount(erasOfData.length)
+  const challenge = page.locator('[data-gym-challenge="the-deep-learning-revolution"]')
+  const answer = challenge.getByRole("button", { name: /AlexNet winning the ImageNet competition/ })
+  await expect(async () => {
+    await answer.click()
+    await expect(challenge.locator("[data-badge-earned]")).toBeVisible({ timeout: 1000 })
+  }).toPass({ timeout: 15_000 })
+  await expect(challenge.locator("[data-badge-earned]")).toContainText("Correct! You earned the Deep Cavern badge!")
+})
+
+test("draws every region in its own biome, with scenery at either side of the route on a wide screen", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto("/")
+
+  const biomes = await page.locator("[data-era-backdrop]").evaluateAll((backdrops) =>
+    backdrops.map((backdrop) => ({
+      biome: backdrop.getAttribute("data-biome"),
+      scenery: [...backdrop.querySelectorAll(".biome-scenery")].map((strip) => getComputedStyle(strip).backgroundImage.startsWith("url(")),
+    })),
+  )
+  expect(biomes.map(({ biome }) => biome)).toEqual(erasOfData.map((era) => era.biome))
+  expect(biomes.every(({ scenery }) => scenery.length === 2 && scenery.every(Boolean))).toBe(true)
+})

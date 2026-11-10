@@ -124,7 +124,12 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
             </span>
             <span className="mt-2.5 flex items-start gap-1.5 text-xs leading-tight text-[#d9dcef]">
               <Sprite src={badgePath(activeEra.badge)} className="size-4 shrink-0 object-contain" />
-              {activeEra.label}
+              <span>
+                {activeEra.label}
+                <span data-rail-place="" className="mt-0.5 block font-pixel text-[0.4375rem] uppercase leading-3 text-[#f4e3b5]">
+                  {activeEra.place}
+                </span>
+              </span>
             </span>
           </p>
           <EraProgress progress={position.eraProgress} color={activeEra.color} className="mx-1 mt-2" />

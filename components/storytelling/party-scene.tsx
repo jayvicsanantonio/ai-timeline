@@ -1,13 +1,15 @@
-// The map of the story, right after the opening: the nine lines the journey follows, each with every stage it has
-// reached, when it got there and the event that evolved it, and how many entries it holds. A line's first stage links to
-// the entry where it appears, and each later stage to the scene where it evolves.
+// The professor's briefing before the journey: how to read it, from an entry's number to the badges at each region's end,
+// then the nine lines it follows, each with every stage it has reached, when it got there and the event that evolved it,
+// and how many entries it holds. A line's first stage links to the entry where it appears, and each later stage to the
+// scene where it evolves.
 'use client';
 
 import { ChevronRight } from 'lucide-react';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { useDexStory } from '@/components/eras/dex-context';
 import { Sprite } from '@/components/ui/sprite';
-import { ART, LINES, speciesOf, type LineId } from '@/lib/dex';
+import { ART, badgePath, iconPath, LINES, speciesOf, type LineId } from '@/lib/dex';
+import { ERA_DEFINITIONS } from '@/lib/eras';
 import { eventAnchorId } from '@/lib/event-format';
 
 interface StageStop {
@@ -57,9 +59,11 @@ export function PartyScene() {
   const { stops, counts } = useStageStops();
 
   return (
-    <section aria-labelledby="party-title" className="bg-background px-4 pb-16 pt-6 text-white sm:px-6 sm:pb-20">
+    <section aria-labelledby="party-title" className="bg-background px-4 pb-16 pt-14 text-white sm:px-6 sm:pb-20">
       <div className="mx-auto max-w-6xl">
-        <p className="font-pixel text-[0.625rem] uppercase text-[#7d84a6]">Your party</p>
+        <Briefing />
+
+        <p className="mt-14 font-pixel text-[0.625rem] uppercase text-[#7d84a6]">Your Pokédex</p>
         <h2 id="party-title" className="mt-3 scroll-mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">
           The {LINES.length} lines of AI
         </h2>
@@ -119,5 +123,78 @@ export function PartyScene() {
         </ol>
       </div>
     </section>
+  );
+}
+
+// The professor's welcome and how to read the journey, each rule beside a small piece of the page it explains
+function Briefing() {
+  const first = LINES[0];
+
+  return (
+    <div data-briefing="">
+      <div className="dex-textbox max-w-3xl px-5 py-4 sm:px-6 sm:py-5">
+        <p className="font-pixel text-[0.5625rem] uppercase text-[#48506b]">Professor</p>
+        <p className="mt-2 text-[15px] leading-7">
+          Welcome to the world of artificial intelligence! People have been raising it since 1943. Your job is to walk the
+          route from the beginning to today and record every milestone in your Pokédex. Here is how to read it.
+        </p>
+      </div>
+
+      <ul aria-label="How to read the journey" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <Tip visual={<span className="font-pixel text-[0.625rem] text-white">No. 001</span>}>
+          Every event is a numbered entry, in the order it happened.
+        </Tip>
+        <Tip
+          visual={
+            <span className="flex items-center gap-1.5">
+              <Sprite src={iconPath(first.stages[0].species)} pixelated className="size-8 object-contain" />
+              <span className="font-pixel text-[0.5625rem] uppercase text-[#4f8fe6]">Lv.12</span>
+            </span>
+          }
+        >
+          Each branch of AI is an evolution line. Its creature shows how far the branch had come; its level counts its
+          milestones.
+        </Tip>
+        <Tip
+          visual={
+            <span className="flex items-center gap-1">
+              <Sprite src={iconPath(first.stages[0].species)} pixelated className="size-8 object-contain" />
+              <span className="text-xs text-[#a7acc8]">▶</span>
+              <Sprite src={iconPath(first.stages[1].species)} pixelated className="size-8 object-contain" />
+            </span>
+          }
+        >
+          Lines evolve at the real turning points. Scroll through an evolution to watch it happen.
+        </Tip>
+        <Tip
+          visual={
+            <span className="block w-20">
+              <span className="hp-track block">
+                <span className="hp-fill" style={{ width: '58%', backgroundColor: '#3ecf6e', transform: 'none' }} />
+              </span>
+            </span>
+          }
+        >
+          Human-versus-machine matches are battles, and the HP bars show the final score.
+        </Tip>
+        <Tip visual={<span className="frz-badge static font-pixel">FRZ</span>}>
+          In the AI winters the money froze, and so does every line until the thaw.
+        </Tip>
+        <Tip visual={<Sprite src={badgePath(ERA_DEFINITIONS[0].badge)} className="size-8 object-contain" />}>
+          Each region ends in a gym challenge. Answer it to earn the region&rsquo;s badge.
+        </Tip>
+      </ul>
+    </div>
+  );
+}
+
+function Tip({ visual, children }: { visual: ReactNode; children: ReactNode }) {
+  return (
+    <li className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <span aria-hidden="true" className="grid h-10 w-20 shrink-0 place-items-center">
+        {visual}
+      </span>
+      <span className="text-sm leading-6 text-[#d9dcef]">{children}</span>
+    </li>
   );
 }

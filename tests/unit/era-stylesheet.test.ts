@@ -28,10 +28,10 @@ function styleOf(selector: string, media = "") {
   return rules.find((placed) => placed.rule.selectorText === selector && placed.media === media)?.rule.style
 }
 
-const BACKDROPS = [".gen-1-backdrop", ".gen-2-backdrop", ".gen-3-backdrop", ".gen-4-backdrop", ".gen-5-backdrop", ".modern-backdrop"]
+const BACKDROPS = [".biome-meadow", ".biome-snow", ".biome-forest", ".biome-cave", ".biome-city", ".biome-summit"]
 
 describe("the AI Dex in the global stylesheet", () => {
-  it("starts every generation's backdrop with the seam that fades it into the page", () => {
+  it("starts every biome's backdrop with the seam that fades it into the page", () => {
     for (const backdrop of BACKDROPS) {
       expect(styleOf(backdrop)?.backgroundImage, backdrop).toMatch(/^var\(--era-seam\)/)
     }

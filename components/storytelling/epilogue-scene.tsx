@@ -1,5 +1,5 @@
-// The close of the page, after the latest entry, where the journey reaches now: the party as every line stands today, with
-// its level, how many years the reader has travelled from the first entry, the badges of the eras leading to an egg for
+// The close of the page, after the latest entry, where the journey reaches now and the party enters the Hall of Fame: every
+// line as it stands today, with its level, how many years the reader has travelled from the first entry, the badges of the eras leading to an egg for
 // the next one, a way back to the start, and the credits for the sprites.
 'use client';
 
@@ -39,11 +39,11 @@ export function EpilogueScene({ firstEraId, firstEvent, latestEvent }: EpilogueS
           {latestEvent.year}
         </p>
         <h2 id="epilogue-title" className="dex-wordmark mt-5 text-4xl font-bold tracking-tight sm:text-6xl">
-          The Journey So Far
+          Hall of Fame
         </h2>
         <p className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-[#d9dcef]">
-          You have travelled {latestEvent.year - firstEvent.year} years, from the {firstEvent.title} in {firstEvent.year}{' '}
-          to agents at work today. This is your party as it stands now.
+          Congratulations! You have travelled {latestEvent.year - firstEvent.year} years, from the {firstEvent.title} in{' '}
+          {firstEvent.year} to agents at work today. Your party enters the Hall of Fame as it stands now.
         </p>
 
         <ol aria-label="The party today" className="mx-auto mt-10 grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-9">

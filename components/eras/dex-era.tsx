@@ -13,13 +13,13 @@ import { CategoryBadge } from '@/components/ui/category-badge';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Sprite } from '@/components/ui/sprite';
 import { ART, formatDexNumber, type DexEntry } from '@/lib/dex';
-import { isCurrentEra, type GenerationId } from '@/lib/eras';
+import { isCurrentEra } from '@/lib/eras';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
 import { groupEventsByYear, type YearGroup } from '@/lib/year-groups';
 import { yearSummary } from '@/lib/year-summaries';
 import { cn } from '@/lib/utils';
 import type { TimelineEvent } from '@/types/timeline';
-import { useDexEntry } from './dex-context';
+import { useDexEntry, useDexStory } from './dex-context';
 import {
   EventHeading,
   EventSource,
@@ -31,16 +31,9 @@ import {
   useBriefListing,
   type EraInterfaceProps,
 } from './era-parts';
+import { GymChallenge } from './gym-challenge';
 import { Scene } from './scenes';
 
-const BACKDROPS: Record<GenerationId, string> = {
-  'gen-1': 'gen-1-backdrop',
-  'gen-2': 'gen-2-backdrop',
-  'gen-3': 'gen-3-backdrop',
-  'gen-4': 'gen-4-backdrop',
-  'gen-5': 'gen-5-backdrop',
-  modern: 'modern-backdrop',
-};
 
 export function DexEra({ era, totalEvents }: EraInterfaceProps) {
   const groups = groupEventsByYear(era.events);
@@ -49,8 +42,10 @@ export function DexEra({ era, totalEvents }: EraInterfaceProps) {
   const current = isCurrentEra(era);
 
   return (
-    <div data-era-backdrop="" className={cn('pb-16 pt-6 sm:pb-24', BACKDROPS[era.generation])}>
+    <div data-era-backdrop="" data-biome={era.biome} className={cn('pb-16 pt-6 sm:pb-24', `biome-${era.biome}`)}>
       {era.generation === 'gen-1' ? <GameBoyPalette /> : null}
+      <div aria-hidden="true" className="biome-scenery biome-scenery-left" />
+      <div aria-hidden="true" className="biome-scenery biome-scenery-right" />
       <div data-gen={era.generation} className="dex-era mx-auto max-w-4xl px-4 sm:px-6">
         {groups.map((group, index) => (
           <div key={group.year}>
@@ -60,6 +55,7 @@ export function DexEra({ era, totalEvents }: EraInterfaceProps) {
         ))}
         {current && !filtering ? <Frontier latestEvent={era.events[era.events.length - 1]} /> : null}
       </div>
+      {filtering ? null : <GymChallenge era={era} />}
     </div>
   );
 }
@@ -114,7 +110,7 @@ function DexYear({ group, filtering, first }: { group: YearGroup; filtering: boo
     >
       <YearColumn
         group={group}
-        className="dex-year-column mb-4 border-b pb-2 md:mb-0 md:border-b-0 md:border-r md:pb-0 md:pr-6"
+        className="dex-year-column mb-4 border-b pb-2 md:mb-0 md:border-b-0 md:pb-0 md:pr-6"
       >
         <DexYearLabel group={group} />
       </YearColumn>
@@ -162,7 +158,7 @@ function DexListItem({ event, inBrief, filtering }: { event: TimelineEvent; inBr
   const scenes = filtering ? [] : entry.scenes;
 
   return (
-    <li className="grid grid-cols-[minmax(0,1fr)] gap-5">
+    <li className="dex-route-stop grid grid-cols-[minmax(0,1fr)] gap-5">
       {inBrief && scenes.length === 0 ? <DexBrief event={event} entry={entry} /> : <DexCard event={event} entry={entry} />}
       {scenes.map((played) => (
         <Scene key={played.id} played={played} pixelated={entry.pixelated} />
@@ -174,6 +170,15 @@ function DexListItem({ event, inBrief, filtering }: { event: TimelineEvent; inBr
 // The year as the era's screen prints it, how many entries it holds and how many are landmarks
 function DexYearLabel({ group }: { group: YearGroup }) {
   const landmarks = group.events.filter((event) => event.landmark).length;
+  const story = useDexStory();
+  // The creatures met on the route this year, once each, as they stood when the year began
+  const met = new Map<number, string>();
+  for (const event of group.events) {
+    const entry = story?.dex.get(eventAnchorId(event));
+    if (entry && !met.has(entry.species.id)) {
+      met.set(entry.species.id, entry.icon);
+    }
+  }
 
   return (
     <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:block">
@@ -181,6 +186,13 @@ function DexYearLabel({ group }: { group: YearGroup }) {
       <p className="dex-year-meta text-xs md:mt-3">{countOf(group.events.length, 'entry', 'entries')}</p>
       {landmarks > 0 ? (
         <p className="text-xs text-[var(--legend-gold)] md:mt-1">★ {countOf(landmarks, 'landmark')}</p>
+      ) : null}
+      {met.size > 0 ? (
+        <p data-year-met="" className="mt-3 hidden flex-wrap gap-0.5 md:flex">
+          {[...met].slice(0, 6).map(([id, icon]) => (
+            <Sprite key={id} src={icon} pixelated className="size-8 object-contain" />
+          ))}
+        </p>
       ) : null}
     </div>
   );

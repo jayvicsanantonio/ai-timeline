@@ -177,7 +177,8 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
     const { section } = renderEra(generation)
 
     within(section)
-      .getAllByRole("heading", { level: 3 })
+      .getAllByRole("article")
+      .map((article) => within(article).getByRole("heading", { level: 3 }))
       .forEach((heading) => {
         const hint = document.getElementById(within(heading).getByRole("link").getAttribute("aria-describedby")!)
         expect(hint).toHaveTextContent("Opens in a new tab")
@@ -316,19 +317,30 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
     }
   })
 
-  it("exposes no decorative controls as buttons", () => {
+  it("exposes no decorative controls as buttons, only its gym challenge's answers", () => {
     const { section } = renderEra(generation)
 
-    expect(within(section).queryAllByRole("button")).toEqual([])
+    const challenge = section.querySelector("[data-gym-challenge]")!
+    const buttons = within(section).queryAllByRole("button")
+    expect(buttons).toHaveLength(3)
+    for (const button of buttons) {
+      expect(challenge).toContainElement(button)
+    }
   })
 
-  it("lets keyboard users tab to every event link in the order shown, the latest first", async () => {
-    renderEra(generation)
+  it("lets keyboard users tab to every event link in the order shown, the first first", async () => {
+    const { section } = renderEra(generation)
+    const eventLinks = shown.map((event) => screen.getByRole("link", { name: event.title }))
+    const focusable = section.querySelectorAll("a, button").length
 
-    for (const event of shown) {
+    const reached: Element[] = []
+    for (let step = 0; step < focusable; step += 1) {
       await userEvent.tab()
-      expect(document.activeElement).toBe(screen.getByRole("link", { name: event.title }))
+      if (document.activeElement && eventLinks.includes(document.activeElement as HTMLAnchorElement)) {
+        reached.push(document.activeElement)
+      }
     }
+    expect(reached).toEqual(eventLinks)
   })
 
   it("says so in its header when none of the era's events match the filters", () => {
@@ -499,8 +511,8 @@ describe("the Generation I era", () => {
   it("prints its titles in the pixel font of its screen", () => {
     const { section } = renderEra("gen-1")
 
-    for (const heading of within(section).getAllByRole("heading", { level: 3 })) {
-      expect(getComputedStyle(heading).fontFamily).toContain("Press Start")
+    for (const article of within(section).getAllByRole("article")) {
+      expect(getComputedStyle(within(article).getByRole("heading", { level: 3 })).fontFamily).toContain("Press Start")
     }
   })
 })
@@ -830,5 +842,114 @@ describe("the story told through the entries", () => {
 
     const { section: filtered } = renderEra("modern", busy, 40)
     expect(filtered.querySelector("[data-scene]")).toBeNull()
+  })
+})
+
+describe("the region the era is drawn as", () => {
+  it("opens on a signpost naming its route and place, and draws its stretch of the route in its biome", () => {
+    const { era, section } = renderEra("gen-2")
+
+    const header = section.querySelector("[data-era-header]")!
+    expect(header.querySelector(".signpost")).toHaveTextContent(`Route ${era.index + 1}${era.place}`)
+    expect(header.querySelector(".signpost")).toHaveAttribute("aria-hidden", "true")
+    expect(header.querySelector("[data-era-place]")).toHaveTextContent(era.place)
+    const backdrop = section.querySelector("[data-era-backdrop]")!
+    expect(backdrop).toHaveAttribute("data-biome", era.biome)
+    expect(backdrop).toHaveClass(`biome-${era.biome}`)
+  })
+
+  it("previews the lines the reader meets there and its turning points, each linking to its entry", () => {
+    const { section, dex } = renderEra("gen-2")
+
+    const ahead = section.querySelector<HTMLElement>("[data-region-ahead]")!
+    const firsts = eventsByGeneration["gen-2"].filter((event) => dex.get(eventAnchorId(event))!.firstOfLine)
+    const landmarks = eventsByGeneration["gen-2"].filter((event) => event.landmark)
+    const links = within(ahead).getAllByRole("link")
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      ...firsts.map((event) => `#${eventAnchorId(event)}`),
+      ...landmarks.map((event) => `#${eventAnchorId(event)}`),
+    ])
+    for (const event of landmarks) {
+      expect(ahead).toHaveTextContent(event.title)
+    }
+  })
+
+  it("leaves the preview and the gym challenge out while the reader filters", () => {
+    const { section } = renderEra("gen-2", eventsByGeneration["gen-2"].slice(0, 1), 10)
+
+    expect(section.querySelector("[data-region-ahead]")).toBeNull()
+    expect(section.querySelector("[data-gym-challenge]")).toBeNull()
+  })
+
+  it("marks a stop on the route beside every entry", () => {
+    const { section } = renderEra("gen-3")
+
+    for (const article of within(section).getAllByRole("article")) {
+      expect(article.closest("li")).toHaveClass("dex-route-stop")
+    }
+  })
+})
+
+describe("the gym challenge at a region's end", () => {
+  function challengeOf(section: HTMLElement) {
+    return section.querySelector<HTMLElement>("[data-gym-challenge]")!
+  }
+
+  it("asks one question with three answers, after the region's entries", () => {
+    const { era, section } = renderEra("gen-4")
+
+    const challenge = challengeOf(section)
+    expect(challenge).toHaveAttribute("data-gym-challenge", era.id)
+    expect(within(challenge).getByRole("heading", { level: 3 })).toHaveTextContent(
+      "After fifty years of SPLASH, what finally evolved MAGIKARP into GYARADOS in 2012?",
+    )
+    expect(within(challenge).getAllByRole("button")).toHaveLength(3)
+    const cards = section.querySelectorAll("article")
+    expect(cards[cards.length - 1].compareDocumentPosition(challenge) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it("says a wrong answer is wrong and lets the reader try again", async () => {
+    const { section } = renderEra("gen-4")
+
+    const challenge = challengeOf(section)
+    const wrong = within(challenge).getByRole("button", { name: /AlphaGo beating Lee Sedol/ })
+    await userEvent.click(wrong)
+
+    expect(wrong).toHaveAttribute("aria-pressed", "true")
+    expect(challenge).toHaveTextContent("Not quite. Try another answer.")
+    expect(within(challenge).getByRole("button", { name: /AlexNet/ })).toBeEnabled()
+    expect(challenge.querySelector("[data-badge-earned]")).toBeNull()
+  })
+
+  it("awards the region's badge for the right answer, explains it and links to its entry", async () => {
+    const { era, section } = renderEra("gen-4")
+
+    const challenge = challengeOf(section)
+    await userEvent.click(within(challenge).getByRole("button", { name: /AlexNet winning the ImageNet competition/ }))
+
+    const earned = challenge.querySelector<HTMLElement>("[data-badge-earned]")!
+    expect(earned).toHaveTextContent(`Correct! You earned the ${era.place} badge!`)
+    expect(earned).toHaveTextContent("AlexNet won ImageNet")
+    expect(earned.querySelector("img")).toHaveAttribute("src", `/sprites/badges/${era.badge}.png`)
+    expect(within(earned).getByRole("link", { name: "Revisit: ImageNet Breakthrough" })).toHaveAttribute(
+      "href",
+      "#event-2012-imagenet-breakthrough",
+    )
+    for (const button of within(challenge).getAllByRole("button")) {
+      expect(button).toBeDisabled()
+    }
+    expect(earned.closest("[aria-live]")).not.toBeNull()
+  })
+
+  it("recaps the evolutions the region held, each linking to its scene", () => {
+    const { section, dex } = renderEra("gen-4")
+
+    const recap = challengeOf(section).querySelector<HTMLElement>("[data-region-recap]")!
+    const evolutions = eventsByGeneration["gen-4"].flatMap((event) =>
+      dex.get(eventAnchorId(event))!.scenes.filter((played) => played.scene.kind === "evolution"),
+    )
+    expect(within(recap).getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual(
+      evolutions.map((played) => `#${played.id}`),
+    )
   })
 })

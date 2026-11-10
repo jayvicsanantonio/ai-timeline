@@ -32,7 +32,7 @@ describe("EpilogueScene", () => {
   it("reaches now under a level-2 heading, numbered as the latest entry", () => {
     renderEpilogue()
 
-    expect(screen.getByRole("heading", { level: 2, name: "The Journey So Far" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 2, name: "Hall of Fame" })).toBeInTheDocument()
     const latest = events.at(-1)!
     expect(screen.getByText(/^No\. \d{3}/)).toHaveTextContent(`No. ${events.length} · ${latest.month} ${latest.year}`)
   })

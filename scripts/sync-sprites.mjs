@@ -1,5 +1,5 @@
 // Copies the sprites the page shows from a checkout of the sprites repository into public/sprites, and removes any it no
-// longer shows. The list comes from requiredSprites in lib/dex.ts, so run this after adding events or changing creatures:
+// longer shows. The list comes from pageSprites in lib/journey.ts, so run this after adding events or changing creatures:
 //
 //   git clone --depth 1 --filter=blob:none --no-checkout https://github.com/jayvicsanantonio/sprites ../sprites
 //   node scripts/sync-sprites.mjs ../sprites
@@ -89,10 +89,10 @@ const server = await createServer({
 });
 
 try {
-  const { requiredSprites } = await server.ssrLoadModule('/lib/dex.ts');
+  const { pageSprites } = await server.ssrLoadModule('/lib/journey.ts');
   const { parseTimelineEvents } = await server.ssrLoadModule('/lib/timeline-events.ts');
   const { default: data } = await server.ssrLoadModule('/data/timeline-events.json');
-  const required = requiredSprites(parseTimelineEvents(data));
+  const required = pageSprites(parseTimelineEvents(data));
 
   for (const publicPath of required) {
     copy(publicPath);

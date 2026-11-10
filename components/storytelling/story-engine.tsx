@@ -1,12 +1,13 @@
-// Orchestrates the page, a journey forward through AI history: the prologue with the latest news, the nine lines the story
-// follows, the six eras from the Foundation Era to the Agentic Era with their toolbar and navigation, the insights and the
-// epilogue with the party as it stands today. Builds the AI Dex once from every event and holds the search and category
+// Orchestrates the page, an adventure forward through AI history: the title screen with the latest news, the world map of
+// the six regions, the professor's briefing on the nine lines the story follows, the six eras from the Foundation Era to the
+// Agentic Era with their toolbar and navigation, the trainer card and the Hall of Fame with the party as it stands today. Builds the AI Dex once from every event and holds the search and category
 // filters, so every part of the timeline shows the same events under the same numbers, lines and scenes.
 'use client';
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { PartyScene } from './party-scene';
 import { PrologueScene } from './prologue-scene';
+import { WorldMap } from './world-map';
 import { EpilogueScene } from './epilogue-scene';
 import { DexProvider } from '@/components/eras/dex-context';
 import { EraChapter } from '@/components/eras/era-chapter';
@@ -92,7 +93,15 @@ export function StoryEngine({ events }: StoryEngineProps) {
   return (
     <DexProvider dex={dex} events={events}>
     <div className="relative">
-      <PrologueScene eras={eras} activity={activity} latest={latest} totalEvents={events.length} />
+      <PrologueScene
+        eras={eras}
+        latest={latest}
+        totalEvents={events.length}
+        firstYear={events[0].year}
+        lastYear={events[events.length - 1].year}
+      />
+
+      <WorldMap eras={eras} activity={activity} totalEvents={events.length} />
 
       <PartyScene />
 
