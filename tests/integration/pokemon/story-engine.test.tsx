@@ -9,7 +9,7 @@ import { PokemonStoryEngine } from "@/components/pokemon/storytelling/story-engi
 import timelineData from "@/data/timeline-events.json"
 import { ERA_DEFINITIONS, groupEventsByEra } from "@/lib/eras"
 import { eventAnchorId } from "@/lib/event-format"
-import { LINES } from "@/lib/dex"
+import { LINES, speciesOf } from "@/lib/dex"
 import { newestFirst } from "@/lib/newest-first"
 import { filterEvents } from "@/lib/timeline-filter"
 import { parseTimelineEvents } from "@/lib/timeline-events"
@@ -43,13 +43,26 @@ describe("PokemonStoryEngine", () => {
   it("maps the nine lines before the journey starts, each stage linking to where it appears or evolves", () => {
     render(<PokemonStoryEngine events={events} />)
 
-    const party = screen.getByRole("region", { name: `The ${LINES.length} lines of AI` })
+    const party = screen.getByRole("region", { name: `The ${LINES.length} branches of AI` })
+    expect(party).toHaveTextContent("AI isn’t one thing.")
+    expect(party).toHaveTextContent("evolution line: a creature and the forms it grows into")
     for (const line of LINES) {
       const stages = within(within(party).getByRole("list", { name: `${line.name} stages` })).getAllByRole("link")
       expect(stages, line.name).toHaveLength(line.stages.length)
       for (const stage of stages) {
         expect(document.getElementById(stage.getAttribute("href")!.slice(1)), line.name).toBeInstanceOf(HTMLElement)
       }
+
+      // Why the creature plays the branch, and each breakthrough that evolved it, in words rather than a tooltip
+      const card = party.querySelector<HTMLElement>(`[data-party-line="${line.id}"]`)!
+      expect(card.querySelector("[data-line-cast]"), line.name).toHaveTextContent(`Why ${speciesOf(line.stages[0].species).name}? ${line.cast}`)
+      const breakthroughs = within(within(card).getByRole("list", { name: `${line.name} breakthroughs` })).getAllByRole("listitem")
+      expect(breakthroughs.map((item) => item.textContent), line.name).toEqual(
+        line.stages.slice(1).map((stage) => {
+          const year = events.find((event) => event.title === stage.evolvesAt)!.year
+          return `${year}${stage.evolvesAt} ▶, evolving into ${speciesOf(stage.species).name}`
+        }),
+      )
     }
     const party_ = party.compareDocumentPosition(screen.getByRole("region", { name: "The Foundation Era" }))
     expect(party_ & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()

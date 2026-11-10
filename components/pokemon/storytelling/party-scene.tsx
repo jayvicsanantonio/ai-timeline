@@ -1,6 +1,7 @@
 // The professor's briefing before the journey: how to read it, from an entry's number to the badges at each region's end,
-// then the nine lines it follows, each with every stage it has reached, when it got there and the event that evolved it,
-// and how many entries it holds. A line's first stage links to the entry where it appears, and each later stage to the
+// then the nine branches of AI the story follows, each played by one evolution line. Each says in plain words what a
+// branch and its line are, why that creature plays it, every stage it has reached with the breakthrough that evolved it,
+// and how many events it holds. A line's first stage links to the entry where it appears, and each later stage to the
 // scene where it evolves.
 'use client';
 
@@ -65,12 +66,20 @@ export function PartyScene() {
 
         <p className="mt-14 font-pixel text-[0.625rem] uppercase text-[#7d84a6]">Your Pokédex</p>
         <h2 id="party-title" className="mt-3 scroll-mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">
-          The {LINES.length} lines of AI
+          The {LINES.length} branches of AI
         </h2>
-        <p className="mt-3 max-w-2xl text-base leading-7 text-[#a7acc8]">
-          Every event in the timeline belongs to one line, shown at the stage it had reached by then. Lines evolve at the
-          turning points that really changed them. Pick a stage to jump to the moment it evolved.
-        </p>
+        <div className="mt-3 max-w-3xl space-y-3 text-base leading-7 text-[#a7acc8]">
+          <p>
+            AI isn&rsquo;t one thing. This timeline splits its history into {LINES.length} branches, and each branch is
+            played by one Pokémon <span className="text-white">evolution line</span>: a creature and the forms it grows
+            into.
+          </p>
+          <p>
+            A branch&rsquo;s Pokémon evolves when that branch had a real breakthrough, so you can see at a glance how far
+            each one has come. Every event in the timeline belongs to one branch, and its card shows that branch&rsquo;s
+            Pokémon as it stood at the time.
+          </p>
+        </div>
 
         <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {LINES.map((line) => {
@@ -85,7 +94,7 @@ export function PartyScene() {
               >
                 <div className="flex items-baseline justify-between gap-3">
                   <h3 className="text-base font-semibold text-white">{line.name}</h3>
-                  <p className="shrink-0 text-xs text-[#a7acc8]">{counts.get(line.id)} entries</p>
+                  <p className="shrink-0 text-xs text-[#a7acc8]">{counts.get(line.id)} events</p>
                 </div>
                 <p className="mt-1 text-sm leading-6 text-[#a7acc8]">{line.blurb}</p>
                 <ol aria-label={`${line.name} stages`} className="mt-4 flex items-end gap-1">
@@ -116,6 +125,29 @@ export function PartyScene() {
                       </li>
                     );
                   })}
+                </ol>
+                <p data-line-cast="" className="mt-4 text-sm leading-6 text-[#d9dcef]">
+                  <span className="font-pixel text-[0.5625rem] uppercase text-[var(--line-color)]">
+                    Why {speciesOf(line.stages[0].species).name}?
+                  </span>{' '}
+                  {line.cast}
+                </p>
+                <ol
+                  aria-label={`${line.name} breakthroughs`}
+                  className="mt-4 space-y-1.5 border-t border-dashed border-white/10 pt-3 text-sm leading-6"
+                >
+                  {lineStops.slice(1).map((stop) => (
+                    <li key={stop.species} className="flex gap-3">
+                      <span className="shrink-0 font-pixel text-[0.5625rem] leading-6 text-[var(--line-color)]">
+                        {stop.year}
+                      </span>
+                      <span className="text-[#d9dcef]">
+                        {stop.event} <span aria-hidden="true">▶</span>
+                        <span className="sr-only">, evolving into</span>{' '}
+                        <span className="font-semibold text-white">{speciesOf(stop.species).name}</span>
+                      </span>
+                    </li>
+                  ))}
                 </ol>
               </li>
             );

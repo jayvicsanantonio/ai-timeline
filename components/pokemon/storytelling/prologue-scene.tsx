@@ -38,7 +38,7 @@ export function PrologueScene({ eras, latest, totalEvents, firstYear, lastYear }
       <div className="relative mx-auto max-w-5xl">
         <p className="prologue-rise font-pixel text-[0.625rem] uppercase leading-5 text-[#c9cde6]">
           An AI adventure <span aria-hidden="true">·</span> {firstYear} – {lastYear} <span aria-hidden="true">·</span>{' '}
-          {totalEvents} entries <span aria-hidden="true">·</span> {LINES.length} lines
+          {totalEvents} entries <span aria-hidden="true">·</span> {LINES.length} branches
         </p>
         <h1
           id="prologue-title"
@@ -47,9 +47,10 @@ export function PrologueScene({ eras, latest, totalEvents, firstYear, lastYear }
           The AI Timeline
         </h1>
         <p className="prologue-rise mx-auto mt-4 max-w-3xl text-pretty text-base leading-7 text-[#d9dcef] [animation-delay:160ms]">
-          {lastYear - firstYear} years of artificial intelligence as {LINES.length} evolution lines. Neural networks
-          splash around as a MAGIKARP for fifty years, chatbots grow into PORYGON-Z, and agents start haunting our
-          machines. Walk the route from {firstYear} and watch every line hatch, freeze, battle and evolve.
+          {lastYear - firstYear} years of artificial intelligence, split into {LINES.length} branches, each played by a
+          Pokémon that evolves at its breakthroughs. Neural networks splash around as a MAGIKARP for fifty years, chatbots
+          grow into PORYGON-Z, and agents start haunting our machines. Walk the route from {firstYear} and watch every
+          branch hatch, freeze, battle and evolve.
         </p>
 
         <TitleLineup />
@@ -64,7 +65,7 @@ export function PrologueScene({ eras, latest, totalEvents, firstYear, lastYear }
                 detail={`Jump to the latest, ${formatEventDate(newest)}`}
               />
             ) : null}
-            <MenuItem href="#party-title" label="Pokédex" detail={`Meet the ${LINES.length} lines`} />
+            <MenuItem href="#party-title" label="Pokédex" detail={`Meet the ${LINES.length} branches of AI`} />
           </ul>
         </nav>
 

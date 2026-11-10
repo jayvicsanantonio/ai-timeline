@@ -49,14 +49,15 @@ describe("PrologueScene", () => {
     expect(screen.getByRole("heading", { level: 1, name: "The AI Timeline" })).toBeInTheDocument()
   })
 
-  it("tells the story's premise: AI history as evolution lines on a route", () => {
+  it("tells the story's premise: AI history as branches, each a Pokémon that evolves at its breakthroughs, on a route", () => {
     renderPrologue()
 
     const first = activity[0].year
     const last = activity.at(-1)!.year
-    const intro = screen.getByText(`${last - first} years of artificial intelligence as ${LINES.length} evolution lines.`, {
+    const intro = screen.getByText(`${last - first} years of artificial intelligence, split into ${LINES.length} branches`, {
       exact: false,
     })
+    expect(intro).toHaveTextContent("each played by a Pokémon that evolves at its breakthroughs")
     expect(intro).toHaveTextContent("MAGIKARP")
     expect(intro).toHaveTextContent(`Walk the route from ${first}`)
   })
@@ -68,7 +69,7 @@ describe("PrologueScene", () => {
     expect(menu.map((item) => item.textContent)).toEqual([
       `▶New gameStart the journey in ${activity[0].year}`,
       `▶ContinueJump to the latest, ${formatEventDate(events.at(-1)!)}`,
-      `▶PokédexMeet the ${LINES.length} lines`,
+      `▶PokédexMeet the ${LINES.length} branches of AI`,
     ])
     expect(menu.map((item) => item.getAttribute("href"))).toEqual([
       `#${eras[0].id}`,

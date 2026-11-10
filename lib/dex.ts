@@ -25,6 +25,8 @@ export interface Line {
   id: LineId;
   name: string;
   blurb: string;
+  // Why this creature plays this branch of AI
+  cast: string;
   color: string;
   stages: Stage[];
 }
@@ -36,6 +38,7 @@ export const LINES: Line[] = [
     id: 'neural',
     name: 'Neural networks',
     blurb: 'Mocked for decades, then unstoppable',
+    cast: 'MAGIKARP is famously useless: all it can do is SPLASH. Then it evolves into the fearsome GYARADOS. Neural networks were dismissed for decades, then took over AI.',
     color: '#4f8fe6',
     stages: [
       { species: 129 },
@@ -50,6 +53,7 @@ export const LINES: Line[] = [
     id: 'logic',
     name: 'Logic & reasoning',
     blurb: 'Rules, search, statistics and thinking step by step',
+    cast: 'ABRA is a psychic Pokémon that sleeps most of the day, and ALAKAZAM’s brain is said to outperform a supercomputer. Thinking machines started out slow too.',
     color: '#e3b341',
     stages: [
       { species: 63 },
@@ -69,6 +73,7 @@ export const LINES: Line[] = [
     id: 'language',
     name: 'Language',
     blurb: 'Machines that read, write and talk',
+    cast: 'PORYGON is a Pokémon made entirely of computer code, and upgrades turn it into PORYGON2 and PORYGON-Z, as the Transformer and ChatGPT upgraded language models.',
     color: '#ee6fa0',
     stages: [
       { species: 137 },
@@ -88,6 +93,7 @@ export const LINES: Line[] = [
     id: 'games',
     name: 'Games & self-play',
     blurb: 'AI that learns by playing',
+    cast: 'MACHOP trains all day to get stronger, like AI that learns a game by playing it millions of times.',
     color: '#e05b4b',
     stages: [
       { species: 66 },
@@ -108,6 +114,7 @@ export const LINES: Line[] = [
     id: 'machines',
     name: 'Chips & robots',
     blurb: 'The hardware it all runs on',
+    cast: 'MAGNEMITE is a magnet that runs on electricity, and three of them link into MAGNETON, like chips working side by side.',
     color: '#5ccbd6',
     stages: [
       { species: 81 },
@@ -127,6 +134,7 @@ export const LINES: Line[] = [
     id: 'art',
     name: 'Images & media',
     blurb: 'Pictures, video and sound on demand',
+    cast: 'MIME JR. learns by imitating others. Once it knows MIMIC it evolves into MR. MIME, whose miming makes people believe in things that are not there, as generated pictures do.',
     color: '#f08a3c',
     stages: [
       { species: 439 },
@@ -141,6 +149,7 @@ export const LINES: Line[] = [
     id: 'money',
     name: 'Money & companies',
     blurb: 'The labs, the deals and the bills',
+    cast: 'MEOWTH loves shiny coins and scatters them with its move PAY DAY: the money behind AI.',
     color: '#8fd18a',
     stages: [
       { species: 52 },
@@ -154,7 +163,8 @@ export const LINES: Line[] = [
   {
     id: 'safety',
     name: 'Safety & law',
-    blurb: 'Rules for AI, and the harms behind them',
+    blurb: 'The people and laws holding AI to account',
+    cast: 'CHANSEY looks after the hurt, as the people and laws on this line look after us.',
     color: '#f1c9d8',
     stages: [
       { species: 113 },
@@ -169,6 +179,7 @@ export const LINES: Line[] = [
     id: 'agents',
     name: 'Agents',
     blurb: 'AI that acts on its own, the ghost in the machine',
+    cast: 'GASTLY is a ghost, and HAUNTER slips through walls: AI that acts on its own, the ghost in the machine.',
     color: '#9d6be0',
     stages: [
       { species: 92 },
