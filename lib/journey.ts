@@ -45,7 +45,7 @@ export const GYM_CHALLENGES: Record<string, GymChallenge> = {
   },
   'the-knowledge-era': {
     species: 144,
-    question: 'In 1974 it started to hail, and every line froze. What set off the first AI winter?',
+    question: 'In 1974 it started to hail, and every branch froze. What set off the first AI winter?',
     choices: [
       'A ban on computers in universities',
       'Governments cut AI funding after it fell short of its promises',

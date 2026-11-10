@@ -167,14 +167,15 @@ function Briefing() {
       <div className="dex-textbox max-w-3xl px-5 py-4 sm:px-6 sm:py-5">
         <p className="font-pixel text-[0.5625rem] uppercase text-[#48506b]">Professor</p>
         <p className="mt-2 text-[15px] leading-7">
-          Welcome to the world of artificial intelligence! People have been raising it since 1943. Your job is to walk the
-          route from the beginning to today and record every milestone in your Pokédex. Here is how to read it.
+          Welcome to the world of artificial intelligence! This is its whole story, from the first artificial neuron in
+          1943 to today, told as a Pokémon journey. Your job is to walk the route and record every milestone in your
+          Pokédex. Here is how to read it.
         </p>
       </div>
 
       <ul aria-label="How to read the journey" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <Tip visual={<span className="font-pixel text-[0.625rem] text-white">No. 001</span>}>
-          Every event is a numbered entry, in the order it happened.
+          Every milestone in AI is a numbered Pokédex entry, in the order it happened.
         </Tip>
         <Tip
           visual={
@@ -196,7 +197,7 @@ function Briefing() {
             </span>
           }
         >
-          Lines evolve at the real turning points. Scroll through an evolution to watch it happen.
+          A branch evolves at its real breakthroughs. Scroll through an evolution to watch it happen.
         </Tip>
         <Tip
           visual={
@@ -210,7 +211,16 @@ function Briefing() {
           Human-versus-machine matches are battles, and the HP bars show the final score.
         </Tip>
         <Tip visual={<span className="frz-badge static font-pixel">FRZ</span>}>
-          In the AI winters the money froze, and so does every line until the thaw.
+          In the AI winters the money froze, and so does every branch until the thaw.
+        </Tip>
+        <Tip visual={<span className="font-pixel text-[0.5rem] leading-4 text-white">▶ USED ALEXNET!</span>}>
+          Under each entry&rsquo;s title, battle text says what that event did to its branch.
+        </Tip>
+        <Tip visual={<span data-status="PSN" className="status-badge font-pixel">PSN</span>}>
+          Scandals and harms leave the branch that caused them with a status, such as PSN for poisoned.
+        </Tip>
+        <Tip visual={<span className="font-pixel text-[0.5rem] leading-4 text-white">GEN I ▶ 3D</span>}>
+          Each region is drawn in one game generation&rsquo;s sprites, so the art grows up as AI does.
         </Tip>
         <Tip visual={<Sprite src={badgePath(ERA_DEFINITIONS[0].badge)} className="size-8 object-contain" />}>
           Each region ends in a gym challenge. Answer it to earn the region&rsquo;s badge.

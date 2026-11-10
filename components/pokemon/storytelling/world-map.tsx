@@ -29,8 +29,9 @@ export function WorldMap({ eras, activity, totalEvents }: WorldMapProps) {
           {eras.length} regions, one route
         </h2>
         <p className="mt-3 max-w-2xl text-base leading-7 text-[#a7acc8]">
-          Every era of AI is a region you walk through, from the meadow where it began to the summit where it stands now.
-          Each ends in a gym challenge: answer it to earn the region&rsquo;s badge.
+          AI&rsquo;s history falls into {eras.length} eras, and each era is a region on your route, from the meadow where AI
+          began to the summit where it stands today. Each region ends in a gym challenge, one question on what you just
+          read: answer it to earn the region&rsquo;s badge.
         </p>
 
         <ol aria-label="Eras" className="world-route mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-6 lg:gap-2">
@@ -47,7 +48,7 @@ export function WorldMap({ eras, activity, totalEvents }: WorldMapProps) {
                   <span className="mt-1 block font-pixel text-[0.625rem] uppercase leading-4 text-white">{era.place}</span>
                   <span className="mt-2 block text-sm font-medium leading-5 text-white">{era.label}</span>
                   <span className="block whitespace-nowrap text-xs text-[#a7acc8]">{era.subtitle}</span>
-                  <span className="block text-xs text-[#7d84a6]">{era.events.length} entries</span>
+                  <span className="block text-xs text-[#7d84a6]">{era.events.length} events</span>
                 </span>
               </a>
             </li>
@@ -63,7 +64,7 @@ export function WorldMap({ eras, activity, totalEvents }: WorldMapProps) {
           <figcaption className="mt-4 flex flex-col gap-3 text-sm leading-6 text-[#a7acc8] sm:flex-row sm:items-start sm:justify-between sm:gap-8">
             {latestEra ? (
               <p>
-                Entries per year. {latestEra.events.length} of the {totalEvents} events happened since {latestEra.range[0]}.{' '}
+                Events per year. {latestEra.events.length} of the {totalEvents} events happened since {latestEra.range[0]}.{' '}
                 {/* The bars answer only the pointer, so assistive technology skips this with the chart */}
                 <span aria-hidden="true">Click a bar to jump to that year.</span>
               </p>

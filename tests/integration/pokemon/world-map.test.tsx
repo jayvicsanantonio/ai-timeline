@@ -37,7 +37,7 @@ describe("WorldMap", () => {
     eras.forEach((era, index) => {
       expect(links[index]).toHaveAttribute("href", `#${era.id}`)
       expect(links[index]).toHaveTextContent(
-        `Route ${index + 1}${era.place}${era.label}${era.subtitle}${era.events.length} entries`,
+        `Route ${index + 1}${era.place}${era.label}${era.subtitle}${era.events.length} events`,
       )
       expect(links[index].querySelector("img")).toHaveAttribute("src", `/sprites/badges/${era.badge}.png`)
       expect(links[index].querySelector("img")).toHaveAttribute("alt", "")

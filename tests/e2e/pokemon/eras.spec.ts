@@ -93,7 +93,7 @@ test("marks every approved landmark, in every era", async ({ page }) => {
 
   expect(perEra.reduce((sum, count) => sum + count, 0)).toBe(landmarks.length)
   expect(perEra.every((count) => count > 0)).toBe(true)
-  await expect(page.locator("article[data-landmark]").getByText("★ Landmark", { exact: true })).toHaveCount(landmarks.length)
+  await expect(page.locator("article[data-landmark]").getByText("★ Turning point", { exact: true })).toHaveCount(landmarks.length)
 })
 
 test("plays every scene of the story right after its event, every evolution among them", async ({ page }) => {

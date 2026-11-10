@@ -54,12 +54,13 @@ describe("PrologueScene", () => {
 
     const first = activity[0].year
     const last = activity.at(-1)!.year
-    const intro = screen.getByText(`${last - first} years of artificial intelligence, split into ${LINES.length} branches`, {
+    const intro = screen.getByText(`The whole story of artificial intelligence, from its first idea in ${first} to today`, {
       exact: false,
     })
-    expect(intro).toHaveTextContent("each played by a Pokémon that evolves at its breakthroughs")
+    expect(intro).toHaveTextContent("told as a Pokémon journey")
+    expect(intro).toHaveTextContent(`AI is split into ${LINES.length} branches, each played by a Pokémon that evolves`)
     expect(intro).toHaveTextContent("MAGIKARP")
-    expect(intro).toHaveTextContent(`Walk the route from ${first}`)
+    expect(intro).toHaveTextContent(`Walk the route through ${last - first} years`)
   })
 
   it("offers a start menu: a new game in the first era, continuing at the latest entry, and the Pokédex", () => {

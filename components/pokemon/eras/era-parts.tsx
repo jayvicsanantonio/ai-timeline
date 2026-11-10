@@ -21,7 +21,7 @@ export interface EraInterfaceProps {
 
 export const NO_MATCHING_EVENTS = 'No events in this era match your search and filters.';
 
-export const LANDMARK_LABEL = 'Landmark';
+export const LANDMARK_LABEL = 'Turning point';
 
 export function eraHeadingId(era: Pick<Era, 'id'>) {
   return `${era.id}-title`;

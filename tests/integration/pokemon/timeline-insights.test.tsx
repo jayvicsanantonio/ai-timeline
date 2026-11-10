@@ -46,7 +46,7 @@ describe("TimelineInsights", () => {
     render(<TimelineInsights events={events} />)
 
     const titles = tiles().getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent)
-    expect(titles).toEqual(["Era Over Era", "Most Common Milestone", "Industry Momentum", "Societal Impact"])
+    expect(titles).toEqual(["Faster every era", "Most common milestone", "Money behind it", "Rules and pushback"])
   })
 
   // Eras differ in length, so the tile compares how many events each holds a year
@@ -83,7 +83,7 @@ describe("TimelineInsights", () => {
     render(<TimelineInsights events={events} />)
 
     expect(labelFor("4")).toHaveTextContent("Research Breakthroughs events")
-    expect(screen.getByText("More of the timeline is Research Breakthroughs than any other kind of milestone.")).toBeInTheDocument()
+    expect(screen.getByText("More of AI's milestones are Research Breakthroughs than any other kind.")).toBeInTheDocument()
   })
 
   it("counts the Companies & Investments and Ethics & Policy events", () => {

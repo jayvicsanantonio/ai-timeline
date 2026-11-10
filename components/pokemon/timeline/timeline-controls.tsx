@@ -149,6 +149,9 @@ export function TimelineControls({
         >
           <SlidersHorizontal aria-hidden="true" className="size-4" />
           <span className="font-pixel text-[0.625rem] uppercase">Bag</span>
+          <span aria-hidden="true" className="hidden text-[#a7acc8] sm:inline">
+            · Filter
+          </span>
           {pickedCount > 0 ? (
             <span className="grid min-w-5 place-items-center rounded-full bg-[#ffcb05] px-1.5 text-xs font-semibold text-black">
               {pickedCount}

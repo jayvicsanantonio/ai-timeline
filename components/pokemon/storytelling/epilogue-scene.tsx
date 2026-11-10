@@ -43,7 +43,8 @@ export function EpilogueScene({ firstEraId, firstEvent, latestEvent }: EpilogueS
         </h2>
         <p className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-[#d9dcef]">
           Congratulations! You have travelled {latestEvent.year - firstEvent.year} years, from the {firstEvent.title} in{' '}
-          {firstEvent.year} to agents at work today. Your party enters the Hall of Fame as it stands now.
+          {firstEvent.year} to agents at work today. Your party, AI&rsquo;s {party.length} branches as they stand now,
+          enters the Hall of Fame.
         </p>
 
         <ol aria-label="The party today" className="mx-auto mt-10 grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-9">

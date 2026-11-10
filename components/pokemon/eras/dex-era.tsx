@@ -184,7 +184,7 @@ function DexYearLabel({ group }: { group: YearGroup }) {
   return (
     <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:block">
       <p className="dex-year font-pixel text-lg leading-none md:text-xl">{group.year}</p>
-      <p className="dex-year-meta text-xs md:mt-3">{countOf(group.events.length, 'entry', 'entries')}</p>
+      <p className="dex-year-meta text-xs md:mt-3">{countOf(group.events.length, 'event')}</p>
       {landmarks > 0 ? (
         <p className="text-xs text-[var(--legend-gold)] md:mt-1">★ {countOf(landmarks, 'landmark')}</p>
       ) : null}
@@ -269,8 +269,8 @@ export function DexCard({ event, entry }: { event: TimelineEvent; entry: DexEntr
       <div className="dex-body">
         {entry.firstOfLine ? (
           <p data-new-line="" className="new-line-tag mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium">
-            <span className="font-pixel text-[0.5rem] uppercase">New line</span>
-            The {entry.line.name.toLowerCase()} line begins with {entry.species.name}
+            <span className="font-pixel text-[0.5rem] uppercase">New branch</span>
+            {entry.line.name} begins as {entry.species.name}
           </p>
         ) : null}
         {event.landmark ? (

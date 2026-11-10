@@ -109,7 +109,7 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
     const header = section.querySelector<HTMLElement>("[data-era-header]")!
     expect(header).toHaveTextContent(era.subtitle)
     expect(header).toHaveTextContent(era.description)
-    expect(header).toHaveTextContent(era.generationName)
+    expect(header.textContent).toMatch(new RegExp(`Drawn in ${era.generationName}`, "i"))
     expect(header).toContainElement(within(section).getByRole("heading", { level: 2, name: era.name }))
     const badge = header.querySelector("[data-era-badge]")!
     expect(badge).toHaveAttribute("aria-hidden", "true")
@@ -310,10 +310,10 @@ describe.each(GENERATIONS)("the %s era", (generation) => {
       .forEach((article, index) => {
         if (shown[index].landmark) {
           expect(article).toHaveAttribute("data-landmark")
-          expect(within(article).getByText("★ Landmark")).toBeInTheDocument()
+          expect(within(article).getByText("★ Turning point")).toBeInTheDocument()
         } else {
           expect(article).not.toHaveAttribute("data-landmark")
-          expect(within(article).queryByText(/Landmark/)).not.toBeInTheDocument()
+          expect(within(article).queryByText(/Turning point/)).not.toBeInTheDocument()
         }
       })
   })
@@ -444,7 +444,7 @@ describe.each(GENERATIONS)("the %s era's year column", (generation) => {
       const count = events.filter((event) => event.year === year).length
       expect(within(column).getByText(`${year}, ${count} ${count === 1 ? "event" : "events"}`)).toHaveClass("sr-only")
       expect(drawnYear(column)).toHaveTextContent(String(year))
-      expect(drawnYear(column)).toHaveTextContent(`${count} ${count === 1 ? "entry" : "entries"}`)
+      expect(drawnYear(column)).toHaveTextContent(`${count} ${count === 1 ? "event" : "events"}`)
       const firstOfYear = section.querySelector(`#${eventAnchorId(shown.find((event) => event.year === year)!)}`)!
       expect(column.compareDocumentPosition(firstOfYear) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     })
@@ -832,7 +832,7 @@ describe("the story told through the entries", () => {
       const entry = dex.get(article.id)!
       const tag = article.querySelector("[data-new-line]")
       if (entry.firstOfLine) {
-        expect(tag).toHaveTextContent(`The ${entry.line.name.toLowerCase()} line begins with ${entry.species.name}`)
+        expect(tag).toHaveTextContent(`New branch${entry.line.name} begins as ${entry.species.name}`)
       } else {
         expect(tag).toBeNull()
       }

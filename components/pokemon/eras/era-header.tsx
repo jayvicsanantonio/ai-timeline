@@ -77,7 +77,7 @@ export function EraHeader({ era, totalEvents }: EraHeaderProps) {
           <span data-era-place="">{era.place}</span> <span aria-hidden="true">·</span> {era.subtitle}{' '}
           <span aria-hidden="true">·</span> {eraEventCount(era, totalEvents)}
           {latestEvent ? ` through ${formatEventDate(latestEvent)}` : null} <span aria-hidden="true">·</span>{' '}
-          {era.generationName}
+          Drawn in {drawnIn(era.generationName)}
         </p>
       </div>
       {empty ? (
@@ -88,6 +88,11 @@ export function EraHeader({ era, totalEvents }: EraHeaderProps) {
       {!empty && !filtering ? <RegionAhead era={era} /> : null}
     </header>
   );
+}
+
+// "Generation I sprites" keeps its capital after "Drawn in", and "Animated 3D sprites" drops it
+function drawnIn(generationName: string) {
+  return generationName.startsWith('Generation') ? generationName : generationName[0].toLowerCase() + generationName.slice(1);
 }
 
 // What the region holds, before the reader walks into it: the lines met here for the first time and its turning points
@@ -105,7 +110,7 @@ function RegionAhead({ era }: { era: Era }) {
     <div data-region-ahead="" className="region-ahead mt-6 grid gap-5 rounded-2xl p-4 sm:grid-cols-2 sm:p-5">
       {newLines.length > 0 ? (
         <div>
-          <h3 className="font-pixel text-[0.5625rem] uppercase text-[#f4e3b5]">New lines you’ll meet</h3>
+          <h3 className="font-pixel text-[0.5625rem] uppercase text-[#f4e3b5]">New branches you’ll meet</h3>
           <ul className="mt-3 grid gap-2">
             {newLines.map(({ line, species, anchorId }) => (
               <li key={line.id}>

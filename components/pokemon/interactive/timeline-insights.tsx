@@ -55,33 +55,32 @@ function getInsights(events: TimelineEvent[]) {
     {
       id: "era-over-era",
       icon: TrendingUp,
-      title: "Era Over Era",
-      description: "How the newest era of AI compares, in milestones a year, with the era that made it possible.",
+      title: "Faster every era",
+      description: "How many milestones a year the newest region logs, against the region before it.",
       stat: formatMultiple(latestRate, previousRate),
       statLabel: `${rateLabel(latestRate)} in the ${latest.label}, against ${oneDecimal(previousRate)} in the ${previous.label}`,
     },
     {
       id: "most-common",
       icon: Lightbulb,
-      title: "Most Common Milestone",
-      description: `More of the timeline is ${mostCommon} than any other kind of milestone.`,
+      title: "Most common milestone",
+      description: `More of AI's milestones are ${mostCommon} than any other kind.`,
       stat: String(counts[mostCommon]),
       statLabel: `${mostCommon} events`,
     },
     {
       id: "industry",
       icon: Users,
-      title: "Industry Momentum",
-      description:
-        "Modern AI advances are built on international collaboration between researchers, institutions, and companies.",
+      title: "Money behind it",
+      description: "Labs founded, bought and funded: the deals that pay for AI's progress.",
       stat: String(counts["Companies & Investments"]),
       statLabel: "Companies & Investments events",
     },
     {
       id: "impact",
       icon: Zap,
-      title: "Societal Impact",
-      description: "AI is transforming every aspect of society, from healthcare to education to creative industries.",
+      title: "Rules and pushback",
+      description: "Laws, court rulings, warnings and protests: people setting limits on AI.",
       stat: String(counts["Ethics & Policy"]),
       statLabel: "Ethics & Policy events",
     },
@@ -109,7 +108,7 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
             </h2>
           </div>
           <p className="max-w-md text-sm leading-6 text-[#3b3f52]">
-            Your journey by the numbers: the patterns that emerge from decades of AI development.
+            Your journey by the numbers: what AI&rsquo;s milestones add up to.
           </p>
         </div>
 
@@ -137,9 +136,9 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
         <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
           <figure data-line-chart="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
             <figcaption>
-              <h3 className="text-base font-semibold text-white">Entries by line</h3>
+              <h3 className="text-base font-semibold text-white">Events by branch</h3>
               <p className="mt-1 text-sm leading-6 text-[#a7acc8]">
-                How many of the timeline&rsquo;s entries each line holds, and the stage it has reached today.
+                How many events each branch holds, and the Pokémon it has evolved into today.
               </p>
             </figcaption>
             <ol className="mt-6 grid gap-3">
@@ -167,7 +166,7 @@ export function TimelineInsights({ events }: TimelineInsightsProps) {
           <div data-badge-case="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
             <h3 className="text-base font-semibold text-white">Badge case</h3>
             <p className="mt-1 text-sm leading-6 text-[#a7acc8]">
-              One badge for each era you have travelled through, {ERA_DEFINITIONS.length} in all.
+              One badge for each region, {ERA_DEFINITIONS.length} in all, earned by answering its gym challenge.
             </p>
             <ol className="mt-6 grid grid-cols-3 gap-3">
               {ERA_DEFINITIONS.map((era) => (

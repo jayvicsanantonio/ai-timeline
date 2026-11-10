@@ -374,7 +374,7 @@ export const SCENES: Record<string, Scene[]> = {
       species: 151,
       lines: [
         'A mysterious MEW appeared!',
-        'MEW is said to carry the genes of every Pokémon. Every line in this story descends from this first model of a neuron.',
+        'MEW is said to carry the genes of every Pokémon. Every branch in this story descends from this first model of a neuron.',
       ],
     },
   ],
@@ -435,7 +435,7 @@ export const SCENES: Record<string, Scene[]> = {
       lines: [
         'It started to hail!',
         'A wild ARTICUNO appeared! It is said to appear to travelers lost in icy mountains.',
-        'AI funding dried up, and every line is frozen solid.',
+        'AI funding dried up, and every branch is frozen solid.',
       ],
     },
   ],
@@ -456,7 +456,7 @@ export const SCENES: Record<string, Scene[]> = {
     {
       kind: 'weather',
       weather: 'clear',
-      lines: ['The hail stopped.', 'Expert systems brought the money back, and every line thawed out.'],
+      lines: ['The hail stopped.', 'Expert systems brought the money back, and every branch thawed out.'],
     },
   ],
   'Backpropagation Popularized': [
@@ -470,14 +470,14 @@ export const SCENES: Record<string, Scene[]> = {
     {
       kind: 'weather',
       weather: 'hail',
-      lines: ['It started to hail again!', 'The Lisp machine market collapsed, and every line froze.'],
+      lines: ['It started to hail again!', 'The Lisp machine market collapsed, and every branch froze.'],
     },
   ],
   'Chinook Becomes Checkers World Champion': [
     {
       kind: 'weather',
       weather: 'clear',
-      lines: ['The hail stopped.', 'Funding crept back in the 1990s, and every line thawed out.'],
+      lines: ['The hail stopped.', 'Funding crept back in the 1990s, and every branch thawed out.'],
     },
   ],
   'IBM Deep Blue Defeats Garry Kasparov': [

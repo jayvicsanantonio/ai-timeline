@@ -38,7 +38,7 @@ export function PrologueScene({ eras, latest, totalEvents, firstYear, lastYear }
       <div className="relative mx-auto max-w-5xl">
         <p className="prologue-rise font-pixel text-[0.625rem] uppercase leading-5 text-[#c9cde6]">
           An AI adventure <span aria-hidden="true">·</span> {firstYear} – {lastYear} <span aria-hidden="true">·</span>{' '}
-          {totalEvents} entries <span aria-hidden="true">·</span> {LINES.length} branches
+          {totalEvents} events <span aria-hidden="true">·</span> {LINES.length} branches
         </p>
         <h1
           id="prologue-title"
@@ -47,10 +47,10 @@ export function PrologueScene({ eras, latest, totalEvents, firstYear, lastYear }
           The AI Timeline
         </h1>
         <p className="prologue-rise mx-auto mt-4 max-w-3xl text-pretty text-base leading-7 text-[#d9dcef] [animation-delay:160ms]">
-          {lastYear - firstYear} years of artificial intelligence, split into {LINES.length} branches, each played by a
-          Pokémon that evolves at its breakthroughs. Neural networks splash around as a MAGIKARP for fifty years, chatbots
-          grow into PORYGON-Z, and agents start haunting our machines. Walk the route from {firstYear} and watch every
-          branch hatch, freeze, battle and evolve.
+          The whole story of artificial intelligence, from its first idea in {firstYear} to today, told as a Pokémon
+          journey. AI is split into {LINES.length} branches, each played by a Pokémon that evolves at that branch&rsquo;s
+          real breakthroughs: neural networks splash around as a MAGIKARP for fifty years until AlexNet turns them into a
+          GYARADOS. Walk the route through {lastYear - firstYear} years and see how we got here.
         </p>
 
         <TitleLineup />
