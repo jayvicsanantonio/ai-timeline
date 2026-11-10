@@ -1,6 +1,5 @@
-// Unit tests for the AI Dex's rules in the global stylesheet, read from its source by the browser's own CSS parser.
-// Every generation's backdrop fades into the page at its seams, the two-screen generation stacks its screens, and every
-// animation waits for the reader to allow motion.
+// Unit tests for the era layout rules in the global stylesheet, read from its source by the browser's own CSS parser.
+// From 1024px a punch card stamps its category and source beside its title, and on a phone a notebook output has no prompt row.
 /// <reference types="vite/client" />
 import { describe, expect, it } from "vitest"
 import globalStyles from "@/app/globals.css?raw"
@@ -28,50 +27,32 @@ function styleOf(selector: string, media = "") {
   return rules.find((placed) => placed.rule.selectorText === selector && placed.media === media)?.rule.style
 }
 
-const BACKDROPS = [".biome-meadow", ".biome-snow", ".biome-forest", ".biome-cave", ".biome-city", ".biome-summit"]
+describe("era layouts in the global stylesheet", () => {
+  it("lays a punch card out from 1024px with its category and source beside its date and title, and its description last", () => {
+    const card = styleOf(".punch-card", "(min-width: 1024px)")
 
-describe("the AI Dex in the global stylesheet", () => {
-  it("starts every biome's backdrop with the seam that fades it into the page", () => {
-    for (const backdrop of BACKDROPS) {
-      expect(styleOf(backdrop)?.backgroundImage, backdrop).toMatch(/^var\(--era-seam\)/)
-    }
+    expect(card?.display).toBe("grid")
+    expect(card?.gridTemplateAreas).toBe('"stripe stripe" "heading fields" "holes holes" "description description"')
   })
 
-  it("stacks the two-screen generation's creature above its entry", () => {
-    const card = styleOf('.dex-era[data-gen="gen-4"] .dex-card')
+  it("leaves out a notebook output's prompt on a phone, where prompts stack above their boxes, and shows it from 640px", () => {
+    const outputPrompt = ".notebook-prompt:has(+ .notebook-output)"
 
-    expect(card?.gridTemplateAreas).toBe('"stage" "body"')
+    expect(styleOf(outputPrompt)?.display).toBe("none")
+    expect(styleOf(outputPrompt, "(min-width: 640px)")?.display).toBe("block")
   })
 
-  it("maps the first generation's sprites onto the four greens of its screen", () => {
-    expect(styleOf('.dex-era[data-gen="gen-1"] .dex-stage > img')?.filter).toBe("url(\"#dmg-palette\")")
+  it("lights the chat thread with an aurora, and sets the agent's console on a flat backdrop with no glow", () => {
+    expect(styleOf(".chat-backdrop")?.backgroundImage).toMatch(/^var\(--era-seam\),\s+radial-gradient/)
+    expect(styleOf(".agent-backdrop")?.backgroundImage).toBe("var(--era-seam)")
   })
 
-  it("prints in the pixel font even before the font's variable is set, falling back to monospace", () => {
-    expect(styleOf(".font-pixel")?.fontFamily).toMatch(/^var\(--font-press-start, "Press Start 2P"\), ui-monospace, monospace$/)
-  })
+  it("shimmers the agent's status only while motion is allowed, and leaves it plain text otherwise", () => {
+    const shimmer = styleOf(".agent-shimmer", "(prefers-reduced-motion: no-preference)")
 
-  it("plays each evolution and battle on its scene's own scroll timeline, and only while motion is allowed", () => {
-    const motion = "(prefers-reduced-motion: no-preference)"
-    const scrolling = (selector: string) =>
-      rules.find(
-        (placed) => placed.rule.selectorText === selector && placed.media === motion && placed.rule.style.getPropertyValue("animation-timeline"),
-      )?.rule.style
-
-    expect(scrolling(".dex-scene")).toBeUndefined()
-    expect(rules.find((placed) => placed.rule.selectorText === ".dex-scene" && placed.rule.style.getPropertyValue("view-timeline-name"))?.media).toBe(motion)
-    for (const selector of [".evo-from,\n      .evo-to,\n      .evo-done", ".hp-fill"]) {
-      const style = rules.find((placed) => placed.rule.selectorText.replace(/\s+/g, " ") === selector.replace(/\s+/g, " ") && placed.media === motion)?.rule.style
-      expect(style?.getPropertyValue("animation-timeline"), selector).toBe("--scene")
-    }
-  })
-
-  it("moves the sprites, the Poké Ball and the legends' sheen only while motion is allowed", () => {
-    const motion = "(prefers-reduced-motion: no-preference)"
-
-    for (const selector of [".sprite-bob", ".ball-wobble", ".dex-lens", ".dex-card[data-landmark] .dex-stage::after"]) {
-      expect(styleOf(selector, motion)?.animationName, selector).not.toBe("")
-      expect(styleOf(selector)?.animationName ?? "", selector).toBe("")
-    }
+    expect(styleOf(".agent-shimmer")).toBeUndefined()
+    expect(shimmer?.animationName).toBe("agent-shimmer")
+    expect(shimmer?.backgroundClip).toBe("text")
+    expect(shimmer?.color).toBe("transparent")
   })
 })

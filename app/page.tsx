@@ -4,7 +4,7 @@ import timelineData from "@/data/timeline-events.json"
 import type { TimelineEvent } from "@/types/timeline"
 import { jsonLd, websiteStructuredData } from "@/lib/site"
 import { parseTimelineEvents } from "@/lib/timeline-events"
-import { StoryEngine } from "@/components/storytelling/story-engine"
+import { ThemedTimeline } from "@/components/theme/themed-timeline"
 
 const events: TimelineEvent[] = parseTimelineEvents(timelineData)
 
@@ -15,7 +15,7 @@ export default function AITimelinePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd(websiteStructuredData(events)) }}
       />
-      <StoryEngine events={events} />
+      <ThemedTimeline events={events} />
     </div>
   )
 }

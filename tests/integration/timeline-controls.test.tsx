@@ -36,7 +36,7 @@ function currentFilters() {
 }
 
 function categoriesToggle() {
-  return screen.getByRole("button", { name: /^Bag/ })
+  return screen.getByRole("button", { name: /^Categories/ })
 }
 
 describe("TimelineControls", () => {
@@ -90,7 +90,7 @@ describe("TimelineControls", () => {
 
     expect(currentFilters().categories).toEqual(["Agents", "Ethics & Policy"])
     expect(within(panel).getByRole("button", { name: /^Agents/ })).toHaveAttribute("aria-pressed", "true")
-    expect(categoriesToggle()).toHaveAccessibleName("Bag: filter by category, 2 picked")
+    expect(categoriesToggle()).toHaveAccessibleName("Categories, 2 picked")
 
     await userEvent.click(within(panel).getByRole("button", { name: /^Agents/ }))
 
@@ -123,11 +123,11 @@ describe("TimelineControls", () => {
     expect(screen.getByRole("status")).not.toHaveTextContent("Showing")
   })
 
-  it("tells screen reader users on a phone that the timeline runs from 1943 to now, where there is no room to show it", () => {
+  it("tells screen reader users on a phone that the timeline reads newest first, where there is no room to show it", () => {
     render(<ControlledControls />)
 
     const order = document.querySelector<HTMLElement>("[data-timeline-order]")!
-    expect(order).toHaveTextContent("Route: 1943 → now")
+    expect(order).toHaveTextContent("Newest first")
     expect(order).toHaveClass("sr-only")
     expect(order.closest('[aria-hidden="true"]')).toBeNull()
   })
@@ -137,12 +137,12 @@ describe("TimelineControls", () => {
       await page.viewport(414, 896)
     })
 
-    it("shows that the timeline runs from 1943 to now beside the count, while it stays in view", async () => {
+    it("shows that the timeline reads newest first beside the count, while it stays in view", async () => {
       await page.viewport(1280, 800)
       render(<ControlledControls />)
 
       const order = document.querySelector<HTMLElement>("[data-timeline-order]")!
-      expect(order).toHaveTextContent("Route: 1943 → now")
+      expect(order).toHaveTextContent("Newest first")
       expect(order.getBoundingClientRect().width).toBeGreaterThan(40)
       expect(order.getBoundingClientRect().left).toBeGreaterThan(screen.getByRole("status").getBoundingClientRect().right)
     })

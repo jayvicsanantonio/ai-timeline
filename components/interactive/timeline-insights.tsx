@@ -1,12 +1,9 @@
-// Timeline Insights section, drawn as the dex's stats: four stat tiles with numbers computed from the timeline events, each
-// leading with its number and then naming what it says about AI's history, beside a bar for every line with how many
-// entries it holds and the stage it has reached, and the case of badges the reader has earned through every era.
+// Timeline Insights section: four stat tiles with numbers computed from the timeline events.
+// Each tile leads with its number, then names what the number says about AI's history.
 "use client"
 
 import { Lightbulb, TrendingUp, Users, Zap } from "lucide-react"
-import { Sprite } from "@/components/ui/sprite"
-import { badgePath, iconPath, lineOf, LINES, speciesOf } from "@/lib/dex"
-import { ERA_DEFINITIONS, groupEventsByEra, type Era } from "@/lib/eras"
+import { groupEventsByEra, type Era } from "@/lib/eras"
 import { countEventsByCategory } from "@/lib/timeline-filter"
 import { TIMELINE_CATEGORIES, type TimelineEvent } from "@/types/timeline"
 
@@ -90,97 +87,37 @@ function getInsights(events: TimelineEvent[]) {
 
 export function TimelineInsights({ events }: TimelineInsightsProps) {
   const insights = getInsights(events)
-  // Each line with its events and its last stage among them, the busiest first
-  const byLine = LINES.map((line) => {
-    const count = events.filter((event) => lineOf(event) === line.id).length
-    const stage = line.stages.filter((stage) => !stage.evolvesAt || events.some((event) => event.title === stage.evolvesAt)).at(-1)!
-    return { line, count, species: stage.species }
-  }).sort((a, b) => b.count - a.count)
-  const mostInLine = Math.max(1, ...byLine.map(({ count }) => count))
 
   return (
-    <section aria-labelledby="insights-title" className="bg-background px-4 py-24 text-white sm:px-6 sm:py-32">
+    <section aria-labelledby="insights-title" className="bg-[#0a0a0b] px-4 py-24 text-white sm:px-6 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <div className="trainer-card-head flex flex-wrap items-end justify-between gap-4 rounded-2xl px-5 py-4 sm:px-6">
-          <div>
-            <p className="font-pixel text-[0.625rem] uppercase text-[#3b2a00]">Trainer card</p>
-            <h2 id="insights-title" className="mt-2 text-3xl font-semibold tracking-tight text-[#1f2433] sm:text-4xl">
-              Timeline Insights
-            </h2>
-          </div>
-          <p className="max-w-md text-sm leading-6 text-[#3b3f52]">
-            Your journey by the numbers: the patterns that emerge from decades of AI development.
-          </p>
-        </div>
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">By the numbers</p>
+        <h2 id="insights-title" className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+          Timeline Insights
+        </h2>
+        <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-400">
+          Discover the patterns and trends that emerge from decades of AI development
+        </p>
 
         {/* Each tile's five rows share the row's tracks, so titles and descriptions line up across a row
             however long the label above them runs */}
-        <div data-insight-tiles="" className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {insights.map((insight) => {
             const Icon = insight.icon
 
             return (
               <div
                 key={insight.id}
-                className="row-span-5 grid grid-rows-subgrid gap-y-0 rounded-2xl border border-white/10 bg-white/[0.04] p-6 transition-colors hover:border-white/25 hover:bg-white/[0.06]"
+                className="row-span-5 grid grid-rows-subgrid gap-y-0 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25 hover:bg-white/[0.05]"
               >
-                <Icon aria-hidden="true" className="size-5 text-[#ffcb05]" />
-                <div className="mt-8 font-pixel text-4xl leading-none text-white">{insight.stat}</div>
-                <div className="mt-3 text-sm leading-6 text-[#a7acc8]">{insight.statLabel}</div>
+                <Icon aria-hidden="true" className="size-5 text-zinc-400" />
+                <div className="mt-8 text-5xl font-semibold tracking-tight text-white">{insight.stat}</div>
+                <div className="mt-2 text-sm leading-6 text-zinc-400">{insight.statLabel}</div>
                 <h3 className="mt-8 text-base font-semibold text-white">{insight.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#a7acc8]">{insight.description}</p>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">{insight.description}</p>
               </div>
             )
           })}
-        </div>
-
-        <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-          <figure data-line-chart="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-            <figcaption>
-              <h3 className="text-base font-semibold text-white">Entries by line</h3>
-              <p className="mt-1 text-sm leading-6 text-[#a7acc8]">
-                How many of the timeline&rsquo;s entries each line holds, and the stage it has reached today.
-              </p>
-            </figcaption>
-            <ol className="mt-6 grid gap-3">
-              {byLine.map(({ line, count, species }) => (
-                <li key={line.id} className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)_2.5rem] items-center gap-3 text-sm">
-                  <span className="flex min-w-0 items-center gap-2">
-                    <Sprite src={iconPath(species)} pixelated className="size-7 shrink-0 object-contain" />
-                    <span className="truncate text-[#e4e6f5]">{line.name}</span>
-                  </span>
-                  <span aria-hidden="true" className="h-3 overflow-hidden rounded-full bg-white/[0.06]">
-                    <span
-                      className="block h-full rounded-full"
-                      style={{ width: `${(count / mostInLine) * 100}%`, backgroundColor: line.color }}
-                    />
-                  </span>
-                  <span className="text-right font-pixel text-[0.625rem] tabular-nums text-white">
-                    {count}
-                    <span className="sr-only"> events, now {speciesOf(species).name}</span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </figure>
-
-          <div data-badge-case="" className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-            <h3 className="text-base font-semibold text-white">Badge case</h3>
-            <p className="mt-1 text-sm leading-6 text-[#a7acc8]">
-              One badge for each era you have travelled through, {ERA_DEFINITIONS.length} in all.
-            </p>
-            <ol className="mt-6 grid grid-cols-3 gap-3">
-              {ERA_DEFINITIONS.map((era) => (
-                <li
-                  key={era.id}
-                  className="flex flex-col items-center gap-2 rounded-xl bg-black/20 px-2 py-3 text-center"
-                >
-                  <Sprite src={badgePath(era.badge)} className="size-10 object-contain" />
-                  <span className="text-xs leading-tight text-[#d9dcef]">{era.label}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-// Pieces every era shares: its props, the heading id, the event count, card attributes, the event title, the year column
+// Pieces every era interface shares: its props, the heading id, the event count, card attributes, the event title, the year column
 // and a busy year's brief listing. Each era's header is drawn once for all of them, in era-header.
 // The title's link stretches over its whole event card, so a click anywhere on the card opens the source.
 'use client';
@@ -6,13 +6,13 @@
 import { useId, useState, type ReactNode } from 'react';
 import type { Era } from '@/lib/eras';
 import { eventAnchorId, eventSource } from '@/lib/event-format';
-import { yearsLaterThanPrevious } from '@/lib/year-gaps';
+import { yearsEarlierThanPrevious } from '@/lib/year-gaps';
 import { isBusyYear, type YearGroup } from '@/lib/year-groups';
 import type { TimelineEvent } from '@/types/timeline';
 import { cn } from '@/lib/utils';
 
 export interface EraInterfaceProps {
-  // The era with its events oldest first, the order every era draws them in. It has at least
+  // The era with its events newest first, the order every interface draws them in (`erasNewestFirst`). It has at least
   // one event: an era the filters empty shows only its header.
   era: Era;
   // How many events the era has before filters are applied
@@ -97,28 +97,28 @@ export function EventSource({ event, className }: { event: TimelineEvent; classN
   );
 }
 
-// A count and its noun, such as "1 entry" or "2 entries"
-export function countOf(count: number, noun: string, plural = `${noun}s`) {
-  return `${count} ${count === 1 ? noun : plural}`;
+// A count and its noun, such as "1 record" or "2 records"
+export function countOf(count: number, noun: string) {
+  return `${count} ${noun}${count === 1 ? '' : 's'}`;
 }
 
 interface YearGapProps {
-  // Events, or years of events, oldest first
+  // Events, or years of events, newest first
   events: Pick<TimelineEvent, 'year'>[];
   index: number;
   className?: string;
 }
 
-// Says how many years later the entry at `index` came than the one above it when more than one
+// Says how many years earlier the entry at `index` came than the one above it when more than one
 // year lies between them, so an era's quiet stretches show between its cards. It goes ahead of the
 // cards, outside them.
 export function YearGap({ events, index, className }: YearGapProps) {
-  const years = yearsLaterThanPrevious(events, index);
+  const years = yearsEarlierThanPrevious(events, index);
   if (years === null) {
     return null;
   }
 
-  return <p className={className}>{years} years later</p>;
+  return <p className={className}>{years} years earlier</p>;
 }
 
 interface YearColumnProps {

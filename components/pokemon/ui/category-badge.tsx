@@ -1,5 +1,5 @@
 // A category beside its item from the bag, the way an entry's footer and the opening's latest sightings name it
-import { CategoryIcon } from '@/components/ui/category-icon';
+import { CategoryIcon } from '@/components/pokemon/ui/category-icon';
 import { cn } from '@/lib/utils';
 import type { TimelineCategory } from '@/types/timeline';
 

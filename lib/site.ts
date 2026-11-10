@@ -21,7 +21,7 @@ export function siteTitle(events: TimelineEvent[]) {
 
 export function siteDescription(events: TimelineEvent[]) {
   const { first, last } = yearSpan(events);
-  return `Explore ${events.length} milestones in the history of artificial intelligence from ${first} to ${last} as a field guide, each era drawn in the Pokémon sprites of its day.`;
+  return `Explore ${events.length} milestones in the history of artificial intelligence from ${first} to ${last}, each era drawn in the interface of its day, from punch cards to AI agents.`;
 }
 
 // The root layout's metadata. The preview image comes from app/opengraph-image.tsx, which Next.js adds on its own.

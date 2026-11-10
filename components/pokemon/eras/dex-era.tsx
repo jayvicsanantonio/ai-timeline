@@ -9,9 +9,9 @@
 
 import { ChevronsUpDown } from 'lucide-react';
 import type { CSSProperties } from 'react';
-import { CategoryBadge } from '@/components/ui/category-badge';
+import { CategoryBadge } from '@/components/pokemon/ui/category-badge';
 import { RelativeTime } from '@/components/ui/relative-time';
-import { Sprite } from '@/components/ui/sprite';
+import { Sprite } from '@/components/pokemon/ui/sprite';
 import { ART, formatDexNumber, type DexEntry } from '@/lib/dex';
 import { isCurrentEra } from '@/lib/eras';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';

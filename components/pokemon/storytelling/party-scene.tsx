@@ -6,8 +6,8 @@
 
 import { ChevronRight } from 'lucide-react';
 import type { CSSProperties, ReactNode } from 'react';
-import { useDexStory } from '@/components/eras/dex-context';
-import { Sprite } from '@/components/ui/sprite';
+import { useDexStory } from '@/components/pokemon/eras/dex-context';
+import { Sprite } from '@/components/pokemon/ui/sprite';
 import { ART, badgePath, iconPath, LINES, speciesOf, type LineId } from '@/lib/dex';
 import { ERA_DEFINITIONS } from '@/lib/eras';
 import { eventAnchorId } from '@/lib/event-format';

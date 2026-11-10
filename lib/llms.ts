@@ -26,7 +26,7 @@ export function llmsTxt(events: TimelineEvent[]) {
     '## Timeline',
     '',
     `- [Every event in Markdown](${SITE_URL}/llms-full.txt): all ${events.length} events by era and year, with their dates, categories, descriptions and sources`,
-    `- [The interactive timeline](${SITE_URL}/): the same events as a field guide, each a numbered entry with a creature of its type, each era drawn in the Pokémon sprites of its generation`,
+    `- [The interactive timeline](${SITE_URL}/): the same events, each era drawn in the computer interface of its day`,
     '',
   ].join('\n');
 }

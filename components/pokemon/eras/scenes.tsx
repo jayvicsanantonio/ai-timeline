@@ -5,7 +5,7 @@
 'use client';
 
 import type { CSSProperties } from 'react';
-import { Sprite } from '@/components/ui/sprite';
+import { Sprite } from '@/components/pokemon/ui/sprite';
 import type { BattleSide, PlayedScene } from '@/lib/dex';
 import { cn } from '@/lib/utils';
 

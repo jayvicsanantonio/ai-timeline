@@ -24,8 +24,8 @@ describe("global styles", () => {
     expect(getComputedStyle(document.documentElement).colorScheme).toBe("dark")
   })
 
-  it("draws the page in its night-blue chrome without needing a theme class on the root element", () => {
+  it("draws the page in its near-black chrome without needing a theme class on the root element", () => {
     expect(document.documentElement).not.toHaveClass("dark")
-    expect(getComputedStyle(document.body).backgroundColor).toBe("rgb(11, 13, 26)")
+    expect(getComputedStyle(document.body).backgroundColor).toBe("rgb(10, 10, 11)")
   })
 })

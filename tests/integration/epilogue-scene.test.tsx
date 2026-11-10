@@ -1,96 +1,66 @@
-// Integration tests for EpilogueScene, the close of the page after the latest entry, in real Chromium.
-// The journey reaches now: the party as every line stands today, how far the reader has travelled, an egg for the next era,
-// the badges of every era, a way back to the start and the credits for the sprites.
-import { render, screen, within } from "@testing-library/react"
-import type { ReactNode } from "react"
+// Integration tests for EpilogueScene, the close of the page below the oldest events, in real Chromium.
+// The rewind ends where the timeline began: a level-2 heading, how far the reader has come, the eras' colors and a way back up to now.
+import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { DexProvider } from "@/components/eras/dex-context"
 import { EpilogueScene } from "@/components/storytelling/epilogue-scene"
 import timelineData from "@/data/timeline-events.json"
-import { buildDex, LINES, speciesOf } from "@/lib/dex"
 import { ERA_DEFINITIONS } from "@/lib/eras"
 import { parseTimelineEvents } from "@/lib/timeline-events"
 
 const events = parseTimelineEvents(timelineData)
-const dex = buildDex(events)
 
-function wrapper({ children }: { children: ReactNode }) {
-  return (
-    <DexProvider dex={dex} events={events}>
-      {children}
-    </DexProvider>
-  )
+// The rgb() a computed style reports for a #rrggbb color
+function rgb(hex: string) {
+  const [red, green, blue] = [1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16))
+  return `rgb(${red}, ${green}, ${blue})`
 }
 
 function renderEpilogue() {
-  return render(<EpilogueScene firstEraId="the-foundation-era" firstEvent={events[0]} latestEvent={events.at(-1)!} />, {
-    wrapper,
-  })
+  return render(<EpilogueScene latestEraId="the-agentic-era" firstEvent={events[0]} latestYear={events.at(-1)!.year} />)
 }
 
 describe("EpilogueScene", () => {
-  it("reaches now under a level-2 heading, numbered as the latest entry", () => {
+  it("ends the rewind where the timeline began, under a level-2 heading and the first event's year", () => {
     renderEpilogue()
 
-    expect(screen.getByRole("heading", { level: 2, name: "Hall of Fame" })).toBeInTheDocument()
-    const latest = events.at(-1)!
-    expect(screen.getByText(/^No\. \d{3}/)).toHaveTextContent(`No. ${events.length} · ${latest.month} ${latest.year}`)
+    expect(screen.getByRole("heading", { level: 2, name: "Where It Began" })).toBeInTheDocument()
+    expect(screen.getByText(String(events[0].year))).toBeInTheDocument()
   })
 
-  it("says how far the reader has travelled, from the first event to now", () => {
+  it("says how many years the reader has rewound, and to which event", () => {
     renderEpilogue()
 
     expect(
-      screen.getByText(`You have travelled ${events.at(-1)!.year - events[0].year} years, from the ${events[0].title} in ${events[0].year}`, {
-        exact: false,
-      }),
+      screen.getByText(
+        `You have rewound ${events.at(-1)!.year - events[0].year} years, from agents at work back to the ${events[0].title} in ${events[0].year}.`,
+        { exact: false },
+      ),
     ).toBeInTheDocument()
   })
 
-  it("shows the party today, every line at its latest stage with its level", () => {
+  it("leaves the next era's interface uninvented", () => {
     renderEpilogue()
 
-    const party = within(screen.getByRole("list", { name: "The party today" })).getAllByRole("listitem")
-    expect(party).toHaveLength(LINES.length)
-    party.forEach((member, index) => {
-      const line = LINES[index]
-      expect(member).toHaveTextContent(speciesOf(line.stages.at(-1)!.species).name)
-      expect(member).toHaveTextContent(line.name)
-      expect(member.textContent).toMatch(/Lv\. \d+/)
-    })
+    expect(screen.getByText(/The interface of the next era has not been invented yet\./)).toBeInTheDocument()
   })
 
-  it("leaves the next era an egg that has not hatched yet", () => {
+  it("traces every era's color in order up to the open slot for the next one", () => {
     const { container } = renderEpilogue()
 
-    expect(screen.getByText("Oh? The EGG is moving!")).toBeInTheDocument()
-    expect(screen.getByText(/The next era hasn’t hatched yet\./)).toBeInTheDocument()
-    expect(container.querySelector('[data-next-era] img[src="/sprites/items/mystery-egg.png"]')).not.toBeNull()
-  })
-
-  it("lines up every era's badge in order", () => {
-    renderEpilogue()
-
-    const badges = within(screen.getByRole("list", { name: "Badges earned" })).getAllByRole("img")
-    expect(badges.map((badge) => badge.getAttribute("alt"))).toEqual(ERA_DEFINITIONS.map((era) => `${era.label} badge`))
-  })
-
-  it("links back to the start of the journey", () => {
-    renderEpilogue()
-
-    expect(screen.getByRole("link", { name: `Start again from ${events[0].year}` })).toHaveAttribute(
-      "href",
-      "#the-foundation-era",
+    const trail = container.querySelector("[data-era-trail]")!
+    expect(trail).toHaveAttribute("aria-hidden", "true")
+    const segments = [...trail.querySelectorAll("[data-era-color]")]
+    expect(segments.map((segment) => getComputedStyle(segment).backgroundColor)).toEqual(
+      ERA_DEFINITIONS.map((era) => rgb(era.color)),
     )
+    const openSlot = trail.querySelector("[data-next-era]")!
+    expect(getComputedStyle(openSlot).borderTopStyle).toBe("dashed")
+    expect(segments.at(-1)!.compareDocumentPosition(openSlot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
-  it("credits the sprites and says the site is an unofficial fan project", () => {
+  it("links back up to now, the latest era at the top of the timeline", () => {
     renderEpilogue()
 
-    expect(screen.getByRole("link", { name: /PokéAPI’s sprite collection/ })).toHaveAttribute(
-      "href",
-      "https://github.com/jayvicsanantonio/sprites",
-    )
-    expect(screen.getByText(/unofficial fan project/)).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Back to now" })).toHaveAttribute("href", "#the-agentic-era")
   })
 })

@@ -67,11 +67,11 @@ describe.each(["horizontal", "vertical"] as const)("ActivityChart drawn %s", (or
     expect(bars(container).map((bar) => bar.dataset.current)).toEqual(["false", "false", "true", "false"])
   })
 
-  it("draws the years from the start of its axis, left to right when horizontal and from the first at the top when vertical", () => {
+  it("draws the years from the start of its axis, left to right when horizontal and from the latest at the top when vertical", () => {
     const { container } = render(<ActivityChart activity={activity} orientation={orientation} className="h-40 w-40" />)
 
     const starts = bars(container).map((bar) => bar.getBoundingClientRect()[orientation === "horizontal" ? "left" : "top"])
-    const ordered = [...starts].sort((a, b) => a - b)
+    const ordered = orientation === "horizontal" ? [...starts].sort((a, b) => a - b) : [...starts].sort((a, b) => b - a)
     expect(starts).toEqual(ordered)
   })
 
@@ -117,12 +117,27 @@ describe("ActivityChart interaction", () => {
     expect(getByText("1970 · 1 of 4 events")).toBeVisible()
   })
 
-  it("reads out the year beside its bar on a vertical chart, which runs the first year at the top", async () => {
+  it("reads out the year beside its bar on a vertical chart, which runs the latest year at the top", async () => {
     const { container, getByText } = render(<ActivityChart activity={activity} orientation="vertical" className="h-80 w-40" />)
 
     await userEvent.hover(bars(container)[3])
     const readout = getByText("1971 · 0 of 1 event").getBoundingClientRect()
     const bar = bars(container)[3].getBoundingClientRect()
+    expect(readout.top).toBeLessThanOrEqual(bar.top + bar.height / 2)
+    expect(readout.bottom).toBeGreaterThanOrEqual(bar.top)
+  })
+
+  it("runs the first year at the top of a vertical chart when asked, as the Pokémon theme reads, and reads out beside it", async () => {
+    const { container, getByText } = render(
+      <ActivityChart activity={activity} orientation="vertical" verticalTop="first" className="h-80 w-40" />,
+    )
+
+    const tops = bars(container).map((bar) => bar.getBoundingClientRect().top)
+    expect(tops).toEqual([...tops].sort((a, b) => a - b))
+
+    await userEvent.hover(bars(container)[0])
+    const readout = getByText("1968 · 2 events").getBoundingClientRect()
+    const bar = bars(container)[0].getBoundingClientRect()
     expect(readout.top).toBeLessThanOrEqual(bar.top + bar.height / 2)
     expect(readout.bottom).toBeGreaterThanOrEqual(bar.top)
   })

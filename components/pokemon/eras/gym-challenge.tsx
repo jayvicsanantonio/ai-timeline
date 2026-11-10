@@ -5,7 +5,7 @@
 
 import { Check, X } from 'lucide-react';
 import { useId, useState } from 'react';
-import { Sprite } from '@/components/ui/sprite';
+import { Sprite } from '@/components/pokemon/ui/sprite';
 import { badgePath } from '@/lib/dex';
 import type { Era } from '@/lib/eras';
 import { eventAnchorId } from '@/lib/event-format';

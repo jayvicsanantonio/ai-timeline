@@ -48,7 +48,7 @@ describe("siteTitle", () => {
 describe("siteDescription", () => {
   it("counts the events and names the years they span", () => {
     expect(siteDescription(eventsIn(1950, 1956, 1962))).toBe(
-      "Explore 3 milestones in the history of artificial intelligence from 1950 to 1962 as a field guide, each era drawn in the Pokémon sprites of its day.",
+      "Explore 3 milestones in the history of artificial intelligence from 1950 to 1962, each era drawn in the interface of its day, from punch cards to AI agents.",
     )
   })
 

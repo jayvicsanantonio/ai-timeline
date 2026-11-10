@@ -1,10 +1,30 @@
-// Draws the item from the bag that stands for a timeline category (CATEGORY_ITEMS in lib/dex.ts) in the entries and the
-// category filters: a Rare Candy for research, a Nugget for money. The icon is decorative, because the category's name is
-// always shown beside it.
-import { Sprite } from '@/components/ui/sprite';
-import { CATEGORY_ITEMS, itemPath } from '@/lib/dex';
-import { cn } from '@/lib/utils';
+// Draws the icon that stands for a timeline category in the era interfaces and the category filters.
+// The icon is decorative, because the category's name is always shown beside it.
+import {
+  Bot,
+  Building2,
+  Cpu,
+  FlaskConical,
+  Network,
+  Rocket,
+  Scale,
+  Siren,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
 import type { TimelineCategory } from '@/types/timeline';
+
+const CATEGORY_ICONS: Record<TimelineCategory, LucideIcon> = {
+  'Models & Architectures': Network,
+  'Research Breakthroughs': FlaskConical,
+  'Public Releases': Rocket,
+  'Ethics & Policy': Scale,
+  'Hardware Advances': Cpu,
+  'Companies & Investments': Building2,
+  'AI Tools': Wrench,
+  'Bombshell News': Siren,
+  Agents: Bot,
+};
 
 interface CategoryIconProps {
   category: TimelineCategory;
@@ -12,11 +32,7 @@ interface CategoryIconProps {
 }
 
 export function CategoryIcon({ category, className }: CategoryIconProps) {
-  const { item } = CATEGORY_ITEMS[category];
+  const Icon = CATEGORY_ICONS[category];
 
-  return (
-    <span aria-hidden="true" data-category-item={item} className={cn('inline-block shrink-0', className)}>
-      <Sprite src={itemPath(item)} eager pixelated className="size-full object-contain" />
-    </span>
-  );
+  return <Icon aria-hidden="true" focusable="false" className={className} />;
 }

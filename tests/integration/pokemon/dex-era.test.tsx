@@ -6,9 +6,9 @@ import { render, screen, within } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { page, userEvent } from "vitest/browser"
-import { DexProvider } from "@/components/eras/dex-context"
-import { EraChapter } from "@/components/eras/era-chapter"
-import { NO_MATCHING_EVENTS } from "@/components/eras/era-parts"
+import { DexProvider } from "@/components/pokemon/eras/dex-context"
+import { EraChapter } from "@/components/pokemon/eras/era-chapter"
+import { NO_MATCHING_EVENTS } from "@/components/pokemon/eras/era-parts"
 import { buildDex, CATEGORY_ITEMS, formatDexNumber } from "@/lib/dex"
 import { ERA_DEFINITIONS, groupEventsByEra, isCurrentEra, type GenerationId } from "@/lib/eras"
 import { eventAnchorId, eventDateTime, eventSource, formatEventDate } from "@/lib/event-format"
@@ -76,10 +76,13 @@ function renderEra(
 ) {
   const dex = buildDex(dexEvents)
   const era = groupEventsByEra(events).find((candidate) => candidate.generation === generation)!
+  // Inside the theme's root, as the theme toggle renders it, which sets the theme's colors
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <DexProvider dex={dex} events={dexEvents}>
-      {children}
-    </DexProvider>
+    <div className="pokemon-theme">
+      <DexProvider dex={dex} events={dexEvents}>
+        {children}
+      </DexProvider>
+    </div>
   )
   const view = render(<EraChapter era={era} totalEvents={totalEvents} />, { wrapper })
   const section = screen.getByRole("region", { name: era.name })

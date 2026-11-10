@@ -4,7 +4,7 @@
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 import { page, userEvent } from "vitest/browser"
-import { WorldMap } from "@/components/storytelling/world-map"
+import { WorldMap } from "@/components/pokemon/storytelling/world-map"
 import timelineData from "@/data/timeline-events.json"
 import { groupEventsByEra } from "@/lib/eras"
 import { countEventsByYear } from "@/lib/timeline-activity"

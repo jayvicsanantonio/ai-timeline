@@ -1,11 +1,14 @@
-// Defines the six eras of AI history, each a region of the AI Dex drawn in the sprites of one generation of handheld
-// games, from four shades of green to today's animated 3D, as AI itself grew from a model of a neuron to agents.
+// Defines the six eras of AI history and the computer interface each one is drawn in, and, for the Pokémon theme, the
+// generation of sprites each is drawn in, the badge it awards and the place and biome it is on the journey's route.
 // Groups timeline events into those eras by year, keeping every era even when none of its events are shown.
 import type { TimelineEvent } from '@/types/timeline';
 
+export type EraInterface = 'punch-card' | 'terminal' | 'desktop' | 'notebook' | 'chat' | 'agent';
+
+// The Pokémon theme's generation of sprites for an era
 export type GenerationId = 'gen-1' | 'gen-2' | 'gen-3' | 'gen-4' | 'gen-5' | 'modern';
 
-// The scenery an era's stretch of the route runs through
+// The scenery an era's stretch of the Pokémon theme's route runs through
 export type Biome = 'meadow' | 'snow' | 'forest' | 'cave' | 'city' | 'summit';
 
 export interface EraDefinition {
@@ -15,12 +18,13 @@ export interface EraDefinition {
   // The era's first year, and the first year of the next era
   range: [number, number];
   description: string;
-  // The generation of sprites the era is drawn in, and how the era header names it
+  interface: EraInterface;
+  interfaceName: string;
+  // The Pokémon theme: the generation of sprites the era is drawn in and how its header names it, the gym badge the
+  // reader earns for it, by its number in public/sprites/badges, and the place and biome it is on the journey's route
   generation: GenerationId;
   generationName: string;
-  // The gym badge the reader earns for the era, by its number in public/sprites/badges
   badge: number;
-  // The place on the journey's map the era is, and the scenery its stretch of the route runs through
   place: string;
   biome: Biome;
   // Marks the era in charts and swatches. The six were validated together as a
@@ -42,6 +46,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     range: [1940, 1970],
     description:
       'The birth of artificial intelligence as a field of study, where visionary researchers laid the theoretical groundwork and created the first programs that could simulate human reasoning.',
+    interface: 'punch-card',
+    interfaceName: 'Punch cards',
     generation: 'gen-1',
     generationName: 'Generation I sprites',
     badge: 1,
@@ -56,6 +62,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     range: [1970, 1990],
     description:
       'A period focused on encoding human expertise into computer systems, leading to the development of expert systems and the first commercial AI applications.',
+    interface: 'terminal',
+    interfaceName: 'Green-screen terminal',
     generation: 'gen-2',
     generationName: 'Generation II sprites',
     badge: 9,
@@ -70,6 +78,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     range: [1990, 2010],
     description:
       'The emergence of machine learning as computers began to learn from data rather than relying solely on programmed rules, setting the stage for modern AI.',
+    interface: 'desktop',
+    interfaceName: 'Desktop windows',
     generation: 'gen-3',
     generationName: 'Generation III sprites',
     badge: 17,
@@ -84,6 +94,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     range: [2010, 2020],
     description:
       'A transformative period where neural networks with multiple layers achieved breakthrough performance in vision, speech, and language understanding.',
+    interface: 'notebook',
+    interfaceName: 'Research notebook',
     generation: 'gen-4',
     generationName: 'Generation IV sprites',
     badge: 25,
@@ -98,6 +110,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     range: [2020, 2025],
     description:
       'The era in which AI systems learned to create original text, images and video and to hold natural conversations, putting AI in the hands of hundreds of millions of people.',
+    interface: 'chat',
+    interfaceName: 'Chat thread',
     generation: 'gen-5',
     generationName: 'Generation V animated sprites',
     badge: 33,
@@ -112,6 +126,8 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
     range: [2025, 2030],
     description:
       'The current era, in which AI systems reason before they answer and work on their own as agents, writing code, doing research and operating computers on our behalf.',
+    interface: 'agent',
+    interfaceName: 'Agent task log',
     generation: 'modern',
     generationName: 'Animated 3D sprites',
     badge: 70,

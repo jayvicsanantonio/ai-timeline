@@ -14,16 +14,12 @@ This project presents the complete history of artificial intelligence through an
 ### Key Features
 
 - **Comprehensive Dataset**: 340 meticulously researched AI milestones with verified sources
-- **Latest News, Then the Journey**: The page opens on the newest events, each saying how long ago it happened, then the journey runs forward from 1943 to now, so every line evolves in the order it did
-- **Nine Evolution Lines**: AI history told as Pokémon evolution lines. Neural networks are a MAGIKARP that uses SPLASH to no effect for fifty years, learns TACKLE with backpropagation and evolves into GYARADOS when AlexNet wins ImageNet. Language runs PORYGON, PORYGON2 at the Transformer and PORYGON-Z at ChatGPT; reasoning runs ABRA to ALAKAZAM at Deep Blue; games run MACHOP to MACHAMP, traded to Google with DeepMind; chips run MAGNEMITE to MAGNEZONE at the TPU; agents are the GASTLY line, the ghost in the machine. Every event is a numbered entry showing its line at the stage and level it had reached
-- **The Story in Scenes**: Evolutions play out as you scroll at the real turning points; human-versus-machine matches are battles (Deep Blue against Kasparov, AlphaGo's MOVE 37 against Lee Sedol, a gold medal at the Math Olympiad) with HP bars at the final score; the AI winters bring hail and freeze every line; MEW opens the story and legendaries mark a few singular moments
-- **An Adventure**: The page opens on a game's title screen with a start menu (NEW GAME, CONTINUE, POKéDEX). Each era is a region on one route with its own night-time scenery: Origin Meadow, Frostbite Pass (where the AI winters hit), Learning Woods, Deep Cavern, Prompt City and Frontier Peak
-- **Learn as You Go**: The professor's briefing teaches how to read the journey; each region opens on a signpost previewing the lines you'll meet and its turning points, and ends in a gym challenge, one question on what you just read, whose right answer explains itself and earns the region's badge
-- **Your Party**: A map of the nine lines links each stage to the moment it evolved, the navigation rail shows the party as it stands wherever you are reading, and the journey ends on the party today and an egg for the next era
-- **Sprites Through Time**: Each era is drawn in the sprites of one generation of handheld games, as AI's own fidelity grew: Generation I's four greens for the Foundation Era, then Generation II's color, Generation III's brighter panels, Generation IV's two screens, Generation V's animated sprites, and today's animated 3D for the Agentic Era
+- **Latest First**: The page opens on the newest events, each saying how long ago it happened, and rewinds from now back to 1943, every era its latest year and its latest event first under a header that says where the rewind has reached
+- **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook, a chat thread and an agent's task log
+- **Pokémon-ify**: A button at the top of the page turns the timeline into a Pokémon adventure, the same 340 events told as nine evolution lines on a journey from 1943 through six regions, each drawn in the sprites of one generation of the games, with evolutions at AI's turning points, frozen lines in the AI winters and a gym challenge at the end of every region. "Back to classic" returns, the page keeps the reader at the event they were reading either way, and it remembers the choice for the next visit. A link can ask for a theme with `?theme=pokemon` or `?theme=classic`
 - **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–6 and /
-- **Sources**: Each entry names the site its link opens
-- **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and each year of the Generative AI and Agentic Eras opens on its field notes, a one-sentence summary. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
+- **Landmarks and Sources**: Twenty-six turning points stand out across the eras, and each card names the site its link opens
+- **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread and the agent's task log sum up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
 - **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
 - **Accessibility First**: A skip link, full keyboard access, visible focus rings and reduced motion support
 - **Performance Optimized**: Scroll-driven CSS animations instead of a JavaScript observer per card, and one scroll measurement per frame for the navigation
@@ -41,22 +37,24 @@ This project presents the complete history of artificial intelligence through an
 
 ```
 components/
+├── theme/
+│   └── themed-timeline.tsx  # Shows the classic timeline or the Pokémon theme, with the switch between them
+├── pokemon/                 # The Pokémon theme, mirroring the folders below, from PokemonStoryEngine down
 ├── storytelling/            # Narrative-driven components
-│   ├── story-engine.tsx     # Main orchestrator: builds the dex, holds the search and category filters, runs the eras from 1943
-│   ├── prologue-scene.tsx   # Title screen: the premise, MEW over the lines, the start menu, latest sightings
-│   ├── world-map.tsx        # The six regions along the route, and a slim events-per-year chart
-│   ├── party-scene.tsx      # The professor's briefing, then the nine lines, each stage linking to where it evolves
-│   └── epilogue-scene.tsx   # Hall of Fame: the party today, the egg for the next era and the sprite credits
-├── eras/                    # The AI Dex, one generation of sprites per era
-│   ├── era-chapter.tsx      # The era's section: its shared header, then its entries
-│   ├── era-header.tsx       # The signpost at each region's entrance, with its badge and what the region holds
-│   ├── dex-era.tsx          # An era's entries in its generation's style (data-gen), from the first forward
-│   ├── scenes.tsx           # Evolutions, battles, moves, encounters, weather and dialog
-│   ├── gym-challenge.tsx    # The question at each region's end that earns its badge
-│   ├── dex-context.tsx      # Hands every part of the page the dex built once from all events
-│   └── era-parts.tsx        # Pieces every era shares: card attributes, titles, year columns, brief listings
+│   ├── story-engine.tsx     # Main orchestrator, holds the search and category filters and orders the eras newest first
+│   ├── prologue-scene.tsx   # Opening: title, latest events, era links and a slim events-per-year chart
+│   └── epilogue-scene.tsx   # Closing: where the rewind ends, at the first event
+├── eras/                    # One interface per era
+│   ├── era-chapter.tsx      # The era's section: its shared header, then its interface
+│   ├── era-header.tsx       # The header every era shares, marked Now or Before {year}
+│   ├── punch-card-era.tsx   # Foundation Era: 80-column punch cards
+│   ├── terminal-era.tsx     # Knowledge Era: green-phosphor terminal
+│   ├── desktop-era.tsx      # Learning Era: beveled desktop windows
+│   ├── notebook-era.tsx     # Deep Learning Revolution: research notebook cells
+│   ├── chat-era.tsx         # Generative AI Era: chat thread
+│   └── agent-era.tsx        # Agentic Era: an agent's task log
 ├── timeline/                # Timeline-wide UI
-│   ├── timeline-controls.tsx    # Search box and the category filters
+│   ├── timeline-controls.tsx    # Search box and category filters
 │   ├── timeline-navigation.tsx  # Chapter rail and phone bar
 │   └── activity-chart.tsx       # Events-per-year chart
 ├── interactive/             # User interaction features
@@ -65,22 +63,13 @@ components/
     └── skip-to-content.tsx
 ```
 
+The Pokémon theme's story is data in `lib/dex.ts` (the nine evolution lines, their scenes and the AI winters) and `lib/journey.ts` (each region's signpost and gym challenge), and its styles are in `app/pokemon.css`. Its sprites come from [jayvicsanantonio/sprites](https://github.com/jayvicsanantonio/sprites): `scripts/sync-sprites.mjs` copies only the ones the page shows into `public/sprites`. Pokémon and its creatures are trademarks of Nintendo, Creatures Inc. and GAME FREAK inc.; this is an unofficial fan project.
+
 ### Data Management
 
 - **Structured Timeline Events**: TypeScript interfaces for type safety
 - **Era-based Grouping**: Foundation, Knowledge, Learning, Deep Learning Revolution, Generative AI and Agentic eras
-- **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents, each drawn as an item from the bag (`CATEGORY_ITEMS` in `lib/dex.ts`)
-
-### Sprites
-
-The sprites come from [jayvicsanantonio/sprites](https://github.com/jayvicsanantonio/sprites), a fork of PokéAPI's sprite collection, and ship in `public/sprites` so the page never depends on another host. `scripts/sync-sprites.mjs` copies exactly the files the page shows (`requiredSprites` in `lib/dex.ts`) and removes the rest, so run it after adding events or changing creatures. A blobless clone downloads only what the script asks for:
-
-```bash
-git clone --depth 1 --filter=blob:none --no-checkout https://github.com/jayvicsanantonio/sprites ../sprites
-node scripts/sync-sprites.mjs ../sprites
-```
-
-A unit test fails if any sprite the page shows is missing. Pokémon and its characters are trademarks of Nintendo, Creatures Inc. and GAME FREAK inc.; this is an unofficial fan project, and the epilogue says so.
+- **Category System**: Research Breakthroughs, Models & Architectures, Public Releases, Ethics & Policy, Hardware Advances, Companies & Investments, AI Tools, Bombshell News, Agents
 
 ## Getting Started
 
@@ -174,7 +163,7 @@ interface TimelineEvent {
     | 'Agents';
   link: string;
   landmark?: boolean; // One of the turning points every era sets apart
-  highlight?: boolean; // Kept in full in a busy year, whose other entries are listed in brief
+  highlight?: boolean; // Kept in full in a busy year of the chat thread or the agent's log
 }
 ```
 
@@ -185,15 +174,14 @@ interface TimelineEvent {
 ### Animation System
 
 - **Scroll-driven Reveals**: Event cards rise into place as they scroll into view
-- **Scroll-driven Scenes**: Evolutions flicker in white silhouettes and HP bars drain as each scene scrolls through the screen, with both stages side by side when motion is reduced
-- **Dex Details**: Today's 3D sprites bob, hail falls in the AI winters, a Poké Ball wobbles while it watches for the next entry, and the hero's lens glows
+- **Era Details**: A blinking terminal caret, a filling progress bar, chat typing dots and the agent's spinner
 - **Reduced Motion**: Every animation is off when the reader prefers reduced motion
 
 ### Custom Hooks
 
 ```typescript
 useTimelinePosition(); // The era, event date and era progress at the reading line
-useTimelineShortcuts(); // J, K, 1–6 and / keyboard shortcuts
+useTimelineShortcuts(); // J, K, 1–5 and / keyboard shortcuts
 ```
 
 ## Standout Engineering Practices

@@ -7,7 +7,9 @@ import { SkipToContent } from '@/components/accessibility/skip-to-content';
 import timelineData from '@/data/timeline-events.json';
 import { siteMetadata } from '@/lib/site';
 import { parseTimelineEvents } from '@/lib/timeline-events';
+import { THEME_BOOT_SCRIPT } from '@/lib/theme';
 import './globals.css';
+import './pokemon.css';
 
 // Work Sans and Open Sans ship with the app (latin subsets, variable weight 300-700), so `next build` never fetches them from Google Fonts.
 const workSans = localFont({
@@ -42,8 +44,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${workSans.variable} ${openSans.variable} ${pressStart.variable} antialiased`}
     >
+      <head>
+        {/* Marks the reader's theme before the page paints, so a returning Pokémon fan never sees the classic page flash */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body className="overflow-x-clip">
         <SkipToContent />
         <main id="main-content">{children}</main>

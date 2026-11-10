@@ -1,191 +1,279 @@
-// The opening of the page, drawn as the title screen of a game under a night sky: the title and the premise, MEW floating
-// above the first creature of every line, which all descend from it, and the start menu: NEW GAME starts the journey in
-// the first era, CONTINUE jumps to the latest entry, and POKéDEX opens the map of the lines. Below the menu, the latest
-// news, each linking to its entry at the end of the timeline.
+// The opening of the page, kept to about a screen so the timeline follows soon: the title, the latest events, a row of
+// links to the eras in the page's order, and a slim events-per-year chart of all of AI history. The page rewinds from now,
+// so each of the latest events links to its place at the top of the timeline below.
 'use client';
 
 import { ArrowDown } from 'lucide-react';
 import type { MouseEvent } from 'react';
-import { useDexEntry } from '@/components/eras/dex-context';
-import { CategoryBadge } from '@/components/ui/category-badge';
+import { ActivityChart } from '@/components/timeline/activity-chart';
+import { CategoryIcon } from '@/components/ui/category-icon';
 import { RelativeTime } from '@/components/ui/relative-time';
-import { Sprite } from '@/components/ui/sprite';
-import { ART, formatDexNumber, LINES } from '@/lib/dex';
 import type { Era } from '@/lib/eras';
 import { eventAnchorId, eventDateTime, formatEventDate } from '@/lib/event-format';
-import { scrollToEvent } from '@/lib/timeline-scroll';
+import { newestFirst } from '@/lib/newest-first';
+import type { YearActivity } from '@/lib/timeline-activity';
+import { scrollToEvent, scrollToYear } from '@/lib/timeline-scroll';
+import { cn } from '@/lib/utils';
 import type { TimelineEvent } from '@/types/timeline';
 
 interface PrologueSceneProps {
-  // Every era with all of its events, in time order, as the page runs
+  // Every era with all of its events, in time order, as the chart runs
   eras: Era[];
+  activity: YearActivity[];
   // The newest events, newest first
   latest: TimelineEvent[];
   totalEvents: number;
-  // The years the timeline spans
-  firstYear: number;
-  lastYear: number;
 }
 
-export function PrologueScene({ eras, latest, totalEvents, firstYear, lastYear }: PrologueSceneProps) {
-  const newest = latest[0];
+export function PrologueScene({ eras, activity, latest, totalEvents }: PrologueSceneProps) {
+  const firstYear = activity[0]?.year;
+  const lastYear = activity.at(-1)?.year;
+  const latestEra = eras.at(-1);
 
   return (
     <section
       aria-labelledby="prologue-title"
-      className="title-sky relative overflow-hidden px-4 pb-12 pt-10 text-center text-white sm:px-6 sm:pt-12"
+      className="relative overflow-hidden bg-[#0a0a0b] px-4 pb-10 pt-14 text-white sm:px-6 sm:pb-14 sm:pt-20"
     >
-      <div className="relative mx-auto max-w-5xl">
-        <p className="prologue-rise font-pixel text-[0.625rem] uppercase leading-5 text-[#c9cde6]">
-          An AI adventure <span aria-hidden="true">·</span> {firstYear} – {lastYear} <span aria-hidden="true">·</span>{' '}
-          {totalEvents} entries <span aria-hidden="true">·</span> {LINES.length} lines
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[36rem] bg-[radial-gradient(50rem_24rem_at_20%_0%,rgba(201,133,0,0.12),transparent_70%),radial-gradient(46rem_22rem_at_85%_10%,rgba(144,133,233,0.14),transparent_70%)]"
+      />
+
+      <div className="relative mx-auto max-w-6xl">
+        <p className="prologue-rise font-mono text-xs uppercase tracking-[0.3em] text-zinc-400">
+          {firstYear} – {lastYear} <span aria-hidden="true">·</span> {totalEvents} events{' '}
+          <span aria-hidden="true">·</span> {eras.length} eras
         </p>
         <h1
           id="prologue-title"
-          className="dex-wordmark prologue-rise mt-4 text-5xl font-bold leading-[0.95] tracking-[-0.03em] [animation-delay:80ms] sm:text-7xl lg:text-[5.5rem]"
+          className="prologue-rise mt-5 text-5xl font-semibold leading-[0.92] tracking-[-0.04em] [animation-delay:80ms] sm:text-7xl lg:text-8xl"
         >
           The AI Timeline
         </h1>
-        <p className="prologue-rise mx-auto mt-4 max-w-3xl text-pretty text-base leading-7 text-[#d9dcef] [animation-delay:160ms]">
-          {lastYear - firstYear} years of artificial intelligence as {LINES.length} evolution lines. Neural networks
-          splash around as a MAGIKARP for fifty years, chatbots grow into PORYGON-Z, and agents start haunting our
-          machines. Walk the route from {firstYear} and watch every line hatch, freeze, battle and evolve.
-        </p>
-
-        <TitleLineup />
-
-        <nav aria-label="Start menu" className="prologue-rise mx-auto mt-5 max-w-md [animation-delay:240ms]">
-          <ul className="start-menu rounded-2xl p-2 text-left">
-            <MenuItem href={`#${eras[0]?.id}`} label="New game" detail={`Start the journey in ${firstYear}`} />
-            {newest ? (
-              <MenuItem
-                href={`#${eventAnchorId(newest)}`}
-                label="Continue"
-                detail={`Jump to the latest, ${formatEventDate(newest)}`}
-              />
-            ) : null}
-            <MenuItem href="#party-title" label="Pokédex" detail={`Meet the ${LINES.length} lines`} />
-          </ul>
-        </nav>
+        {firstYear !== undefined && lastYear !== undefined ? (
+          <p className="prologue-rise mt-5 max-w-2xl text-lg leading-8 text-zinc-300 [animation-delay:160ms]">
+            {lastYear - firstYear} years of artificial intelligence, from the latest news back to {firstYear}, each era
+            drawn in the computer interface of its day. Scroll to rewind.
+          </p>
+        ) : null}
 
         <LatestEvents events={latest} />
+
+        <EraLinks eras={eras} />
+
+        <figure className="prologue-rise mt-10 [animation-delay:280ms] sm:mt-12">
+          <div className="relative pt-7">
+            <BusiestYearLabel activity={activity} />
+            <ActivityChart
+              activity={activity}
+              orientation="horizontal"
+              onSelectYear={scrollToYear}
+              className="h-14 sm:h-16"
+            />
+          </div>
+          <EraAxis eras={eras} activity={activity} />
+          <figcaption className="mt-4 flex flex-col gap-3 text-sm leading-6 text-zinc-400 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+            {latestEra ? (
+              <p>
+                Events per year. {latestEra.events.length} of the {totalEvents} events happened since{' '}
+                {latestEra.range[0]}.{' '}
+                {/* The bars answer only the pointer, so assistive technology skips this with the chart */}
+                <span aria-hidden="true">Click a bar to jump to that year.</span>
+              </p>
+            ) : null}
+            <YearTable activity={activity} />
+          </figcaption>
+        </figure>
       </div>
     </section>
   );
 }
 
-// One choice of the start menu, its cursor showing on hover and focus as a game's does
-function MenuItem({ href, label, detail }: { href: string; label: string; detail: string }) {
-  return (
-    <li>
-      <a
-        href={href}
-        className="start-menu-item group flex items-baseline gap-3 rounded-xl px-4 py-2.5 focus-visible:outline-none"
-      >
-        <span aria-hidden="true" className="start-menu-cursor font-pixel text-xs">
-          ▶
-        </span>
-        <span className="w-28 shrink-0 font-pixel text-xs uppercase leading-5">{label}</span>
-        <span className="min-w-0 text-sm text-[#5b6275]">{detail}</span>
-      </a>
-    </li>
-  );
-}
-
-// MEW floating over the first creature of every line, standing on the grass where the journey starts
-function TitleLineup() {
-  return (
-    <div aria-hidden="true" className="prologue-rise relative mx-auto mt-4 max-w-3xl [animation-delay:200ms]">
-      <div className="grid h-14 place-items-center">
-        <span className="sprite-bob">
-          <Sprite src={ART.ancestor.sprite} eager className="h-12 w-12 object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]" />
-        </span>
-      </div>
-      <ol className="title-ledge mt-1 grid grid-cols-9 items-end gap-1 rounded-full px-3 pb-2 sm:px-6">
-        {LINES.map((line) => (
-          <li key={line.id} className="grid h-12 place-items-end justify-center sm:h-16">
-            <Sprite src={ART.lineSprite(line.stages[0].species)} eager className="max-h-full max-w-full object-contain" />
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
-}
-
 // The newest events, so the latest news is the first thing on the page, each with how long ago it happened. Each one jumps to
-// its entry at the end of the timeline, and works as a plain link to the entry before the page loads.
+// its card in the timeline, where its description and source are, and works as a plain link to the card before the page loads.
 function LatestEvents({ events }: { events: TimelineEvent[] }) {
   const newest = events[0];
   if (!newest) {
     return null;
   }
 
+  const jumpToEvent = (event: MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+    if (scrollToEvent(anchorId)) {
+      event.preventDefault();
+    }
+  };
+
   return (
-    <div data-latest-events="" className="prologue-rise mt-8 text-left [animation-delay:280ms]">
+    <div data-latest-events="" className="prologue-rise mt-10 [animation-delay:200ms]">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <h2
           id="latest-title"
-          className="flex items-center gap-2.5 font-pixel text-[0.625rem] uppercase leading-none text-white"
+          className="flex items-center gap-2.5 font-mono text-xs uppercase tracking-[0.3em] text-zinc-200"
         >
-          <span aria-hidden="true" className="size-2 rounded-full bg-[#ff5a6e] motion-safe:animate-pulse" />
-          Latest sightings
+          <span aria-hidden="true" className="size-2 rounded-full bg-[#cf4f9a] motion-safe:animate-pulse" />
+          Latest
         </h2>
-        <p className="text-sm text-[#a7acc8]">
+        <p className="text-sm text-zinc-400">
           Through <time dateTime={eventDateTime(newest)}>{formatEventDate(newest)}</time>
         </p>
       </div>
-      <ol aria-labelledby="latest-title" className="mt-3 grid gap-2 lg:grid-cols-3">
-        {events.map((event) => (
-          <LatestEvent key={eventAnchorId(event)} event={event} />
-        ))}
+      <ol aria-labelledby="latest-title" className="mt-4 grid gap-3 lg:grid-cols-3">
+        {events.map((event) => {
+          const anchorId = eventAnchorId(event);
+
+          return (
+            <li key={anchorId}>
+              <a
+                href={`#${anchorId}`}
+                onClick={(click) => jumpToEvent(click, anchorId)}
+                className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition-colors hover:border-white/25 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 sm:p-5"
+              >
+                <span className="flex flex-wrap items-center gap-x-2 text-xs text-zinc-400">
+                  <time dateTime={eventDateTime(event)} className="font-medium text-zinc-200">
+                    {formatEventDate(event)}
+                  </time>
+                  <RelativeTime event={event} before="· " className="text-[#e77fb8]" />
+                </span>
+                <span className="mt-2 text-pretty text-base font-semibold leading-snug text-white">{event.title}</span>
+                <span className="mt-auto flex items-center justify-between gap-3 pt-4 text-xs text-zinc-400">
+                  <span className="inline-flex min-w-0 items-center gap-1.5">
+                    <CategoryIcon category={event.category} className="size-3.5 shrink-0" />
+                    <span className="truncate">{event.category}</span>
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex shrink-0 items-center gap-1 text-zinc-500 transition-colors group-hover:text-zinc-300"
+                  >
+                    In the timeline
+                    <ArrowDown className="size-3" />
+                  </span>
+                </span>
+              </a>
+            </li>
+          );
+        })}
       </ol>
     </div>
   );
 }
 
-function LatestEvent({ event }: { event: TimelineEvent }) {
-  const entry = useDexEntry(event);
-  const anchorId = eventAnchorId(event);
-
-  const jumpToEvent = (click: MouseEvent<HTMLAnchorElement>) => {
-    if (scrollToEvent(anchorId)) {
-      click.preventDefault();
-    }
-  };
-
+// A link to each era in the page's order, the latest first, named with its years. On a phone the row scrolls sideways.
+function EraLinks({ eras }: { eras: Era[] }) {
   return (
-    <li>
-      <a
-        href={`#${anchorId}`}
-        onClick={jumpToEvent}
-        className="group flex h-full items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 transition-colors hover:border-white/25 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffcb05]"
-      >
-        <span
-          aria-hidden="true"
-          className="grid size-12 shrink-0 place-items-center rounded-xl"
-          style={{ background: `radial-gradient(circle at 50% 60%, ${entry.line.color}55, transparent 70%)` }}
-        >
-          <Sprite src={entry.sprite} eager className="max-h-11 max-w-11 object-contain" />
-        </span>
-        <span className="flex min-w-0 flex-1 flex-col">
-          <span className="flex flex-wrap items-center gap-x-2 text-xs text-[#a7acc8]">
-            <span className="font-pixel text-[0.5625rem]">{formatDexNumber(entry.number)}</span>
-            <time dateTime={eventDateTime(event)} className="font-medium text-[#e4e6f5]">
-              {formatEventDate(event)}
-            </time>
-            <RelativeTime event={event} before="· " className="text-[#ffcb05]" />
-          </span>
-          <span className="mt-1 line-clamp-2 text-pretty text-sm font-semibold leading-snug text-white">{event.title}</span>
-          <span className="mt-1 flex items-center justify-between gap-3 text-xs text-[#a7acc8]">
-            <CategoryBadge category={event.category} className="min-w-0" />
-            <ArrowDown
-              aria-hidden="true"
-              className="size-3.5 shrink-0 text-[#7d84a6] transition-colors group-hover:text-white"
-            />
-          </span>
-        </span>
-      </a>
-    </li>
+    <ol
+      aria-label="Eras"
+      className="prologue-rise -mx-4 mt-6 flex snap-x gap-2 overflow-x-auto px-4 pb-1 [animation-delay:240ms] [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+    >
+      {newestFirst(eras).map((era) => (
+        <li key={era.id} className="shrink-0 snap-start">
+          <a
+            href={`#${era.id}`}
+            className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-sm transition-colors hover:border-white/25 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          >
+            <span aria-hidden="true" className="size-2 shrink-0 rounded-full" style={{ backgroundColor: era.color }} />
+            <span className="font-medium text-white">{era.label}</span>
+            <span className="text-zinc-400">{era.subtitle}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
   );
 }
 
+// Labels the year with the most events directly above its bar, the one value the chart calls out
+function BusiestYearLabel({ activity }: { activity: YearActivity[] }) {
+  if (activity.length === 0) {
+    return null;
+  }
+
+  const busiestIndex = activity.reduce(
+    (best, year, index) => (year.total > activity[best].total ? index : best),
+    0
+  );
+  const busiest = activity[busiestIndex];
+  const position = (busiestIndex + 0.5) / activity.length;
+
+  return (
+    <p
+      aria-hidden="true"
+      className={cn(
+        'absolute top-0 whitespace-nowrap text-xs text-zinc-300',
+        position > 0.85 ? '-translate-x-full text-right' : '-translate-x-1/2'
+      )}
+      style={{ left: `${position * 100}%` }}
+    >
+      <span className="font-semibold text-white">{busiest.total} events</span> in {busiest.year}
+    </p>
+  );
+}
+
+// The era bands under the chart: a colored rule across each era's years, its first year and its name
+function EraAxis({ eras, activity }: { eras: Era[]; activity: YearActivity[] }) {
+  if (activity.length === 0) {
+    return null;
+  }
+
+  const firstYear = activity[0].year;
+  const lastYear = activity[activity.length - 1].year;
+
+  return (
+    <div aria-hidden="true" data-era-axis="" className="mt-2 flex gap-[2px]">
+      {eras.map((era, index) => {
+        const start = Math.max(era.range[0], firstYear);
+        const end = Math.min(era.range[1] - 1, lastYear);
+        const isLast = index === eras.length - 1;
+        // An era of only a few years has room for its first year on a wide screen, and never for its name
+        const isShort = end - start + 1 < 8;
+
+        return (
+          <div key={era.id} className="min-w-0" style={{ flexGrow: end - start + 1, flexBasis: 0 }}>
+            <div className="h-0.5 rounded-full" style={{ backgroundColor: era.color }} />
+            <div className={cn('mt-2 flex items-baseline gap-1.5 text-xs', isLast && 'justify-end')}>
+              <span className={cn('font-mono tabular-nums text-zinc-500', isShort && !isLast && 'hidden lg:inline')}>
+                {isLast ? lastYear : start}
+              </span>
+              <span className="hidden truncate text-zinc-300 md:inline">{isLast || isShort ? '' : era.label}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// The chart's numbers for readers who want them exactly, or who cannot see the bars, the latest year first
+function YearTable({ activity }: { activity: YearActivity[] }) {
+  const yearsWithEvents = newestFirst(activity.filter((year) => year.total > 0));
+
+  return (
+    <details className="shrink-0 sm:text-right">
+      <summary className="cursor-pointer select-none font-medium text-zinc-300 underline-offset-4 hover:underline">
+        Show the numbers
+      </summary>
+      <div className="mt-3 max-h-72 overflow-y-auto rounded-xl border border-white/10 text-left">
+        <table className="w-full min-w-48 text-sm">
+          <caption className="sr-only">Events per year</caption>
+          <thead className="sticky top-0 bg-[#141417] text-xs text-zinc-400">
+            <tr>
+              <th scope="col" className="px-4 py-2 text-left font-medium">
+                Year
+              </th>
+              <th scope="col" className="px-4 py-2 text-right font-medium">
+                Events
+              </th>
+            </tr>
+          </thead>
+          <tbody className="tabular-nums">
+            {yearsWithEvents.map((year) => (
+              <tr key={year.year} className="border-t border-white/5">
+                <td className="px-4 py-1.5 text-zinc-300">{year.year}</td>
+                <td className="px-4 py-1.5 text-right text-white">{year.total}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  );
+}

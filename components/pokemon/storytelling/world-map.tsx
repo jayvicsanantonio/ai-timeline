@@ -4,7 +4,7 @@
 'use client';
 
 import { ActivityChart } from '@/components/timeline/activity-chart';
-import { Sprite } from '@/components/ui/sprite';
+import { Sprite } from '@/components/pokemon/ui/sprite';
 import { badgePath } from '@/lib/dex';
 import type { Era } from '@/lib/eras';
 import type { YearActivity } from '@/lib/timeline-activity';
