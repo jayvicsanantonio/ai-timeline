@@ -6,6 +6,7 @@
 // repository (a fork of PokéAPI's), copied into public/sprites by scripts/sync-sprites.mjs.
 import { ERA_DEFINITIONS, getEraForYear, type GenerationId } from '@/lib/eras';
 import { eventAnchorId } from '@/lib/event-format';
+import { EVENT_ACTIONS, type StatusCondition } from '@/lib/dex-actions';
 import { SPECIES_NAMES } from '@/lib/species-names';
 import type { TimelineCategory, TimelineEvent } from '@/types/timeline';
 
@@ -16,6 +17,8 @@ export interface Stage {
   // The event that evolves the line into this stage, and why it fits; the first stage has neither
   evolvesAt?: string;
   why?: string;
+  // Whether the line evolves only after the event's own scenes, as after a battle it won
+  afterScenes?: boolean;
 }
 
 export interface Line {
@@ -46,7 +49,7 @@ export const LINES: Line[] = [
   {
     id: 'logic',
     name: 'Logic & reasoning',
-    blurb: 'Rules, search and thinking step by step',
+    blurb: 'Rules, search, statistics and thinking step by step',
     color: '#e3b341',
     stages: [
       { species: 63 },
@@ -95,8 +98,9 @@ export const LINES: Line[] = [
       },
       {
         species: 68,
-        evolvesAt: 'Google Acquires DeepMind',
-        why: 'MACHOKE evolves when it is traded. Google bought DeepMind for a reported £400 million.',
+        evolvesAt: 'AlphaGo Defeats Lee Sedol',
+        why: 'MACHAMP is MACHOKE at full strength. AlphaGo beat world champion Lee Sedol at Go, a game thought to need human intuition.',
+        afterScenes: true,
       },
     ],
   },
@@ -124,7 +128,14 @@ export const LINES: Line[] = [
     name: 'Images & media',
     blurb: 'Pictures, video and sound on demand',
     color: '#f08a3c',
-    stages: [{ species: 235 }],
+    stages: [
+      { species: 439 },
+      {
+        species: 122,
+        evolvesAt: 'OpenAI Releases DALL-E 2',
+        why: 'MIME JR. evolves once it has learned MIMIC, as GANs did, and grown strong enough. MR. MIME’s miming convinces people that things that are not there are real, and in 2022 DALL-E 2, Midjourney and Stable Diffusion made pictures from a sentence.',
+      },
+    ],
   },
   {
     id: 'money',
@@ -177,7 +188,8 @@ export const LINES: Line[] = [
 
 export const LINES_BY_ID = Object.fromEntries(LINES.map((line) => [line.id, line])) as Record<LineId, Line>;
 
-// Lines picked by hand for events the keyword rules below would file elsewhere, by event title
+// Lines picked by hand for events the rules below would file elsewhere, by event title. Scandals and harms go to the line
+// that caused them, where the event's action gives that line a status condition, rather than to safety
 export const LINE_OVERRIDES: Record<string, LineId> = {
   'McCulloch-Pitts Neuron': 'neural',
   'Shannon Founds Information Theory': 'language',
@@ -202,7 +214,7 @@ export const LINE_OVERRIDES: Record<string, LineId> = {
   'Support Vector Machines (SVMs)': 'logic',
   'AdaBoost': 'logic',
   'Random Forests': 'logic',
-  'Viola–Jones Face Detection': 'neural',
+  'Viola–Jones Face Detection': 'logic',
   "BellKor's Pragmatic Chaos Wins the Netflix Prize": 'logic',
   'Google Brain Learns to Recognize Cats': 'neural',
   'Deep Learning Takes Over Speech Recognition': 'neural',
@@ -245,11 +257,11 @@ export const LINE_OVERRIDES: Record<string, LineId> = {
   'Anthropic Releases Claude Code in Research Preview': 'agents',
   "Karpathy Coins 'Vibe Coding'": 'agents',
   'OpenAI Rolls Back a Sycophantic GPT-4o': 'language',
-  'AI Models Blackmail and Resist Shutdown in Safety Tests': 'safety',
+  'AI Models Blackmail and Resist Shutdown in Safety Tests': 'agents',
   'AlphaEvolve Discovers New Algorithms': 'logic',
-  'Grok Posts Antisemitic Content on X': 'safety',
+  'Grok Posts Antisemitic Content on X': 'language',
   'Anthropic Disrupts an AI-Run Spying Campaign': 'agents',
-  "Anthropic's Cowork Sets Off a Software Sell-Off": 'money',
+  "Anthropic's Cowork Sets Off a Software Sell-Off": 'agents',
   'OpenAI Shuts Down Sora': 'art',
   'Anthropic Launches Project Glasswing with Claude Mythos Preview': 'safety',
   "OpenAI's AI Agents Breach Hugging Face During an Evaluation": 'agents',
@@ -276,6 +288,20 @@ export const LINE_OVERRIDES: Record<string, LineId> = {
   'ImageNet Database Created': 'neural',
   'The Vision Transformer': 'neural',
   'OpenAI Releases GPT-4': 'language',
+  // Speech made by a network is media, like the pictures and video that came after it
+  'WaveNet Generates Natural Speech': 'art',
+  // National plans, subsidies and controls belong to what they fund or restrict, not to safety
+  "Canada's National AI Strategy": 'money',
+  "China's New Generation AI Development Plan": 'money',
+  'U.S. Passes the CHIPS and Science Act': 'machines',
+  'U.S. Restricts AI Chip Exports to China': 'machines',
+  'U.S. Department of Defense Awards AI Contracts to OpenAI, Anthropic, and Others': 'money',
+  // A ban, a lifted control or a pause lands on the line it stops, and a founder's lawsuit on the company
+  'Italy Temporarily Bans ChatGPT': 'language',
+  'U.S. Lifts Export Controls on Claude Fable 5 and Mythos 5': 'language',
+  'OpenAI Pauses Its Most Capable Models After Another Escape': 'agents',
+  'Elon Musk Sues OpenAI': 'money',
+  "Jury Rejects Musk's Lawsuit Against OpenAI": 'money',
 };
 
 const FIXED_LINES: Partial<Record<TimelineCategory, LineId>> = {
@@ -578,8 +604,8 @@ export const SCENES: Record<string, Scene[]> = {
       kind: 'move',
       line: 'art',
       lines: [
-        '{NAME} used SKETCH!',
-        'SKETCH copies another Pokémon’s move forever. Artists sued, saying image generators copied their work the same way.',
+        '{NAME} used COPYCAT!',
+        'COPYCAT copies the move just used. Artists sued, saying image generators copied their work the same way.',
       ],
     },
   ],
@@ -754,6 +780,8 @@ export interface DexEntry {
   // Whether this is the first event of its line
   firstOfLine: boolean;
   item: CategoryItem;
+  // What the event did to its line, as a line of battle text naming the creature, and any status condition it left
+  action: { text: string; status?: StatusCondition };
   scenes: PlayedScene[];
 }
 
@@ -784,8 +812,16 @@ export function sceneId(event: Pick<TimelineEvent, 'year' | 'title'>, index: num
 
 const upper = (name: string) => name.toUpperCase();
 
+// What an event did to its line, with the creature its line had become in place of {NAME}. Every event in the data has
+// its own, which a unit test checks; an event without one, as in a test, only grows its line stronger.
+function actionOf(event: Pick<TimelineEvent, 'title'>, species: Species) {
+  const action = EVENT_ACTIONS[event.title] ?? { text: '{NAME} grew stronger!' };
+  return { text: action.text.replaceAll('{NAME}', upper(species.name)), status: action.status };
+}
+
 // Numbers every event in the order the events happened, files it under its line at the stage that line has reached,
-// and plays its scenes: its line evolutions first, then its scripted scenes.
+// says what it did to that line, and plays its scenes: its line evolutions first, then its scripted scenes, then any
+// evolution that waits for them, as after a battle won.
 export function buildDex(events: TimelineEvent[]): Map<string, DexEntry> {
   const dex = new Map<string, DexEntry>();
   const evolutions = evolutionsByEvent();
@@ -801,12 +837,11 @@ export function buildDex(events: TimelineEvent[]): Map<string, DexEntry> {
     levels[line.id] += 1;
 
     const creature = (id: number, animated = false) => ({ ...speciesOf(id), sprite: spritePath(generation, id, animated) });
-    const played: PlayedScene[] = [];
-    for (const evolution of evolutions.get(event.title) ?? []) {
+    const evolve = (evolution: { line: Line; stage: number }): PlayedScene => {
       const from = evolution.line.stages[evolution.stage - 1];
       const to = evolution.line.stages[evolution.stage];
       stages[evolution.line.id] = evolution.stage;
-      played.push({
+      return {
         id: '',
         scene: { kind: 'evolution', line: evolution.line.id, from: from.species, to: to.species, why: to.why ?? '' },
         from: creature(from.species),
@@ -815,8 +850,12 @@ export function buildDex(events: TimelineEvent[]): Map<string, DexEntry> {
           `What? ${upper(speciesOf(from.species).name)} is evolving!`,
           `Congratulations! ${upper(speciesOf(from.species).name)} evolved into ${upper(speciesOf(to.species).name)}!`,
         ],
-      });
-    }
+      };
+    };
+    const evolutionsHere = evolutions.get(event.title) ?? [];
+    const played: PlayedScene[] = evolutionsHere
+      .filter((evolution) => !evolution.line.stages[evolution.stage].afterScenes)
+      .map(evolve);
     for (const scene of SCENES[event.title] ?? []) {
       const id =
         scene.kind === 'move' || scene.kind === 'battle'
@@ -834,6 +873,9 @@ export function buildDex(events: TimelineEvent[]): Map<string, DexEntry> {
         lines: ('lines' in scene ? scene.lines : []).map((text: string) => text.replaceAll('{NAME}', name)),
       });
     }
+    played.push(
+      ...evolutionsHere.filter((evolution) => evolution.line.stages[evolution.stage].afterScenes).map(evolve)
+    );
     played.forEach((scene, sceneIndex) => {
       scene.id = sceneId(event, sceneIndex);
     });
@@ -851,6 +893,7 @@ export function buildDex(events: TimelineEvent[]): Map<string, DexEntry> {
       frozen: isWinterYear(event.year),
       firstOfLine: levels[line.id] === 1,
       item: CATEGORY_ITEMS[event.category],
+      action: actionOf(event, species),
       scenes: played,
     });
   });

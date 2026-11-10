@@ -18,6 +18,7 @@ import {
   speciesOf,
 } from "@/lib/dex"
 import { getEraForYear } from "@/lib/eras"
+import { EVENT_ACTIONS, STATUS_CONDITIONS } from "@/lib/dex-actions"
 import { pageSprites } from "@/lib/journey"
 import { eventAnchorId } from "@/lib/event-format"
 import { parseTimelineEvents } from "@/lib/timeline-events"
@@ -35,7 +36,7 @@ describe("LINES", () => {
       ["Porygon", "Porygon2", "Porygon-Z"],
       ["Machop", "Machoke", "Machamp"],
       ["Magnemite", "Magneton", "Magnezone"],
-      ["Smeargle"],
+      ["Mime Jr.", "Mr. Mime"],
       ["Meowth", "Persian"],
       ["Chansey", "Blissey"],
       ["Gastly", "Haunter", "Gengar"],
@@ -55,6 +56,16 @@ describe("LINES", () => {
 
   it("evolves neural networks from MAGIKARP to GYARADOS when AlexNet wins ImageNet", () => {
     expect(LINES_BY_ID.neural.stages[1].evolvesAt).toBe("ImageNet Breakthrough")
+  })
+
+  it("evolves images from MIME JR. to MR. MIME at DALL-E 2, after GANs taught it MIMIC as the games require", () => {
+    expect(LINES_BY_ID.art.stages[1].evolvesAt).toBe("OpenAI Releases DALL-E 2")
+    expect(entryOf("Generative Adversarial Networks (GANs)").action.text).toBe("MIME JR. learned MIMIC!")
+    expect(entryOf("OpenAI Releases DALL-E 2").scenes[0].lines[1]).toBe("Congratulations! MIME JR. evolved into MR. MIME!")
+  })
+
+  it("evolves games to MACHAMP only once AlphaGo has won its battle with Lee Sedol", () => {
+    expect(LINES_BY_ID.games.stages[2]).toMatchObject({ evolvesAt: "AlphaGo Defeats Lee Sedol", afterScenes: true })
   })
 })
 
@@ -130,12 +141,17 @@ describe("buildDex", () => {
     expect(entryOf("XCON Brings Expert Systems to Business").frozen).toBe(false)
   })
 
-  it("plays an evolution at every turning point, before the event's scripted scenes", () => {
+  it("plays an evolution at every turning point, before the event's scripted scenes unless it waits for them", () => {
     const deepBlue = entryOf("IBM Deep Blue Defeats Garry Kasparov").scenes
     expect(deepBlue.map((played) => played.scene.kind)).toEqual(["evolution", "battle"])
     expect(deepBlue[0].lines).toEqual(["What? KADABRA is evolving!", "Congratulations! KADABRA evolved into ALAKAZAM!"])
     expect(deepBlue[1].species?.name).toBe("Alakazam")
     expect(deepBlue[1].backSprite).toBe("/sprites/gen-3/back/65.png")
+
+    const alphaGo = entryOf("AlphaGo Defeats Lee Sedol").scenes
+    expect(alphaGo.map((played) => played.scene.kind)).toEqual(["battle", "evolution"])
+    expect(alphaGo[0].species?.name).toBe("Machoke")
+    expect(alphaGo[1].lines[1]).toBe("Congratulations! MACHOKE evolved into MACHAMP!")
 
     const evolutions = [...dex.values()].flatMap((entry) => entry.scenes).filter((played) => played.scene.kind === "evolution")
     expect(evolutions).toHaveLength(LINES.reduce((sum, line) => sum + line.stages.length - 1, 0))
@@ -146,7 +162,7 @@ describe("buildDex", () => {
       "MAGIKARP used SPLASH!",
       "But nothing happened!",
     ])
-    expect(entryOf("AlphaGo Defeats Lee Sedol").scenes[0].lines[1]).toBe("MACHAMP used MOVE 37! No human would have played it.")
+    expect(entryOf("AlphaGo Defeats Lee Sedol").scenes[0].lines[1]).toBe("MACHOKE used MOVE 37! No human would have played it.")
     expect(entryOf("OpenAI Releases o1").scenes[0].lines[0]).toBe("ALAKAZAM used CALM MIND!")
   })
 
@@ -159,6 +175,52 @@ describe("buildDex", () => {
     const again = buildDex(events)
     for (const [id, entry] of dex) {
       expect(again.get(id)).toEqual(entry)
+    }
+  })
+})
+
+describe("EVENT_ACTIONS", () => {
+  it("says what every event in the timeline did to its line, and names no other event", () => {
+    const titles = events.map((event) => event.title)
+    expect(Object.keys(EVENT_ACTIONS)).toEqual(titles)
+  })
+
+  it("names the creature in each action as its line stood at the event, before the event's own evolution", () => {
+    for (const event of events) {
+      const entry = dex.get(eventAnchorId(event))!
+      expect(EVENT_ACTIONS[event.title].text, event.title).toContain("{NAME}")
+      expect(entry.action.text, event.title).toContain(entry.species.name.toUpperCase())
+    }
+    expect(entryOf("ImageNet Breakthrough").action.text).toBe("MAGIKARP used ALEXNET! It's super effective!")
+    expect(entryOf("OpenAI Releases GPT-4").action.text).toBe("PORYGON-Z used GPT-4!")
+  })
+
+  it("keeps each action to one short line of battle text", () => {
+    for (const [title, action] of Object.entries(EVENT_ACTIONS)) {
+      expect(action.text.replace("{NAME}", "PORYGON-Z").length, title).toBeLessThanOrEqual(70)
+      expect(action.text, title).toMatch(/[!.]$/)
+    }
+  })
+
+  it("lands status conditions on the line that caused the harm, never on safety, which stands for the people holding AI to account", () => {
+    const harmed = [...dex.values()].filter((entry) => entry.action.status)
+    expect(harmed.length).toBeGreaterThan(10)
+    for (const entry of harmed) {
+      expect(entry.line.id, entry.action.text).not.toBe("safety")
+      expect(Object.keys(STATUS_CONDITIONS)).toContain(entry.action.status)
+    }
+    expect(entryOf("Italy Temporarily Bans ChatGPT")).toMatchObject({ line: { id: "language" }, action: { status: "PAR" } })
+    expect(entryOf("Deepfakes Appear on Reddit")).toMatchObject({ line: { id: "art" }, action: { status: "PSN" } })
+  })
+
+  it("tells the deaths plainly, with no status and no exclamation", () => {
+    for (const title of [
+      "Self-Driving Uber Kills a Pedestrian",
+      "Lawsuit Blames Character.AI for a Teen's Suicide",
+      "Parents Sue OpenAI Over Their Son's Suicide",
+    ]) {
+      expect(EVENT_ACTIONS[title].text, title).toMatch(/\.$/)
+      expect(EVENT_ACTIONS[title].status, title).toBeUndefined()
     }
   })
 })
