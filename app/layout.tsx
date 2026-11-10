@@ -1,5 +1,6 @@
-// Root layout for the AI Timeline: loads the Work Sans, Open Sans and Press Start 2P fonts and the global styles, and sets the
-// metadata search engines and link previews read. Wraps every page with the skip link and main landmark.
+// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts, declares the Pokémon theme's pixel font, loads the
+// global styles and the theme switch's, and sets the metadata search engines and link previews read. Wraps every page with
+// the skip link and main landmark.
 import type React from 'react';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
@@ -9,7 +10,7 @@ import { siteMetadata } from '@/lib/site';
 import { parseTimelineEvents } from '@/lib/timeline-events';
 import { THEME_BOOT_SCRIPT } from '@/lib/theme';
 import './globals.css';
-import './pokemon.css';
+import './theme-switch.css';
 
 // Work Sans and Open Sans ship with the app (latin subsets, variable weight 300-700), so `next build` never fetches them from Google Fonts.
 const workSans = localFont({
@@ -26,12 +27,14 @@ const openSans = localFont({
   weight: '300 700',
 });
 
-// The pixel font the AI Dex prints its numbers and labels in, from the handheld games' screens
+// The pixel font the Pokémon theme prints its numbers and labels in, from the handheld games' screens. Only that theme uses
+// it, so the classic page never downloads it: the theme loads it while its Poké Ball fills the screen.
 const pressStart = localFont({
   src: './fonts/PressStart2P-Latin.woff2',
   display: 'swap',
   variable: '--font-press-start',
   weight: '400',
+  preload: false,
 });
 
 export const metadata: Metadata = siteMetadata(parseTimelineEvents(timelineData));

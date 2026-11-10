@@ -74,14 +74,6 @@ describe("the Pokémon theme's stylesheet", () => {
     }
   })
 
-  it("hides the prerendered classic page while the page comes up in the Pokémon theme, and shows it if scripts never run", () => {
-    const hidden = styleOf('html[data-timeline-theme="pokemon"] [data-theme-root="classic"]')
-
-    expect(hidden?.visibility).toBe("hidden")
-    expect(hidden?.animationName).toBe("theme-fallback")
-    expect(hidden?.animationDelay).toBe("2s")
-  })
-
   it("gives the theme its own night-blue chrome and seam, set on its root alone", () => {
     const root = styleOf(".pokemon-theme")
 

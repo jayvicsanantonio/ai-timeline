@@ -1,10 +1,13 @@
-// Orchestrates the page, an adventure forward through AI history: the title screen with the latest news, the world map of
-// the six regions, the professor's briefing on the nine lines the story follows, the six eras from the Foundation Era to the
-// Agentic Era with their toolbar and navigation, the trainer card and the Hall of Fame with the party as it stands today. Builds the AI Dex once from every event and holds the search and category
-// filters, so every part of the timeline shows the same events under the same numbers, lines and scenes.
+// Orchestrates the Pokémon theme, an adventure forward through AI history: the title screen with the latest news, the world
+// map of the six regions, the professor's briefing on the nine lines the story follows, the six eras from the Foundation Era
+// to the Agentic Era with their toolbar and navigation, the trainer card and the Hall of Fame with the party as it stands
+// today. Builds the AI Dex once from every event and holds the search and category filters, so every part of the timeline
+// shows the same events under the same numbers, lines and scenes. The theme's styles come with this module, which the page
+// downloads only when the reader asks for the theme (components/theme/load-pokemon-theme.ts).
 'use client';
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import '@/app/pokemon.css';
 import { PartyScene } from './party-scene';
 import { PrologueScene } from './prologue-scene';
 import { WorldMap } from './world-map';
