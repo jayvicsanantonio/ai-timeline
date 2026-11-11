@@ -90,6 +90,8 @@ test("shuts a Poké Ball over the screen while the Pokémon theme downloads, the
 
 test("returns to classic at once, and remembers each choice across a reload", async ({ page }) => {
   await page.goto("/")
+  // The prerendered button does nothing until the page has run its scripts
+  await settledOn(page, "classic")
   await page.locator('[data-theme-switch="bar"]').click()
   await settledOn(page, "pokemon")
 
@@ -117,6 +119,25 @@ test("leaves the reader on the classic page if the Pokémon theme cannot downloa
 
   await page.unroute(ON_DEMAND)
   await page.locator('[data-theme-switch="bar"]').click()
+  await settledOn(page, "pokemon")
+})
+
+test("keeps a returning reader's saved choice if the Pokémon theme cannot download as the page comes up", async ({ page }) => {
+  await page.addInitScript((key) => {
+    if (!window.sessionStorage.getItem("seeded")) {
+      window.localStorage.setItem(key, "pokemon")
+      window.sessionStorage.setItem("seeded", "yes")
+    }
+  }, THEME_STORAGE_KEY)
+  await page.route(ON_DEMAND, (route) => route.abort())
+  await page.goto("/")
+
+  await settledOn(page, "classic")
+  await expect(page.locator("[data-theme-bar]")).toContainText("The Pokémon edition couldn’t load.")
+  expect(await page.evaluate((key) => window.localStorage.getItem(key), THEME_STORAGE_KEY)).toBe("pokemon")
+
+  await page.unroute(ON_DEMAND)
+  await page.reload()
   await settledOn(page, "pokemon")
 })
 

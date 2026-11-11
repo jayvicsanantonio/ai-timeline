@@ -15,6 +15,7 @@ import { useTimelinePosition } from '@/hooks/use-timeline-position';
 import { useDexStory } from '@/components/pokemon/eras/dex-context';
 import { badgePath, iconPath, partyAfter, type PartyMember } from '@/lib/dex';
 import type { Era } from '@/lib/eras';
+import { eventAnchorId } from '@/lib/event-format';
 import type { YearActivity } from '@/lib/timeline-activity';
 import { scrollToEra, scrollToYear } from '@/lib/timeline-scroll';
 import { cn } from '@/lib/utils';
@@ -62,9 +63,18 @@ export function TimelineNavigation({ eras, activity, contentKey }: TimelineNavig
   const phoneListId = useId();
   const phoneToggleRef = useRef<HTMLButtonElement>(null);
   const story = useDexStory();
+  // At an era's header no event of that era has been read yet, so the party stands as the last era before it left it
+  const readingEraIndex = Math.max(eraIds.indexOf(position.eraId), 0);
+  const eventBefore = position.inTimeline
+    ? eras
+        .slice(0, readingEraIndex)
+        .flatMap((era) => era.events)
+        .at(-1)
+    : undefined;
+  const partyAnchor = position.eventId ?? (eventBefore ? eventAnchorId(eventBefore) : null);
   const party = useMemo(
-    () => (story ? partyAfter(story.dex, story.events, position.eventId) : []),
-    [story, position.eventId]
+    () => (story ? partyAfter(story.dex, story.events, partyAnchor) : []),
+    [story, partyAnchor]
   );
 
   if (eras.length === 0) {

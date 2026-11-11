@@ -1231,7 +1231,7 @@
     color: #e4e6f5;
   }
 
-  .gym-choice:not(:disabled):hover {
+  .gym-choice:not([aria-disabled="true"]):hover {
     border-color: #ffcb05;
     background: rgb(255 203 5 / 0.08);
   }
@@ -1252,7 +1252,7 @@
     color: #ffd2cf;
   }
 
-  .gym-choice:disabled:not(.is-right) {
+  .gym-choice[aria-disabled="true"]:not(.is-right) {
     opacity: 0.55;
   }
 

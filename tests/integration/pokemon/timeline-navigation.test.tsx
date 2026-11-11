@@ -204,6 +204,18 @@ describe("TimelineNavigation on a wide screen", () => {
     expect(neural()).toHaveTextContent("Neural networks: Gyarados, level")
   })
 
+  it("keeps the party as the era before left it while the reader is at an era's header", async () => {
+    renderNavigation()
+    const neural = () => rail().querySelector('[data-party-member="neural"]')!
+
+    // The Learning Era's header, above its first event: MAGIKARP has appeared in an earlier era
+    screen.getByRole("heading", { level: 2, name: "The Learning Era" }).scrollIntoView({ block: "center", behavior: "instant" as ScrollBehavior })
+    await expect
+      .poll(() => within(rail()).getByRole("button", { name: "Learning Era, 1990s – 2000s" }).getAttribute("aria-current"))
+      .toBe("location")
+    await expect.poll(() => neural().getAttribute("data-species")).toBe("129")
+  })
+
   it("jumps to the first event of a year picked on the activity chart", async () => {
     renderNavigation()
 

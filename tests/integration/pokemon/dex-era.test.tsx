@@ -971,8 +971,11 @@ describe("the gym challenge at a region's end", () => {
     const { era, section } = renderEra("gen-4")
 
     const challenge = challengeOf(section)
-    await userEvent.click(within(challenge).getByRole("button", { name: /AlexNet winning the ImageNet competition/ }))
+    const right = within(challenge).getByRole("button", { name: /AlexNet winning the ImageNet competition/ })
+    await userEvent.click(right)
 
+    // The answer keeps the keyboard focus it was picked with
+    expect(right).toHaveFocus()
     const earned = challenge.querySelector<HTMLElement>("[data-badge-earned]")!
     expect(earned).toHaveTextContent(`Correct! You earned the ${era.place} badge!`)
     expect(earned).toHaveTextContent("AlexNet won ImageNet")
@@ -982,8 +985,11 @@ describe("the gym challenge at a region's end", () => {
       "#event-2012-imagenet-breakthrough",
     )
     for (const button of within(challenge).getAllByRole("button")) {
-      expect(button).toBeDisabled()
+      expect(button).toHaveAttribute("aria-disabled", "true")
     }
+    // A later pick changes nothing. Playwright will not click a button it reads as disabled, so the click goes through the DOM
+    within(challenge).getByRole("button", { name: /Google buying DeepMind/ }).click()
+    expect(within(challenge).getByRole("button", { name: /Google buying DeepMind/ })).toHaveAttribute("aria-pressed", "false")
     expect(earned.closest("[aria-live]")).not.toBeNull()
   })
 

@@ -173,7 +173,10 @@ export function ThemedTimeline({ events }: { events: TimelineEvent[] }) {
           return;
         }
         shown = 'classic';
-        storeTheme('classic');
+        // Undo only the choice this catch saved; a returning reader's saved choice stays, so a reload tries again
+        if (shutFirst) {
+          storeTheme('classic');
+        }
         setFailed(true);
         setAnnouncement(LOAD_FAILED);
       }

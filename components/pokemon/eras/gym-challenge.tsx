@@ -58,8 +58,13 @@ export function GymChallenge({ era }: { era: Era }) {
                 <button
                   type="button"
                   aria-pressed={wasPicked}
-                  disabled={solved}
-                  onClick={() => setPicked((current) => (current.includes(index) ? current : [...current, index]))}
+                  // Not disabled, which would drop the keyboard focus the right answer holds; once solved, choices only say so
+                  aria-disabled={solved || undefined}
+                  onClick={() => {
+                    if (!solved) {
+                      setPicked((current) => (current.includes(index) ? current : [...current, index]));
+                    }
+                  }}
                   className={cn(
                     'gym-choice flex h-full w-full items-start gap-3 rounded-xl px-4 py-3 text-left text-sm leading-6 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffcb05]',
                     wasPicked && right && 'is-right',
