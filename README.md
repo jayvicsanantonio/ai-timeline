@@ -16,6 +16,7 @@ This project presents the complete history of artificial intelligence through an
 - **Comprehensive Dataset**: 340 meticulously researched AI milestones with verified sources
 - **Latest First**: The page opens on the newest events, each saying how long ago it happened, and rewinds from now back to 1943, every era its latest year and its latest event first under a header that says where the rewind has reached
 - **Interfaces Through Time**: Each era is drawn in the computer interface of its day: punch cards, a green-phosphor terminal, desktop windows, a research notebook, a chat thread and an agent's task log
+- **Pokémon-ify**: A button at the top of the page turns the timeline into a Pokémon adventure, the same 340 events told as nine evolution lines on a journey from 1943 through six regions, each drawn in the sprites of one generation of the games, with evolutions at AI's turning points, frozen lines in the AI winters and a gym challenge at the end of every region. "Back to classic" returns, the page keeps the reader at the event they were reading either way, and it remembers the choice for the next visit. A link can ask for a theme with `?theme=pokemon` or `?theme=classic`. The classic page downloads none of the Pokémon theme: pressing Pokémon-ify shuts a Poké Ball over the screen, which wobbles while the theme's code, styles, font and first sprites download, then bursts open onto it
 - **Search, Filters and Shortcuts**: Search every event, filter by category, and jump around with J, K, 1–6 and /
 - **Landmarks and Sources**: Twenty-six turning points stand out across the eras, and each card names the site its link opens
 - **Pace and Context**: Each year's label stays beside its events as they scroll past, the early eras mark the quiet years between events, and the chat thread and the agent's task log sum up each year in a sentence. The busy years of the 2020s keep their highlights in full and list the rest in brief, with a button to show them all
@@ -36,6 +37,10 @@ This project presents the complete history of artificial intelligence through an
 
 ```
 components/
+├── theme/
+│   ├── themed-timeline.tsx  # Shows the classic timeline or the Pokémon theme, the switch and the Poké Ball between them
+│   └── load-pokemon-theme.ts    # Downloads the Pokémon theme on demand
+├── pokemon/                 # The Pokémon theme, mirroring the folders below, from PokemonStoryEngine down
 ├── storytelling/            # Narrative-driven components
 │   ├── story-engine.tsx     # Main orchestrator, holds the search and category filters and orders the eras newest first
 │   ├── prologue-scene.tsx   # Opening: title, latest events, era links and a slim events-per-year chart
@@ -58,6 +63,8 @@ components/
 └── accessibility/           # Accessibility helpers
     └── skip-to-content.tsx
 ```
+
+The Pokémon theme's story is data in `lib/dex.ts` (the nine evolution lines, their scenes and the AI winters), `lib/dex-actions.ts` (what every event did to its line, in the games' battle text) and `lib/journey.ts` (each region's signpost and gym challenge), and its styles are in `app/pokemon.css`, which download with its code. The switch and the Poké Ball are styled in `app/theme-switch.css`. Its sprites come from [jayvicsanantonio/sprites](https://github.com/jayvicsanantonio/sprites): `scripts/sync-sprites.mjs` copies only the ones the page shows into `public/sprites`. Pokémon and its creatures are trademarks of Nintendo, Creatures Inc. and GAME FREAK inc.; this is an unofficial fan project.
 
 ### Data Management
 

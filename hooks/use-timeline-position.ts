@@ -12,6 +12,8 @@ export interface TimelinePosition {
   year: number | null;
   // That event's month, or null when its month is unknown
   month: string | null;
+  // That event's anchor id, or null while the era's introduction is still being read
+  eventId: string | null;
   inTimeline: boolean;
   // How far the reading line has come through the current era, from 0 to 1 in hundredths
   eraProgress: number;
@@ -20,6 +22,7 @@ export interface TimelinePosition {
 const START: Omit<TimelinePosition, 'eraId'> = {
   year: null,
   month: null,
+  eventId: null,
   inTimeline: false,
   eraProgress: 0,
 };
@@ -29,6 +32,7 @@ function samePosition(a: TimelinePosition, b: TimelinePosition) {
     a.eraId === b.eraId &&
     a.year === b.year &&
     a.month === b.month &&
+    a.eventId === b.eventId &&
     a.inTimeline === b.inTimeline &&
     a.eraProgress === b.eraProgress
   );
@@ -64,6 +68,7 @@ export function useTimelinePosition(eraIds: string[], contentKey?: unknown): Tim
         eraId: section.id,
         year: card ? Number(card.dataset.year) : null,
         month: month && month !== 'Unknown' ? month : null,
+        eventId: card?.id ?? null,
         inTimeline: eraIndex !== -1 && sections[sections.length - 1].getBoundingClientRect().bottom > line,
         eraProgress: Math.round(progress * 100) / 100,
       };

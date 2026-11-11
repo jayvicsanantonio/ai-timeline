@@ -12,6 +12,9 @@ interface ActivityChartProps {
   // Horizontal charts run the years left to right with bars growing up. Vertical charts run
   // them from the latest at the top down to the first, as the page does, with bars growing right.
   orientation: 'horizontal' | 'vertical';
+  // Which year a vertical chart puts at the top: the latest, as the classic page rewinds, or the first, as the Pokémon
+  // theme's journey runs forward
+  verticalTop?: 'latest' | 'first';
   currentYear?: number | null;
   onSelectYear?: (year: number) => void;
   className?: string;
@@ -45,6 +48,7 @@ export function ActivityChart({
   onSelectYear,
   className,
   barsClassName,
+  verticalTop = 'latest',
 }: ActivityChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const isHorizontal = orientation === 'horizontal';
@@ -53,7 +57,8 @@ export function ActivityChart({
   const hovered = hoveredIndex === null ? undefined : activity[hoveredIndex];
   // Where the hovered year's bar is drawn along the chart, from its start at the left or top to its end
   const hoveredShare = hoveredIndex === null ? 0 : (hoveredIndex + 0.5) / activity.length;
-  const hoveredPosition = isHorizontal ? hoveredShare : 1 - hoveredShare;
+  const firstAtStart = isHorizontal || verticalTop === 'first';
+  const hoveredPosition = firstAtStart ? hoveredShare : 1 - hoveredShare;
   const alignment = readoutAlignment(hoveredPosition);
   const barEnd = isHorizontal ? 'inset-x-0 bottom-0 rounded-t-[2px]' : 'inset-y-0 left-0 rounded-r-[2px]';
   // A year with even one event keeps a sliver, so it never vanishes next to the busiest years
@@ -69,7 +74,7 @@ export function ActivityChart({
       <div
         className={cn(
           'flex h-full w-full gap-[2px]',
-          isHorizontal ? 'flex-row' : 'flex-col-reverse',
+          isHorizontal ? 'flex-row' : firstAtStart ? 'flex-col' : 'flex-col-reverse',
           barsClassName
         )}
       >

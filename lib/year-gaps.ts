@@ -11,3 +11,15 @@ export function yearsEarlierThanPrevious(events: Pick<TimelineEvent, 'year'>[], 
   const years = previous.year - events[index].year;
   return years > 1 ? years : null;
 }
+
+// The Pokémon theme's journey reads from the first event forward, so its gaps say how many years later an event came than
+// the event shown above it
+export function yearsLaterThanPrevious(events: Pick<TimelineEvent, 'year'>[], index: number) {
+  const previous = events[index - 1];
+  if (!previous) {
+    return null;
+  }
+
+  const years = events[index].year - previous.year;
+  return years > 1 ? years : null;
+}

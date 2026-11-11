@@ -2,3 +2,7 @@
 # Next.js fingerprints every file under /_next/static, so browsers may keep them for a year.
 /_next/static/*
   Cache-Control: public,max-age=31536000,immutable
+
+# The sprites keep their names when scripts/sync-sprites.mjs copies them again, so browsers keep them for a week.
+/sprites/*
+  Cache-Control: public,max-age=604800

@@ -1,8 +1,15 @@
-// Defines the six eras of AI history and the computer interface each one is drawn in.
+// Defines the six eras of AI history and the computer interface each one is drawn in, and, for the Pokémon theme, the
+// generation of sprites each is drawn in, the badge it awards and the place and biome it is on the journey's route.
 // Groups timeline events into those eras by year, keeping every era even when none of its events are shown.
 import type { TimelineEvent } from '@/types/timeline';
 
 export type EraInterface = 'punch-card' | 'terminal' | 'desktop' | 'notebook' | 'chat' | 'agent';
+
+// The Pokémon theme's generation of sprites for an era
+export type GenerationId = 'gen-1' | 'gen-2' | 'gen-3' | 'gen-4' | 'gen-5' | 'modern';
+
+// The scenery an era's stretch of the Pokémon theme's route runs through
+export type Biome = 'meadow' | 'snow' | 'forest' | 'cave' | 'city' | 'summit';
 
 export interface EraDefinition {
   id: string;
@@ -13,6 +20,13 @@ export interface EraDefinition {
   description: string;
   interface: EraInterface;
   interfaceName: string;
+  // The Pokémon theme: the generation of sprites the era is drawn in and how its header names it, the gym badge the
+  // reader earns for it, by its number in public/sprites/badges, and the place and biome it is on the journey's route
+  generation: GenerationId;
+  generationName: string;
+  badge: number;
+  place: string;
+  biome: Biome;
   // Marks the era in charts and swatches. The six were validated together as a
   // categorical palette on the dark chrome, so neighboring eras stay distinct.
   color: string;
@@ -34,6 +48,11 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
       'The birth of artificial intelligence as a field of study, where visionary researchers laid the theoretical groundwork and created the first programs that could simulate human reasoning.',
     interface: 'punch-card',
     interfaceName: 'Punch cards',
+    generation: 'gen-1',
+    generationName: 'Generation I sprites',
+    badge: 1,
+    place: 'Origin Meadow',
+    biome: 'meadow',
     color: '#c98500',
   },
   {
@@ -45,6 +64,11 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
       'A period focused on encoding human expertise into computer systems, leading to the development of expert systems and the first commercial AI applications.',
     interface: 'terminal',
     interfaceName: 'Green-screen terminal',
+    generation: 'gen-2',
+    generationName: 'Generation II sprites',
+    badge: 9,
+    place: 'Frostbite Pass',
+    biome: 'snow',
     color: '#199e70',
   },
   {
@@ -56,6 +80,11 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
       'The emergence of machine learning as computers began to learn from data rather than relying solely on programmed rules, setting the stage for modern AI.',
     interface: 'desktop',
     interfaceName: 'Desktop windows',
+    generation: 'gen-3',
+    generationName: 'Generation III sprites',
+    badge: 17,
+    place: 'Learning Woods',
+    biome: 'forest',
     color: '#3987e5',
   },
   {
@@ -67,6 +96,11 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
       'A transformative period where neural networks with multiple layers achieved breakthrough performance in vision, speech, and language understanding.',
     interface: 'notebook',
     interfaceName: 'Research notebook',
+    generation: 'gen-4',
+    generationName: 'Generation IV sprites',
+    badge: 25,
+    place: 'Deep Cavern',
+    biome: 'cave',
     color: '#d95926',
   },
   {
@@ -78,6 +112,11 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
       'The era in which AI systems learned to create original text, images and video and to hold natural conversations, putting AI in the hands of hundreds of millions of people.',
     interface: 'chat',
     interfaceName: 'Chat thread',
+    generation: 'gen-5',
+    generationName: 'Generation V animated sprites',
+    badge: 33,
+    place: 'Prompt City',
+    biome: 'city',
     color: '#9085e9',
   },
   {
@@ -89,6 +128,11 @@ export const ERA_DEFINITIONS: EraDefinition[] = [
       'The current era, in which AI systems reason before they answer and work on their own as agents, writing code, doing research and operating computers on our behalf.',
     interface: 'agent',
     interfaceName: 'Agent task log',
+    generation: 'modern',
+    generationName: 'Animated 3D sprites',
+    badge: 70,
+    place: 'Frontier Peak',
+    biome: 'summit',
     color: '#cf4f9a',
   },
 ];

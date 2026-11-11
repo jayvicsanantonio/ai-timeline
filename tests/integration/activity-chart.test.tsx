@@ -127,6 +127,21 @@ describe("ActivityChart interaction", () => {
     expect(readout.bottom).toBeGreaterThanOrEqual(bar.top)
   })
 
+  it("runs the first year at the top of a vertical chart when asked, as the Pokémon theme reads, and reads out beside it", async () => {
+    const { container, getByText } = render(
+      <ActivityChart activity={activity} orientation="vertical" verticalTop="first" className="h-80 w-40" />,
+    )
+
+    const tops = bars(container).map((bar) => bar.getBoundingClientRect().top)
+    expect(tops).toEqual([...tops].sort((a, b) => a - b))
+
+    await userEvent.hover(bars(container)[0])
+    const readout = getByText("1968 · 2 events").getBoundingClientRect()
+    const bar = bars(container)[0].getBoundingClientRect()
+    expect(readout.top).toBeLessThanOrEqual(bar.top + bar.height / 2)
+    expect(readout.bottom).toBeGreaterThanOrEqual(bar.top)
+  })
+
   it("picks a year that has events to show", async () => {
     const pickedYears: number[] = []
     const { container } = render(
