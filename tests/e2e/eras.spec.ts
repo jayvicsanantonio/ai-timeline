@@ -1,7 +1,7 @@
 // End-to-end tests for the six era interfaces on the real page in Chromium.
 // Each era is drawn in its own interface, the latest era first and every era newest first, and each interface answers the
 // pointer the way its original did.
-import { expect, test, type Locator, type Page } from "@playwright/test"
+import { expect, test, type Locator, type Page } from "./classic-theme"
 import timelineData from "../../data/timeline-events.json"
 import yearSummaryData from "../../data/year-summaries.json"
 import { groupEventsByEra } from "../../lib/eras"

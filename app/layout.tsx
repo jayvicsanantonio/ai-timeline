@@ -1,4 +1,4 @@
-// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts, declares the Pokémon theme's pixel font, loads the
+// Root layout for the AI Timeline: loads the Work Sans and Open Sans fonts and the Pokémon theme's pixel font, loads the
 // global styles and the theme switch's, and sets the metadata search engines and link previews read. Wraps every page with
 // the skip link and main landmark.
 import type React from 'react';
@@ -27,14 +27,12 @@ const openSans = localFont({
   weight: '300 700',
 });
 
-// The pixel font the Pokémon theme prints its numbers and labels in, from the handheld games' screens. Only that theme uses
-// it, so the classic page never downloads it: the theme loads it while its Poké Ball fills the screen.
+// The pixel font the Pokémon theme, the page's default, prints its numbers and labels in, from the handheld games' screens
 const pressStart = localFont({
   src: './fonts/PressStart2P-Latin.woff2',
   display: 'swap',
   variable: '--font-press-start',
   weight: '400',
-  preload: false,
 });
 
 export const metadata: Metadata = siteMetadata(parseTimelineEvents(timelineData));
@@ -51,7 +49,7 @@ export default function RootLayout({
       className={`${workSans.variable} ${openSans.variable} ${pressStart.variable} antialiased`}
     >
       <head>
-        {/* Marks the reader's theme before the page paints, so a returning Pokémon fan never sees the classic page flash */}
+        {/* Marks the reader's theme before the page paints, so a reader who picked the classic timeline never sees the Pokémon page flash */}
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
       <body className="overflow-x-clip">

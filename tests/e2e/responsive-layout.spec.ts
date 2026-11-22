@@ -1,6 +1,6 @@
 // End-to-end layout tests at phone, tablet and desktop widths: nothing runs off the side of the screen, the toolbar
 // sticks while reading, and the era navigation fits each width as a rail on wide screens and a compact bar on phones.
-import { expect, test, type Page } from "@playwright/test"
+import { expect, test, type Page } from "./classic-theme"
 
 const PHONE = { width: 375, height: 812 }
 const PHONE_LANDSCAPE = { width: 812, height: 320 }

@@ -1,6 +1,6 @@
 // End-to-end tests for the timeline page in a real Next.js server: error-free loading with and without reduced
 // motion, cards that settle in place, card dates, the opening's latest events and events-per-year chart and an insight stat.
-import { expect, test, type Page } from "@playwright/test"
+import { expect, test, type Page } from "./classic-theme"
 import timelineData from "../../data/timeline-events.json"
 
 // Loads the page, scrolls through all of it, and returns every console error and uncaught page error.

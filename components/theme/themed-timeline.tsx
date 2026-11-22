@@ -1,28 +1,28 @@
-// Shows the timeline in the reader's theme: the classic timeline by default, or the Pokémon theme once they press
-// Pokémon-ify. A bar at the top of the page offers the other theme, and on wide screens a button stays at hand while
-// reading. The Pokémon theme downloads only when asked for: a Poké Ball shuts over the page, wobbles while the theme's code,
-// styles, font and first sprites arrive, and bursts open onto it. Switching keeps the reader at the event they were reading,
-// since both themes give every event the same id, and remembers the choice for their next visit.
+// Shows the timeline in the reader's theme: the Pokémon theme by default, or the classic timeline once they press Switch to
+// classic. A bar at the top of the page offers the other theme, and on wide screens a button stays at hand while reading.
+// The page is prerendered in the Pokémon theme. Switching to classic is instant; Pokémon-ify shuts a Poké Ball over the
+// page, wobbles while the theme's font and first sprites arrive, and bursts open onto it. Switching keeps the reader at the
+// event they were reading, since both themes give every event the same id, and remembers the choice for their next visit.
 //
-// The ball is moved straight on its element rather than through React state: React holds back every commit while a
-// stylesheet it manages is loading, which the Pokémon theme's is, so a ball drawn from state would freeze just when it
-// should be wobbling.
+// The ball is moved straight on its element rather than through React state, so the timeline's own renders never hold it
+// up and a ball drawn from state never freezes just when it should be wobbling.
 'use client';
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type Ref } from 'react';
+import { PokemonStoryEngine } from '@/components/pokemon/storytelling/story-engine';
 import { StoryEngine } from '@/components/storytelling/story-engine';
 import { readingLineY } from '@/lib/timeline-scroll';
 import { preferredTheme, THEME_ATTRIBUTE, THEME_STORAGE_KEY, type TimelineTheme } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import type { TimelineEvent } from '@/types/timeline';
-import { imagesInView, loadPixelFont, loadPokemonEngine, wait, type PokemonEngine } from './load-pokemon-theme';
+import { imagesInView, loadPixelFont, wait } from './pokemon-assets';
 
-// Where the Poké Ball is: on the server and until the page runs, shut only if the boot script marked the Pokémon theme;
-// then idle, or shutting, loading and opening while the Pokémon theme comes in. It sits in the ball's data-phase.
+// Where the Poké Ball is: out of sight on the server and until the page runs, then idle, or shutting, loading and opening
+// while the Pokémon theme comes in. It sits in the ball's data-phase.
 export type PokeballPhase = 'boot' | 'idle' | 'closing' | 'loading' | 'opening';
 
-// The ball stays shut at least a moment, with motion and for readers who prefer less, so a theme already downloaded still
-// reads as a catch rather than a flicker
+// The ball stays shut at least a moment, with motion and for readers who prefer less, so a theme whose files are already
+// here still reads as a catch rather than a flicker
 const LEAST_SHUT_MS = { motion: 900, still: 300 };
 
 // The animations in app/theme-switch.css that end the ball's shutting and its opening, with motion and without, and how
@@ -35,7 +35,6 @@ const ANIMATION_WAIT_MS = 1500;
 const IMAGE_WAIT_MS = 8000;
 
 const LOADING = 'Loading the Pokémon edition…';
-const LOAD_FAILED = 'The Pokémon edition couldn’t load. Check your connection and try again.';
 
 function storedTheme() {
   try {
@@ -97,11 +96,8 @@ function eventAtReadingLine() {
 }
 
 export function ThemedTimeline({ events }: { events: TimelineEvent[] }) {
-  // The page is prerendered in the classic theme, and learns the reader's once it runs in the browser. The Pokémon theme
-  // shows once its code has arrived.
-  const [theme, setTheme] = useState<TimelineTheme>('classic');
-  const [Pokemon, setPokemon] = useState<PokemonEngine | null>(null);
-  const [failed, setFailed] = useState(false);
+  // The page is prerendered in the Pokémon theme, and learns the reader's once it runs in the browser
+  const [theme, setTheme] = useState<TimelineTheme>('pokemon');
   const [announcement, setAnnouncement] = useState('');
   const placeRef = useRef<{ eventId: string | null } | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -114,7 +110,7 @@ export function ThemedTimeline({ events }: { events: TimelineEvent[] }) {
   const catchRef = useRef(0);
   // The button kept at hand appears only once the bar at the top has scrolled away, so the two never show together
   const [barInView, setBarInView] = useState(true);
-  const pokemon = theme === 'pokemon' && Pokemon !== null;
+  const pokemon = theme === 'pokemon';
 
   // Moves the ball, and keeps the page behind it from taking focus while it is shut
   const showBall = useCallback((phase: PokeballPhase) => {
@@ -128,84 +124,59 @@ export function ThemedTimeline({ events }: { events: TimelineEvent[] }) {
     }
   }, []);
 
-  // Shuts the ball (unless it already is, as when the page comes up in the Pokémon theme), downloads the theme, swaps it in
-  // behind the ball, waits for the sprites the reader will see first, and opens the ball onto it
-  const catchPokemon = useCallback(
-    async (shutFirst: boolean) => {
-      const run = ++catchRef.current;
-      const stale = () => run !== catchRef.current;
-      const leastShut = prefersLessMotion() ? LEAST_SHUT_MS.still : LEAST_SHUT_MS.motion;
-      const shut = shutFirst ? animationEnd(ballRef.current, SHUT_ANIMATIONS, ANIMATION_WAIT_MS) : Promise.resolve();
-      showBall(shutFirst ? 'closing' : 'loading');
-      setFailed(false);
-      setAnnouncement(LOADING);
-      const files = Promise.all([loadPokemonEngine(), loadPixelFont()]);
-      // Settled below, once the ball has shut
-      files.catch(() => undefined);
+  // Shuts the ball, waits for the theme's pixel font, swaps the theme in behind the ball, waits for the sprites the reader
+  // will see first, and opens the ball onto it
+  const catchPokemon = useCallback(async () => {
+    const run = ++catchRef.current;
+    const stale = () => run !== catchRef.current;
+    const leastShut = prefersLessMotion() ? LEAST_SHUT_MS.still : LEAST_SHUT_MS.motion;
+    const shut = animationEnd(ballRef.current, SHUT_ANIMATIONS, ANIMATION_WAIT_MS);
+    showBall('closing');
+    setAnnouncement(LOADING);
+    const font = loadPixelFont();
 
-      if (shutFirst) {
-        await shut;
-        if (stale()) {
-          return;
-        }
-        showBall('loading');
-      }
+    await shut;
+    if (stale()) {
+      return;
+    }
+    showBall('loading');
 
-      let shown: TimelineTheme = 'pokemon';
-      try {
-        const [[engine]] = await Promise.all([files, wait(leastShut)]);
-        if (stale()) {
-          return;
-        }
-        const swapped = new Promise<void>((resolve) => {
-          swappedRef.current = resolve;
-        });
-        setPokemon(() => engine);
-        setTheme('pokemon');
-        await swapped;
-        await afterPaint();
-        if (rootRef.current) {
-          await imagesInView(rootRef.current, IMAGE_WAIT_MS);
-        }
-        setAnnouncement('The Pokémon edition is ready.');
-      } catch {
-        if (stale()) {
-          return;
-        }
-        shown = 'classic';
-        // Undo only the choice this catch saved; a returning reader's saved choice stays, so a reload tries again
-        if (shutFirst) {
-          storeTheme('classic');
-        }
-        setFailed(true);
-        setAnnouncement(LOAD_FAILED);
-      }
-
-      if (stale()) {
-        return;
-      }
-      document.documentElement.setAttribute(THEME_ATTRIBUTE, shown);
-      const opened = animationEnd(ballRef.current, OPEN_ANIMATIONS, ANIMATION_WAIT_MS);
-      showBall('opening');
-      await opened;
-      if (!stale()) {
-        showBall('idle');
-      }
-    },
-    [showBall]
-  );
-
-  useEffect(() => {
-    if (preferredTheme(window.location.search, storedTheme()) === 'pokemon') {
-      void catchPokemon(false);
-    } else {
-      document.documentElement.setAttribute(THEME_ATTRIBUTE, 'classic');
+    await Promise.all([font, wait(leastShut)]);
+    if (stale()) {
+      return;
+    }
+    const swapped = new Promise<void>((resolve) => {
+      swappedRef.current = resolve;
+    });
+    setTheme('pokemon');
+    await swapped;
+    await afterPaint();
+    if (rootRef.current) {
+      await imagesInView(rootRef.current, IMAGE_WAIT_MS);
+    }
+    if (stale()) {
+      return;
+    }
+    setAnnouncement('The Pokémon edition is ready.');
+    const opened = animationEnd(ballRef.current, OPEN_ANIMATIONS, ANIMATION_WAIT_MS);
+    showBall('opening');
+    await opened;
+    if (!stale()) {
       showBall('idle');
     }
+  }, [showBall]);
+
+  // A reader who picked the classic timeline last time, or whose link asks for it, gets it at once. The boot script has
+  // already marked <html> with their theme, which keeps the prerendered Pokémon page hidden until the classic one is drawn.
+  useEffect(() => {
+    const preferred = preferredTheme(window.location.search, storedTheme());
+    setTheme(preferred);
+    document.documentElement.setAttribute(THEME_ATTRIBUTE, preferred);
+    showBall('idle');
     return () => {
       catchRef.current += 1;
     };
-  }, [catchPokemon, showBall]);
+  }, [showBall]);
 
   useEffect(() => {
     const bar = barRef.current;
@@ -232,8 +203,10 @@ export function ThemedTimeline({ events }: { events: TimelineEvent[] }) {
     }
   }, [pokemon]);
 
+  // Once the Pokémon theme is in the document, <html> says so, then the catch carries on
   useLayoutEffect(() => {
     if (pokemon && swappedRef.current) {
+      document.documentElement.setAttribute(THEME_ATTRIBUTE, 'pokemon');
       swappedRef.current();
       swappedRef.current = null;
     }
@@ -246,29 +219,28 @@ export function ThemedTimeline({ events }: { events: TimelineEvent[] }) {
     placeRef.current = { eventId: eventAtReadingLine() };
     storeTheme(next);
     if (next === 'pokemon') {
-      void catchPokemon(true);
+      void catchPokemon();
     } else {
       document.documentElement.setAttribute(THEME_ATTRIBUTE, 'classic');
       setTheme('classic');
-      setAnnouncement('Back to the classic timeline.');
+      setAnnouncement('Switched to the classic timeline.');
     }
   };
 
-  const shown: TimelineTheme = pokemon ? 'pokemon' : 'classic';
   // The same element from one render to the next, so the switch's own updates never re-render the whole timeline
   const classicTimeline = useMemo(() => <StoryEngine events={events} />, [events]);
-  const pokemonTimeline = useMemo(() => (Pokemon ? <Pokemon events={events} /> : null), [Pokemon, events]);
+  const pokemonTimeline = useMemo(() => <PokemonStoryEngine events={events} />, [events]);
 
   return (
     <>
       <div
         ref={rootRef}
-        data-theme-root={shown}
+        data-theme-root={theme}
         className={cn(pokemon && 'pokemon-theme')}
       >
-        <ThemeBar ref={barRef} theme={shown} failed={failed} onSwitch={switchTo} />
+        <ThemeBar ref={barRef} theme={theme} onSwitch={switchTo} />
         {pokemon ? pokemonTimeline : classicTimeline}
-        <FloatingSwitch theme={shown} onSwitch={switchTo} shown={!barInView} />
+        <FloatingSwitch theme={theme} onSwitch={switchTo} shown={!barInView} />
       </div>
       <PokeballOverlay ref={ballRef} />
       <p aria-live="polite" aria-atomic="true" data-theme-status="" className="sr-only">
@@ -284,7 +256,7 @@ interface SwitchProps {
 }
 
 // The bar at the top of the page that offers the other theme
-function ThemeBar({ theme, failed, onSwitch, ref }: SwitchProps & { failed: boolean; ref: Ref<HTMLDivElement> }) {
+function ThemeBar({ theme, onSwitch, ref }: SwitchProps & { ref: Ref<HTMLDivElement> }) {
   const pokemon = theme === 'pokemon';
 
   return (
@@ -297,16 +269,10 @@ function ThemeBar({ theme, failed, onSwitch, ref }: SwitchProps & { failed: bool
       )}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 sm:gap-4">
-        <p className={cn('min-w-0 text-xs sm:text-sm', pokemon ? 'text-[#c9cde6]' : failed ? 'text-[#ff8a96]' : 'text-zinc-400')}>
-          {pokemon ? (
-            'You’re playing the Pokémon edition of the AI timeline.'
-          ) : failed ? (
-            LOAD_FAILED
-          ) : (
-            <>
-              <span className="hidden sm:inline">New: </span>Travel through AI history as a Pokémon adventure.
-            </>
-          )}
+        <p className={cn('min-w-0 text-xs sm:text-sm', pokemon ? 'text-[#c9cde6]' : 'text-zinc-400')}>
+          {pokemon
+            ? 'You’re playing the Pokémon edition of the AI timeline.'
+            : 'Travel through AI history as a Pokémon adventure.'}
         </p>
         <SwitchButton theme={theme} onSwitch={onSwitch} />
       </div>
@@ -349,13 +315,13 @@ function SwitchButton({ theme, onSwitch, floating = false }: SwitchProps & { flo
         // The Poké Ball is drawn in CSS so the classic page loads no sprite
         <span aria-hidden="true" className="theme-ball" />
       )}
-      {pokemon ? 'Back to classic' : 'Pokémon-ify'}
+      {pokemon ? 'Switch to classic' : 'Pokémon-ify'}
     </button>
   );
 }
 
 // The Poké Ball that fills the screen while the Pokémon theme comes in, drawn in app/theme-switch.css. It is only a picture:
-// the status line above says what it shows. React renders it at boot and never again; showBall moves it from there.
+// the status line above says what it shows. React renders it once and never again; showBall moves it from there.
 function PokeballOverlay({ ref }: { ref: Ref<HTMLDivElement> }) {
   return (
     <div ref={ref} data-pokeball-overlay="" data-phase="boot" aria-hidden="true" className="pokeball-overlay">

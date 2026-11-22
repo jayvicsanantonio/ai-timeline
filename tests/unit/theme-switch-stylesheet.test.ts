@@ -1,6 +1,7 @@
 // Unit tests for the theme switch's stylesheet, which every page loads, read from its source by the browser's own CSS
-// parser: the prerendered classic page hides while a page comes up in the Pokémon theme, and the Poké Ball that fills the
-// screen shuts, wobbles and opens only while the reader allows motion, and fades in and out otherwise.
+// parser: the prerendered Pokémon page hides while a page comes up in the classic theme, no ball covers a page as it comes
+// up, and the Poké Ball that fills the screen shuts, wobbles and opens only while the reader allows motion, and fades in
+// and out otherwise.
 /// <reference types="vite/client" />
 import { describe, expect, it } from "vitest"
 import switchStyles from "@/app/theme-switch.css?raw"
@@ -31,21 +32,17 @@ const MOTION = "(prefers-reduced-motion: no-preference)"
 const STILL = "(prefers-reduced-motion: reduce)"
 
 describe("the theme switch's stylesheet", () => {
-  it("hides the prerendered classic page while the page comes up in the Pokémon theme, and shows it if scripts never run", () => {
-    const hidden = styleOf('html[data-timeline-theme="pokemon"] [data-theme-root="classic"]')
+  it("hides the prerendered Pokémon page while the page comes up in the classic theme, and shows it if scripts never run", () => {
+    const hidden = styleOf('html[data-timeline-theme="classic"] [data-theme-root="pokemon"]')
 
     expect(hidden?.visibility).toBe("hidden")
     expect(hidden?.animationName).toBe("theme-fallback")
     expect(hidden?.animationDelay).toBe("2s")
   })
 
-  it("shuts the ball over a page coming up in the Pokémon theme from its first paint, and lifts it if scripts never run", () => {
-    const boot = styleOf('html[data-timeline-theme="pokemon"] .pokeball-overlay[data-phase="boot"]')
-
+  it("keeps the ball out of sight as the page comes up, since the page is prerendered in the Pokémon theme", () => {
     expect(styleOf(".pokeball-overlay")?.display).toBe("none")
-    expect(boot?.display).toBe("block")
-    expect(boot?.animationName).toBe("pokeball-fallback")
-    expect(boot?.animationDelay).toBe("2s")
+    expect(rules.filter((placed) => placed.rule.selectorText.includes('[data-phase="boot"]'))).toEqual([])
   })
 
   it("covers the whole screen above everything while the ball shuts, loads and opens, and lets clicks through as it opens", () => {

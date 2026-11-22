@@ -1,4 +1,4 @@
-// Unit tests for choosing the page's theme: the classic timeline unless a link asks for the Pokémon theme or the reader
+// Unit tests for choosing the page's theme: the Pokémon theme unless a link asks for the classic timeline or the reader
 // picked it last time, and the script that marks <html> with that choice before the first paint.
 import { afterEach, describe, expect, it } from "vitest"
 import {
@@ -11,9 +11,9 @@ import {
 } from "@/lib/theme"
 
 describe("preferredTheme", () => {
-  it("shows the classic timeline by default", () => {
-    expect(DEFAULT_THEME).toBe("classic")
-    expect(preferredTheme("", null)).toBe("classic")
+  it("shows the Pokémon theme by default", () => {
+    expect(DEFAULT_THEME).toBe("pokemon")
+    expect(preferredTheme("", null)).toBe("pokemon")
   })
 
   it("follows the theme the reader picked last time", () => {
@@ -27,8 +27,8 @@ describe("preferredTheme", () => {
   })
 
   it("ignores a theme it does not know, in the link or in storage", () => {
-    expect(preferredTheme("?theme=pikachu", "pokemon")).toBe("pokemon")
-    expect(preferredTheme("?theme=", "dark")).toBe("classic")
+    expect(preferredTheme("?theme=pikachu", "classic")).toBe("classic")
+    expect(preferredTheme("?theme=", "dark")).toBe("pokemon")
     expect(isTimelineTheme("Pokemon")).toBe(false)
   })
 })
@@ -40,18 +40,36 @@ describe("THEME_BOOT_SCRIPT", () => {
   })
 
   it("marks <html> with the theme the reader picked last time", () => {
-    window.localStorage.setItem(THEME_STORAGE_KEY, "pokemon")
+    window.localStorage.setItem(THEME_STORAGE_KEY, "classic")
     new Function(THEME_BOOT_SCRIPT)()
 
-    expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe("pokemon")
+    expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe("classic")
   })
 
-  it("marks <html> classic when nothing was picked, or when the pick is not a theme", () => {
+  it("marks <html> pokemon when nothing was picked, or when the pick is not a theme", () => {
     new Function(THEME_BOOT_SCRIPT)()
-    expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe("classic")
+    expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe("pokemon")
 
     window.localStorage.setItem(THEME_STORAGE_KEY, "<script>")
     new Function(THEME_BOOT_SCRIPT)()
-    expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe("classic")
+    expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe("pokemon")
+  })
+
+  it("agrees with preferredTheme on what a link and the last pick ask for", () => {
+    const cases: [string, string | null][] = [
+      ["", null],
+      ["", "classic"],
+      ["", "pokemon"],
+      ["?theme=classic", "pokemon"],
+      ["?theme=pokemon", "classic"],
+      ["?theme=pikachu", "classic"],
+    ]
+    for (const [search, stored] of cases) {
+      if (stored) window.localStorage.setItem(THEME_STORAGE_KEY, stored)
+      else window.localStorage.removeItem(THEME_STORAGE_KEY)
+      const script = THEME_BOOT_SCRIPT.replace("location.search", JSON.stringify(search))
+      new Function(script)()
+      expect(document.documentElement.getAttribute(THEME_ATTRIBUTE), `${search} ${stored}`).toBe(preferredTheme(search, stored))
+    }
   })
 })
