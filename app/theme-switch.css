@@ -1,8 +1,8 @@
 /* The switch between the page's two themes, which every page loads: the Poké Ball on the Pokémon-ify button, the rule that
-   keeps the prerendered classic page hidden while a page comes up in the Pokémon theme, and the Poké Ball that fills the
-   screen while the Pokémon theme downloads. The theme itself, app/pokemon.css, arrives with its code only when it is asked
-   for. The ball shuts over the page, wobbles like a catch until every file the first screen needs has arrived, and bursts
-   open onto the Pokémon theme. Readers who prefer less motion see it fade in and out instead. */
+   keeps the prerendered Pokémon page hidden while a page comes up in the classic theme, and the Poké Ball that fills the
+   screen while the Pokémon theme comes in. The theme itself is in app/pokemon.css. The ball shuts over the page, wobbles
+   like a catch until every file the first screen needs has arrived, and bursts open onto the Pokémon theme. Readers who
+   prefer less motion see it fade in and out instead. */
 @layer components {
   /* A Poké Ball drawn in CSS, so the classic page loads no sprite for its Pokémon-ify button */
   .theme-ball {
@@ -16,9 +16,9 @@
     box-shadow: 0 0 0 1.5px #14161f;
   }
 
-  /* While a page comes up in the Pokémon theme, the prerendered classic page stays hidden behind the closed ball. Should
-     the page never run its scripts, the classic page shows anyway after a moment, and the ball goes. */
-  html[data-timeline-theme="pokemon"] [data-theme-root="classic"] {
+  /* While a page comes up in the classic theme, the prerendered Pokémon page stays hidden until the classic one replaces it.
+     Should the page never run its scripts, the Pokémon page shows anyway after a moment. */
+  html[data-timeline-theme="classic"] [data-theme-root="pokemon"] {
     visibility: hidden;
     animation: theme-fallback 0s 2s forwards;
   }
@@ -51,18 +51,6 @@
   /* Opening, the ball lets the reader through to the page it reveals */
   .pokeball-overlay[data-phase="opening"] {
     pointer-events: none;
-  }
-
-  /* A page coming up in the Pokémon theme starts behind the closed ball, before its scripts run */
-  html[data-timeline-theme="pokemon"] .pokeball-overlay[data-phase="boot"] {
-    display: block;
-    animation: pokeball-fallback 0s 2s forwards;
-  }
-
-  @keyframes pokeball-fallback {
-    to {
-      visibility: hidden;
-    }
   }
 
   /* The ball is a square far larger than the screen, so it still fills it while it wobbles */

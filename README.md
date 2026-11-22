@@ -9,7 +9,7 @@ _The history of artificial intelligence from 1943 to October 2026, each era draw
 
 **[Open the timeline →](https://ai-timeline.pokemoncenter.dev)**
 
-340 events, from McCulloch and Pitts's artificial neuron to this year's agents, each with a source link. The page rewinds from now: it opens on the latest events and runs back through six eras to where it all began. A Pokémon-ify button retells the same history as a Pokémon adventure.
+340 events, from McCulloch and Pitts's artificial neuron to this year's agents, each with a source link. The page rewinds from now: it opens on the latest events and runs back through six eras to where it all began. It opens as a Pokémon adventure that tells the same history; a Switch to classic button shows the original design, every era drawn in the computer interface of its day.
 
 ## Contents
 
@@ -57,16 +57,16 @@ Every era is drawn as the interface people used to talk to computers at the time
 
 ## The Pokémon theme
 
-The **Pokémon-ify** button at the top of the page turns the timeline into a Pokémon adventure that reads forward from 1943:
+The page opens in its Pokémon theme, a Pokémon adventure that reads forward from 1943:
 
 - AI history becomes nine evolution lines (neural networks, logic and reasoning, language, games and self-play, chips and robots, images and media, money and companies, safety and law, and agents) on a journey through six regions, one per era.
 - Each region is drawn in the sprites of one generation of the games, so the pictures grow up as the field does.
 - Lines evolve at AI's turning points, freeze in the AI winters, and fight famous matches (Deep Blue against Kasparov, AlphaGo against Lee Sedol) as battle scenes. Each region ends in a gym challenge.
 - Every event says what it did to its line in the games' battle text: a move learned, a stat raised or lowered, or a status condition for scandals and harms.
 
-**Back to classic** returns instantly. Either way the page keeps the reader at the event they were reading, and remembers the choice for the next visit. A link can pick a theme with `?theme=pokemon` or `?theme=classic`.
+**Switch to classic** at the top of the page shows the classic timeline instantly, and **Pokémon-ify** brings the adventure back. Either way the page keeps the reader at the event they were reading, and remembers the choice for the next visit. A link can pick a theme with `?theme=pokemon` or `?theme=classic`.
 
-The classic page downloads none of the Pokémon theme. Pressing Pokémon-ify shuts a Poké Ball over the screen, which wobbles while the theme's code, styles, font and first sprites download, then opens onto it. If the download fails, the ball opens back onto the classic page.
+The page is prerendered in the Pokémon theme, so readers without scripts and search engines get it too. A reader who picked the classic timeline never sees the Pokémon page flash: a script in `<head>` marks their choice before the first paint, and the prerendered page stays hidden until the classic one is drawn. Pressing Pokémon-ify shuts a Poké Ball over the screen, which wobbles while the theme's first sprites arrive, then opens onto it.
 
 Pokémon and its creatures are trademarks of Nintendo, Creatures Inc. and GAME FREAK inc. This is an unofficial fan project. The sprites come from [jayvicsanantonio/sprites](https://github.com/jayvicsanantonio/sprites).
 
@@ -135,11 +135,11 @@ app/
 ├── layout.tsx                # Fonts, metadata and the inline script that picks the theme before first paint
 ├── globals.css               # Chrome tokens, era backdrops and scroll-driven animations
 ├── theme-switch.css          # The theme bar and the Poké Ball
-├── pokemon.css               # The Pokémon theme's styles, downloaded with its code
+├── pokemon.css               # The Pokémon theme's styles, the page's default
 ├── llms.txt/, llms-full.txt/ # Plain-text routes for AI agents
 └── robots.ts, sitemap.ts, opengraph-image.tsx, icon.svg
 components/
-├── theme/                    # ThemedTimeline (classic or Pokémon) and the on-demand loader
+├── theme/                    # ThemedTimeline (Pokémon or classic) and what the Poké Ball waits on
 ├── storytelling/             # StoryEngine (filters, era order), the opening and the closing
 ├── eras/                     # The era section, its shared header and the six era interfaces
 ├── timeline/                 # Search and filters, the navigation rail and bar, the activity chart
@@ -162,13 +162,13 @@ How the page fits together:
 ```
 app/page.tsx
 └── ThemedTimeline
-    ├── StoryEngine (classic, the default)
+    ├── StoryEngine (classic, after Switch to classic)
     │   ├── PrologueScene        latest events, era links, chart
     │   ├── TimelineControls     search and category filters
     │   ├── EraChapter × 6       EraHeader + one era interface, latest era first
     │   ├── TimelineNavigation   rail on wide screens, bar on phones
     │   └── TimelineInsights + EpilogueScene
-    └── PokemonStoryEngine (loaded with import() after Pokémon-ify)
+    └── PokemonStoryEngine (the default, prerendered)
 ```
 
 **Stack:** Next.js 15 (App Router, fully prerendered), React 19, TypeScript in strict mode, Tailwind CSS 4, Framer Motion for the phone chapter list. Most motion is CSS: cards rise in with scroll-driven animations (`animation-timeline: view()`) rather than a JavaScript observer per card, and the navigation measures scroll once per frame. Work Sans and Open Sans are self-hosted in `app/fonts/`.
@@ -228,7 +228,7 @@ Large data updates should be described in the pull request.
 ## Testing
 
 - **Vitest** (`tests/unit`, `tests/integration`) renders components in real headless Chromium through browser mode, so tests use real browser APIs instead of mocks.
-- **Playwright** (`tests/e2e`) runs against a production build. It also checks that the classic page loads none of the Pokémon theme's styles, font or sprites.
+- **Playwright** (`tests/e2e`) runs against a production build. The classic specs import `test` from `tests/e2e/classic-theme.ts`, which opens every page in the classic theme.
 - The Pokémon theme's tests live in `pokemon/` subfolders of each suite. `tests/e2e/theme-switch.spec.ts` covers switching between themes.
 - Before pushing, run `pnpm lint`, `pnpm type-check` and `pnpm test`, plus `pnpm test:e2e` for anything the browser shows.
 

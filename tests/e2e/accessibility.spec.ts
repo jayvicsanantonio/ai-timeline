@@ -1,6 +1,6 @@
 // End-to-end accessibility checks in real Chromium: landmarks, era headings, event links and their names,
 // keyboard access, focus rings, the system cursor and a page that holds still when reduced motion is preferred.
-import { expect, test, type Page } from "@playwright/test"
+import { expect, test, type Page } from "./classic-theme"
 import timelineData from "../../data/timeline-events.json"
 
 const ERA_TITLES = [

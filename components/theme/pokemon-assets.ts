@@ -1,25 +1,5 @@
-// Downloads the Pokémon theme only when a reader asks for it, so the classic page carries none of it: its code and its
-// stylesheet come in one chunk, then its pixel font, then the sprites its first screen shows. The Poké Ball that fills the
-// screen waits on these before it opens onto the theme.
-import type { ComponentType } from 'react';
-import type { TimelineEvent } from '@/types/timeline';
-
-export type PokemonEngine = ComponentType<{ events: TimelineEvent[] }>;
-
-let engine: Promise<PokemonEngine> | null = null;
-
-// The theme's code and styles, fetched once; a failed download can be tried again
-export function loadPokemonEngine() {
-  engine ??= import('@/components/pokemon/storytelling/story-engine').then(
-    (module) => module.PokemonStoryEngine,
-    (error: unknown) => {
-      engine = null;
-      throw error;
-    }
-  );
-  return engine;
-}
-
+// What the Poké Ball waits on before it opens onto the Pokémon theme: the theme's pixel font, and the sprites its first
+// screen shows. The theme's code and styles are already in the page, which is prerendered in it.
 export function wait(ms: number) {
   return new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 }

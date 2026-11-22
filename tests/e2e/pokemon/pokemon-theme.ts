@@ -1,9 +1,7 @@
-// The Playwright test for the Pokémon theme's specs. Its pages open in the Pokémon theme, as a reader who pressed Pokémon-ify
-// on an earlier visit would see them: the choice is in their browser's storage before the page's first script runs. The
-// page is prerendered in the classic theme and downloads the Pokémon theme behind a Poké Ball once it runs, so every
-// navigation waits until the theme is drawn and the ball has opened.
+// The Playwright test for the Pokémon theme's specs. Its pages open in the Pokémon theme, the page's default, as a first-time
+// reader sees them. The page is prerendered in the Pokémon theme, and every navigation waits until it is drawn and its
+// scripts have run.
 import { test as base, type Page } from "@playwright/test"
-import { THEME_STORAGE_KEY } from "../../../lib/theme"
 
 export { expect, type Page } from "@playwright/test"
 
@@ -14,7 +12,6 @@ async function pokemonDrawn(page: Page) {
 
 export const test = base.extend({
   page: async ({ page }, provide) => {
-    await page.addInitScript((key) => window.localStorage.setItem(key, "pokemon"), THEME_STORAGE_KEY)
     const goto = page.goto.bind(page)
     const reload = page.reload.bind(page)
     page.goto = async (...args) => {

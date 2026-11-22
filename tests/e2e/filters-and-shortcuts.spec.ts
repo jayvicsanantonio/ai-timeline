@@ -1,7 +1,7 @@
 // End-to-end tests for searching, filtering and the keyboard shortcuts on the real page in Chromium.
 // Filters narrow every era and the activity rail at once, and J, K, the era numbers and / move the reader around a timeline
 // that reads newest first.
-import { expect, test, type Page } from "@playwright/test"
+import { expect, test, type Page } from "./classic-theme"
 import timelineData from "../../data/timeline-events.json"
 import { groupEventsByEra } from "../../lib/eras"
 import { filterEvents } from "../../lib/timeline-filter"
